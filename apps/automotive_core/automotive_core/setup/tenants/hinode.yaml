@@ -1,0 +1,214 @@
+# Reference tenant: the fictional Hinode Automotive Group (requirements §2).
+# Applied idempotently by automotive_core.setup.tenant.apply("hinode").
+# Organisation structure only — no transactions. Synthetic data comes from
+# automotive_seed (non-production sites only).
+
+tenant: hinode
+group_name: Hinode Automotive Group
+fiscal_years:
+  - {year: FY2025, start: "2025-04-01", end: "2026-03-31"}
+  - {year: FY2026, start: "2026-04-01", end: "2027-03-31"}
+  - {year: FY2027, start: "2027-04-01", end: "2028-03-31"}
+holiday_years: [2025, 2026, 2027]
+
+companies:
+  - name: Hinode Automotive Manufacturing Japan
+    abbr: HAMJ
+    currency: JPY
+    country: Japan
+    holidays: JP
+    branch: Aichi
+    tax_id: JP-T9000000000001
+  - name: Hinode Powertrain Components
+    abbr: HPC
+    currency: JPY
+    country: Japan
+    holidays: JP
+    branch: Kyushu
+    tax_id: JP-T9000000000002
+  - name: Hinode Automotive Distribution North America
+    abbr: HADNA
+    currency: USD
+    country: United States
+    holidays: US
+    branch: North America
+    tax_id: US-98-0000001
+
+departments: [Engineering, Production Planning, Plant Operations, Warehousing, Quality, Purchasing,
+  Finance, Treasury, Sales, Logistics, IT]
+
+shift_patterns:
+  - name: JP Two Shift
+    time_zone: Asia/Tokyo
+    holidays: JP
+    days: [monday, tuesday, wednesday, thursday, friday]
+    shifts:
+      - {code: A, start: "06:30:00", end: "15:15:00", break_minutes: 45}
+      - {code: B, start: "16:15:00", end: "01:00:00", break_minutes: 45}
+  - name: NA Day Shift
+    time_zone: America/Chicago
+    holidays: US
+    days: [monday, tuesday, wednesday, thursday, friday]
+    shifts:
+      - {code: D, start: "07:00:00", end: "15:30:00", break_minutes: 30}
+
+plants:
+  - code: AICHI-VA
+    name: Aichi Vehicle Assembly
+    company: Hinode Automotive Manufacturing Japan
+    type: Vehicle Assembly
+    country: Japan
+    time_zone: Asia/Tokyo
+    shift_pattern: JP Two Shift
+    annual_capacity_units: 96000
+    warehouses:
+      receiving: Aichi Receiving Dock
+      inspection: Aichi Receiving Inspection
+      raw_material: Aichi Parts Store
+      wip: Aichi Body & Paint WIP
+      quarantine: Aichi Quarantine
+      finished_goods: Aichi Finished Vehicle Yard
+      outbound: Aichi Outbound Staging
+      in_transit: Aichi Goods In Transit
+      scrap: Aichi Scrap
+      consignment: Aichi Supplier Consignment
+    lines:
+      - code: AICHI-BODY
+        name: Aichi Body Shop
+        type: Body Shop
+        takt: 60
+        stations: [S10 Underbody Weld, S20 Side Frame Weld, S30 Roof & Closures, S40 Body Inspection]
+      - code: AICHI-PAINT
+        name: Aichi Paint Shop
+        type: Paint Shop
+        takt: 60
+        stations: [S10 Pretreatment, S20 Primer, S30 Top Coat, S40 Paint Audit]
+      - code: AICHI-FA1
+        name: Aichi Final Assembly 1 (H1 / H2)
+        type: Final Assembly
+        takt: 64
+        products: [H1, H2]
+        stations: [S10 Trim, S20 Powertrain Marriage, S30 Chassis, S40 Interior, S50 Final Inspection]
+      - code: AICHI-FA2
+        name: Aichi Final Assembly 2 (H3)
+        type: Final Assembly
+        takt: 96
+        products: [H3]
+        stations: [S10 Trim, S20 Powertrain Marriage, S30 Chassis, S40 Cargo Fit-out, S50 Final Inspection]
+  - code: KYUSHU-PT
+    name: Kyushu Powertrain
+    company: Hinode Powertrain Components
+    type: Powertrain Manufacturing
+    country: Japan
+    time_zone: Asia/Tokyo
+    shift_pattern: JP Two Shift
+    annual_capacity_units: 110000
+    warehouses:
+      receiving: Kyushu Receiving Dock
+      inspection: Kyushu Receiving Inspection
+      raw_material: Kyushu Materials Store
+      wip: Kyushu Machining WIP
+      quarantine: Kyushu Quarantine
+      finished_goods: Kyushu Finished Powertrains
+      outbound: Kyushu Outbound Staging
+      in_transit: Kyushu Goods In Transit
+      scrap: Kyushu Scrap
+    lines:
+      - code: KYU-MACH
+        name: Kyushu Machining
+        type: Machining
+        takt: 45
+        stations: [M10 Block Machining, M20 Head Machining, M30 Gear Cutting, M40 CMM Inspection]
+      - code: KYU-P180
+        name: Kyushu P180 Hybrid Assembly
+        type: Powertrain Assembly
+        takt: 72
+        products: [P180]
+        stations: [P10 Engine Dress, P20 Hybrid Transaxle, P30 Inverter Fit, P40 Hot Test]
+      - code: KYU-E240
+        name: Kyushu E240 E-Drive Assembly
+        type: E-Drive Assembly
+        takt: 90
+        products: [E240]
+        stations: [E10 Stator Insert, E20 Rotor & Reduction Gear, E30 Inverter Integration, E40 End-of-Line Test]
+  - code: NA-PDC
+    name: North America Preparation & Distribution
+    company: Hinode Automotive Distribution North America
+    type: Preparation & Distribution
+    country: United States
+    time_zone: America/Chicago
+    shift_pattern: NA Day Shift
+    annual_capacity_units: 40000
+    warehouses:
+      receiving: NA Port Receiving
+      raw_material: NA Accessories Store
+      quarantine: NA Quarantine
+      finished_goods: NA Vehicle Inventory
+      outbound: NA Dealer Outbound
+      in_transit: NA Goods In Transit
+      scrap: NA Scrap
+    lines:
+      - code: NA-PDI
+        name: NA Pre-Delivery Inspection
+        type: Pre-Delivery Inspection
+        takt: 300
+        stations: [D10 Arrival Inspection, D20 Accessory Fit, D30 Final PDI]
+
+# Intercompany relationships: seller company -> buyer company
+intercompany:
+  - {seller: Hinode Powertrain Components, buyer: Hinode Automotive Manufacturing Japan}
+  - {seller: Hinode Automotive Manufacturing Japan, buyer: Hinode Automotive Distribution North America}
+
+segregation_of_duties:
+  - {name: Buyer vs AP Clerk, a: Buyer, b: AP Clerk, enforcement: Block,
+     rationale: "Whoever commits spend must not book or match the supplier invoice."}
+  - {name: AP Clerk vs Treasury Approver, a: AP Clerk, b: Treasury Approver, enforcement: Block,
+     rationale: "Payment preparation and payment release are separated."}
+  - {name: Buyer vs Treasury Approver, a: Buyer, b: Treasury Approver, enforcement: Block,
+     rationale: "A buyer must not release payments to suppliers."}
+  - {name: IT Operator vs Treasury Approver, a: IT Operator, b: Treasury Approver, enforcement: Block,
+     rationale: "Administrators must not approve payments."}
+  - {name: Auditor vs AP Clerk, a: Auditor, b: AP Clerk, enforcement: Block,
+     rationale: "Auditors stay independent of the processes they review."}
+  - {name: Warehouse Clerk vs Quality Manager, a: Warehouse Clerk, b: Quality Manager, enforcement: Warn,
+     rationale: "Quarantine release should be decided by someone who does not move the stock."}
+
+# Approval policies for DocTypes that exist when the tenant is applied; amounts are in
+# company currency. Other apps add theirs through the automotive_tenant_policies hook.
+approval_policies:
+  - name: Purchase Order Approval - JPY
+    doctype: Purchase Order
+    companies: [Hinode Automotive Manufacturing Japan, Hinode Powertrain Components]
+    amount_field: base_grand_total
+    steps:
+      - {step: 1, name: Procurement review, role: Procurement Manager}
+      - {step: 2, name: Plant director, role: Plant Director, min_amount: 10000000}
+      - {step: 3, name: Executive, role: Automotive Executive, min_amount: 100000000}
+  - name: Purchase Order Approval - USD
+    doctype: Purchase Order
+    companies: [Hinode Automotive Distribution North America]
+    amount_field: base_grand_total
+    steps:
+      - {step: 1, name: Procurement review, role: Procurement Manager}
+      - {step: 2, name: Plant director, role: Plant Director, min_amount: 75000}
+      - {step: 3, name: Executive, role: Automotive Executive, min_amount: 750000}
+  - name: Supplier Payment Release
+    doctype: Payment Entry
+    amount_field: base_paid_amount
+    category_field: payment_type
+    category_values: [Pay]
+    steps:
+      - {step: 1, name: Treasury first approval, role: Treasury Approver}
+      - {step: 2, name: Treasury second approval, role: Treasury Approver}
+      - {step: 3, name: Group controller, role: Group Controller, min_amount: 50000000}
+  - name: Manual Journal Approval
+    doctype: Journal Entry
+    amount_field: total_debit
+    category_field: voucher_type
+    category_values: [Journal Entry, Inter Company Journal Entry]
+    steps:
+      - {step: 1, name: Group controller, role: Group Controller}
+  - name: Account Provisioning
+    doctype: User Provisioning Request
+    steps:
+      - {step: 1, name: IT security review, role: IT Operator}

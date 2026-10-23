@@ -3,6 +3,15 @@
 
 from frappe.model.document import Document
 
+from automotive_core.governance import delegation
+
 
 class ApprovalDelegation(Document):
-	pass
+	def validate(self):
+		delegation.validate(self)
+
+	def on_submit(self):
+		delegation.on_submit(self)
+
+	def on_cancel(self):
+		delegation.on_cancel(self)

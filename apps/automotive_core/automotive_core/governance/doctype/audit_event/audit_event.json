@@ -19,6 +19,7 @@
   "section_break_1",
   "payload",
   "section_break_2",
+  "chain_index",
   "previous_hash",
   "event_hash",
   "sealed_at"
@@ -111,6 +112,14 @@
    "label": "Seal"
   },
   {
+   "description": "Position in the hash chain; 0 until sealed.",
+   "fieldname": "chain_index",
+   "fieldtype": "Int",
+   "label": "Chain Index",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
    "fieldname": "previous_hash",
    "fieldtype": "Data",
    "label": "Previous Hash",
@@ -131,7 +140,7 @@
  ],
  "icon": "scroll-text",
  "links": [],
- "modified": "2026-10-24 07:18:49.079506",
+ "modified": "2026-10-24 07:50:28.433299",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Audit Event",

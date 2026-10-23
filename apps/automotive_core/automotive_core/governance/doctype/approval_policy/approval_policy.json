@@ -9,7 +9,7 @@
  "field_order": [
   "policy_name",
   "reference_doctype",
-  "company",
+  "applies_to_company",
   "is_active",
   "priority",
   "column_break_1",
@@ -50,7 +50,7 @@
   },
   {
    "description": "Leave empty to apply to every company.",
-   "fieldname": "company",
+   "fieldname": "applies_to_company",
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
@@ -168,7 +168,7 @@
  ],
  "icon": "list-checks",
  "links": [],
- "modified": "2026-10-24 07:18:49.077757",
+ "modified": "2026-10-24 07:50:28.431691",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Approval Policy",

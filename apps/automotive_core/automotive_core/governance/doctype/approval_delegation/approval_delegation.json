@@ -16,7 +16,7 @@
   "to_date",
   "status",
   "section_break_1",
-  "company",
+  "scope_company",
   "reference_doctype",
   "column_break_2",
   "max_amount",
@@ -98,7 +98,7 @@
   },
   {
    "description": "Empty = every company.",
-   "fieldname": "company",
+   "fieldname": "scope_company",
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company"
@@ -145,7 +145,7 @@
  "icon": "user-round-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 07:18:49.079164",
+ "modified": "2026-10-24 07:50:28.432913",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Approval Delegation",

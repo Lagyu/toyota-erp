@@ -81,7 +81,7 @@
    "fieldname": "source",
    "fieldtype": "Select",
    "label": "Source",
-   "options": "HTTPS\nFile Drop\nLoopback\nReplay",
+   "options": "HTTPS\nFile Drop\nInternal\nReplay",
    "read_only": 1
   },
   {
@@ -180,7 +180,7 @@
  ],
  "icon": "inbox",
  "links": [],
- "modified": "2026-10-24 07:18:49.081117",
+ "modified": "2026-10-24 07:38:12.258627",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Integration Inbound Message",

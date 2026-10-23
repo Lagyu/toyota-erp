@@ -3,6 +3,15 @@
 
 from frappe.model.document import Document
 
+from automotive_core.governance import provisioning
+
 
 class UserProvisioningRequest(Document):
-	pass
+	def validate(self):
+		provisioning.validate(self)
+
+	def on_submit(self):
+		provisioning.on_submit(self)
+
+	def on_cancel(self):
+		self.db_set("status", "Cancelled")
