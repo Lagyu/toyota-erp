@@ -1,0 +1,95 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:56:38.755515",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "sequence_no",
+  "work_order",
+  "item_code",
+  "mix_key",
+  "shift_code",
+  "planned_start",
+  "planned_end",
+  "vehicle_unit",
+  "slot_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "sequence_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Seq",
+   "read_only": 1
+  },
+  {
+   "fieldname": "work_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Work Order",
+   "options": "Work Order"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Variant",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "mix_key",
+   "fieldtype": "Data",
+   "label": "Mix Key",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shift_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Shift",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_start",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Planned Start",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_end",
+   "fieldtype": "Datetime",
+   "label": "Planned End",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_unit",
+   "fieldtype": "Link",
+   "label": "Vehicle Unit",
+   "options": "Vehicle Unit",
+   "read_only": 1
+  },
+  {
+   "default": "Planned",
+   "fieldname": "slot_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Planned\nBuilt\nSkipped",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:56:38.755515",
+ "modified_by": "Administrator",
+ "module": "Production Planning",
+ "name": "Plant Schedule Slot",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,334 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-10-24 07:56:38.757947",
+ "description": "Outgoing supervisor's shift report; the incoming supervisor acknowledges it.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "plant",
+  "production_line",
+  "shift_date",
+  "shift_code",
+  "column_break_1",
+  "outgoing_supervisor",
+  "incoming_supervisor",
+  "status",
+  "acknowledged_at",
+  "section_break_1",
+  "planned_units",
+  "built_units",
+  "scrap_qty",
+  "column_break_2",
+  "downtime_minutes",
+  "andon_events",
+  "open_items",
+  "section_break_2",
+  "safety_notes",
+  "quality_notes",
+  "handover_notes",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "default": "SHO-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "SHO-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Production Line",
+   "options": "Production Line",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Shift Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Shift",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "outgoing_supervisor",
+   "fieldtype": "Link",
+   "label": "Outgoing Supervisor",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "incoming_supervisor",
+   "fieldtype": "Link",
+   "label": "Incoming Supervisor",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Draft\nHanded Over\nAcknowledged",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "acknowledged_at",
+   "fieldtype": "Datetime",
+   "label": "Acknowledged At",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Shift Results (computed on submit)"
+  },
+  {
+   "fieldname": "planned_units",
+   "fieldtype": "Int",
+   "label": "Planned Units",
+   "read_only": 1
+  },
+  {
+   "fieldname": "built_units",
+   "fieldtype": "Int",
+   "label": "Built Units",
+   "read_only": 1
+  },
+  {
+   "fieldname": "scrap_qty",
+   "fieldtype": "Float",
+   "label": "Scrap Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "downtime_minutes",
+   "fieldtype": "Float",
+   "label": "Downtime (Minutes)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "andon_events",
+   "fieldtype": "Int",
+   "label": "Andon Events",
+   "read_only": 1
+  },
+  {
+   "fieldname": "open_items",
+   "fieldtype": "Small Text",
+   "label": "Open Andons / Active Holds",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "safety_notes",
+   "fieldtype": "Small Text",
+   "label": "Safety"
+  },
+  {
+   "fieldname": "quality_notes",
+   "fieldtype": "Small Text",
+   "label": "Quality"
+  },
+  {
+   "fieldname": "handover_notes",
+   "fieldtype": "Small Text",
+   "label": "Handover",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Shift Handover",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "icon": "arrow-left-right",
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:56:38.757947",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Shift Handover",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "production_line",
+ "track_changes": 1
+}

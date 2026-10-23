@@ -1,0 +1,199 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:reason_code",
+ "creation": "2026-10-24 07:56:38.757206",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reason_code",
+  "description",
+  "category",
+  "raises_quality_hold",
+  "stops_line"
+ ],
+ "fields": [
+  {
+   "fieldname": "reason_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Description",
+   "reqd": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Category",
+   "options": "Quality\nMaterial Shortage\nEquipment\nSafety\nProcess",
+   "reqd": 1
+  },
+  {
+   "fieldname": "raises_quality_hold",
+   "fieldtype": "Check",
+   "label": "Raises Quality Hold"
+  },
+  {
+   "default": "1",
+   "fieldname": "stops_line",
+   "fieldtype": "Check",
+   "label": "Stops The Line"
+  }
+ ],
+ "links": [],
+ "modified": "2026-10-24 07:56:38.757206",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Andon Reason Code",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

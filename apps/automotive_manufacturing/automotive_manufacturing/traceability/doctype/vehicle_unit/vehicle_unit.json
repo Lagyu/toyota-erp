@@ -1,0 +1,366 @@
+{
+ "actions": [],
+ "autoname": "field:vin",
+ "creation": "2026-10-24 07:56:38.758364",
+ "description": "One physical vehicle (or serialized assembly) with independent production, quality, inventory, shipment and invoicing states.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vin",
+  "serial_no",
+  "vehicle_model",
+  "variant_item",
+  "configuration",
+  "column_break_1",
+  "company",
+  "plant",
+  "production_line",
+  "work_order",
+  "build_sequence",
+  "built_at",
+  "section_break_1",
+  "production_status",
+  "quality_status",
+  "inventory_status",
+  "column_break_2",
+  "shipment_status",
+  "invoice_status",
+  "current_warehouse",
+  "final_inspection",
+  "section_break_2",
+  "sales_order",
+  "dealer",
+  "column_break_3",
+  "warranty_start_date",
+  "warranty_end_date",
+  "warranty_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "vin",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "VIN / Serial",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Link",
+   "label": "Serial No",
+   "options": "Serial No",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_model",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Vehicle Model",
+   "options": "Vehicle Model",
+   "reqd": 1
+  },
+  {
+   "fieldname": "variant_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Variant Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "configuration",
+   "fieldtype": "Link",
+   "label": "Configuration",
+   "options": "Vehicle Configuration"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Build Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Link",
+   "label": "Production Line",
+   "options": "Production Line"
+  },
+  {
+   "fieldname": "work_order",
+   "fieldtype": "Link",
+   "label": "Work Order",
+   "options": "Work Order",
+   "search_index": 1
+  },
+  {
+   "fieldname": "build_sequence",
+   "fieldtype": "Int",
+   "label": "Build Sequence"
+  },
+  {
+   "fieldname": "built_at",
+   "fieldtype": "Datetime",
+   "label": "Built At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Status"
+  },
+  {
+   "default": "Planned",
+   "fieldname": "production_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Production",
+   "options": "Planned\nIn Production\nBuilt\nScrapped",
+   "read_only": 1
+  },
+  {
+   "default": "Pending Inspection",
+   "fieldname": "quality_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Quality Release",
+   "options": "Pending Inspection\nOn Hold\nReleased\nRejected",
+   "read_only": 1
+  },
+  {
+   "default": "Not In Stock",
+   "fieldname": "inventory_status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Inventory",
+   "options": "Not In Stock\nIn Stock\nReserved\nIn Transit\nDelivered",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Not Shipped",
+   "fieldname": "shipment_status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Shipment",
+   "options": "Not Shipped\nReady To Ship\nDispatched\nDelivered\nAccepted",
+   "read_only": 1
+  },
+  {
+   "default": "Not Invoiced",
+   "fieldname": "invoice_status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Invoicing",
+   "options": "Not Invoiced\nInvoiced\nPaid\nCredited",
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_warehouse",
+   "fieldtype": "Link",
+   "label": "Current Warehouse",
+   "options": "Warehouse",
+   "read_only": 1
+  },
+  {
+   "fieldname": "final_inspection",
+   "fieldtype": "Link",
+   "label": "Final Inspection",
+   "options": "Quality Inspection",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Sales & Warranty"
+  },
+  {
+   "fieldname": "sales_order",
+   "fieldtype": "Link",
+   "label": "Sales Order",
+   "options": "Sales Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Dealer",
+   "options": "Customer",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "warranty_start_date",
+   "fieldtype": "Date",
+   "label": "Warranty Start",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_end_date",
+   "fieldtype": "Date",
+   "label": "Warranty End",
+   "read_only": 1
+  },
+  {
+   "fieldname": "warranty_reference",
+   "fieldtype": "Data",
+   "label": "Warranty Reference",
+   "read_only": 1
+  }
+ ],
+ "icon": "car-front",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.758364",
+ "modified_by": "Administrator",
+ "module": "Traceability",
+ "name": "Vehicle Unit",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "search_fields": "vehicle_model,variant_item,plant",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "vin",
+ "track_changes": 1
+}

@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:56:38.759297",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "unit_serial_no",
+  "unit_item",
+  "via",
+  "vehicle_unit",
+  "location",
+  "dealer"
+ ],
+ "fields": [
+  {
+   "fieldname": "unit_serial_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "VIN / Serial",
+   "read_only": 1
+  },
+  {
+   "fieldname": "unit_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "description": "component -> ... -> unit",
+   "fieldname": "via",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Path",
+   "read_only": 1
+  },
+  {
+   "fieldname": "vehicle_unit",
+   "fieldtype": "Link",
+   "label": "Vehicle Unit",
+   "options": "Vehicle Unit",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Location",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dealer",
+   "fieldtype": "Link",
+   "label": "Dealer",
+   "options": "Customer",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:56:38.759297",
+ "modified_by": "Administrator",
+ "module": "Traceability",
+ "name": "Recall Affected Unit",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

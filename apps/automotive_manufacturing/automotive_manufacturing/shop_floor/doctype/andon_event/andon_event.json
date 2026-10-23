@@ -1,0 +1,405 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-10-24 07:56:38.757557",
+ "description": "A line call or stop with containment, restart authorisation and measured duration.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "plant",
+  "production_line",
+  "workstation",
+  "reason_code",
+  "category",
+  "stop_type",
+  "column_break_1",
+  "status",
+  "raised_by",
+  "raised_at",
+  "assigned_to",
+  "acknowledged_at",
+  "section_break_1",
+  "work_order",
+  "job_card",
+  "item_code",
+  "batch_no",
+  "serial_no",
+  "description",
+  "section_break_2",
+  "containment_action",
+  "contained_at",
+  "quality_hold",
+  "nonconformance",
+  "column_break_2",
+  "restart_authorized_by",
+  "restarted_at",
+  "duration_minutes",
+  "downtime_entry"
+ ],
+ "fields": [
+  {
+   "default": "AND-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "AND-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Production Line",
+   "options": "Production Line",
+   "reqd": 1
+  },
+  {
+   "fieldname": "workstation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Station",
+   "options": "Workstation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reason_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Reason",
+   "options": "Andon Reason Code",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "reason_code.category",
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Category",
+   "options": "Quality\nMaterial Shortage\nEquipment\nSafety\nProcess",
+   "read_only": 1
+  },
+  {
+   "default": "Line Stop",
+   "fieldname": "stop_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "Line Stop\nCall",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Raised",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Raised\nAcknowledged\nContained\nRestarted\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "raised_by",
+   "fieldtype": "Link",
+   "label": "Raised By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "raised_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Raised At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Link",
+   "label": "Assigned To",
+   "options": "User"
+  },
+  {
+   "fieldname": "acknowledged_at",
+   "fieldtype": "Datetime",
+   "label": "Acknowledged At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Affected Work"
+  },
+  {
+   "fieldname": "work_order",
+   "fieldtype": "Link",
+   "label": "Work Order",
+   "options": "Work Order"
+  },
+  {
+   "fieldname": "job_card",
+   "fieldtype": "Link",
+   "label": "Job Card",
+   "options": "Job Card"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "batch_no",
+   "fieldtype": "Link",
+   "label": "Batch",
+   "options": "Batch"
+  },
+  {
+   "fieldname": "serial_no",
+   "fieldtype": "Link",
+   "label": "Serial No",
+   "options": "Serial No"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Containment & Restart"
+  },
+  {
+   "fieldname": "containment_action",
+   "fieldtype": "Small Text",
+   "label": "Containment Action"
+  },
+  {
+   "fieldname": "contained_at",
+   "fieldtype": "Datetime",
+   "label": "Contained At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "quality_hold",
+   "fieldtype": "Link",
+   "label": "Quality Hold",
+   "options": "Quality Hold",
+   "read_only": 1
+  },
+  {
+   "fieldname": "nonconformance",
+   "fieldtype": "Link",
+   "label": "Nonconformance",
+   "options": "Non Conformance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "restart_authorized_by",
+   "fieldtype": "Link",
+   "label": "Restart Authorised By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "restarted_at",
+   "fieldtype": "Datetime",
+   "label": "Restarted At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "duration_minutes",
+   "fieldtype": "Float",
+   "label": "Stop Duration (Minutes)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "downtime_entry",
+   "fieldtype": "Link",
+   "label": "Downtime Entry",
+   "options": "Downtime Entry",
+   "read_only": 1
+  }
+ ],
+ "icon": "siren",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.757557",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Andon Event",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Line Operator"
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "search_fields": "production_line,workstation,status",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "reason_code",
+ "track_changes": 1
+}

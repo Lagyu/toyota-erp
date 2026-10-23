@@ -1,0 +1,337 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-10-24 07:56:38.756919",
+ "description": "A replenishment request from an emptied card, with its JIT due time and fulfilment trail.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "kanban_loop",
+  "kanban_card",
+  "item_code",
+  "qty",
+  "plant",
+  "column_break_1",
+  "signal_source",
+  "signaled_at",
+  "due_by",
+  "status",
+  "escalation_level",
+  "section_break_1",
+  "material_request",
+  "purchase_order",
+  "stock_entry",
+  "purchase_receipt",
+  "column_break_2",
+  "received_at",
+  "lead_time_hours_actual",
+  "escalation_note"
+ ],
+ "fields": [
+  {
+   "default": "KS-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "KS-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "kanban_loop",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Loop",
+   "options": "Kanban Loop",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "kanban_card",
+   "fieldtype": "Link",
+   "label": "Card",
+   "options": "Kanban Card",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qty",
+   "fieldtype": "Float",
+   "label": "Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Plant",
+   "options": "Plant",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "signal_source",
+   "fieldtype": "Select",
+   "label": "Source",
+   "options": "Card Scan\nConsumption Trigger\nManual",
+   "read_only": 1
+  },
+  {
+   "fieldname": "signaled_at",
+   "fieldtype": "Datetime",
+   "label": "Signaled At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "due_by",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Due By (JIT Window)",
+   "read_only": 1
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Open\nOrdered\nShipped\nReceived\nEscalated\nCancelled",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "escalation_level",
+   "fieldtype": "Int",
+   "label": "Escalation Level",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Fulfilment"
+  },
+  {
+   "fieldname": "material_request",
+   "fieldtype": "Link",
+   "label": "Material Request",
+   "options": "Material Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Purchase Order",
+   "options": "Purchase Order",
+   "read_only": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Transfer Entry",
+   "options": "Stock Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purchase_receipt",
+   "fieldtype": "Link",
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "received_at",
+   "fieldtype": "Datetime",
+   "label": "Received At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "lead_time_hours_actual",
+   "fieldtype": "Float",
+   "label": "Actual Lead Time (Hours)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "escalation_note",
+   "fieldtype": "Small Text",
+   "label": "Escalation Note",
+   "read_only": 1
+  }
+ ],
+ "icon": "radio-tower",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.756919",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Kanban Signal",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "search_fields": "kanban_loop,item_code,status",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "item_code",
+ "track_changes": 1
+}

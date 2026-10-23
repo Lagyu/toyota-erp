@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:56:38.753440",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "old_bom",
+  "new_bom",
+  "revision",
+  "reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "old_bom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Superseded BOM",
+   "options": "BOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "new_bom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "New BOM",
+   "options": "BOM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "revision",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Revision",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Why",
+   "options": "Direct Change\nParent Of Changed Assembly",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:56:38.753440",
+ "modified_by": "Administrator",
+ "module": "Product Engineering",
+ "name": "ECO BOM Revision",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

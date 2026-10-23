@@ -1,0 +1,415 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-10-24 07:56:38.754214",
+ "description": "One reproducible MRP run: recorded inputs, deterministic results, approvals and release.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "company",
+  "plant",
+  "parameter_set",
+  "master_production_schedule",
+  "column_break_1",
+  "as_of",
+  "horizon_start",
+  "horizon_end",
+  "status",
+  "progress",
+  "cancel_requested",
+  "section_break_1",
+  "inputs_file",
+  "inputs_sha256",
+  "outputs_sha256",
+  "column_break_2",
+  "replay_of",
+  "replay_result",
+  "section_break_2",
+  "demand_lines",
+  "proposal_count",
+  "shortage_count",
+  "capacity_conflicts",
+  "column_break_3",
+  "production_plan",
+  "released_at",
+  "released_by",
+  "error",
+  "section_break_3",
+  "proposals",
+  "section_break_4",
+  "shortages",
+  "section_break_5",
+  "capacity"
+ ],
+ "fields": [
+  {
+   "default": "MRP-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "MRP-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parameter_set",
+   "fieldtype": "Link",
+   "label": "Parameter Set Version",
+   "link_filters": "[[\"Planning Parameter Set\",\"docstatus\",\"=\",1]]",
+   "options": "Planning Parameter Set",
+   "reqd": 1
+  },
+  {
+   "fieldname": "master_production_schedule",
+   "fieldtype": "Link",
+   "label": "Master Production Schedule",
+   "options": "Master Production Schedule"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "as_of",
+   "fieldtype": "Datetime",
+   "label": "Planned As Of",
+   "read_only": 1
+  },
+  {
+   "fieldname": "horizon_start",
+   "fieldtype": "Date",
+   "label": "Horizon Start",
+   "read_only": 1
+  },
+  {
+   "fieldname": "horizon_end",
+   "fieldtype": "Date",
+   "label": "Horizon End",
+   "read_only": 1
+  },
+  {
+   "default": "Queued",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Queued\nRunning\nCompleted\nFailed\nCancelled\nReleased",
+   "read_only": 1
+  },
+  {
+   "fieldname": "progress",
+   "fieldtype": "Percent",
+   "label": "Progress",
+   "read_only": 1
+  },
+  {
+   "fieldname": "cancel_requested",
+   "fieldtype": "Check",
+   "label": "Cancel Requested",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Reproducibility"
+  },
+  {
+   "fieldname": "inputs_file",
+   "fieldtype": "Attach",
+   "label": "Inputs Snapshot",
+   "read_only": 1
+  },
+  {
+   "fieldname": "inputs_sha256",
+   "fieldtype": "Data",
+   "label": "Inputs SHA-256",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outputs_sha256",
+   "fieldtype": "Data",
+   "label": "Outputs SHA-256",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "replay_of",
+   "fieldtype": "Link",
+   "label": "Replay Of",
+   "options": "Planning Run",
+   "read_only": 1
+  },
+  {
+   "fieldname": "replay_result",
+   "fieldtype": "Select",
+   "label": "Replay Result",
+   "options": "\nIdentical\nDifferent",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Summary"
+  },
+  {
+   "fieldname": "demand_lines",
+   "fieldtype": "Int",
+   "label": "Demand Lines",
+   "read_only": 1
+  },
+  {
+   "fieldname": "proposal_count",
+   "fieldtype": "Int",
+   "label": "Proposals",
+   "read_only": 1
+  },
+  {
+   "fieldname": "shortage_count",
+   "fieldtype": "Int",
+   "label": "Shortages",
+   "read_only": 1
+  },
+  {
+   "fieldname": "capacity_conflicts",
+   "fieldtype": "Int",
+   "label": "Capacity Conflicts",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "production_plan",
+   "fieldtype": "Link",
+   "label": "Production Plan",
+   "options": "Production Plan",
+   "read_only": 1
+  },
+  {
+   "fieldname": "released_at",
+   "fieldtype": "Datetime",
+   "label": "Released At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "released_by",
+   "fieldtype": "Link",
+   "label": "Released By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error",
+   "fieldtype": "Text",
+   "label": "Error",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break",
+   "label": "Proposals"
+  },
+  {
+   "fieldname": "proposals",
+   "fieldtype": "Table",
+   "label": "Proposals",
+   "options": "Planning Run Proposal"
+  },
+  {
+   "fieldname": "section_break_4",
+   "fieldtype": "Section Break",
+   "label": "Shortages & Exceptions"
+  },
+  {
+   "fieldname": "shortages",
+   "fieldtype": "Table",
+   "label": "Shortages",
+   "options": "Planning Run Shortage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_5",
+   "fieldtype": "Section Break",
+   "label": "Capacity"
+  },
+  {
+   "fieldname": "capacity",
+   "fieldtype": "Table",
+   "label": "Capacity Load",
+   "options": "Planning Run Capacity",
+   "read_only": 1
+  }
+ ],
+ "icon": "calculator",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.754214",
+ "modified_by": "Administrator",
+ "module": "Production Planning",
+ "name": "Planning Run",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "plant",
+ "track_changes": 1
+}

@@ -55,12 +55,18 @@ def load(tenant: str) -> dict[str, Any]:
 	return yaml.safe_load(path.read_text())
 
 
-def apply(tenant: str = "hinode", dry_run: bool = False) -> list[str]:
+def apply(tenant: str = "hinode", dry_run: bool = False, environment: str | None = None) -> list[str]:
+	"""environment: development | test | staging | production (default from site_config
+	``automotive_environment``). Production additionally enforces 2FA for privileged roles."""
 	frappe.only_for("System Manager")
 	definition = load(tenant)
 	log = TenantLog(dry_run)
+	environment = environment or frappe.conf.get("automotive_environment") or "development"
 	companies = definition["companies"]
 	_setup_wizard(definition, companies[0], log)
+	_singles(definition.get("settings", {}), log)
+	if environment == "production":
+		_singles(definition.get("production_settings", {}), log)
 	for company in companies:
 		_company(company, log)
 	_fiscal_years(definition, log)
@@ -112,6 +118,17 @@ def _setup_wizard(definition, first: dict, log: TenantLog) -> None:
 	if (result or {}).get("status") != "ok":
 		frappe.throw(f"ERPNext setup wizard failed: {result}")
 	frappe.clear_cache()
+
+
+def _singles(settings: dict, log: TenantLog) -> None:
+	for doctype, values in settings.items():
+		doc = frappe.get_single(doctype)
+		changes = {k: v for k, v in values.items() if str(doc.get(k) if doc.get(k) is not None else "") != str(v)}
+		if not changes or not log.change(f"{doctype}: {sorted(changes)}"):
+			continue
+		doc.update(changes)
+		doc.flags.ignore_permissions = True
+		doc.save()
 
 
 def _company(company: dict, log: TenantLog) -> None:

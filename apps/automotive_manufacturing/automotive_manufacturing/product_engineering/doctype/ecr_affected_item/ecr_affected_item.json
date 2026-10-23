@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:56:38.752684",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_code",
+  "current_bom",
+  "proposed_change"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_bom",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Current BOM",
+   "options": "BOM"
+  },
+  {
+   "fieldname": "proposed_change",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Proposed Change"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:56:38.752684",
+ "modified_by": "Administrator",
+ "module": "Product Engineering",
+ "name": "ECR Affected Item",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

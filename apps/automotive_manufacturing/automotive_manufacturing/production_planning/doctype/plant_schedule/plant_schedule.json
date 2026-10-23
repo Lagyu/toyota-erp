@@ -1,0 +1,260 @@
+{
+ "actions": [],
+ "autoname": "format:PSCH-{production_line}-{schedule_date}",
+ "creation": "2026-10-24 07:56:38.755241",
+ "description": "Daily build schedule and sequence for one line (mixed-model leveling).",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "plant",
+  "production_line",
+  "schedule_date",
+  "status",
+  "column_break_1",
+  "takt_time_seconds",
+  "available_minutes",
+  "capacity_units",
+  "planned_units",
+  "leveling_score",
+  "conflicts",
+  "section_break_1",
+  "slots"
+ ],
+ "fields": [
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Production Line",
+   "options": "Production Line",
+   "reqd": 1
+  },
+  {
+   "fieldname": "schedule_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Draft\nReleased\nFrozen\nCompleted",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "takt_time_seconds",
+   "fieldtype": "Float",
+   "label": "Takt (Seconds)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_minutes",
+   "fieldtype": "Float",
+   "label": "Available Minutes",
+   "read_only": 1
+  },
+  {
+   "fieldname": "capacity_units",
+   "fieldtype": "Int",
+   "label": "Capacity (Units)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "planned_units",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Planned Units",
+   "read_only": 1
+  },
+  {
+   "description": "Sum of squared deviation from ideal model mix; lower is smoother.",
+   "fieldname": "leveling_score",
+   "fieldtype": "Float",
+   "label": "Leveling Deviation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "conflicts",
+   "fieldtype": "Small Text",
+   "label": "Conflicts",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Sequence"
+  },
+  {
+   "fieldname": "slots",
+   "fieldtype": "Table",
+   "label": "Sequence",
+   "options": "Plant Schedule Slot"
+  }
+ ],
+ "icon": "calendar-range",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.755241",
+ "modified_by": "Administrator",
+ "module": "Production Planning",
+ "name": "Plant Schedule",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "production_line",
+ "track_changes": 1
+}

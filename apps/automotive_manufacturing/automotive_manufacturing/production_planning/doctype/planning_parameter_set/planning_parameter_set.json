@@ -1,0 +1,356 @@
+{
+ "actions": [],
+ "autoname": "format:{parameter_set}-v{version}",
+ "creation": "2026-10-24 07:56:38.753756",
+ "description": "Versioned MRP parameters. Submitted versions are immutable; amend to create the next version.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "parameter_set",
+  "version",
+  "previous_version",
+  "company",
+  "plant",
+  "column_break_1",
+  "horizon_days",
+  "bucket",
+  "frozen_zone_days",
+  "section_break_1",
+  "include_forecast",
+  "consume_forecast",
+  "include_kanban_items",
+  "column_break_2",
+  "safety_stock_policy",
+  "days_of_cover",
+  "section_break_2",
+  "lot_sizing",
+  "lead_time_source",
+  "fixed_lead_time_days",
+  "column_break_3",
+  "capacity_check",
+  "respect_holidays",
+  "section_break_3",
+  "change_note",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "parameter_set",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Parameter Set",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "version",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Version",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "previous_version",
+   "fieldtype": "Link",
+   "label": "Previous Version",
+   "options": "Planning Parameter Set",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plant",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "56",
+   "fieldname": "horizon_days",
+   "fieldtype": "Int",
+   "label": "Horizon (Days)",
+   "reqd": 1
+  },
+  {
+   "default": "Day",
+   "fieldname": "bucket",
+   "fieldtype": "Select",
+   "label": "Bucket",
+   "options": "Day\nWeek",
+   "reqd": 1
+  },
+  {
+   "default": "3",
+   "description": "Planned orders are never proposed to start inside the frozen zone.",
+   "fieldname": "frozen_zone_days",
+   "fieldtype": "Int",
+   "label": "Frozen Zone (Days)"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Demand"
+  },
+  {
+   "default": "1",
+   "fieldname": "include_forecast",
+   "fieldtype": "Check",
+   "label": "Include Sales Forecast / MPS"
+  },
+  {
+   "default": "1",
+   "fieldname": "consume_forecast",
+   "fieldtype": "Check",
+   "label": "Consume Forecast With Firm Orders"
+  },
+  {
+   "default": "0",
+   "description": "Kanban items are replenished by pull signals, not MRP, unless this is set.",
+   "fieldname": "include_kanban_items",
+   "fieldtype": "Check",
+   "label": "Plan Kanban-Controlled Items"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Item Safety Stock",
+   "fieldname": "safety_stock_policy",
+   "fieldtype": "Select",
+   "label": "Safety Stock",
+   "options": "Item Safety Stock\nDays Of Cover"
+  },
+  {
+   "depends_on": "eval:doc.safety_stock_policy=='Days Of Cover'",
+   "fieldname": "days_of_cover",
+   "fieldtype": "Float",
+   "label": "Days Of Cover"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Supply"
+  },
+  {
+   "default": "Lot For Lot",
+   "fieldname": "lot_sizing",
+   "fieldtype": "Select",
+   "label": "Lot Sizing",
+   "options": "Lot For Lot\nMinimum Order Qty Multiples"
+  },
+  {
+   "default": "Item Lead Time",
+   "fieldname": "lead_time_source",
+   "fieldtype": "Select",
+   "label": "Lead Time Source",
+   "options": "Item Lead Time\nFixed Days"
+  },
+  {
+   "depends_on": "eval:doc.lead_time_source=='Fixed Days'",
+   "fieldname": "fixed_lead_time_days",
+   "fieldtype": "Int",
+   "label": "Fixed Lead Time (Days)"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "capacity_check",
+   "fieldtype": "Check",
+   "label": "Check Line Capacity"
+  },
+  {
+   "default": "1",
+   "fieldname": "respect_holidays",
+   "fieldtype": "Check",
+   "label": "Use Plant Calendars"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "change_note",
+   "fieldtype": "Small Text",
+   "label": "What Changed In This Version"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Planning Parameter Set",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "icon": "settings-2",
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-10-24 08:10:12.769323",
+ "modified_by": "Administrator",
+ "module": "Production Planning",
+ "name": "Planning Parameter Set",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director",
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "parameter_set",
+ "track_changes": 1
+}

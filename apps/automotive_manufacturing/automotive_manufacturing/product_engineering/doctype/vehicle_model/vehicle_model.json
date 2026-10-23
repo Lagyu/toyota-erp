@@ -1,0 +1,279 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:model_code",
+ "creation": "2026-10-24 07:56:38.750945",
+ "description": "A product family member (vehicle line or powertrain assembly) and its configurable template.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "model_code",
+  "model_name",
+  "product_family",
+  "template_item",
+  "lifecycle_status",
+  "column_break_1",
+  "default_plant",
+  "production_line",
+  "start_of_production",
+  "end_of_production",
+  "vin_prefix",
+  "warranty_months",
+  "section_break_1",
+  "option_groups",
+  "section_break_2",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "model_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Code",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "model_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Model Name",
+   "reqd": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "product_family",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Product Family",
+   "options": "Passenger Car\nCrossover\nLight Commercial\nPowertrain\nElectric Drive",
+   "reqd": 1
+  },
+  {
+   "description": "Item with variants; each buildable configuration is a variant of it.",
+   "fieldname": "template_item",
+   "fieldtype": "Link",
+   "label": "Template Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "lifecycle_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Lifecycle",
+   "options": "Development\nActive\nRun-out\nDiscontinued"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_plant",
+   "fieldtype": "Link",
+   "label": "Build Plant",
+   "options": "Plant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_line",
+   "fieldtype": "Link",
+   "label": "Production Line",
+   "options": "Production Line",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_of_production",
+   "fieldtype": "Date",
+   "label": "Start of Production"
+  },
+  {
+   "fieldname": "end_of_production",
+   "fieldtype": "Date",
+   "label": "End of Production"
+  },
+  {
+   "description": "8 characters before the check digit; synthetic, not an assigned WMI.",
+   "fieldname": "vin_prefix",
+   "fieldtype": "Data",
+   "label": "VIN Prefix (WMI + VDS)",
+   "length": 8
+  },
+  {
+   "default": "36",
+   "fieldname": "warranty_months",
+   "fieldtype": "Int",
+   "label": "Warranty (Months)"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Configuration"
+  },
+  {
+   "fieldname": "option_groups",
+   "fieldtype": "Table",
+   "label": "Option Groups",
+   "options": "Vehicle Model Option Group"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Description"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "icon": "car",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.750945",
+ "modified_by": "Administrator",
+ "module": "Product Engineering",
+ "name": "Vehicle Model",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "import": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "import": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "import": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "model_name",
+ "track_changes": 1
+}

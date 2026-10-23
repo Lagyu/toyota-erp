@@ -1,0 +1,287 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-10-24 07:56:38.759019",
+ "description": "Synthetic component recall: finds every unit built from the suspect lots/serials.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "title",
+  "component_item",
+  "batch_nos",
+  "serial_nos",
+  "supplier",
+  "column_break_1",
+  "built_from",
+  "built_to",
+  "status",
+  "analyzed_at",
+  "query_sha256",
+  "result_sha256",
+  "section_break_1",
+  "affected_units",
+  "affected_in_stock",
+  "affected_at_dealers",
+  "affected"
+ ],
+ "fields": [
+  {
+   "default": "RCL-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "RCL-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "component_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Component",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "description": "One per line.",
+   "fieldname": "batch_nos",
+   "fieldtype": "Small Text",
+   "label": "Suspect Batches"
+  },
+  {
+   "description": "One per line.",
+   "fieldname": "serial_nos",
+   "fieldtype": "Small Text",
+   "label": "Suspect Serials"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "built_from",
+   "fieldtype": "Date",
+   "label": "Built From"
+  },
+  {
+   "fieldname": "built_to",
+   "fieldtype": "Date",
+   "label": "Built To"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nAnalyzed\nNotified\nClosed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "analyzed_at",
+   "fieldtype": "Datetime",
+   "label": "Analyzed At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "query_sha256",
+   "fieldtype": "Data",
+   "label": "Query Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "result_sha256",
+   "fieldtype": "Data",
+   "label": "Result Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Result"
+  },
+  {
+   "fieldname": "affected_units",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Affected Units",
+   "read_only": 1
+  },
+  {
+   "fieldname": "affected_in_stock",
+   "fieldtype": "Int",
+   "label": "Still In Our Stock",
+   "read_only": 1
+  },
+  {
+   "fieldname": "affected_at_dealers",
+   "fieldtype": "Int",
+   "label": "At Dealers / Customers",
+   "read_only": 1
+  },
+  {
+   "fieldname": "affected",
+   "fieldtype": "Table",
+   "label": "Affected Units",
+   "options": "Recall Affected Unit",
+   "read_only": 1
+  }
+ ],
+ "icon": "siren",
+ "links": [],
+ "modified": "2026-10-24 07:56:38.759019",
+ "modified_by": "Administrator",
+ "module": "Traceability",
+ "name": "Recall Campaign",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}

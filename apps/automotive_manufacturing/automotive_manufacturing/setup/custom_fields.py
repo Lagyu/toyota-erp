@@ -1,0 +1,118 @@
+"""Custom fields automotive_manufacturing adds to standard DocTypes (prefix automotive_)."""
+
+from __future__ import annotations
+
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
+
+def _f(fieldname, label, fieldtype, insert_after, **extra):
+	return {"fieldname": fieldname, "label": label, "fieldtype": fieldtype, "insert_after": insert_after, **extra}
+
+
+def manufacturing_custom_fields() -> dict[str, list[dict]]:
+	return {
+		"BOM": [
+			_f("automotive_engineering_section", "Engineering Revision", "Section Break", "project", collapsible=0),
+			_f("automotive_revision", "Revision", "Data", "automotive_engineering_section", read_only=1, in_list_view=1,
+				allow_on_submit=1),
+			_f("automotive_engineering_status", "Engineering Status", "Select", "automotive_revision",
+				options="Draft\nReleased\nSuperseded\nObsolete", default="Draft", read_only=1, allow_on_submit=1,
+				in_standard_filter=1),
+			_f("automotive_eco", "Released By ECO", "Link", "automotive_engineering_status", options="Engineering Change Order",
+				read_only=1, allow_on_submit=1),
+			_f("automotive_engineering_column", None, "Column Break", "automotive_eco"),
+			_f("automotive_effective_from", "Effective From", "Date", "automotive_engineering_column", allow_on_submit=1,
+				read_only=1),
+			_f("automotive_effective_to", "Effective To", "Date", "automotive_effective_from", allow_on_submit=1,
+				read_only=1),
+			_f("automotive_supersedes", "Supersedes", "Link", "automotive_effective_to", options="BOM", read_only=1),
+			_f("automotive_superseded_by", "Superseded By", "Link", "automotive_supersedes", options="BOM", read_only=1,
+				allow_on_submit=1),
+		],
+		"BOM Item": [
+			_f("automotive_net_qty", "Net Qty (Before Scrap)", "Float", "qty"),
+			_f("automotive_scrap_factor_percent", "Scrap Factor %", "Percent", "automotive_net_qty",
+				description="qty = net qty x (1 + scrap factor)."),
+			_f("automotive_critical", "Traceability Critical", "Check", "automotive_scrap_factor_percent",
+				description="Serial or batch must be recorded in the unit genealogy."),
+			_f("automotive_station", "Consumed At Station", "Data", "automotive_critical"),
+		],
+		"Work Order": [
+			_f("automotive_production_line", "Production Line", "Link", "automotive_plant", options="Production Line",
+				in_standard_filter=1),
+			_f("automotive_bom_pinned", "BOM Explicitly Pinned", "Check", "bom_no",
+				description="Unset: the BOM effective at the planned start date is used."),
+			_f("automotive_planning_run", "Planning Run", "Link", "automotive_production_line", options="Planning Run",
+				read_only=1),
+			_f("automotive_configuration", "Vehicle Configuration", "Link", "automotive_planning_run",
+				options="Vehicle Configuration"),
+		],
+		"Item": [
+			_f("automotive_vehicle_model", "Vehicle Model", "Link", "item_group", options="Vehicle Model",
+				in_standard_filter=1),
+			_f("automotive_kanban_controlled", "Kanban Controlled", "Check", "automotive_vehicle_model",
+				description="Replenished by Kanban pull signals instead of MRP."),
+			_f("automotive_standard_cost", "Standard Cost", "Currency", "valuation_rate",
+				description="Engineering standard cost per stock UOM (purchase price variance and production variance)."),
+		],
+		"Batch": [
+			_f("automotive_supplier_lot", "Supplier Lot", "Data", "batch_id", search_index=1),
+			_f("automotive_supplier", "Supplier", "Link", "automotive_supplier_lot", options="Supplier"),
+		],
+		"Quality Inspection": [
+			_f("automotive_inspection_stage", "Inspection Stage", "Select", "inspection_type",
+				options="\nIncoming\nIn-Process\nFinal\nPre-Delivery", in_standard_filter=1),
+			_f("automotive_quality_hold", "Quality Hold", "Link", "automotive_inspection_stage", options="Quality Hold",
+				read_only=1, allow_on_submit=1),
+			_f("automotive_nonconformance", "Nonconformance", "Link", "automotive_quality_hold", options="Non Conformance",
+				read_only=1, allow_on_submit=1),
+		],
+		"Non Conformance": [
+			_f("automotive_details_section", "Automotive Details", "Section Break", "details"),
+			_f("automotive_source", "Detected At", "Select", "automotive_details_section",
+				options="\nIncoming\nIn-Process\nFinal\nCustomer\nField", in_standard_filter=1),
+			_f("automotive_company", "Company", "Link", "automotive_source", options="Company"),
+			_f("automotive_plant", "Plant", "Link", "automotive_company", options="Plant", in_standard_filter=1),
+			_f("automotive_item", "Item", "Link", "automotive_plant", options="Item", in_standard_filter=1),
+			_f("automotive_batch_no", "Batch", "Link", "automotive_item", options="Batch"),
+			_f("automotive_serial_no", "Serial No", "Link", "automotive_batch_no", options="Serial No"),
+			_f("automotive_qty_affected", "Qty Affected", "Float", "automotive_serial_no"),
+			_f("automotive_details_column", None, "Column Break", "automotive_qty_affected"),
+			_f("automotive_supplier", "Supplier", "Link", "automotive_details_column", options="Supplier"),
+			_f("automotive_quality_inspection", "Quality Inspection", "Link", "automotive_supplier",
+				options="Quality Inspection"),
+			_f("automotive_quality_hold", "Quality Hold", "Link", "automotive_quality_inspection", options="Quality Hold"),
+			_f("automotive_andon_event", "Andon Event", "Link", "automotive_quality_hold", options="Andon Event"),
+			_f("automotive_root_cause_section", "Root Cause & CAPA", "Section Break", "automotive_andon_event"),
+			_f("automotive_root_cause_method", "Method", "Select", "automotive_root_cause_section",
+				options="\n5 Why\nIshikawa\n8D"),
+			_f("automotive_root_cause", "Root Cause", "Text", "automotive_root_cause_method"),
+			_f("automotive_capa", "Corrective / Preventive Action", "Link", "automotive_root_cause",
+				options="Quality Action"),
+			_f("automotive_closure_approved_by", "Closure Approved By", "Link", "automotive_capa", options="User",
+				read_only=1),
+			_f("automotive_closure_approved_at", "Closure Approved At", "Datetime", "automotive_closure_approved_by",
+				read_only=1),
+		],
+		"Item Alternative": [
+			_f("automotive_eco", "Approved By ECO", "Link", "two_way", options="Engineering Change Order"),
+			_f("automotive_valid_from", "Valid From", "Date", "automotive_eco"),
+			_f("automotive_valid_to", "Valid To", "Date", "automotive_valid_from"),
+		],
+		"Downtime Entry": [
+			_f("automotive_andon_event", "Andon Event", "Link", "stop_reason", options="Andon Event", read_only=1),
+			_f("automotive_production_line", "Production Line", "Link", "automotive_andon_event",
+				options="Production Line"),
+		],
+		"Material Request": [
+			_f("automotive_kanban_signal", "Kanban Signal", "Link", "material_request_type", options="Kanban Signal",
+				read_only=1, search_index=1),
+		],
+		"Serial No": [
+			_f("automotive_vehicle_unit", "Vehicle Unit", "Link", "item_code", options="Vehicle Unit", read_only=1),
+		],
+	}
+
+
+def apply() -> None:
+	create_custom_fields(manufacturing_custom_fields(), update=True)
