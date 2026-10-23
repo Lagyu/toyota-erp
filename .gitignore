@@ -1,0 +1,24 @@
+# Local, machine-specific state (secrets, bench checkouts, generated files)
+/.local/
+/infra/upstream/
+/deploy/rendered/
+/config/env/*.env
+!/config/env/*.env.example
+.env
+
+# Python / Node
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+node_modules/
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# Test output
+/e2e/test-results/
+/e2e/playwright-report/
+/e2e/.auth/
+/integration_tests/.reports/
+/perf/results/raw/

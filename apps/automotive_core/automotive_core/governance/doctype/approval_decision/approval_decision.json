@@ -1,0 +1,235 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-10-24 07:18:49.078858",
+ "description": "Immutable record of one approver's decision.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "approval_request",
+  "reference_doctype",
+  "reference_name",
+  "step_no",
+  "decision",
+  "column_break_1",
+  "decided_by",
+  "on_behalf_of",
+  "delegation",
+  "decided_at",
+  "document_hash",
+  "client_ip",
+  "section_break_1",
+  "comment"
+ ],
+ "fields": [
+  {
+   "default": "APD-.YYYY.-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "APD-.YYYY.-",
+   "print_hide": 1,
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "approval_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Approval Request",
+   "options": "Approval Request",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "DocType",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_name",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Document",
+   "options": "reference_doctype",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "step_no",
+   "fieldtype": "Int",
+   "label": "Step",
+   "read_only": 1
+  },
+  {
+   "fieldname": "decision",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Decision",
+   "options": "Approve\nReject",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "decided_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Decided By",
+   "options": "User",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "on_behalf_of",
+   "fieldtype": "Link",
+   "label": "On Behalf Of",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "delegation",
+   "fieldtype": "Link",
+   "label": "Delegation",
+   "options": "Approval Delegation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "decided_at",
+   "fieldtype": "Datetime",
+   "label": "Decided At",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "document_hash",
+   "fieldtype": "Data",
+   "label": "Document Hash",
+   "read_only": 1
+  },
+  {
+   "fieldname": "client_ip",
+   "fieldtype": "Data",
+   "label": "Client IP",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Comment"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Small Text",
+   "label": "Comment",
+   "read_only": 1
+  }
+ ],
+ "icon": "badge-check",
+ "links": [],
+ "modified": "2026-10-24 07:18:49.078858",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "Approval Decision",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager"
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "search_fields": "reference_doctype,reference_name,decided_by",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

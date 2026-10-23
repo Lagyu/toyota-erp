@@ -1,0 +1,317 @@
+"""Governance: approvals, delegation, audit, segregation of duties, provisioning (ERP-01/09/10)."""
+
+from dsl import (
+	DocType,
+	amended_from,
+	check,
+	column,
+	currency,
+	data,
+	date,
+	datetime,
+	dynamic_link,
+	int_,
+	json_,
+	link,
+	naming_series,
+	perm,
+	section,
+	select,
+	small_text,
+	table,
+	table_multiselect,
+	text,
+)
+from roles import *  # noqa: F403
+
+MODULE = "Governance"
+APPROVERS = [
+	EXECUTIVE, CONTROLLER, PLANT_DIRECTOR, PROCUREMENT_MANAGER, TREASURY, QUALITY_MANAGER,  # noqa: F405
+	SALES_MANAGER, ENGINEERING_MANAGER, IT_OPERATOR, SUPERVISOR, PLANNER, BUYER, AP_CLERK,  # noqa: F405
+	DEALER_LIAISON, ENGINEER, QUALITY_INSPECTOR, WAREHOUSE, LOGISTICS,  # noqa: F405
+]
+
+DOCTYPES = [
+	DocType(
+		"Approval Policy",
+		MODULE,
+		autoname="field:policy_name",
+		icon="list-checks",
+		description="Approval matrix for one DocType: which steps, roles and thresholds apply.",
+		fields=[
+			data("policy_name", "Policy Name", reqd=1, unique=1, in_list_view=1),
+			link("reference_doctype", "DocType", "DocType", reqd=1, in_list_view=1, in_standard_filter=1),
+			link("company", "Company", "Company", in_list_view=1, in_standard_filter=1,
+				description="Leave empty to apply to every company."),
+			check("is_active", "Active", default="1", in_list_view=1),
+			int_("priority", "Priority", default="10",
+				description="When several policies match, the highest priority wins."),
+			column(),
+			data("amount_field", "Amount Field", description="e.g. base_grand_total, paid_amount."),
+			currency("min_amount", "Applies From Amount"),
+			currency("max_amount", "Applies Up To Amount", description="0 = no upper bound."),
+			data("category_field", "Category Field", description="e.g. item_group or purchase_category."),
+			small_text("category_values", "Category Values", description="One per line; empty = any."),
+			section("Controls"),
+			check("maker_cannot_approve", "Maker Cannot Approve", default="1"),
+			check("distinct_approvers", "Each Step Needs A Different Approver", default="1"),
+			check("allow_delegation", "Allow Delegated Approval", default="1"),
+			column(),
+			check("bind_to_document_hash", "Invalidate Approval When Document Changes", default="1"),
+			small_text("hash_fields", "Fields Bound By The Approval",
+				description="Comma separated. Empty = amount field, party, company, dates and item rows."),
+			section("Steps"),
+			table("steps", "Steps", "Approval Policy Step", reqd=1),
+			section("Notes"),
+			small_text("description", "Description"),
+		],
+		permissions=[
+			perm(SYSTEM, "rwcd pe"),  # noqa: F405
+			perm(IT_OPERATOR, "rwc pe"),  # noqa: F405
+			perm(CONTROLLER, "rw pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+			*[perm(r, "r") for r in APPROVERS],
+		],
+	),
+	DocType(
+		"Approval Policy Step",
+		MODULE,
+		child=True,
+		fields=[
+			int_("step_no", "Step", reqd=1, in_list_view=1),
+			data("step_name", "Step Name", reqd=1, in_list_view=1),
+			link("approver_role", "Approver Role", "Role", reqd=1, in_list_view=1),
+			currency("min_amount", "Only From Amount", in_list_view=1,
+				description="Step is skipped below this amount."),
+			link("approver_user", "Specific Approver", "User"),
+			int_("escalate_after_hours", "Escalate After (Hours)", default="24"),
+		],
+	),
+	DocType(
+		"Approval Request",
+		MODULE,
+		autoname="naming_series:",
+		title_field="reference_name",
+		search_fields="reference_doctype,reference_name,status",
+		icon="stamp",
+		description="One approval cycle for one document. Created and advanced only by the approval service.",
+		fields=[
+			naming_series("APR-.YYYY.-"),
+			link("reference_doctype", "DocType", "DocType", reqd=1, read_only=1, in_list_view=1, in_standard_filter=1),
+			dynamic_link("reference_name", "Document", "reference_doctype", reqd=1, read_only=1, in_list_view=1,
+				search_index=1),
+			link("company", "Company", "Company", read_only=1, in_standard_filter=1),
+			link("policy", "Policy", "Approval Policy", read_only=1),
+			column(),
+			select("status", "Status", ["Pending", "Approved", "Rejected", "Withdrawn", "Invalidated"],
+				default="Pending", read_only=1, in_list_view=1, in_standard_filter=1, search_index=1),
+			currency("amount", "Amount", read_only=1, options="currency"),
+			link("currency", "Currency", "Currency", read_only=1),
+			int_("current_step", "Current Step", read_only=1),
+			section("Request"),
+			link("requested_by", "Requested By", "User", read_only=1),
+			datetime("requested_at", "Requested At", read_only=1),
+			data("document_hash", "Document Hash", read_only=1),
+			column(),
+			datetime("completed_at", "Completed At", read_only=1),
+			small_text("remarks", "Remarks", read_only=1),
+			section("Steps"),
+			table("steps", "Steps", "Approval Request Step", read_only=1),
+		],
+		permissions=[
+			perm(SYSTEM, "r pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+			*[perm(r, "r p") for r in APPROVERS],
+		],
+	),
+	DocType(
+		"Approval Request Step",
+		MODULE,
+		child=True,
+		fields=[
+			int_("step_no", "Step", in_list_view=1, read_only=1),
+			data("step_name", "Step Name", in_list_view=1, read_only=1),
+			link("approver_role", "Approver Role", "Role", in_list_view=1, read_only=1),
+			link("approver_user", "Specific Approver", "User", read_only=1),
+			select("status", "Status", ["Pending", "Approved", "Rejected", "Skipped"], default="Pending",
+				in_list_view=1, read_only=1),
+			link("decided_by", "Decided By", "User", in_list_view=1, read_only=1),
+			link("on_behalf_of", "On Behalf Of", "User", read_only=1),
+			datetime("decided_at", "Decided At", read_only=1),
+			link("decision", "Decision", "Approval Decision", read_only=1),
+		],
+	),
+	DocType(
+		"Approval Decision",
+		MODULE,
+		autoname="naming_series:",
+		search_fields="reference_doctype,reference_name,decided_by",
+		icon="badge-check",
+		description="Immutable record of one approver's decision.",
+		track_changes=False,
+		fields=[
+			naming_series("APD-.YYYY.-"),
+			link("approval_request", "Approval Request", "Approval Request", reqd=1, read_only=1, in_list_view=1),
+			link("reference_doctype", "DocType", "DocType", read_only=1, in_standard_filter=1),
+			dynamic_link("reference_name", "Document", "reference_doctype", read_only=1, in_list_view=1,
+				search_index=1),
+			int_("step_no", "Step", read_only=1),
+			select("decision", "Decision", ["Approve", "Reject"], reqd=1, read_only=1, in_list_view=1),
+			column(),
+			link("decided_by", "Decided By", "User", reqd=1, read_only=1, in_list_view=1),
+			link("on_behalf_of", "On Behalf Of", "User", read_only=1),
+			link("delegation", "Delegation", "Approval Delegation", read_only=1),
+			datetime("decided_at", "Decided At", reqd=1, read_only=1),
+			data("document_hash", "Document Hash", read_only=1),
+			data("client_ip", "Client IP", read_only=1),
+			section("Comment"),
+			small_text("comment", "Comment", read_only=1),
+		],
+		permissions=[
+			perm(SYSTEM, "r pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+			*[perm(r, "r") for r in APPROVERS],
+		],
+	),
+	DocType(
+		"Approval Delegation",
+		MODULE,
+		autoname="naming_series:",
+		submittable=True,
+		title_field="delegate",
+		icon="user-round-plus",
+		description="Time-bounded delegation of approval authority. Submit to activate, cancel to revoke.",
+		fields=[
+			naming_series("DLG-.YYYY.-"),
+			link("delegator", "Delegator", "User", reqd=1, in_list_view=1, in_standard_filter=1),
+			link("delegate", "Delegate", "User", reqd=1, in_list_view=1, in_standard_filter=1),
+			link("approver_role", "Role Delegated", "Role", reqd=1, in_list_view=1),
+			column(),
+			date("from_date", "From Date", reqd=1, in_list_view=1),
+			date("to_date", "To Date", reqd=1, in_list_view=1),
+			select("status", "Status", ["Draft", "Scheduled", "Active", "Expired", "Revoked"], read_only=1,
+				in_list_view=1, in_standard_filter=1, allow_on_submit=1, no_copy=1),
+			section("Scope"),
+			link("company", "Company", "Company", description="Empty = every company."),
+			link("reference_doctype", "DocType", "DocType", description="Empty = every governed DocType."),
+			column(),
+			currency("max_amount", "Max Amount", description="0 = no limit."),
+			section("Reason"),
+			small_text("reason", "Reason", reqd=1),
+			amended_from("Approval Delegation"),
+		],
+		permissions=[
+			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
+			perm(IT_OPERATOR, "rwc sxa pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+			*[perm(r, "rwc sx o") for r in APPROVERS],
+		],
+	),
+	DocType(
+		"Audit Event",
+		MODULE,
+		autoname="autoincrement",
+		track_changes=False,
+		sort_field="name",
+		search_fields="event_type,reference_doctype,reference_name,actor",
+		icon="scroll-text",
+		description="Append-only audit log, sealed into a SHA-256 hash chain by a background job.",
+		fields=[
+			data("event_type", "Event Type", reqd=1, read_only=1, in_list_view=1, in_standard_filter=1,
+				search_index=1),
+			link("reference_doctype", "DocType", "DocType", read_only=1, in_list_view=1, in_standard_filter=1),
+			dynamic_link("reference_name", "Document", "reference_doctype", read_only=1, in_list_view=1,
+				search_index=1),
+			link("company", "Company", "Company", read_only=1, in_standard_filter=1),
+			column(),
+			link("actor", "Actor", "User", read_only=1, in_list_view=1, in_standard_filter=1),
+			link("on_behalf_of", "On Behalf Of", "User", read_only=1),
+			datetime("event_time", "Event Time", read_only=1, in_list_view=1),
+			data("correlation_id", "Correlation ID", read_only=1, search_index=1),
+			section("Details"),
+			json_("payload", "Payload", read_only=1),
+			section("Seal"),
+			data("previous_hash", "Previous Hash", read_only=1),
+			data("event_hash", "Event Hash", read_only=1),
+			datetime("sealed_at", "Sealed At", read_only=1),
+		],
+		permissions=[perm(SYSTEM, "r pe"), perm(AUDITOR, "r pe"), perm(IT_OPERATOR, "r p")],  # noqa: F405
+	),
+	DocType(
+		"Segregation of Duties Rule",
+		MODULE,
+		autoname="field:rule_name",
+		icon="split",
+		fields=[
+			data("rule_name", "Rule Name", reqd=1, unique=1, in_list_view=1),
+			link("role_a", "Role A", "Role", reqd=1, in_list_view=1),
+			link("role_b", "Role B", "Role", reqd=1, in_list_view=1),
+			select("enforcement", "Enforcement", ["Block", "Warn"], default="Block", in_list_view=1),
+			check("is_active", "Active", default="1"),
+			small_text("rationale", "Rationale", reqd=1),
+		],
+		permissions=[
+			perm(SYSTEM, "rwcd pe"),  # noqa: F405
+			perm(IT_OPERATOR, "rwc pe"),  # noqa: F405
+			perm(CONTROLLER, "rw pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+		],
+	),
+	DocType(
+		"User Provisioning Request",
+		MODULE,
+		autoname="naming_series:",
+		submittable=True,
+		title_field="email",
+		icon="user-cog",
+		description="Create, change, deactivate or reactivate an account. Applied on submit after approval.",
+		fields=[
+			naming_series("UPR-.YYYY.-"),
+			select("request_type", "Request Type", ["Create", "Modify", "Deactivate", "Reactivate"], reqd=1,
+				in_list_view=1),
+			link("user", "Existing User", "User", depends_on="eval:doc.request_type!='Create'",
+				mandatory_depends_on="eval:doc.request_type!='Create'"),
+			data("email", "Email", reqd=1, options="Email", in_list_view=1),
+			data("first_name", "First Name", depends_on="eval:doc.request_type=='Create'"),
+			data("last_name", "Last Name", depends_on="eval:doc.request_type=='Create'"),
+			column(),
+			select("user_type", "User Type", ["System User", "Website User"], default="System User"),
+			link("role_profile", "Persona (Role Profile)", "Role Profile"),
+			link("language", "Language", "Language", default="en"),
+			date("access_expiry_date", "Access Expires On"),
+			select("status", "Status", ["Draft", "Pending Approval", "Applied", "Rejected", "Cancelled"],
+				read_only=1, default="Draft", in_list_view=1, allow_on_submit=1, no_copy=1),
+			section("Additional Roles"),
+			table_multiselect("extra_roles", "Additional Roles", "User Provisioning Role"),
+			section("Data Scope"),
+			table("scopes", "Scope Restrictions", "User Provisioning Scope"),
+			section("Justification"),
+			small_text("justification", "Justification", reqd=1),
+			small_text("result", "Result", read_only=1, allow_on_submit=1, no_copy=1),
+			amended_from("User Provisioning Request"),
+		],
+		permissions=[
+			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
+			perm(IT_OPERATOR, "rwc sxa pe"),  # noqa: F405
+			perm(PLANT_DIRECTOR, "rwc pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+		],
+	),
+	DocType(
+		"User Provisioning Role",
+		MODULE,
+		child=True,
+		fields=[link("role", "Role", "Role", reqd=1, in_list_view=1)],
+	),
+	DocType(
+		"User Provisioning Scope",
+		MODULE,
+		child=True,
+		fields=[
+			select("allow", "Restrict To", ["Company", "Plant", "Warehouse", "Supplier", "Customer"], reqd=1,
+				in_list_view=1),
+			dynamic_link("for_value", "Value", "allow", reqd=1, in_list_view=1),
+			check("is_default", "Default", in_list_view=1),
+		],
+	),
+]

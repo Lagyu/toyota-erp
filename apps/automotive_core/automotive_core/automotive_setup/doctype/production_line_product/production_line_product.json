@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.074971",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "item_group",
+  "priority"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item / Template",
+   "options": "Item"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Group",
+   "options": "Item Group"
+  },
+  {
+   "default": "1",
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Priority"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.074971",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Production Line Product",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

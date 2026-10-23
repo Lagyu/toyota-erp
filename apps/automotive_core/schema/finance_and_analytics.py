@@ -1,0 +1,140 @@
+"""Finance Controls (ERP-09) and Analytics / KPI catalogue (ERP-12)."""
+
+from dsl import (
+	DocType,
+	amended_from,
+	check,
+	column,
+	currency,
+	data,
+	date,
+	datetime,
+	float_,
+	link,
+	naming_series,
+	perm,
+	section,
+	select,
+	small_text,
+	table,
+	text,
+)
+from roles import *  # noqa: F403
+
+FINANCE_READERS = [perm(r, "r p") for r in (EXECUTIVE, PLANT_DIRECTOR, PROCUREMENT_MANAGER, SALES_MANAGER)]  # noqa: F405
+
+DOCTYPES = [
+	DocType(
+		"Period Close Checklist",
+		"Finance Controls",
+		autoname="naming_series:",
+		submittable=True,
+		title_field="company",
+		icon="calendar-check",
+		description="Month/period close: automated ledger checks, then approval; submitting locks the period.",
+		fields=[
+			naming_series("PCC-.YYYY.-"),
+			link("company", "Company", "Company", reqd=1, in_list_view=1, in_standard_filter=1),
+			link("fiscal_year", "Fiscal Year", "Fiscal Year", reqd=1),
+			date("period_start", "Period Start", reqd=1, in_list_view=1),
+			date("period_end", "Period End", reqd=1, in_list_view=1),
+			column(),
+			select("status", "Status", ["Open", "Checks Failed", "Ready For Approval", "Closed", "Reopened"],
+				default="Open", read_only=1, in_list_view=1, in_standard_filter=1, allow_on_submit=1, no_copy=1),
+			link("accounting_period", "Accounting Period", "Accounting Period", read_only=1, allow_on_submit=1,
+				no_copy=1),
+			datetime("checks_run_at", "Checks Last Run", read_only=1),
+			section("Checks"),
+			table("tasks", "Checks", "Period Close Task"),
+			section("Notes"),
+			small_text("notes", "Notes"),
+			amended_from("Period Close Checklist"),
+		],
+		permissions=[
+			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
+			perm(CONTROLLER, "rwc sxa pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+			*FINANCE_READERS,
+		],
+	),
+	DocType(
+		"Period Close Task",
+		"Finance Controls",
+		child=True,
+		fields=[
+			data("check_code", "Check", reqd=1, in_list_view=1, read_only=1),
+			data("description", "Description", in_list_view=1, read_only=1),
+			select("status", "Status", ["Pending", "Passed", "Failed", "Waived"], default="Pending", in_list_view=1,
+				read_only=1),
+			small_text("result", "Result", read_only=1),
+			small_text("waiver_reason", "Waiver Reason"),
+			link("waived_by", "Waived By", "User", read_only=1),
+		],
+	),
+	DocType(
+		"KPI Definition",
+		"Analytics",
+		autoname="field:kpi_code",
+		title_field="kpi_name",
+		show_title_field_in_link=True,
+		icon="gauge",
+		description="KPI catalogue entry: formula, sources, authorization filter, refresh and reconciliation (ERP-12).",
+		fields=[
+			data("kpi_code", "KPI Code", reqd=1, unique=1, in_list_view=1),
+			data("kpi_name", "KPI Name", reqd=1, in_list_view=1, translatable=1),
+			select("domain", "Domain", [
+				"Delivery", "Production", "Quality", "Inventory", "Procurement", "Finance", "Sales",
+			], reqd=1, in_list_view=1, in_standard_filter=1),
+			select("unit", "Unit", ["Percent", "Count", "Days", "Hours", "Amount", "Ratio"], reqd=1),
+			select("direction", "Direction", ["Higher Is Better", "Lower Is Better"], reqd=1),
+			float_("target_value", "Target"),
+			column(),
+			select("refresh_policy", "Refresh Policy", ["On Read", "Hourly", "Daily", "Monthly"], reqd=1),
+			data("compute_method", "Compute Method", reqd=1, description="Dotted path of the whitelisted function."),
+			data("reconciliation_method", "Reconciliation Method", reqd=1),
+			link("owner_role", "Owner Role", "Role"),
+			check("is_active", "Active", default="1"),
+			section("Definition"),
+			small_text("formula", "Formula", reqd=1),
+			small_text("source_doctypes", "Source DocTypes", reqd=1),
+			small_text("authorization_filter", "Authorization Filter", reqd=1),
+			small_text("reconciliation_check", "Reconciliation Check", reqd=1),
+		],
+		permissions=[
+			perm(SYSTEM, "rwcd pe"),  # noqa: F405
+			perm(IT_OPERATOR, "rwc pe"),  # noqa: F405
+			*[perm(r, "r p") for r in INTERNAL],  # noqa: F405
+		],
+	),
+	DocType(
+		"KPI Snapshot",
+		"Analytics",
+		autoname="naming_series:",
+		search_fields="kpi,company,period_end",
+		icon="chart-line",
+		track_changes=False,
+		description="Computed KPI value for a period and scope, with its inputs hash and reconciliation result.",
+		fields=[
+			naming_series("KPI-.YYYY.-"),
+			link("kpi", "KPI", "KPI Definition", reqd=1, read_only=1, in_list_view=1, in_standard_filter=1),
+			link("company", "Company", "Company", read_only=1, in_list_view=1, in_standard_filter=1),
+			link("plant", "Plant", "Plant", read_only=1, in_standard_filter=1),
+			date("period_start", "Period Start", read_only=1),
+			date("period_end", "Period End", read_only=1, in_list_view=1),
+			column(),
+			float_("value", "Value", read_only=1, in_list_view=1),
+			float_("numerator", "Numerator", read_only=1),
+			float_("denominator", "Denominator", read_only=1),
+			datetime("computed_at", "Computed At", read_only=1),
+			data("inputs_hash", "Inputs Hash", read_only=1),
+			select("reconciliation_status", "Reconciliation", ["Not Run", "Passed", "Failed"], read_only=1,
+				in_list_view=1),
+			small_text("reconciliation_note", "Reconciliation Note", read_only=1),
+		],
+		permissions=[
+			perm(SYSTEM, "r pe"),  # noqa: F405
+			perm(AUDITOR, "r pe"),  # noqa: F405
+			*[perm(r, "r p") for r in INTERNAL if r != AUDITOR],  # noqa: F405
+		],
+	),
+]

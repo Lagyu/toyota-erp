@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "autoname": "hash",
+ "creation": "2026-10-24 07:18:49.082135",
+ "description": "Seen request nonces for inbound signature replay protection (pruned after the tolerance window).",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "nonce_key",
+  "partner",
+  "seen_at"
+ ],
+ "fields": [
+  {
+   "fieldname": "nonce_key",
+   "fieldtype": "Data",
+   "label": "Nonce Key",
+   "read_only": 1,
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "partner",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Partner",
+   "options": "Integration Partner",
+   "read_only": 1
+  },
+  {
+   "fieldname": "seen_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Seen At",
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-10-24 07:18:49.082135",
+ "modified_by": "Administrator",
+ "module": "Integration Hub",
+ "name": "Integration Nonce",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager"
+  },
+  {
+   "read": 1,
+   "role": "IT Operator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

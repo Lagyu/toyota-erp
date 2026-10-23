@@ -1,0 +1,233 @@
+{
+ "actions": [],
+ "autoname": "field:partner_code",
+ "creation": "2026-10-24 07:18:49.080774",
+ "description": "An external system we exchange messages with, and how (adapter, credentials, status).",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "partner_code",
+  "partner_name",
+  "partner_type",
+  "party_type",
+  "party",
+  "column_break_1",
+  "adapter",
+  "message_format",
+  "connection_status",
+  "is_active",
+  "section_break_1",
+  "endpoint_url",
+  "key_id",
+  "outbound_secret",
+  "inbound_secret",
+  "column_break_2",
+  "allowed_message_types",
+  "subscribed_events",
+  "local_directory",
+  "section_break_2",
+  "last_success_at",
+  "last_failure_at",
+  "column_break_3",
+  "last_error"
+ ],
+ "fields": [
+  {
+   "fieldname": "partner_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Partner Code",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "partner_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Partner Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "partner_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Partner Type",
+   "options": "Supplier\nDealer\nCarrier\nBank\nLogistics Provider\nFinance System\nInternal",
+   "reqd": 1
+  },
+  {
+   "fieldname": "party_type",
+   "fieldtype": "Select",
+   "label": "Party Type",
+   "options": "\nSupplier\nCustomer"
+  },
+  {
+   "fieldname": "party",
+   "fieldtype": "Dynamic Link",
+   "label": "Party",
+   "options": "party_type"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Local File Drop",
+   "fieldname": "adapter",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Adapter",
+   "options": "Local File Drop\nHTTPS Webhook\nLoopback",
+   "reqd": 1
+  },
+  {
+   "default": "JSON",
+   "fieldname": "message_format",
+   "fieldtype": "Select",
+   "label": "Message Format",
+   "options": "JSON\nHinode EDI",
+   "reqd": 1
+  },
+  {
+   "description": "Live only when an HTTPS endpoint and credentials are configured and the last delivery succeeded.",
+   "fieldname": "connection_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Connection Status",
+   "options": "Not Configured\nLocal Adapter Only\nLive",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Active"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Credentials & Endpoint"
+  },
+  {
+   "depends_on": "eval:doc.adapter=='HTTPS Webhook'",
+   "fieldname": "endpoint_url",
+   "fieldtype": "Data",
+   "label": "Outbound Endpoint URL",
+   "options": "URL"
+  },
+  {
+   "description": "Sent as kid= in the signature header; identifies the secret.",
+   "fieldname": "key_id",
+   "fieldtype": "Data",
+   "label": "Key ID"
+  },
+  {
+   "fieldname": "outbound_secret",
+   "fieldtype": "Password",
+   "label": "Outbound Signing Secret"
+  },
+  {
+   "fieldname": "inbound_secret",
+   "fieldtype": "Password",
+   "label": "Inbound Verification Secret"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "One per line. Empty = none accepted.\ndealer_order, dealer_order_change, asn, po_acknowledgement, production_event, inventory_adjustment, supplier_invoice, shipment_status, bank_statement",
+   "fieldname": "allowed_message_types",
+   "fieldtype": "Small Text",
+   "label": "Allowed Inbound Message Types"
+  },
+  {
+   "description": "One event type per line.",
+   "fieldname": "subscribed_events",
+   "fieldtype": "Small Text",
+   "label": "Outbound Events"
+  },
+  {
+   "fieldname": "local_directory",
+   "fieldtype": "Read Only",
+   "label": "Local Exchange Directory"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Health"
+  },
+  {
+   "fieldname": "last_success_at",
+   "fieldtype": "Datetime",
+   "label": "Last Successful Exchange",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_failure_at",
+   "fieldtype": "Datetime",
+   "label": "Last Failure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_error",
+   "fieldtype": "Small Text",
+   "label": "Last Error",
+   "read_only": 1
+  }
+ ],
+ "icon": "plug",
+ "links": [],
+ "modified": "2026-10-24 07:18:49.080774",
+ "modified_by": "Administrator",
+ "module": "Integration Hub",
+ "name": "Integration Partner",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "role": "Dealer Liaison"
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "partner_name",
+ "track_changes": 1
+}

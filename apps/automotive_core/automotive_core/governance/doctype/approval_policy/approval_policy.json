@@ -1,0 +1,285 @@
+{
+ "actions": [],
+ "autoname": "field:policy_name",
+ "creation": "2026-10-24 07:18:49.077757",
+ "description": "Approval matrix for one DocType: which steps, roles and thresholds apply.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "policy_name",
+  "reference_doctype",
+  "company",
+  "is_active",
+  "priority",
+  "column_break_1",
+  "amount_field",
+  "min_amount",
+  "max_amount",
+  "category_field",
+  "category_values",
+  "section_break_1",
+  "maker_cannot_approve",
+  "distinct_approvers",
+  "allow_delegation",
+  "column_break_2",
+  "bind_to_document_hash",
+  "hash_fields",
+  "section_break_2",
+  "steps",
+  "section_break_3",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "policy_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Policy Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "DocType",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "description": "Leave empty to apply to every company.",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "default": "10",
+   "description": "When several policies match, the highest priority wins.",
+   "fieldname": "priority",
+   "fieldtype": "Int",
+   "label": "Priority"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "e.g. base_grand_total, paid_amount.",
+   "fieldname": "amount_field",
+   "fieldtype": "Data",
+   "label": "Amount Field"
+  },
+  {
+   "fieldname": "min_amount",
+   "fieldtype": "Currency",
+   "label": "Applies From Amount"
+  },
+  {
+   "description": "0 = no upper bound.",
+   "fieldname": "max_amount",
+   "fieldtype": "Currency",
+   "label": "Applies Up To Amount"
+  },
+  {
+   "description": "e.g. item_group or purchase_category.",
+   "fieldname": "category_field",
+   "fieldtype": "Data",
+   "label": "Category Field"
+  },
+  {
+   "description": "One per line; empty = any.",
+   "fieldname": "category_values",
+   "fieldtype": "Small Text",
+   "label": "Category Values"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Controls"
+  },
+  {
+   "default": "1",
+   "fieldname": "maker_cannot_approve",
+   "fieldtype": "Check",
+   "label": "Maker Cannot Approve"
+  },
+  {
+   "default": "1",
+   "fieldname": "distinct_approvers",
+   "fieldtype": "Check",
+   "label": "Each Step Needs A Different Approver"
+  },
+  {
+   "default": "1",
+   "fieldname": "allow_delegation",
+   "fieldtype": "Check",
+   "label": "Allow Delegated Approval"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "bind_to_document_hash",
+   "fieldtype": "Check",
+   "label": "Invalidate Approval When Document Changes"
+  },
+  {
+   "description": "Comma separated. Empty = amount field, party, company, dates and item rows.",
+   "fieldname": "hash_fields",
+   "fieldtype": "Small Text",
+   "label": "Fields Bound By The Approval"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Steps"
+  },
+  {
+   "fieldname": "steps",
+   "fieldtype": "Table",
+   "label": "Steps",
+   "options": "Approval Policy Step",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "icon": "list-checks",
+ "links": [],
+ "modified": "2026-10-24 07:18:49.077757",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "Approval Policy",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

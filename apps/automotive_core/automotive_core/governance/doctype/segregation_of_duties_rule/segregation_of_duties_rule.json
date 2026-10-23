@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "autoname": "field:rule_name",
+ "creation": "2026-10-24 07:18:49.079740",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rule_name",
+  "role_a",
+  "role_b",
+  "enforcement",
+  "is_active",
+  "rationale"
+ ],
+ "fields": [
+  {
+   "fieldname": "rule_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Rule Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "role_a",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Role A",
+   "options": "Role",
+   "reqd": 1
+  },
+  {
+   "fieldname": "role_b",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Role B",
+   "options": "Role",
+   "reqd": 1
+  },
+  {
+   "default": "Block",
+   "fieldname": "enforcement",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Enforcement",
+   "options": "Block\nWarn"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Active"
+  },
+  {
+   "fieldname": "rationale",
+   "fieldtype": "Small Text",
+   "label": "Rationale",
+   "reqd": 1
+  }
+ ],
+ "icon": "split",
+ "links": [],
+ "modified": "2026-10-24 07:18:49.079740",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "Segregation of Duties Rule",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller",
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

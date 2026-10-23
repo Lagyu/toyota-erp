@@ -1,0 +1,272 @@
+{
+ "actions": [],
+ "autoname": "field:kpi_code",
+ "creation": "2026-10-24 07:18:49.077090",
+ "description": "KPI catalogue entry: formula, sources, authorization filter, refresh and reconciliation (ERP-12).",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "kpi_code",
+  "kpi_name",
+  "domain",
+  "unit",
+  "direction",
+  "target_value",
+  "column_break_1",
+  "refresh_policy",
+  "compute_method",
+  "reconciliation_method",
+  "owner_role",
+  "is_active",
+  "section_break_1",
+  "formula",
+  "source_doctypes",
+  "authorization_filter",
+  "reconciliation_check"
+ ],
+ "fields": [
+  {
+   "fieldname": "kpi_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "KPI Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "kpi_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "KPI Name",
+   "reqd": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "domain",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Domain",
+   "options": "Delivery\nProduction\nQuality\nInventory\nProcurement\nFinance\nSales",
+   "reqd": 1
+  },
+  {
+   "fieldname": "unit",
+   "fieldtype": "Select",
+   "label": "Unit",
+   "options": "Percent\nCount\nDays\nHours\nAmount\nRatio",
+   "reqd": 1
+  },
+  {
+   "fieldname": "direction",
+   "fieldtype": "Select",
+   "label": "Direction",
+   "options": "Higher Is Better\nLower Is Better",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_value",
+   "fieldtype": "Float",
+   "label": "Target"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "refresh_policy",
+   "fieldtype": "Select",
+   "label": "Refresh Policy",
+   "options": "On Read\nHourly\nDaily\nMonthly",
+   "reqd": 1
+  },
+  {
+   "description": "Dotted path of the whitelisted function.",
+   "fieldname": "compute_method",
+   "fieldtype": "Data",
+   "label": "Compute Method",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reconciliation_method",
+   "fieldtype": "Data",
+   "label": "Reconciliation Method",
+   "reqd": 1
+  },
+  {
+   "fieldname": "owner_role",
+   "fieldtype": "Link",
+   "label": "Owner Role",
+   "options": "Role"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Active"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Definition"
+  },
+  {
+   "fieldname": "formula",
+   "fieldtype": "Small Text",
+   "label": "Formula",
+   "reqd": 1
+  },
+  {
+   "fieldname": "source_doctypes",
+   "fieldtype": "Small Text",
+   "label": "Source DocTypes",
+   "reqd": 1
+  },
+  {
+   "fieldname": "authorization_filter",
+   "fieldtype": "Small Text",
+   "label": "Authorization Filter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reconciliation_check",
+   "fieldtype": "Small Text",
+   "label": "Reconciliation Check",
+   "reqd": 1
+  }
+ ],
+ "icon": "gauge",
+ "links": [],
+ "modified": "2026-10-24 07:18:49.077090",
+ "modified_by": "Administrator",
+ "module": "Analytics",
+ "name": "KPI Definition",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "kpi_name",
+ "track_changes": 1
+}

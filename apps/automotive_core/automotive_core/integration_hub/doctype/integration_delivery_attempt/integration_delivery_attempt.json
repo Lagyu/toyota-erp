@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.081687",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "attempt_no",
+  "attempted_at",
+  "duration_ms",
+  "response_code",
+  "outcome",
+  "error"
+ ],
+ "fields": [
+  {
+   "fieldname": "attempt_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Attempt",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attempted_at",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Attempted At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "duration_ms",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Duration (ms)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "response_code",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Response Code",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outcome",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Outcome",
+   "options": "Delivered\nRetryable Failure\nPermanent Failure",
+   "read_only": 1
+  },
+  {
+   "fieldname": "error",
+   "fieldtype": "Small Text",
+   "label": "Error",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.081687",
+ "modified_by": "Administrator",
+ "module": "Integration Hub",
+ "name": "Integration Delivery Attempt",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

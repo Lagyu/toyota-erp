@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.080469",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "allow",
+  "for_value",
+  "is_default"
+ ],
+ "fields": [
+  {
+   "fieldname": "allow",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Restrict To",
+   "options": "Company\nPlant\nWarehouse\nSupplier\nCustomer",
+   "reqd": 1
+  },
+  {
+   "fieldname": "for_value",
+   "fieldtype": "Dynamic Link",
+   "in_list_view": 1,
+   "label": "Value",
+   "options": "allow",
+   "reqd": 1
+  },
+  {
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Default"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.080469",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "User Provisioning Scope",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

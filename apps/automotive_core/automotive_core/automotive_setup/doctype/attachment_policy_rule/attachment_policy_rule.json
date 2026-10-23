@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.073935",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reference_doctype",
+  "allowed_extensions",
+  "max_size_mb",
+  "retention_days",
+  "private_only"
+ ],
+ "fields": [
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "DocType",
+   "options": "DocType",
+   "reqd": 1
+  },
+  {
+   "fieldname": "allowed_extensions",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Allowed Extensions"
+  },
+  {
+   "fieldname": "max_size_mb",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Max Size (MB)"
+  },
+  {
+   "fieldname": "retention_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Retention (Days)"
+  },
+  {
+   "default": "1",
+   "fieldname": "private_only",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Private Files Only"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.073935",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Attachment Policy Rule",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

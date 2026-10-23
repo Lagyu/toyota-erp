@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.075170",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "station_code",
+  "sequence",
+  "workstation",
+  "station_type",
+  "is_quality_gate",
+  "cycle_time_seconds"
+ ],
+ "fields": [
+  {
+   "fieldname": "station_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Station Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sequence",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Sequence",
+   "reqd": 1
+  },
+  {
+   "fieldname": "workstation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Workstation",
+   "options": "Workstation",
+   "reqd": 1
+  },
+  {
+   "default": "Assembly",
+   "fieldname": "station_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Station Type",
+   "options": "Assembly\nInspection\nTest\nRework\nAndon Point"
+  },
+  {
+   "fieldname": "is_quality_gate",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Quality Gate"
+  },
+  {
+   "fieldname": "cycle_time_seconds",
+   "fieldtype": "Float",
+   "label": "Cycle Time (Seconds)",
+   "non_negative": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.075170",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Production Line Station",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

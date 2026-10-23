@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.075680",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "shift_code",
+  "start_time",
+  "end_time",
+  "break_minutes",
+  "crosses_midnight",
+  "available_minutes"
+ ],
+ "fields": [
+  {
+   "fieldname": "shift_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Shift Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Start",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "End",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "break_minutes",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Break (Minutes)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "crosses_midnight",
+   "fieldtype": "Check",
+   "label": "Crosses Midnight",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_minutes",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Available Minutes",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.075680",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Shift Pattern Slot",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

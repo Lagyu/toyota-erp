@@ -1,0 +1,94 @@
+# Local development stack: MariaDB, Redis (cache + durable queue) and a bench
+# container with this repository bind-mounted at /workspace. The bench itself
+# (frappe + erpnext at the pinned commits, custom apps symlinked) lives in
+# ${DEV_STATE_DIR}/bench so it survives container re-creation.
+#
+# Use through scripts/dev/compose.sh, which supplies infra/versions.env and the
+# generated .local/dev.env (secrets). Ports are published on 127.0.0.1 only.
+name: toyota-erp-dev
+
+x-limits: &small-service
+  restart: unless-stopped
+  logging:
+    driver: local
+    options: { max-size: 10m, max-file: "3" }
+
+services:
+  mariadb:
+    <<: *small-service
+    image: ${MARIADB_IMAGE:?}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --innodb-buffer-pool-size=${DEV_INNODB_BUFFER_POOL:-1G}
+      - --innodb-log-file-size=256M
+      - --max-connections=200
+      - --max-allowed-packet=256M
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DEV_DB_ROOT_PASSWORD:?run scripts/dev/init-env.sh}
+      MARIADB_AUTO_UPGRADE: "1"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    mem_limit: ${DEV_DB_MEM_LIMIT:-2g}
+
+  redis-cache:
+    <<: *small-service
+    image: ${REDIS_IMAGE:?}
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    mem_limit: 384m
+
+  redis-queue:
+    <<: *small-service
+    image: ${REDIS_IMAGE:?}
+    # Durable queue: jobs survive a container restart (AOF, fsync every second).
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - redis-queue-data:/data
+    mem_limit: 512m
+
+  bench:
+    <<: *small-service
+    image: ${BENCH_IMAGE:?}
+    command: ["sleep", "infinity"]
+    init: true
+    working_dir: /home/frappe/dev/frappe-bench
+    environment:
+      SHELL: /bin/bash
+      DEV_SITE: ${DEV_SITE:-erp.localhost}
+      DEV_DB_ROOT_PASSWORD: ${DEV_DB_ROOT_PASSWORD:?}
+      DEV_ADMIN_PASSWORD: ${DEV_ADMIN_PASSWORD:?}
+      PIP_CACHE_DIR: /home/frappe/dev/cache/pip
+      YARN_CACHE_FOLDER: /home/frappe/dev/cache/yarn
+      TZ: Asia/Tokyo
+    depends_on:
+      mariadb: { condition: service_healthy }
+      redis-cache: { condition: service_healthy }
+      redis-queue: { condition: service_healthy }
+    volumes:
+      - ../..:/workspace
+      - ${DEV_STATE_DIR:?}:/home/frappe/dev
+    ports:
+      - 127.0.0.1:${DEV_HTTP_PORT:-18000}:8000
+      - 127.0.0.1:${DEV_SOCKETIO_PORT:-19000}:9000
+    mem_limit: ${DEV_BENCH_MEM_LIMIT:-5g}
+
+volumes:
+  mariadb-data:
+  redis-queue-data:

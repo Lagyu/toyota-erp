@@ -1,0 +1,28 @@
+# Shared lint/format settings for all custom apps and repository tooling.
+# Mirrors the Frappe v16 app boilerplate (tabs, double quotes, 110 columns).
+line-length = 110
+target-version = "py314"
+extend-exclude = [".local", "infra/upstream", "node_modules"]
+
+[lint]
+select = ["F", "E", "W", "I", "UP", "B", "RUF", "S"]
+ignore = [
+    "B017", "B018", "B023", "B904",
+    "E101", "E402", "E501", "E741",
+    "F401", "F403", "F405", "F722",
+    "W191",
+    "UP030", "UP031", "UP032", "UP037", "UP040",
+    "RUF012",  # frappe controllers use mutable class attributes
+    "S101",    # assert is used in tests
+    "S311",    # random is used for deterministic synthetic data, not security
+]
+typing-modules = ["frappe.types.DF"]
+
+[lint.per-file-ignores]
+"**/schema/*.py" = ["F405"]
+"**/tests/**" = ["S105", "S106"]
+
+[format]
+quote-style = "double"
+indent-style = "tab"
+docstring-code-format = true

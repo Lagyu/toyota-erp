@@ -1,0 +1,224 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 07:18:49.073486",
+ "description": "Group-wide controls for integrations, attachments, audit and plant scoping.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "tab_break_1",
+  "enforce_plant_scope",
+  "require_cancel_reason",
+  "audit_chain_enabled",
+  "max_delegation_days",
+  "column_break_1",
+  "audit_chain_head",
+  "audit_chain_verified_at",
+  "audit_chain_last_result",
+  "tab_break_2",
+  "outbound_host_allowlist",
+  "webhook_tolerance_seconds",
+  "column_break_2",
+  "outbox_max_attempts",
+  "outbox_base_backoff_seconds",
+  "inbound_max_attempts",
+  "inbound_rate_limit_per_minute",
+  "tab_break_3",
+  "max_upload_mb",
+  "allowed_extensions",
+  "virus_scan_mode",
+  "column_break_3",
+  "clamd_host",
+  "clamd_port",
+  "default_retention_days",
+  "section_break_1",
+  "attachment_rules"
+ ],
+ "fields": [
+  {
+   "fieldname": "tab_break_1",
+   "fieldtype": "Tab Break",
+   "label": "Access & Audit"
+  },
+  {
+   "default": "1",
+   "description": "Derive and require the Plant on plant-scoped documents.",
+   "fieldname": "enforce_plant_scope",
+   "fieldtype": "Check",
+   "label": "Enforce Plant Scope"
+  },
+  {
+   "default": "1",
+   "fieldname": "require_cancel_reason",
+   "fieldtype": "Check",
+   "label": "Require Reason To Cancel Governed Documents"
+  },
+  {
+   "default": "1",
+   "fieldname": "audit_chain_enabled",
+   "fieldtype": "Check",
+   "label": "Seal Audit Events In A Hash Chain"
+  },
+  {
+   "default": "90",
+   "fieldname": "max_delegation_days",
+   "fieldtype": "Int",
+   "label": "Maximum Delegation Length (Days)"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "audit_chain_head",
+   "fieldtype": "Read Only",
+   "label": "Audit Chain Head"
+  },
+  {
+   "fieldname": "audit_chain_verified_at",
+   "fieldtype": "Data",
+   "label": "Audit Chain Last Verified",
+   "read_only": 1
+  },
+  {
+   "fieldname": "audit_chain_last_result",
+   "fieldtype": "Small Text",
+   "label": "Last Verification Result",
+   "read_only": 1
+  },
+  {
+   "fieldname": "tab_break_2",
+   "fieldtype": "Tab Break",
+   "label": "Integrations"
+  },
+  {
+   "description": "One hostname per line. Outbound webhooks to any other host are refused.",
+   "fieldname": "outbound_host_allowlist",
+   "fieldtype": "Small Text",
+   "label": "Outbound Host Allowlist"
+  },
+  {
+   "default": "300",
+   "fieldname": "webhook_tolerance_seconds",
+   "fieldtype": "Int",
+   "label": "Signature Timestamp Tolerance (Seconds)"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "8",
+   "fieldname": "outbox_max_attempts",
+   "fieldtype": "Int",
+   "label": "Outbox Max Attempts"
+  },
+  {
+   "default": "30",
+   "fieldname": "outbox_base_backoff_seconds",
+   "fieldtype": "Int",
+   "label": "Outbox Base Backoff (Seconds)"
+  },
+  {
+   "default": "6",
+   "fieldname": "inbound_max_attempts",
+   "fieldtype": "Int",
+   "label": "Inbound Max Attempts"
+  },
+  {
+   "default": "120",
+   "fieldname": "inbound_rate_limit_per_minute",
+   "fieldtype": "Int",
+   "label": "Inbound Requests Per Minute Per Partner"
+  },
+  {
+   "fieldname": "tab_break_3",
+   "fieldtype": "Tab Break",
+   "label": "Attachments"
+  },
+  {
+   "default": "25",
+   "fieldname": "max_upload_mb",
+   "fieldtype": "Int",
+   "label": "Default Max Upload Size (MB)"
+  },
+  {
+   "default": "pdf,png,jpg,jpeg,csv,xlsx,txt,edi,json,xml",
+   "description": "Comma separated, lower case.",
+   "fieldname": "allowed_extensions",
+   "fieldtype": "Small Text",
+   "label": "Allowed Extensions"
+  },
+  {
+   "default": "Disabled",
+   "description": "Required: unscanned or infected files cannot be downloaded.",
+   "fieldname": "virus_scan_mode",
+   "fieldtype": "Select",
+   "label": "Virus Scan Mode",
+   "options": "Disabled\nBest Effort\nRequired"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "clamd_host",
+   "fieldtype": "Data",
+   "label": "ClamAV (clamd) Host"
+  },
+  {
+   "default": "3310",
+   "fieldname": "clamd_port",
+   "fieldtype": "Int",
+   "label": "ClamAV (clamd) Port"
+  },
+  {
+   "default": "0",
+   "description": "0 keeps attachments forever.",
+   "fieldname": "default_retention_days",
+   "fieldtype": "Int",
+   "label": "Default Attachment Retention (Days)"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Per-DocType Rules"
+  },
+  {
+   "fieldname": "attachment_rules",
+   "fieldtype": "Table",
+   "label": "Attachment Rules",
+   "options": "Attachment Policy Rule"
+  }
+ ],
+ "icon": "settings",
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-10-24 07:18:49.073486",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Automotive Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "print": 1,
+   "read": 1,
+   "role": "IT Operator",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Auditor"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

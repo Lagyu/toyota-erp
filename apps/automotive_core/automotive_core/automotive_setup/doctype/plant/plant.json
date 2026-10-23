@@ -1,0 +1,376 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "autoname": "field:plant_code",
+ "creation": "2026-10-24 07:18:49.074289",
+ "description": "An operating site (vehicle assembly, powertrain, preparation & distribution).",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "plant_code",
+  "plant_name",
+  "company",
+  "plant_type",
+  "column_break_1",
+  "branch",
+  "plant_floor",
+  "country",
+  "time_zone",
+  "is_active",
+  "section_break_1",
+  "holiday_list",
+  "default_shift_pattern",
+  "column_break_2",
+  "cost_center",
+  "annual_capacity_units",
+  "section_break_2",
+  "receiving_warehouse",
+  "inspection_warehouse",
+  "raw_material_warehouse",
+  "line_side_warehouse",
+  "wip_warehouse",
+  "quarantine_warehouse",
+  "column_break_3",
+  "finished_goods_warehouse",
+  "outbound_warehouse",
+  "in_transit_warehouse",
+  "scrap_warehouse",
+  "consignment_warehouse",
+  "section_break_3",
+  "description"
+ ],
+ "fields": [
+  {
+   "description": "Short immutable code, e.g. AICHI-VA.",
+   "fieldname": "plant_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Plant Code",
+   "reqd": 1,
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "plant_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Plant Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "plant_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Plant Type",
+   "options": "Vehicle Assembly\nPowertrain Manufacturing\nPreparation & Distribution",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "plant_floor",
+   "fieldtype": "Link",
+   "label": "Plant Floor",
+   "options": "Plant Floor"
+  },
+  {
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "label": "Country",
+   "options": "Country"
+  },
+  {
+   "default": "Asia/Tokyo",
+   "fieldname": "time_zone",
+   "fieldtype": "Data",
+   "label": "Time Zone",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Active"
+  },
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Calendar & Costing"
+  },
+  {
+   "fieldname": "holiday_list",
+   "fieldtype": "Link",
+   "label": "Holiday List",
+   "options": "Holiday List"
+  },
+  {
+   "fieldname": "default_shift_pattern",
+   "fieldtype": "Link",
+   "label": "Default Shift Pattern",
+   "options": "Shift Pattern"
+  },
+  {
+   "fieldname": "column_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "annual_capacity_units",
+   "fieldtype": "Int",
+   "label": "Annual Capacity (Units)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Warehouses"
+  },
+  {
+   "fieldname": "receiving_warehouse",
+   "fieldtype": "Link",
+   "label": "Receiving Dock",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "inspection_warehouse",
+   "fieldtype": "Link",
+   "label": "Receiving Inspection",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "raw_material_warehouse",
+   "fieldtype": "Link",
+   "label": "Raw Material Store",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "line_side_warehouse",
+   "fieldtype": "Link",
+   "label": "Line Side (group)",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "wip_warehouse",
+   "fieldtype": "Link",
+   "label": "Work In Progress",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "quarantine_warehouse",
+   "fieldtype": "Link",
+   "label": "Quarantine",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "finished_goods_warehouse",
+   "fieldtype": "Link",
+   "label": "Finished Goods",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "outbound_warehouse",
+   "fieldtype": "Link",
+   "label": "Outbound Staging",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "in_transit_warehouse",
+   "fieldtype": "Link",
+   "label": "Goods In Transit",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "scrap_warehouse",
+   "fieldtype": "Link",
+   "label": "Scrap",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "consignment_warehouse",
+   "fieldtype": "Link",
+   "label": "Supplier Consignment",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break",
+   "label": "Notes"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "icon": "factory",
+ "links": [],
+ "modified": "2026-10-24 07:18:49.074289",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Plant",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "import": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "search_fields": "plant_name,company",
+ "show_title_field_in_link": 1,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "plant_name",
+ "track_changes": 1
+}
