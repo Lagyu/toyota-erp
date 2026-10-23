@@ -120,10 +120,16 @@ def _setup_wizard(definition, first: dict, log: TenantLog) -> None:
 	frappe.clear_cache()
 
 
+def _same(current, wanted) -> bool:
+	if isinstance(wanted, bool | int | float):
+		return frappe.utils.flt(current) == frappe.utils.flt(wanted)
+	return str(current if current is not None else "") == str(wanted)
+
+
 def _singles(settings: dict, log: TenantLog) -> None:
 	for doctype, values in settings.items():
 		doc = frappe.get_single(doctype)
-		changes = {k: v for k, v in values.items() if str(doc.get(k) if doc.get(k) is not None else "") != str(v)}
+		changes = {k: v for k, v in values.items() if not _same(doc.get(k), v)}
 		if not changes or not log.change(f"{doctype}: {sorted(changes)}"):
 			continue
 		doc.update(changes)
