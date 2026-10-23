@@ -10,7 +10,7 @@ from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, nowdate
 
 from automotive_core.governance import approvals
-from automotive_core.tests.utils import AICHI, as_user, make_user
+from automotive_core.tests.utils import AICHI, approve, as_user, make_user
 from automotive_manufacturing.mes.production import build_entry
 from automotive_manufacturing.product_engineering import bom_revisions, configuration
 from automotive_manufacturing.quality_control.holds import QualityHoldError
@@ -24,15 +24,6 @@ QM2 = "qm2.mfg@hinode.example"
 DIRECTOR = "director.mfg@hinode.example"
 PLANNER = "planner.mfg@hinode.example"
 SUPERVISOR = "supervisor.mfg@hinode.example"
-
-
-def approve(doc, maker: str, approvers: list[str]) -> None:
-	with as_user(maker):
-		req = approvals.request_approval(doc.doctype, doc.name)
-	for approver in approvers:
-		with as_user(approver):
-			req = approvals.decide(req["name"], "Approve")
-	assert req["status"] == "Approved", req
 
 
 class ManufacturingTestCase(IntegrationTestCase):
@@ -298,7 +289,11 @@ class TestPlanning(ManufacturingTestCase):
 		approve(params, "Administrator", [DIRECTOR])
 		params.reload()
 		params.submit()
-		customer = frappe.db.get_value("Customer", {"is_internal_customer": 1}, "name")
+		customer = "Planning Test Dealer"
+		if not frappe.db.exists("Customer", customer):
+			frappe.get_doc({"doctype": "Customer", "customer_name": customer,
+				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
 		so = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": customer,
 			"transaction_date": nowdate(), "delivery_date": add_days(nowdate(), 14),
 			"items": [{"item_code": cat["variants"][("Premium", "AWD")], "qty": 3, "rate": 2_500_000,

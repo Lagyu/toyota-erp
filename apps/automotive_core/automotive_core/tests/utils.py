@@ -132,3 +132,17 @@ def make_policy(name: str, steps: list[tuple[int, str, float]], **extra) -> str:
 	)
 	doc.insert(ignore_permissions=True)
 	return doc.name
+
+
+def approve(doc, maker: str, approvers: list[str]) -> dict:
+	"""Run a full approval cycle: maker requests, each approver decides (distinct people)."""
+	from automotive_core.governance import approvals
+
+	with as_user(maker):
+		req = approvals.request_approval(doc.doctype, doc.name)
+	for approver in approvers:
+		with as_user(approver):
+			req = approvals.decide(req["name"], "Approve")
+	if req["status"] != "Approved":
+		raise AssertionError(f"approval did not complete: {req}")
+	return req

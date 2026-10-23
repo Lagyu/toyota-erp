@@ -96,3 +96,6 @@ scheduler_events = {
 	"hourly": ["automotive_manufacturing.production_planning.planning_run.recover_stalled"],
 	"daily": ["automotive_manufacturing.product_engineering.bom_revisions.apply_effectivity"],
 }
+
+# Every app prepares the test site the same way (Frappe runs the tested app's hook only).
+before_tests = "automotive_core.tests.fixtures.before_tests"

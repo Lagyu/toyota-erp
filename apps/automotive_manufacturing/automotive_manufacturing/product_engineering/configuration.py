@@ -61,12 +61,33 @@ def check_selections(model: str, selections: dict[str, str], on_date=None) -> di
 	}
 
 
+def find_variant(template: str, selections: dict[str, str]) -> str | None:
+	"""The variant of ``template`` whose attributes equal ``selections`` exactly.
+
+	Resolution is a system lookup (dealers configure through the portal without read
+	access to the item master), so it does not go through ERPNext's permission-checked
+	get_variant."""
+	candidates = None
+	for attribute, value in sorted(selections.items()):
+		rows = set(frappe.db.sql_list(
+			"""select iva.parent from `tabItem Variant Attribute` iva join `tabItem` i on i.name = iva.parent
+			where i.variant_of = %s and iva.attribute = %s and iva.attribute_value = %s and i.disabled = 0""",
+			(template, attribute, value)))
+		candidates = rows if candidates is None else candidates & rows
+		if not candidates:
+			return None
+	for name in sorted(candidates or []):
+		if frappe.db.count("Item Variant Attribute", {"parent": name}) == len(selections):
+			return name
+	return None
+
+
 def resolve_variant(model: str, selections: dict[str, str]) -> str:
 	"""Existing variant item for the selections, or a new one created from the template."""
-	from erpnext.controllers.item_variant import create_variant, get_variant
+	from erpnext.controllers.item_variant import create_variant
 
 	template = frappe.get_cached_value("Vehicle Model", model, "template_item")
-	existing = get_variant(template, selections)
+	existing = find_variant(template, selections)
 	if existing:
 		return existing
 	variant = create_variant(template, selections)
@@ -84,10 +105,8 @@ def check(vehicle_model: str, selections: str | dict) -> dict[str, Any]:
 		selections = json.loads(selections)
 	result = check_selections(vehicle_model, {k: str(v) for k, v in selections.items()})
 	if result["valid"]:
-		from erpnext.controllers.item_variant import get_variant
-
 		template = frappe.get_cached_value("Vehicle Model", vehicle_model, "template_item")
-		result["variant_item"] = get_variant(template, selections)
+		result["variant_item"] = find_variant(template, selections)
 	return result
 
 

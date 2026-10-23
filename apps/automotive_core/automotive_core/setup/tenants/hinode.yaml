@@ -227,6 +227,8 @@ settings:
   Buying Settings:
     po_required: "Yes"
     pr_required: "Yes"
+    # rate differences are governed by the three-way match tolerances (automotive_supply_chain)
+    maintain_same_rate: 0
   Manufacturing Settings:
     backflush_raw_materials_based_on: BOM
     overproduction_percentage_for_work_order: 0

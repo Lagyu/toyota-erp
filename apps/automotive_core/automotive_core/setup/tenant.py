@@ -454,18 +454,41 @@ def _line(line: dict, plant: dict, company: str, abbr: str, line_side_group: str
 
 
 def _intercompany(definition, companies, log: TenantLog) -> None:
+	currency = {c["name"]: c["currency"] for c in companies}
 	for pair in definition.get("intercompany", []):
 		seller, buyer = pair["seller"], pair["buyer"]
-		_internal_party("Customer", buyer, seller, log)
-		_internal_party("Supplier", seller, buyer, log)
+		# ERPNext requires intercompany documents to use a buying+selling price list; the
+		# pair trades in the buyer's currency.
+		price_list = _intercompany_price_list(currency[buyer], log)
+		_internal_party("Customer", buyer, seller, log, price_list)
+		_internal_party("Supplier", seller, buyer, log, price_list)
 
 
-def _internal_party(doctype: str, represents: str, transacting_company: str, log: TenantLog) -> None:
+def _intercompany_price_list(currency: str, log: TenantLog) -> str:
+	name = f"Intercompany {currency}"
+	if not frappe.db.exists("Price List", name) and log.change(f"price list {name}"):
+		frappe.get_doc({"doctype": "Price List", "price_list_name": name, "currency": currency, "buying": 1,
+			"selling": 1, "enabled": 1}).insert(ignore_permissions=True)
+	return name
+
+
+def _internal_party(doctype: str, represents: str, transacting_company: str, log: TenantLog,
+		price_list: str | None = None) -> None:
 	name_field = "customer_name" if doctype == "Customer" else "supplier_name"
 	flag = "is_internal_customer" if doctype == "Customer" else "is_internal_supplier"
 	existing = frappe.db.get_value(doctype, {flag: 1, "represents_company": represents}, "name")
 	if existing:
 		doc = frappe.get_doc(doctype, existing)
+		drift = {}
+		if price_list and doc.get("default_price_list") != price_list:
+			drift["default_price_list"] = price_list
+		if doctype == "Supplier":
+			drift.update({f: 1 for f in ("allow_purchase_invoice_creation_without_purchase_order",
+				"allow_purchase_invoice_creation_without_purchase_receipt") if not doc.get(f)})
+			if drift and log.change(f"Supplier {existing}: {sorted(drift)}"):
+				doc.update(drift)
+				doc.flags.accept_similar_name = True
+				doc.save(ignore_permissions=True)
 		if any(row.company == transacting_company for row in doc.companies):
 			return
 		if not log.change(f"{doctype} {existing}: allowed company {transacting_company}"):
@@ -481,12 +504,16 @@ def _internal_party(doctype: str, represents: str, transacting_company: str, log
 		flag: 1,
 		"represents_company": represents,
 		"companies": [{"company": transacting_company}],
+		"default_price_list": price_list,
 	}
 	if doctype == "Customer":
 		values["customer_group"] = frappe.db.get_value("Customer Group", {"is_group": 0}, "name")
 		values["territory"] = frappe.db.get_value("Territory", {"is_group": 0}, "name")
 	else:
 		values["supplier_group"] = frappe.db.get_value("Supplier Group", {"is_group": 0}, "name")
+		# Intercompany invoices mirror the seller's invoice (matched in three_way_match), not a PO/PR pair.
+		values["allow_purchase_invoice_creation_without_purchase_order"] = 1
+		values["allow_purchase_invoice_creation_without_purchase_receipt"] = 1
 	doc = frappe.get_doc(values)
 	doc.flags.accept_similar_name = True  # internal parties mirror company names on purpose
 	doc.insert(ignore_permissions=True)
@@ -523,6 +550,8 @@ def approval_policy(policy: dict, log: TenantLog) -> None:
 				"is_active": 1,
 				"priority": policy.get("priority", 10),
 				"amount_field": policy.get("amount_field"),
+				"min_amount": policy.get("min_amount", 0),
+				"max_amount": policy.get("max_amount", 0),
 				"category_field": policy.get("category_field"),
 				"category_values": "\n".join(policy.get("category_values", [])),
 				"maker_cannot_approve": 1,

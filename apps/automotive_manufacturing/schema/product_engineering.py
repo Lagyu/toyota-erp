@@ -67,7 +67,7 @@ DOCTYPES = [
 			section("Description"),
 			small_text("description", "Description"),
 		],
-		permissions=[*ENGINEERING, *READ_ALL],
+		permissions=[*ENGINEERING, *READ_ALL, perm(DEALER_PORTAL, "r")],  # noqa: F405
 	),
 	DocType(
 		"Vehicle Model Option Group",
@@ -131,6 +131,7 @@ DOCTYPES = [
 			perm(ENGINEER, "rwc pe"),  # noqa: F405
 			perm(SALES_MANAGER, "rwc pe"),  # noqa: F405
 			perm(DEALER_LIAISON, "rwc pe"),  # noqa: F405
+			perm(DEALER_PORTAL, "rc"),  # noqa: F405
 			*READ_ALL,
 		],
 	),

@@ -1,0 +1,230 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 08:23:27.540957",
+ "description": "Tolerances and controls for matching, sourcing, schedules and dealer operations.",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_1",
+  "qty_tolerance_percent",
+  "price_tolerance_percent",
+  "price_tolerance_amount",
+  "hold_payment_on_exception",
+  "section_break_2",
+  "asl_item_groups",
+  "schedule_firm_days",
+  "schedule_horizon_days",
+  "section_break_3",
+  "discount_approval_percent",
+  "promise_transit_days",
+  "auto_allocate"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_1",
+   "fieldtype": "Section Break",
+   "label": "Three-Way Match"
+  },
+  {
+   "default": "0",
+   "fieldname": "qty_tolerance_percent",
+   "fieldtype": "Percent",
+   "label": "Quantity Tolerance %"
+  },
+  {
+   "default": "2",
+   "fieldname": "price_tolerance_percent",
+   "fieldtype": "Percent",
+   "label": "Price Tolerance %"
+  },
+  {
+   "default": "0",
+   "description": "Either limit passes; both 0 means exact match.",
+   "fieldname": "price_tolerance_amount",
+   "fieldtype": "Currency",
+   "label": "Price Tolerance (Amount Per Unit)"
+  },
+  {
+   "default": "1",
+   "fieldname": "hold_payment_on_exception",
+   "fieldtype": "Check",
+   "label": "Hold Payment While Exceptions Are Open"
+  },
+  {
+   "fieldname": "section_break_2",
+   "fieldtype": "Section Break",
+   "label": "Sourcing"
+  },
+  {
+   "fieldname": "asl_item_groups",
+   "fieldtype": "Table MultiSelect",
+   "label": "Production Material Item Groups (ASL Enforced)",
+   "options": "Supply Chain Item Group"
+  },
+  {
+   "default": "10",
+   "fieldname": "schedule_firm_days",
+   "fieldtype": "Int",
+   "label": "Supplier Schedule Firm Zone (Days)"
+  },
+  {
+   "default": "56",
+   "fieldname": "schedule_horizon_days",
+   "fieldtype": "Int",
+   "label": "Supplier Schedule Horizon (Days)"
+  },
+  {
+   "fieldname": "section_break_3",
+   "fieldtype": "Section Break",
+   "label": "Dealer Operations"
+  },
+  {
+   "default": "3",
+   "fieldname": "discount_approval_percent",
+   "fieldtype": "Percent",
+   "label": "Discounts Above This % Need Approval"
+  },
+  {
+   "default": "7",
+   "fieldname": "promise_transit_days",
+   "fieldtype": "Int",
+   "label": "Default Transit Days For Promise Dates"
+  },
+  {
+   "default": "1",
+   "fieldname": "auto_allocate",
+   "fieldtype": "Check",
+   "label": "Allocate Released Vehicles Automatically"
+  }
+ ],
+ "icon": "settings",
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-10-24 08:23:27.540957",
+ "modified_by": "Administrator",
+ "module": "Procurement Controls",
+ "name": "Supply Chain Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Procurement Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Sales Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Automotive Executive"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Group Controller"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Plant Director"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Planner"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Production Supervisor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Line Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Warehouse Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Inspector"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Quality Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Buyer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Procurement Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "AP Clerk"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Treasury Approver"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Sales Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Dealer Liaison"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "IT Operator"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Auditor"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Product Engineer"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Engineering Manager"
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "Logistics Coordinator"
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

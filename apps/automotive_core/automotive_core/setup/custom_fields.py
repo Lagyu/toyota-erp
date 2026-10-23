@@ -38,6 +38,9 @@ def plant_field(insert_after: str, **extra) -> dict:
 		"insert_after": insert_after,
 		"in_standard_filter": 1,
 		"search_index": 1,
+		# mapped documents (e.g. an intercompany receipt from the seller's delivery) re-derive
+		# their own plant from their warehouses instead of inheriting the source's
+		"no_copy": 1,
 		**extra,
 	}
 
