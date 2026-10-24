@@ -62,7 +62,7 @@ jobs:
     with:
       index: 1
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s02:
     needs: [image, s01]
@@ -71,7 +71,7 @@ jobs:
     with:
       index: 2
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s03:
     needs: [image, s02]
@@ -80,7 +80,7 @@ jobs:
     with:
       index: 3
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s04:
     needs: [image, s03]
@@ -89,7 +89,7 @@ jobs:
     with:
       index: 4
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s05:
     needs: [image, s04]
@@ -98,7 +98,7 @@ jobs:
     with:
       index: 5
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s06:
     needs: [image, s05]
@@ -107,7 +107,7 @@ jobs:
     with:
       index: 6
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s07:
     needs: [image, s06]
@@ -116,7 +116,7 @@ jobs:
     with:
       index: 7
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s08:
     needs: [image, s07]
@@ -125,7 +125,7 @@ jobs:
     with:
       index: 8
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s09:
     needs: [image, s08]
@@ -134,7 +134,7 @@ jobs:
     with:
       index: 9
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s10:
     needs: [image, s09]
@@ -143,7 +143,7 @@ jobs:
     with:
       index: 10
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s11:
     needs: [image, s10]
@@ -152,7 +152,7 @@ jobs:
     with:
       index: 11
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
   s12:
     needs: [image, s11]
@@ -161,7 +161,7 @@ jobs:
     with:
       index: 12
       profile: ${{ inputs.profile }}
-      minutes: ${{ inputs.minutes }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
 
   # green only when a segment finished the run and its validation passed
