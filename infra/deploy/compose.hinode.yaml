@@ -14,8 +14,6 @@
 
 x-app: &app
   image: ${CUSTOM_IMAGE:?set CUSTOM_IMAGE}:${CUSTOM_TAG:?set CUSTOM_TAG}
-  # as frappe_docker's services; cron is defined only here and would not come back after a reboot
-  restart: ${RESTART_POLICY:-unless-stopped}
   pull_policy: ${PULL_POLICY:-missing}
   init: true
   security_opt: [no-new-privileges:true]
@@ -130,6 +128,9 @@ services:
   # Schedules are UTC, seconds first: 17:30 UTC = 02:30 JST; 19:30 UTC Saturday = Sunday 04:30 JST.
   cron:
     <<: [*app, *backup-jobs]
+    # frappe_docker's services take theirs from its compose.yaml; this one is defined only here
+    # (not in x-app: the one-shot configurator must keep on-failure, or its dependants wait forever)
+    restart: ${RESTART_POLICY:-unless-stopped}
     command: ["/home/frappe/frappe-bench/env/bin/python", "/opt/hinode/ops/backup/cron.py"]
     volumes:
       - sites:/home/frappe/frappe-bench/sites
