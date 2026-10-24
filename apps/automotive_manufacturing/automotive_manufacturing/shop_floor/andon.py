@@ -133,7 +133,10 @@ def authorize_restart(name: str, note: str | None = None) -> str:
 	doc = get_scoped_doc("Andon Event", name)
 	user = frappe.session.user
 	# a quality stop restarts on quality's word, any other on a responder's
-	frappe.only_for(("Quality Manager", "System Manager") if doc.category == "Quality" else RESPONDERS)
+	if doc.category == "Quality":
+		frappe.only_for(("Quality Manager", "System Manager"))
+	else:
+		frappe.only_for(RESPONDERS)
 	if doc.status not in ("Acknowledged", "Contained"):
 		frappe.throw(_("Andon {0} must be acknowledged/contained before restart (now {1}).").format(name, doc.status))
 	if doc.category == "Quality":

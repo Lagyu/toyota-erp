@@ -121,14 +121,14 @@ Every clone is verified against the pinned commit (`scripts/lib/verify-checkout.
 
 `upgrade.sh` stops at the first failing step (`set -e`):
 
-1. **Backup** of the running version: `backup.sh` in the current `scheduler` container. Note the line `... [backup] done: snapshot <id> <time>`: this is your rollback point.
-2. `bench --site <site> set-maintenance-mode on`.
+1. `bench --site <site> set-maintenance-mode on`.
+2. **Backup** of the running version: `backup.sh` in the current `scheduler` container. Taken inside the maintenance window, it holds exactly the state being upgraded. Note the line `... [backup] done: snapshot <id> <time>`: this is your rollback point.
 3. `compose pull --quiet` (failures ignored), then `compose up -d --remove-orphans`, which recreates the containers on the new image.
 4. `bench --site <site> migrate`.
 5. `bench --site <site> set-maintenance-mode off`.
 6. `scripts/deploy/smoke.sh`. All checks `ok`, then `... [upgrade] upgraded <site> to <CUSTOM_TAG>`.
 
-**Downtime** runs from step 2 to step 5:
+**Downtime** runs from step 1 to step 5, the backup included:
 
 - While `maintenance_mode` is set, Frappe answers **every** request with HTTP 503, including the health endpoints.
 - The container health checks turn unhealthy.
@@ -202,14 +202,14 @@ Use a rollback when the migration failed or the new release misbehaves.
    ./scripts/deploy/compose.sh "$ENV" up -d --remove-orphans
    ```
 
-4. Restore the database and files of the snapshot. This is required whenever `migrate` ran even partially, because the schema may already have changed.
+4. Restore the database and files of the snapshot **as it is**. This is required whenever `migrate` ran even partially, because the schema may already have changed.
 
    ```bash
-   ./scripts/deploy/restore.sh "$ENV" <snapshot id>       # asks you to type the site name
+   ./scripts/deploy/restore.sh "$ENV" <snapshot id> --no-replay    # asks you to type the site name
    ```
 
-   It sets maintenance mode on, restores, runs migrate (nothing to do on the old code), sets maintenance mode off and runs the smoke test. See [backup-restore.md](backup-restore.md#restore-a-site-restoresh).
-5. Verify the smoke output and the application. Changes made after the snapshot are lost; normally there are none, because maintenance mode was on.
+   `--no-replay` matters: by default `restore.sh` brings a backup forward with the shipped binary logs, and those logs hold the upgrade's own migration. The snapshot already holds everything up to the upgrade, because it was taken in the maintenance window. (A previous release older than point-in-time recovery has no such option and does not replay.) It sets maintenance mode on, restores, runs migrate (nothing to do on the old code), sets maintenance mode off and runs the smoke test. See [backup-restore.md](backup-restore.md#restore-a-site-restoresh).
+5. Verify the smoke output and the application. Changes made after the snapshot are lost: none before the rollback decision, because maintenance mode was on from before the backup; whatever users entered on the new release in the meantime has to be entered again.
 
 An image-only rollback (steps 2–3 without the restore) is safe only if `migrate` never started.
 

@@ -11,6 +11,8 @@
 # 3. Checks HTTPS (redirect, security headers, cookie flags), simulates a reboot (the
 #    Docker daemon restarts every container under its restart policy) and checks again,
 #    takes an off-host backup, runs the restore drill and reads the monitoring targets.
+# 4. Rolls back to the previous release by ops/runbooks/upgrade.md: its tree and image, and the
+#    pre-upgrade snapshot restored as it is.
 # Report: .local/rehearsal/report.md (and the logs beside it). It rewrites the Docker
 # daemon configuration, /etc/hosts and /etc/hinode: never run it on a host that matters.
 set -euo pipefail
@@ -170,7 +172,7 @@ pass "ToDo $before; Plant.reserve_warehouse before: ${had_reserve:-false}"
 step "Upgrade with scripts/deploy/upgrade.sh"
 set_env "CUSTOM_TAG=${image##*:}"
 if "$REPO_ROOT/scripts/deploy/upgrade.sh" "$ENV" >"$out/upgrade.log" 2>&1; then
-	pass "backup, maintenance mode, recreate, migrate, smoke: $(grep -c ' ok ' "$out/upgrade.log") checks ok"
+	pass "maintenance mode, backup, recreate, migrate, smoke: $(grep -c ' ok ' "$out/upgrade.log") checks ok"
 else
 	fail "see upgrade.log"
 fi
@@ -238,6 +240,21 @@ else
 	fail "backend got '$inside' for https://$SITE"
 fi
 
+step "Structured logs with correlation ids"
+# a refused partner delivery is logged (automotive.log, JSON) under the request's correlation id,
+# which the response echoes; the line is in the site's logs on the shared sites volume
+cid="rehearsal-$RANDOM$RANDOM"
+echoed=$(https -s -o /dev/null -D - -X POST -H "X-Correlation-ID: $cid" -H "X-Hinode-Partner: REHEARSAL-NO-SUCH" \
+	-H "Content-Type: application/json" --data '{}' \
+	"https://$SITE/api/method/automotive_core.integration_hub.inbound.receive" \
+	| tr -d '\r' | awk 'tolower($1) == "x-correlation-id:" {print $2}')
+logged=$(compose exec -T scheduler bash -c "grep -h '$cid' sites/$SITE/logs/automotive.log* 2>/dev/null" || true)
+if [[ $echoed == "$cid" && $logged == *'"event": "integration.inbound.unknown_partner"'* ]]; then
+	pass "the response echoes X-Correlation-ID; automotive.log holds the refusal under it (read from another container)"
+else
+	fail "echoed '${echoed:-none}'; log line '${logged:0:160}'"
+fi
+
 # 5. reboot, backup, restore drill, monitoring --------------------------------------------
 step "Simulated reboot (Docker daemon restart)"
 sudo systemctl restart docker
@@ -296,6 +313,41 @@ else
 	why=$(python3 -c 'import json,sys; print("; ".join(x["labels"]["job"] + ": " + (x.get("lastError") or "?")[:160] for x in json.load(sys.stdin)["data"]["activeTargets"] if x["health"] != "up"))' \
 		<<<"$targets" 2>/dev/null || true)
 	fail "$up of $total up; down: ${why:-${down:-?}}"
+fi
+
+# 6. rollback ------------------------------------------------------------------------------
+step "Rollback to the previous release (upgrade.md)"
+# the snapshot upgrade.sh took in the maintenance window, the previous release's tree and image,
+# and its restore of that snapshot as it is: a release with point-in-time recovery is told
+# --no-replay, since the binary logs shipped after the snapshot hold the upgrade's migration
+snap=$(grep -o 'done: snapshot [0-9a-f]*' "$out/upgrade.log" | head -1 | awk '{print $3}')
+no_replay=()
+if grep -q -- '--no-replay' "$prev/scripts/deploy/restore.sh"; then no_replay=(--no-replay); fi
+set_env "CUSTOM_TAG=${prev_image##*:}"
+restored=ok
+if [[ -z $snap ]] || ! prev_compose up -d --remove-orphans >"$out/rollback.log" 2>&1; then
+	restored=""
+elif ! "$prev/scripts/deploy/restore.sh" "$ENV" "$snap" "${no_replay[@]}" <<<"$SITE" >>"$out/rollback.log" 2>&1; then
+	# releases before wait_ready smoke-test at once after maintenance mode off, inside Frappe's
+	# 60 s site config cache (503): the outcome is judged below, with the release's own smoke test
+	restored="restore.sh reported a failure"
+fi
+if [[ -n $restored ]] && healthy && "$prev/scripts/deploy/smoke.sh" "$ENV" >"$out/smoke-rollback.log" 2>&1; then
+	running=$(docker_cmd inspect --format '{{index .Config.Labels "org.opencontainers.image.revision"}}' \
+		"$(compose ps -q backend)" 2>/dev/null || true)
+	kept=$(bench execute frappe.db.exists --args "['ToDo', '$before']" | tail -1)
+	later=$(bench execute frappe.db.get_value \
+		--args "['ToDo', {'description': 'Rehearsal: recorded after the backup'}, 'name']" | tail -1)
+	reserve=$(bench execute frappe.db.has_column --args "['Plant', 'reserve_warehouse']" | tail -1)
+	if [[ $running == "$(cut -d- -f2 <<<"${prev_image##*:}")"* && $kept == *"$before"* && -z $later \
+			&& ${reserve:-false} == "${had_reserve:-false}" ]]; then
+		note=""; [[ $restored != ok ]] && note=" (the release's restore.sh: $restored; site healthy and smoke ok after the cache expired)"
+		pass "previous revision $running on snapshot $snap: ToDo $before back, later data gone, schema as before the upgrade$note"
+	else
+		fail "revision '$running', ToDo '$kept', later '$later', reserve_warehouse '$reserve' (see rollback.log)"
+	fi
+else
+	fail "snapshot '${snap:-none}'; see rollback.log / smoke-rollback.log"
 fi
 
 finish

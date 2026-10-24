@@ -3,7 +3,9 @@
 - every method that names the roles it requires (``x-roles`` in the contract) refuses a line
   operator who holds none of them, and a partner portal user;
 - every partner-portal method (``x-party``) refuses the other kind of partner: a dealer on the
-  supplier portal's methods, a supplier on the dealer portal's.
+  supplier portal's methods, a supplier on the dealer portal's;
+- the plant boundary: a Kyushu logistics coordinator's lists hold no Aichi stock entries, and
+  one asked for by name is refused.
 
 Each call carries placeholder arguments of the documented types and an Idempotency-Key, so the
 refusal is the method's own check and not a missing argument. A refusal is a 403, or a 404 for
@@ -79,7 +81,8 @@ class TestAuthorization(unittest.TestCase):
 			raise unittest.SkipTest("no personas (INTEGRATION_CREDENTIALS)")
 		credentials = json.loads(Path(path).read_text())
 		cls.clients = {}
-		for persona, page in (("operator", "/desk"), ("supplier", "/supplier-portal"), ("dealer", "/dealer-portal")):
+		for persona, page in (("operator", "/desk"), ("supplier", "/supplier-portal"), ("dealer", "/dealer-portal"),
+				("kyushu_logistics", "/desk")):
 			user = credentials["users"].get(persona)
 			if not user:
 				raise unittest.SkipTest(f"no {persona} persona")
@@ -112,6 +115,23 @@ class TestAuthorization(unittest.TestCase):
 			wrong += self.refusals(persona, ops)
 		self.assertEqual(wrong, [])
 
+	def test_a_plant_user_sees_only_their_own_plant(self):
+		admin = Client()
+		admin.login(os.environ.get("INTEGRATION_USER", "Administrator"), os.environ["INTEGRATION_PASSWORD"])
+		aichi = json.dumps({"automotive_plant": "AICHI-VA"})
+		status, data = admin.request("GET", "/api/method/frappe.client.get_list", params={"doctype": "Stock Entry",
+			"filters": aichi, "fields": json.dumps(["name"]), "limit_page_length": 1})
+		self.assertEqual(status, 200, data)
+		if not data["message"]:
+			self.skipTest("no Aichi stock entry in this dataset")
+		entry = data["message"][0]["name"]
+		kyushu = self.clients["kyushu_logistics"]
+		status, data = kyushu.request("GET", "/api/method/frappe.client.get_count",
+			params={"doctype": "Stock Entry", "filters": aichi})
+		self.assertEqual((status, data.get("message")), (200, 0), str(data)[:200])
+		status, data = kyushu.request("GET", "/api/method/frappe.client.get",
+			params={"doctype": "Stock Entry", "name": entry})
+		self.assertEqual(status, 403, str(data)[:200])
 
 if __name__ == "__main__":
 	unittest.main()

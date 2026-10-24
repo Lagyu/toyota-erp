@@ -10,9 +10,9 @@ Contract tests of the running API against the committed OpenAPI document
 - the signed inbound endpoint answers unsigned, unknown and badly signed deliveries with 401;
 - with the run's personas (`INTEGRATION_CREDENTIALS`, set by `scripts/ci/e2e.sh`): every
   method that names the roles it requires refuses a line operator without them and a partner
-  portal user, and every partner-portal method refuses the other kind of partner
-  (`test_authorization.py`); concurrent requests to critical workflows create one document
-  (`test_concurrency.py`).
+  portal user, every partner-portal method refuses the other kind of partner, and a Kyushu
+  user's lists and reads hold no Aichi documents (`test_authorization.py`); concurrent
+  requests to critical workflows create one document (`test_concurrency.py`).
 
 They use only the Python standard library and run from the host against a site that serves
 the API:

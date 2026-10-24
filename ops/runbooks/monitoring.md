@@ -499,6 +499,7 @@ See [troubleshooting.md](troubleshooting.md#disk-pressure).
 - **Level:** the logger is raised to INFO, so the lines are written in production too.
 - **Events written:**
   - `integration.inbound.accepted`;
+  - `integration.inbound.unknown_partner` (warning): a delivery naming no configured partner, with the code as sent and the client address;
   - `integration.inbound.signature_rejected` (warning);
   - `integration.inbound.previous_secret_used`: a partner still signs with the secret a rotation replaced;
   - `integration.inbound.processed`, `failed`, `dead_letter`, `rejected`;

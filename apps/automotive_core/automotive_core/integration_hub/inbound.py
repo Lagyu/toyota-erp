@@ -189,6 +189,9 @@ def receive() -> dict[str, Any]:
 	partner_code = request.headers.get(signing.PARTNER_HEADER, "")
 	body = request.get_data(cache=True) or b""
 	if not partner_code or not frappe.db.exists("Integration Partner", partner_code):
+		# probing with guessed partner codes shows in the log (the code as sent, shortened)
+		log("integration.inbound.unknown_partner", level="warning", partner=partner_code[:64],
+			ip=getattr(frappe.local, "request_ip", None))
 		raise frappe.AuthenticationError(_("Unknown partner."))
 	partner = frappe.get_doc("Integration Partner", partner_code)
 	try:

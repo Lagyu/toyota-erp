@@ -58,6 +58,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The custom methods' OpenAPI contract is versioned (1.1.0): additions raise the minor
   version, breaking changes come as new paths with the old ones deprecated, and CI checks
   that the version follows each change of the contract (D-034).
+- Upgrades put the site in maintenance mode before the pre-upgrade backup, so the backup is
+  exactly the state being upgraded; a rollback restores it with `--no-replay` (the shipped
+  binary logs after it hold the upgrade's own migration; upgrade.md said to replay them).
+  The production rehearsal now rolls back to the previous release and checks the structured
+  log under a request's correlation id; deliveries naming an unknown partner are logged.
 - Reports are offered (workspaces, sidebars) only to the roles that may run them: a report
   whose roles go beyond those allowed to report on its DocType gets a Custom Role naming only
   those, re-applied on every migrate. The navigation check opens single DocTypes as forms and
