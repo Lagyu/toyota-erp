@@ -1,0 +1,5 @@
+# Fixable CRITICAL findings of the image scan accepted for now; scripts/ci/sbom.sh fails on
+# any other. One per line:  PACKAGE INSTALLED_VERSION FINDING   (ops/security/findings.md)
+# An entry stops matching once the installed version changes. A release build
+# (SBOM_RELEASE=1, release tags) also needs the finding's owner decision in findings.md.
+pillow 12.3.0 V-03c

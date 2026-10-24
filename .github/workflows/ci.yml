@@ -88,6 +88,9 @@ jobs:
           echo "production=$(tail -1 .local-image.txt | cut -d: -f2)" >>"$GITHUB_OUTPUT"
           echo "reference=$(tail -1 .local-image-reference.txt | cut -d: -f2)" >>"$GITHUB_OUTPUT"
       - name: SBOM and vulnerability scan
+        env:
+          # a release also needs the owner's decision on every accepted finding
+          SBOM_RELEASE: ${{ startsWith(github.ref, 'refs/tags/v') && '1' || '0' }}
         run: ./scripts/ci/sbom.sh "$(tail -1 .local-image.txt)"
       - name: Production stack smoke test
         run: ./scripts/ci/smoke.sh "$(tail -1 .local-image.txt)"
