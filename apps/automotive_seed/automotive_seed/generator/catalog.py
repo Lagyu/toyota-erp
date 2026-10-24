@@ -178,6 +178,42 @@ COMMODITY_TEMPLATE = {
 }
 
 
+# Kyushu routings (ERP-04.1): item -> (line, [(station, operation, minutes per unit)]). A work order
+# gets one job card per operation for its whole quantity.
+_P180_POWERTRAIN = ("KYU-P180", [("P20", "Hybrid transaxle fit", 8), ("P30", "Inverter fit", 6), ("P40", "Hot test", 10)])
+_E240_DRIVE = ("KYU-E240", [("E10", "Stator insert", 6), ("E20", "Rotor and reduction gear", 7),
+	("E30", "Inverter integration", 6), ("E40", "End-of-line test", 8)])
+ROUTINGS = {
+	"BLOCK-MACH": ("KYU-MACH", [("M10", "Block machining", 6), ("M40", "CMM inspection", 2)]),
+	"HEAD-MACH": ("KYU-MACH", [("M20", "Head machining", 5), ("M40", "CMM inspection", 2)]),
+	"GEARSET-240": ("KYU-MACH", [("M30", "Gear cutting", 4), ("M40", "CMM inspection", 2)]),
+	"HOUSING-240": ("KYU-MACH", [("M10", "Housing machining", 5), ("M40", "CMM inspection", 2)]),
+	"ENG-P180": ("KYU-P180", [("P10", "Engine dress", 12)]),
+	"P180-FWD": _P180_POWERTRAIN, "P180-AWD": _P180_POWERTRAIN, "E240-S": _E240_DRIVE, "E240-D": _E240_DRIVE,
+}
+
+
+def routing(item: str) -> tuple[str | None, list[dict]]:
+	"""The item's Routing (created on first use) and the BOM operations it gives."""
+	if item not in ROUTINGS:
+		return None, []
+	line, steps = ROUTINGS[item]
+	operations = []
+	for seq, (station, label, minutes) in enumerate(steps, start=1):
+		workstation = f"{line}-{station}"
+		operation = f"{station} {label}"
+		if not frappe.db.exists("Operation", operation):
+			frappe.get_doc({"doctype": "Operation", "__newname": operation, "workstation": workstation,
+				"description": f"{label} at {workstation}"}).insert(ignore_permissions=True)
+		operations.append({"operation": operation, "workstation": workstation, "time_in_mins": minutes,
+			"sequence_id": seq})
+	name = f"Routing {item}"
+	if not frappe.db.exists("Routing", name):
+		frappe.get_doc({"doctype": "Routing", "routing_name": name, "operations": operations}).insert(
+			ignore_permissions=True)
+	return name, operations
+
+
 def inspection_templates() -> None:
 	for template, parameters in INSPECTION_TEMPLATES.items():
 		for name, _low, _high in parameters:
@@ -317,9 +353,11 @@ def _bom(ctx, item: str, company: str, lines: list[tuple[str, float]], operation
 	existing = frappe.db.get_value("BOM", {"item": item, "docstatus": 1, "is_active": 1, "is_default": 1}, "name")
 	if existing:
 		return existing
+	route, operations = routing(item)
 	bom = frappe.get_doc({
 		"doctype": "BOM", "item": item, "company": company, "quantity": 1, "is_default": 1, "is_active": 1,
 		"rm_cost_as_per": "Valuation Rate", "automotive_effective_from": ctx.start.isoformat(),
+		"with_operations": int(bool(operations)), "routing": route, "operations": operations,
 		"items": [{"item_code": code, "qty": flt(qty, 6), "automotive_net_qty": flt(qty, 6),
 			"automotive_critical": int(bool(frappe.get_cached_value("Item", code, "has_serial_no")))}
 			for code, qty in lines],

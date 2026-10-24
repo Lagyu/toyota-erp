@@ -23,6 +23,25 @@ from automotive_manufacturing.traceability.vehicle_units import planned_vins
 MES_ROLES = ("Production Supervisor", "Line Operator", "Manufacturing User", "System Manager")
 
 
+def record_operation(job_card: str, qty: float, employee: str | None = None, from_time=None, to_time=None) -> str:
+	"""An operation confirmation from the station (ERP-04.1, labour record): ``qty`` units done
+	on the job card's operation between ``from_time`` and ``to_time`` by ``employee``. The job
+	card is submitted once its quantity is complete, which is what lets the work order post
+	the units (ERPNext checks every operation is confirmed for them). Returns its status."""
+	doc = frappe.get_doc("Job Card", job_card)
+	if doc.docstatus != 0:
+		frappe.throw(_("Job Card {0} is already {1}.").format(job_card, doc.status))
+	remaining = flt(doc.for_quantity) - flt(doc.total_completed_qty)
+	if flt(qty) <= 0 or flt(qty) > remaining + 1e-9:
+		frappe.throw(_("Job Card {0}: {1} unit(s) left to confirm, not {2}.").format(job_card, remaining, qty))
+	doc.append("time_logs", {"from_time": from_time or now_datetime(), "to_time": to_time or now_datetime(),
+		"completed_qty": qty, "employee": employee})
+	doc.save()
+	if flt(doc.total_completed_qty) >= flt(doc.for_quantity) - 1e-9:
+		doc.submit()
+	return doc.status
+
+
 def build_entry(work_order: str, qty: float = 1, serial_nos: list[str] | None = None,
 		components: list[dict] | None = None, posting_date=None, posting_time=None):
 	from erpnext.manufacturing.doctype.work_order.work_order import make_stock_entry

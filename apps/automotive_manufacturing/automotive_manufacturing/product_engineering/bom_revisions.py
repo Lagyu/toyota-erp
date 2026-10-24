@@ -145,7 +145,10 @@ def select_effective_bom(doc, method=None) -> None:
 def validate_work_order_bom(doc, method=None) -> None:
 	if doc.docstatus != 0 or not doc.bom_no:
 		return
-	if doc.flags.get("automotive_bom_reselected") and frappe.get_meta("Work Order").has_field("operations"):
+	# ERPNext copies a routed BOM's operations only from the desk form: do it for orders created by
+	# code too (planning release, API, MES), so they get their job cards on submit
+	if frappe.get_meta("Work Order").has_field("operations") and (doc.flags.get("automotive_bom_reselected")
+			or (not doc.operations and frappe.db.get_value("BOM", doc.bom_no, "with_operations"))):
 		doc.set_work_order_operations()
 	status, start, end = frappe.db.get_value(
 		"BOM", doc.bom_no, ["automotive_engineering_status", "automotive_effective_from", "automotive_effective_to"]

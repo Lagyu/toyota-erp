@@ -16,6 +16,7 @@
 from __future__ import annotations
 
 import contextlib
+import datetime as dt
 import json
 import time
 import traceback
@@ -136,7 +137,13 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		frappe.db.set_value("Seed Run", name, "stage", key)
 		frappe.db.commit()
 		started = time.monotonic()
-		note = fn() or ""
+		if key in ("history", "validation"):
+			note = fn() or ""
+		else:
+			# master data is set up the day before the first simulated business day, so its dates
+			# (supplier approvals, partner access, agreements) precede the history that uses them
+			with ctx.frozen(dt.datetime.combine(ctx.start - dt.timedelta(days=1), dt.time(9, 0))):
+				note = fn() or ""
 		_mark(name, key, f"{note} ({time.monotonic() - started:.0f}s)", sum(ctx.counts.values()))
 		save_state(name, state)
 

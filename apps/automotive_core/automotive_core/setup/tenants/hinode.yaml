@@ -118,17 +118,20 @@ plants:
         name: Kyushu Machining
         type: Machining
         takt: 45
+        hour_rate: 7200   # labour and overhead per station hour (operation costing)
         stations: [M10 Block Machining, M20 Head Machining, M30 Gear Cutting, M40 CMM Inspection]
       - code: KYU-P180
         name: Kyushu P180 Hybrid Assembly
         type: Powertrain Assembly
         takt: 72
+        hour_rate: 5400   # labour and overhead per station hour (operation costing)
         products: [P180]
         stations: [P10 Engine Dress, P20 Hybrid Transaxle, P30 Inverter Fit, P40 Hot Test]
       - code: KYU-E240
         name: Kyushu E240 E-Drive Assembly
         type: E-Drive Assembly
         takt: 90
+        hour_rate: 5400   # labour and overhead per station hour (operation costing)
         products: [E240]
         stations: [E10 Stator Insert, E20 Rotor & Reduction Gear, E30 Inverter Integration, E40 End-of-Line Test]
   - code: NA-PDC
@@ -280,6 +283,9 @@ settings:
   Manufacturing Settings:
     backflush_raw_materials_based_on: BOM
     overproduction_percentage_for_work_order: 0
+    # line capacity is planned by the plant schedule and the planning run (automotive_manufacturing);
+    # ERPNext's workstation slot search would refuse job cards beyond its 30-day window
+    disable_capacity_planning: 1
   System Settings:
     apply_strict_user_permissions: 1
     enable_password_policy: 1

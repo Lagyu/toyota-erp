@@ -78,6 +78,7 @@ def apply(tenant: str = "hinode", dry_run: bool = False, environment: str | None
 	_branches(companies, log)
 	_departments(definition, companies, log)
 	_shift_patterns(definition, log)
+	_operating_costs(definition, companies, log)
 	for plant in definition["plants"]:
 		_plant(plant, companies, definition, log)
 	_taxes(definition, companies, log)
@@ -371,8 +372,51 @@ def _plant(plant: dict, companies, definition, log: TenantLog) -> None:
 		_line(line, plant, company, abbr, line_side_group, log)
 
 
-def _workstation(name: str, plant: dict, log: TenantLog) -> str:
+OPERATING_COMPONENT = "Labour and Overhead"
+
+
+def _operating_costs(definition, companies, log: TenantLog) -> None:
+	"""Operation costing: workstations of lines with an hour_rate charge it (as the "Labour and
+	Overhead" operating component) to the job cards they run; manufacture entries debit it to
+	the product's valuation and credit an absorption account of the company."""
+	costed = sorted({p["company"] for p in definition["plants"] for ln in p.get("lines", []) if ln.get("hour_rate")})
+	accounts = []
+	for company in costed:
+		name = f"Labour and Overhead Absorbed - {_abbr(companies, company)}"
+		if not frappe.db.exists("Account", name) and log.change(f"account {name}"):
+			parent = frappe.db.get_value("Account", {"company": company, "account_name": "Direct Expenses",
+				"is_group": 1}, "name") or frappe.db.get_value("Account", {"company": company, "root_type": "Expense",
+				"is_group": 1}, "name", order_by="lft")
+			frappe.get_doc({"doctype": "Account", "account_name": "Labour and Overhead Absorbed", "company": company,
+				"parent_account": parent, "is_group": 0}).insert(ignore_permissions=True)
+		if not frappe.db.exists("Account", name):
+			continue
+		accounts.append({"company": company, "expense_account": name})
+		if frappe.db.get_value("Company", company, "default_operating_cost_account") != name and log.change(
+				f"{company}: default operating cost account {name}"):
+			frappe.db.set_value("Company", company, "default_operating_cost_account", name)
+	if not frappe.db.exists("Workstation Operating Component", OPERATING_COMPONENT):
+		if log.change(f"workstation operating component {OPERATING_COMPONENT}"):
+			frappe.get_doc({"doctype": "Workstation Operating Component", "component_name": OPERATING_COMPONENT,
+				"accounts": accounts}).insert(ignore_permissions=True)
+		return
+	component = frappe.get_doc("Workstation Operating Component", OPERATING_COMPONENT)
+	missing = [a for a in accounts if not any(r.company == a["company"] for r in component.accounts)]
+	if missing and log.change(f"{OPERATING_COMPONENT}: accounts for {[a['company'] for a in missing]}"):
+		for row in missing:
+			component.append("accounts", row)
+		component.save(ignore_permissions=True)
+
+
+def _workstation(name: str, plant: dict, log: TenantLog, hour_rate: float | None = None) -> str:
+	"""hour_rate: labour and overhead per hour (the line's), the operating cost of its job cards."""
+	costs = [{"operating_component": OPERATING_COMPONENT, "operating_cost": hour_rate}] if hour_rate else []
 	if frappe.db.exists("Workstation", name):
+		if hour_rate and float(frappe.db.get_value("Workstation", name, "hour_rate") or 0) != float(hour_rate) \
+				and log.change(f"workstation {name}: hour rate {hour_rate}"):
+			doc = frappe.get_doc("Workstation", name)
+			doc.set("workstation_costs", costs)
+			doc.save(ignore_permissions=True)
 		return name
 	if not log.change(f"workstation {name}"):
 		return name
@@ -385,6 +429,7 @@ def _workstation(name: str, plant: dict, log: TenantLog) -> str:
 			"holiday_list": pattern.holiday_list,
 			"automotive_plant": plant["code"],
 			"working_hours": _working_hours(pattern),
+			"workstation_costs": costs,
 		}
 	)
 	doc.insert(ignore_permissions=True)
@@ -419,7 +464,7 @@ def _line(line: dict, plant: dict, company: str, abbr: str, line_side_group: str
 	stations = []
 	for seq, station in enumerate(line["stations"], start=1):
 		station_code, _sep, _label = station.partition(" ")
-		workstation = _workstation(f"{code}-{station_code}", plant, log)
+		workstation = _workstation(f"{code}-{station_code}", plant, log, line.get("hour_rate"))
 		stations.append(
 			{
 				"station_code": station_code,

@@ -253,6 +253,43 @@ class TestReworkReinspection(ManufacturingTestCase):
 		self.assertEqual(frappe.db.get_value("Quality Inspection", rejected.name, "status"), "Rejected")  # kept
 
 
+class TestRoutedWorkOrders(ManufacturingTestCase):
+	def test_units_post_only_after_their_operations_are_confirmed(self):
+		"""ERP-04.1: a routed work order gets a job card per operation; its units post only once
+		the station confirms them, and the time logs record who did the work."""
+		from frappe.utils import add_to_date, now_datetime
+
+		from automotive_manufacturing.mes.production import record_operation
+
+		cat = self.cat
+		workstation = frappe.db.get_value("Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name")
+		if not frappe.db.exists("Operation", "TST Seat sewing"):
+			frappe.get_doc({"doctype": "Operation", "__newname": "TST Seat sewing", "workstation": workstation}).insert(
+				ignore_permissions=True)
+		bom = frappe.get_doc({"doctype": "BOM", "item": cat["seat"], "company": AICHI, "quantity": 1, "is_default": 0,
+			"is_active": 1, "with_operations": 1, "items": [{"item_code": cat["foam"], "qty": 1.5}],
+			"operations": [{"operation": "TST Seat sewing", "workstation": workstation, "time_in_mins": 4}]})
+		bom.insert(ignore_permissions=True)
+		bom.submit()
+		foam_batch = catalog.make_batch(cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		catalog.receive(cat["foam"], 3, batch_no=foam_batch, rate=40)
+		wo = catalog.work_order(cat["seat"], 2, bom=bom.name, fg_warehouse=catalog.LINE_SIDE, pinned=True)
+		cards = frappe.get_all("Job Card", filters={"work_order": wo.name}, fields=["name", "for_quantity"])
+		self.assertEqual([c.for_quantity for c in cards], [2])
+		with self.assertRaises(frappe.ValidationError):
+			build_entry(wo.name, 1)  # the station has not confirmed anything
+		employee = frappe.get_doc({"doctype": "Employee", "first_name": "Tst", "last_name": "Sewer", "gender": "Female",
+			"date_of_birth": "1990-01-01", "date_of_joining": "2020-01-01", "company": AICHI,
+			"create_user_permission": 0}).insert(ignore_permissions=True)
+		end = now_datetime()
+		self.assertEqual(record_operation(cards[0].name, 2, employee.name, add_to_date(end, minutes=-8), end), "Completed")
+		build_entry(wo.name, 1)
+		build_entry(wo.name, 1)
+		self.assertEqual(frappe.db.get_value("Work Order", wo.name, "produced_qty"), 2)
+		self.assertEqual(frappe.get_all("Job Card Time Log", filters={"parent": cards[0].name, "parentfield": "time_logs"},
+			fields=["employee", "completed_qty"]), [{"employee": employee.name, "completed_qty": 2}])
+
+
 class TestJidoka(ManufacturingTestCase):
 	def test_out_of_tolerance_reading_rejects_the_lot(self):
 		"""ERP-07.1: with an inspection plan the readings decide; a re-inspection needs new readings."""

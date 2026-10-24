@@ -9,7 +9,7 @@ import zlib
 from collections import Counter, defaultdict
 
 import frappe
-from frappe.utils import add_days, flt, getdate
+from frappe.utils import add_days, flt, get_datetime, getdate
 
 from automotive_core.governance import approvals
 from automotive_manufacturing.mes.production import build_entry
@@ -168,10 +168,48 @@ class Production:
 
 	def build(self, wo_name: str, units: float, operator: str) -> str:
 		self.ensure_for_work_order(wo_name, units)
+		self.confirm_operations(wo_name, units, operator)
 		with self.ctx.as_user(operator):
 			se = build_entry(wo_name, units)
 		self.ctx.count("Stock Entry")
 		return se.name
+
+	def confirm_operations(self, wo_name: str, units: float, supervisor: str) -> None:
+		"""The stations' confirmations before ``units`` of a routed work order are posted (ERP-04.1):
+		each operation not yet confirmed for them is confirmed for the order's whole quantity, a time
+		log at the standard time for an operator assigned to the line (the labour record), back to
+		back on the line's clock (a station runs one job at a time, an operator works on one at a
+		time), by the supervisor who posts the build."""
+		from automotive_manufacturing.mes.production import record_operation
+
+		wo = frappe.get_doc("Work Order", wo_name)
+		if not wo.operations:
+			return
+		ctx = self.ctx
+		need = flt(wo.produced_qty) + flt(units)
+		line = wo.automotive_production_line
+		operator = frappe.db.sql("""select e.user_id from `tabPlant Assignment` pa join `tabEmployee` e
+			on e.name = pa.employee join `tabHas Role` r on r.parent = e.user_id and r.role = 'Line Operator'
+			where pa.production_line = %s order by e.user_id limit 1""", line, pluck=True)
+		operator = operator[0] if operator else self.sim.person("Line Operator", wo.automotive_plant)
+		employee = frappe.db.get_value("Employee", {"user_id": operator}, "name")
+		clocks = self.s.setdefault("line_clock", {})
+		start = max(get_datetime(clocks[line]) if clocks.get(line) else ctx.clock.now, ctx.clock.now)
+		for op in sorted(wo.operations, key=lambda r: r.idx):
+			if flt(op.completed_qty) >= need - 1e-9:
+				continue
+			minutes = flt(op.time_in_mins) / flt(wo.qty) if flt(wo.qty) else flt(op.time_in_mins)
+			for card in frappe.get_all("Job Card", filters={"work_order": wo.name, "operation_id": op.name,
+					"docstatus": 0}, fields=["name", "for_quantity", "total_completed_qty"], order_by="creation asc, name asc"):
+				qty = flt(card.for_quantity) - flt(card.total_completed_qty)
+				if qty <= 1e-9:
+					continue
+				end = start + dt.timedelta(minutes=minutes * qty)
+				with ctx.as_user(supervisor):
+					record_operation(card.name, qty, employee, start, end)
+				ctx.count("Job Card")
+				start = end
+		clocks[line] = start.isoformat()
 
 	# -----------------------------------------------------------------------------------
 	# sub-assemblies for today's vehicles
