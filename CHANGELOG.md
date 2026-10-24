@@ -218,6 +218,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - Private files were served before their virus scan, infected ones included: Frappe's
   `/private/files/` route asks `File.is_downloadable`, which skips the permission hooks. The
   scan gate now applies there too (finding C-12).
+- The load test never produced a result: Locust adds `.json` to the `--json-file` name, so the
+  summary found no statistics, and the list reads asked for `_comments`, which Frappe v16 refuses
+  in a query. The list reads are now the desk's own request (`frappe.desk.reportview.get` with
+  the standard fields and the comment count). Found by a short run on the closing dataset.
 
 ### Operations
 - Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5

@@ -118,11 +118,12 @@ PY
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" sample "$stack_url" "$stack_secrets/metrics_token" \
 		"$dir/queues.txt" 15 &
 	sampler=$!
-	# a tenth of the users start per second, as people sign in over a few minutes
+	# a tenth of the users start per second, as people sign in over a few minutes (--json-file
+	# names the file without its .json)
 	"$venv/bin/locust" -f "$REPO_ROOT/perf/locustfile.py" --headless --host "$stack_url" \
 		--users "$users" --spawn-rate "$spawn" --run-time "$duration" --stop-timeout 30 \
 		--credentials "$stack_secrets/credentials.json" --as-of "$as_of" \
-		--csv "$dir/locust" --html "$dir/report.html" --json-file "$dir/stats.json" --only-summary \
+		--csv "$dir/locust" --html "$dir/report.html" --json-file "$dir/stats" --only-summary \
 		--loglevel WARNING --logfile "$dir/locust.log" || true
 	kill "$sampler" 2>/dev/null || true
 	wait "$sampler" 2>/dev/null || true

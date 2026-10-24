@@ -289,9 +289,21 @@ PERSONAS: dict[str, Persona] = {
 WRITE_WEIGHTS = {"todo": 1, "comment": 1, "mr_transfer": 2, "mr_purchase": 2, "stock_transfer": 3}
 NOT_DISCUSSED = {"Audit Event", "Bin", "Error Log", "GL Entry", "Stock Ledger Entry"}
 
-# What the desk list view asks for: the standard columns, then each DocType's title,
+# What the desk list view asks for (Frappe v16, frappe.desk.reportview.get with the comment
+# count): the standard columns (frappe.model.std_fields_list), then each DocType's title,
 # status and in_list_view fields.
-STANDARD_FIELDS = ("name", "modified", "docstatus", "_assign", "_comments", "_liked_by")
+STANDARD_FIELDS = (
+	"name",
+	"owner",
+	"creation",
+	"modified",
+	"modified_by",
+	"_user_tags",
+	"_assign",
+	"_liked_by",
+	"docstatus",
+	"idx",
+)
 LIST_FIELDS = {
 	"Advance Shipping Notice": "supplier expected_arrival status",
 	"Andon Event": "reason_code production_line workstation stop_type status raised_at",
@@ -619,6 +631,29 @@ class ErpUser(HttpUser):
 		)
 		return (body or {}).get("message") or []
 
+	def desk_list(self, doctype: str, fields, filters=(), *, limit: int = 20, start: int = 0) -> list[dict]:
+		"""A page of the desk list view, as its own request (reportview.get, with the comment
+		count; the answer comes as keys and value rows)."""
+		body = self.call(
+			"GET",
+			"frappe.desk.reportview.get",
+			f"read:list {doctype}",
+			params={
+				"doctype": doctype,
+				"fields": json.dumps([f"`tab{doctype}`.`{field}`" for field in fields]),
+				"filters": json.dumps(list(filters)),
+				"order_by": f"`tab{doctype}`.`modified` desc",
+				"start": start,
+				"page_length": limit,
+				"view": "List",
+				"group_by": "",
+				"with_comment_count": 1,
+			},
+		)
+		data = (body or {}).get("message") or {}
+		keys = data.get("keys") or []
+		return [dict(zip(keys, row, strict=False)) for row in data.get("values") or []]
+
 
 # ---------------------------------------------------------------------------------------
 # Desk
@@ -661,7 +696,7 @@ class DeskUser(ErpUser):
 		doctype = random.choice(self.persona.lists)
 		filters = LIST_FILTERS.get(doctype, [])
 		fields = (*STANDARD_FIELDS, *LIST_FIELDS.get(doctype, "").split())
-		rows = self.get_list(doctype, fields, filters, start=random.choice((0, 0, 0, 20)))
+		rows = self.desk_list(doctype, fields, filters, start=random.choice((0, 0, 0, 20)))
 		self.call(
 			"GET",
 			"frappe.client.get_count",
