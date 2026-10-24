@@ -27,6 +27,18 @@ docker_cmd() {
 
 random_secret() { python3 -c 'import secrets; print(secrets.token_urlsafe(24))'; }
 
+# A secret file the application containers read as frappe (uid 1000), as preflight.sh
+# requires: owned by uid 1000 and group-readable by the deploying user. A no-op when that
+# user is uid 1000; otherwise (a CI runner) it needs sudo.
+secret_for_frappe() {
+	local file
+	for file in "$@"; do
+		[[ $(id -u) == 1000 ]] && continue
+		chmod 0440 "$file"
+		sudo chown "1000:$(id -g)" "$file"
+	done
+}
+
 # Python for a frappe container (working directory: the bench) that sets one
 # site_config.json key to the value on its stdin. Unlike bench set-config, the value never
 # appears on a command line, and one that starts with "-" (token_urlsafe gives those) is

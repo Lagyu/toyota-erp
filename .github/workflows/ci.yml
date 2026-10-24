@@ -7,6 +7,7 @@ on:
     branches: [main]
     tags: ["v*"]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -19,83 +20,141 @@ jobs:
   lint:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: { python-version: "3.14" }
       - run: ./scripts/ci/lint.sh
 
   unit:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: { python-version: "3.14" }
       - run: ./scripts/ci/unit.sh
 
   audit:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with: { python-version: "3.14" }
       - run: ./scripts/ci/audit.sh
 
   integration:
     needs: [lint, unit]
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Integration tests on the pinned bench
         run: ./scripts/ci/integration.sh
       - name: Test logs
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: integration-logs
           path: .local/dev-state/logs/
+          include-hidden-files: true
           retention-days: 14
 
+  # Images, scan, smoke test and the browser suite. Runs beside the integration tests (not
+  # after them) so a run reports both sooner; on a release tag the tested images are pushed
+  # as candidates and the release job promotes them once every job is green.
   image:
-    needs: [integration, audit]
+    needs: [lint, unit]
     runs-on: ubuntu-24.04
     # the first run after a generator change also builds the small reference dataset
-    timeout-minutes: 150
+    timeout-minutes: 330
     permissions:
       contents: read
       packages: write
+    outputs:
+      production: ${{ steps.images.outputs.production }}
+      reference: ${{ steps.images.outputs.reference }}
     steps:
-      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space for the image builds
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
       - name: Build production and reference images
+        id: images
         run: |
           ./scripts/image/build.sh | tee .local-image.txt
           ./scripts/image/build.sh --reference | tee .local-image-reference.txt
+          echo "production=$(tail -1 .local-image.txt | cut -d: -f2)" >>"$GITHUB_OUTPUT"
+          echo "reference=$(tail -1 .local-image-reference.txt | cut -d: -f2)" >>"$GITHUB_OUTPUT"
       - name: SBOM and vulnerability scan
         run: ./scripts/ci/sbom.sh "$(tail -1 .local-image.txt)"
       - name: Production stack smoke test
         run: ./scripts/ci/smoke.sh "$(tail -1 .local-image.txt)"
-      - name: Reference dataset cache (rebuilt only when the generator changes)
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - name: Restore the reference dataset (rebuilt only when the generator changes)
+        id: dataset
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .local/reference
           key: >-
             reference-small-${{ hashFiles('apps/automotive_seed/automotive_seed/generator/**',
             'apps/automotive_seed/automotive_seed/profiles/**', 'apps/automotive_seed/automotive_seed/reference_data/**',
             'apps/automotive_seed/automotive_seed/runner.py', 'apps/automotive_core/automotive_core/setup/tenants/**') }}
-      - name: End-to-end journeys (reference image, small dataset)
+      - name: End-to-end journeys and API contract (reference image, small dataset)
         run: ./scripts/ci/e2e.sh "$(tail -1 .local-image-reference.txt)"
+      - name: Check for a newly generated dataset
+        id: generated
+        if: always() && steps.dataset.outputs.cache-hit != 'true'
+        run: |
+          if compgen -G ".local/reference/small-*/database.sql.gz" >/dev/null; then echo "found=true" >>"$GITHUB_OUTPUT"; fi
+      # saved even when the journeys fail: the next run need not generate it again
+      - name: Save the reference dataset
+        if: always() && steps.generated.outputs.found == 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .local/reference
+          key: ${{ steps.dataset.outputs.cache-primary-key }}
+      # reports only: the run's persona passwords and partner secret (.local/e2e/*.json) stay out
       - name: Evidence
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: image-evidence
           path: |
             .local/sbom/
-            .local/e2e/
             .local/smoke/
+            .local/e2e/report/
+            .local/e2e/junit.xml
+            e2e/test-results/
+          include-hidden-files: true
           retention-days: 30
-      - name: Push release images
+      - name: Push release candidates
         if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          REPO: ghcr.io/${{ github.repository_owner }}/hinode-erp
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-          ./scripts/image/build.sh --push "ghcr.io/${{ github.repository_owner }}/hinode-erp"
+          for image in "$(tail -1 .local-image.txt)" "$(tail -1 .local-image-reference.txt)"; do
+            docker tag "$image" "$REPO:${image#*:}-candidate"
+            docker push "$REPO:${image#*:}-candidate"
+          done
+
+  # a release tag publishes exactly the images the journeys ran against
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [integration, audit, image]
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Promote the tested images
+        env:
+          REPO: ghcr.io/${{ github.repository_owner }}/hinode-erp
+          PRODUCTION: ${{ needs.image.outputs.production }}
+          REFERENCE: ${{ needs.image.outputs.reference }}
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          for tag in "$PRODUCTION" "$REFERENCE"; do
+            # 0.1.0-<sha>[-reference] is also published as 0.1.0[-reference]
+            short="${tag%%-*}$([[ $tag == *-reference ]] && echo -reference || true)"
+            docker buildx imagetools create --tag "$REPO:$tag" --tag "$REPO:$short" "$REPO:$tag-candidate"
+          done

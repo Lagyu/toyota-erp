@@ -19,6 +19,7 @@ for s in db_root_password admin_password metrics_token restic_password; do
 	random_secret >"$secrets/$s"
 done
 chmod 600 "$secrets"/*
+secret_for_frappe "$secrets/db_root_password" "$secrets/restic_password"
 env_file=$work/smoke.env
 cat >"$env_file" <<EOF
 COMPOSE_PROJECT_NAME=hinode-smoke

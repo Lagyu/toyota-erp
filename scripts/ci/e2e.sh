@@ -37,6 +37,7 @@ if [[ -n $image ]]; then
 	secrets=$work/secrets
 	mkdir -p "$secrets"
 	for s in db_root_password admin_password metrics_token restic_password; do random_secret >"$secrets/$s"; done
+	secret_for_frappe "$secrets/db_root_password" "$secrets/restic_password"
 	site=e2e.localhost
 	url=http://e2e.localhost:18091
 	env_file=$work/e2e.env
