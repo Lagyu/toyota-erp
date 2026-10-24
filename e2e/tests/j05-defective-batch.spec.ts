@@ -8,6 +8,7 @@ import {
 import { fixtures } from "../support/fixtures";
 import { stages } from "../support/journey";
 import { as, userOf } from "../support/personas";
+import { inspectionResult } from "../support/quality";
 
 test("J-05 a defective batch is segregated, dispositioned, and the line restarts only after release", async ({ browser }) => {
 	const fx = fixtures().j05;
@@ -33,11 +34,12 @@ test("J-05 a defective batch is segregated, dispositioned, and the line restarts
 		doctype: "Quality Inspection", inspection_type: "Incoming", automotive_inspection_stage: "Incoming",
 		reference_type: "Purchase Receipt", reference_name: fx.purchase_receipt, child_row_reference: fx.receipt_row,
 		item_code: fx.item_code, batch_no: fx.batch_no, sample_size: 2, inspected_by: userOf("inspector"),
-		status: "Rejected", manual_inspection: 1, company: fx.company,
+		company: fx.company, ...(await inspectionResult(inspector.page, fx.item_code, false)),
 		remarks: "Housing cracks on 2 of 2 samples taken at the line.",
 	});
 	await submitDoc(inspector.page, "Quality Inspection", qi.name);
 	const inspected = await getDoc(inspector.page, "Quality Inspection", qi.name);
+	expect(inspected.status).toBe("Rejected"); // from the out-of-tolerance reading where the item has a plan
 	const batchHold = inspected.automotive_quality_hold;
 	const nc = inspected.automotive_nonconformance;
 	expect(await getDoc(auditor.page, "Quality Hold", batchHold)).toMatchObject({ hold_scope: "Batch",

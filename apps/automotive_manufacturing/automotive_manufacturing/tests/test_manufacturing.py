@@ -254,6 +254,45 @@ class TestReworkReinspection(ManufacturingTestCase):
 
 
 class TestJidoka(ManufacturingTestCase):
+	def test_out_of_tolerance_reading_rejects_the_lot(self):
+		"""ERP-07.1: with an inspection plan the readings decide; a re-inspection needs new readings."""
+		from automotive_manufacturing.quality_control.inspections import make_reinspection
+
+		cat = self.cat
+		for parameter in ("TST Rim runout (mm)", "TST Visual"):
+			if not frappe.db.exists("Quality Inspection Parameter", parameter):
+				frappe.get_doc({"doctype": "Quality Inspection Parameter", "parameter": parameter}).insert(
+					ignore_permissions=True)
+		if not frappe.db.exists("Quality Inspection Template", "TST Incoming Wheels"):
+			frappe.get_doc({"doctype": "Quality Inspection Template", "quality_inspection_template_name": "TST Incoming Wheels",
+				"item_quality_inspection_parameter": [
+					{"specification": "TST Rim runout (mm)", "numeric": 1, "min_value": 0, "max_value": 0.5},
+					{"specification": "TST Visual", "numeric": 0, "value": "OK"}]}).insert(ignore_permissions=True)
+		frappe.db.set_value("Item", cat["wheel"], "quality_inspection_template", "TST Incoming Wheels")
+		batch = catalog.make_batch(cat["wheel"], f"TWHL-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		receipt = catalog.receive(cat["wheel"], 4, warehouse=catalog.PARTS_STORE, batch_no=batch, rate=120)
+
+		def readings(*runout: str, visual: str = "OK") -> list[dict]:
+			return [{"specification": "TST Rim runout (mm)", "numeric": 1, "min_value": 0, "max_value": 0.5,
+				**{f"reading_{i}": value for i, value in enumerate(runout, 1)}},
+				{"specification": "TST Visual", "numeric": 0, "value": "OK", "reading_value": visual}]
+
+		qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "Incoming",
+			"automotive_inspection_stage": "Incoming", "reference_type": "Stock Entry", "reference_name": receipt,
+			"item_code": cat["wheel"], "batch_no": batch, "sample_size": 2, "inspected_by": "Administrator",
+			"quality_inspection_template": "TST Incoming Wheels", "manual_inspection": 0, "company": AICHI,
+			"readings": readings("0.21", "0.74")})
+		qi.insert(ignore_permissions=True)
+		self.assertEqual((qi.status, qi.readings[0].status, qi.readings[1].status), ("Rejected", "Rejected", "Accepted"))
+		qi.submit()
+		qi.reload()
+		self.assertEqual(frappe.db.get_value("Quality Hold", qi.automotive_quality_hold, "status"), "Active")
+		with as_user(QM2):
+			unmeasured = frappe.get_doc("Quality Inspection", make_reinspection(qi.name))
+			measured = make_reinspection(qi.name, readings=readings("0.18", "0.22"))
+		self.assertEqual(unmeasured.status, "Rejected")  # no readings recorded: nothing to accept
+		self.assertEqual(frappe.db.get_value("Quality Inspection", measured, "status"), "Accepted")
+
 	def test_rejected_batch_is_held_until_dispositioned(self):
 		cat = self.cat
 		batch = catalog.make_batch(cat["wheel"], f"TWHL-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")

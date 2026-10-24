@@ -81,7 +81,7 @@ jobs:
           key: >-
             reference-small-${{ hashFiles('apps/automotive_seed/automotive_seed/generator/**',
             'apps/automotive_seed/automotive_seed/profiles/**', 'apps/automotive_seed/automotive_seed/reference_data/**',
-            'apps/automotive_seed/automotive_seed/runner.py') }}
+            'apps/automotive_seed/automotive_seed/runner.py', 'apps/automotive_core/automotive_core/setup/tenants/**') }}
       - name: End-to-end journeys (reference image, small dataset)
         run: ./scripts/ci/e2e.sh "$(tail -1 .local-image-reference.txt)"
       - name: Evidence

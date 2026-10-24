@@ -106,10 +106,13 @@ def on_cancel(doc, method=None) -> None:
 
 
 @frappe.whitelist(methods=["POST"])
-def make_reinspection(quality_inspection: str, status: str = "Accepted", remarks: str | None = None) -> str:
+def make_reinspection(quality_inspection: str, status: str = "Accepted", remarks: str | None = None,
+		readings: list[dict] | str | None = None) -> str:
 	"""Re-inspect a unit/lot after rework: a new inspection of the same document row as the
 	rejected one (ERPNext allows one inspection per row unless the row is named explicitly).
-	Returns the draft inspection; the inspector submits it."""
+	With an inspection plan the status comes from the readings (given here, or entered on the
+	draft before submitting); without one it is the given status. Returns the draft inspection;
+	the inspector submits it."""
 	frappe.has_permission("Quality Inspection", "create", throw=True)
 	original = frappe.get_doc("Quality Inspection", quality_inspection)
 	if original.docstatus != 1 or original.status != "Rejected":
@@ -129,9 +132,12 @@ def make_reinspection(quality_inspection: str, status: str = "Accepted", remarks
 		"company": original.company,
 		"quality_inspection_template": original.quality_inspection_template,
 		"inspected_by": frappe.session.user,
-		"manual_inspection": 1,
-		"status": status,
 		"remarks": remarks or _("Re-inspection after rework of {0}").format(original.name),
 	})
+	if original.quality_inspection_template:
+		doc.manual_inspection = 0
+		doc.set("readings", frappe.parse_json(readings) if isinstance(readings, str) else (readings or []))
+	else:
+		doc.update({"manual_inspection": 1, "status": status})
 	doc.insert()
 	return doc.name

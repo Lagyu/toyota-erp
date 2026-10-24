@@ -11,6 +11,7 @@ import { fixtures } from "../support/fixtures";
 import { as, userOf } from "../support/personas";
 import { stages } from "../support/journey";
 import { placeDealerOrder } from "../support/portal";
+import { inspectionResult } from "../support/quality";
 
 test("J-01 a dealer's order is built, inspected, shipped and invoiced", async ({ browser }) => {
 	test.setTimeout(480_000); // nine people, two channels, one vehicle
@@ -72,8 +73,10 @@ test("J-01 a dealer's order is built, inspected, shipped and invoiced", async ({
 	const qi = await insertDoc(inspector.page, {
 		doctype: "Quality Inspection", inspection_type: "In Process", automotive_inspection_stage: "Final",
 		reference_type: "Stock Entry", reference_name: built.stock_entry, item_code: plan.variant, item_serial_no: vin,
-		sample_size: 1, inspected_by: userOf("inspector"), status: "Accepted", manual_inspection: 1, company: fx.company,
+		sample_size: 1, inspected_by: userOf("inspector"), company: fx.company,
+		...(await inspectionResult(inspector.page, plan.variant, true)),
 	});
+	expect(qi.status).toBe("Accepted");
 	await submitDoc(inspector.page, "Quality Inspection", qi.name);
 	await expect.poll(async () => (await getDoc(auditor.page, "Vehicle Unit", vin)).quality_status).toBe("Released");
 

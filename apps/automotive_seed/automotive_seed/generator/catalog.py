@@ -150,6 +150,48 @@ def _ensure_group(name: str, parent: str | None) -> None:
 			"is_group": 0}).insert(ignore_permissions=True)
 
 
+# Inspection plans (ERP-07.1): template -> parameters. A measured parameter has its acceptance
+# range; a check (low None) passes with the value "OK". ERPNext accepts or rejects an
+# inspection from its readings.
+INSPECTION_TEMPLATES = {
+	"Incoming - Metal Parts": [("Critical dimension deviation (mm)", -0.05, 0.05), ("Hardness (HRC)", 28, 36),
+		("Surface and burrs", None, None)],
+	"Incoming - Electrical": [("Insulation resistance (MOhm)", 100, 1_000), ("Contact resistance (Ohm)", 0, 0.5),
+		("Functional test", None, None)],
+	"Incoming - Trim and Polymer": [("Hardness (Shore A)", 60, 80), ("Colour difference (dE)", 0, 1.0),
+		("Appearance", None, None)],
+	"Incoming - Fluids and Paint": [("Viscosity (mPa s)", 85, 115), ("Solids content (%)", 42, 48),
+		("Contamination", None, None)],
+	"Final - Vehicle": [("Wheel alignment toe (mm)", -1.0, 1.0), ("Headlamp aim (%)", -2.0, -0.5),
+		("Brake force imbalance (%)", 0, 20), ("Water leak test", None, None), ("Road test", None, None)],
+	"Final - Powertrain": [("Hot test power (kW)", 145, 175), ("Oil pressure at idle (kPa)", 300, 450),
+		("Leak rate (cc/min)", 0, 5), ("NVH check", None, None)],
+	"Pre-Delivery - Vehicle": [("Battery voltage (V)", 12.2, 12.9), ("Paint and body", None, None),
+		("Accessory fit", None, None)],
+}
+COMMODITY_TEMPLATE = {
+	**dict.fromkeys(("stamping", "castings", "forgings", "machining", "fasteners", "steel", "tires"),
+		"Incoming - Metal Parts"),
+	**dict.fromkeys(("electronics", "lighting", "motors", "harness", "battery"), "Incoming - Electrical"),
+	**dict.fromkeys(("glass", "interior", "seating", "plastics", "rubber"), "Incoming - Trim and Polymer"),
+	**dict.fromkeys(("chemicals", "paint"), "Incoming - Fluids and Paint"),
+}
+
+
+def inspection_templates() -> None:
+	for template, parameters in INSPECTION_TEMPLATES.items():
+		for name, _low, _high in parameters:
+			if not frappe.db.exists("Quality Inspection Parameter", name):
+				frappe.get_doc({"doctype": "Quality Inspection Parameter", "parameter": name}).insert(
+					ignore_permissions=True)
+		if not frappe.db.exists("Quality Inspection Template", template):
+			frappe.get_doc({"doctype": "Quality Inspection Template", "quality_inspection_template_name": template,
+				"item_quality_inspection_parameter": [
+					{"specification": name, "numeric": 1, "min_value": low, "max_value": high} if low is not None
+					else {"specification": name, "numeric": 0, "value": "OK"} for name, low, high in parameters]}).insert(
+				ignore_permissions=True)
+
+
 def _ensure_attribute(name: str, values: list[tuple[str, str]]) -> None:
 	if frappe.db.exists("Item Attribute", name):
 		doc = frappe.get_doc("Item Attribute", name)
@@ -198,6 +240,7 @@ def build(ctx: SeedContext) -> dict:
 	"""Create the whole catalogue; returns the structure the simulation uses."""
 	for name, parent in GROUPS.items():
 		_ensure_group(name, parent)
+	inspection_templates()
 	colors = COLORS[: int(ctx.profile["catalog"]["colors"])]
 	for attribute, values in ATTRIBUTES.items():
 		_ensure_attribute(attribute, values)
@@ -210,7 +253,8 @@ def build(ctx: SeedContext) -> dict:
 
 	def purchased(code, name, group, uom, tracking, cost, commodity, lead, inspect, stores):
 		_item(ctx, code, name, group, uom, tracking, cost, stores, is_purchase_item=1, lead_time_days=lead,
-			inspection_required_before_purchase=int(inspect), min_order_qty=1)
+			inspection_required_before_purchase=int(inspect), min_order_qty=1,
+			quality_inspection_template=COMMODITY_TEMPLATE.get(commodity) if inspect else None)
 		structure["purchased"][code] = {"commodity": commodity, "cost": cost, "lead": lead, "uom": uom,
 			"tracking": tracking, "inspect": inspect, "plant": "KYUSHU-PT" if stores is kyushu_store else "AICHI-VA"}
 
@@ -309,10 +353,12 @@ def _powertrains(ctx, structure, kyushu) -> None:
 	common = [("TRANSAXLE-HEV", 1), ("INVERTER-P180", 1), ("HVBATT-P180", 1), ("FLUID-OIL", 3.5)]
 	for code, name, extra in (("P180-FWD", "P180 hybrid powertrain FWD", []),
 			("P180-AWD", "P180 hybrid powertrain AWD", [("REAR-EMOTOR", 1)])):
-		_item(ctx, code, name, "Powertrain Assemblies", "Nos", "serial", 0, fg, serial_no_series=f"{code.replace('-', '')}-.######")
+		_item(ctx, code, name, "Powertrain Assemblies", "Nos", "serial", 0, fg, serial_no_series=f"{code.replace('-', '')}-.######",
+			quality_inspection_template="Final - Powertrain")
 		structure["powertrains"][code] = {"line": "KYU-P180", "bom": _bom(ctx, code, KYUSHU, [("ENG-P180", 1), *common, *extra])}
 	for code, name, motors in (("E240-S", "E240 electric drive single motor", 1), ("E240-D", "E240 electric drive dual motor", 2)):
-		_item(ctx, code, name, "Powertrain Assemblies", "Nos", "serial", 0, fg, serial_no_series=f"{code.replace('-', '')}-.######")
+		_item(ctx, code, name, "Powertrain Assemblies", "Nos", "serial", 0, fg, serial_no_series=f"{code.replace('-', '')}-.######",
+			quality_inspection_template="Final - Powertrain")
 		structure["powertrains"][code] = {"line": "KYU-E240", "bom": _bom(ctx, code, KYUSHU, [("STATOR-240", motors),
 			("ROTOR-240", motors), ("GEARSET-240", motors), ("HOUSING-240", 1), ("INVERTER-E240", motors)])}
 
@@ -372,6 +418,7 @@ def _vehicles(ctx, structure, aichi, wh, colors) -> None:
 			frappe.get_doc({"doctype": "Item", "item_code": m, "item_name": model["name"], "item_group": "Vehicles",
 				# purchase item too: the North American distributor buys vehicles from Aichi
 				"stock_uom": "Nos", "is_stock_item": 1, "has_variants": 1, "has_serial_no": 1, "is_purchase_item": 1,
+				"quality_inspection_template": "Final - Vehicle",
 				"attributes": [{"attribute": a} for a in model["attrs"]], "item_defaults": _defaults(fg)}).insert(
 				ignore_permissions=True)
 			ctx.count("Item")
@@ -395,6 +442,7 @@ def _vehicles(ctx, structure, aichi, wh, colors) -> None:
 			if not code:
 				variant = create_variant(m, sel)
 				variant.automotive_vehicle_model = m
+				variant.quality_inspection_template = "Final - Vehicle"
 				variant.flags.ignore_permissions = True
 				variant.insert()
 				code = variant.name

@@ -244,11 +244,14 @@ class Sales:
 			where so.docstatus = 1 and so.customer = %s and so.status not in ('Closed', 'Completed')
 			and soi.qty > soi.delivered_qty order by so.transaction_date, soi.idx""", customer, as_dict=True)
 		by_so: dict[str, list] = defaultdict(list)
+		taken: set[str] = set()  # open lines of several weeks' orders can ask for the same variant
 		for line in open_lines:
 			vins = frappe.get_all("Vehicle Unit", filters={"variant_item": line.item_code, "quality_status": "Released",
 				"inventory_status": "In Stock", "automotive_allocation": ("is", "not set"),
-				"current_warehouse": fg_for("AICHI-VA")}, pluck="name", order_by="built_at asc", limit=int(line.open_qty))
+				"current_warehouse": fg_for("AICHI-VA"), "name": ("not in", sorted(taken) or [""])}, pluck="name",
+				order_by="built_at asc", limit=int(line.open_qty))
 			if vins:
+				taken.update(vins)
 				by_so[line.parent].append((line.name, vins))
 		for so_name, rows in sorted(by_so.items()):
 			with ctx.step(15, 30):
@@ -277,7 +280,9 @@ class Sales:
 				for vin in filter(None, (row.serial_no or "").split("\n")):
 					with ctx.step(10, 0):  # one inspection per vehicle on the shared receipt row
 						self.sim.quality._qi(row.item_code, "Purchase Receipt", pr, "Pre-Delivery", inspector, "Accepted",
-							NA, serial=vin, remarks="PDI: transport check, accessory fit", child_row=row.name)
+							NA, serial=vin, remarks="PDI: transport check, accessory fit", child_row=row.name,
+							template="Pre-Delivery - Vehicle" if frappe.db.exists("Quality Inspection Template",
+								"Pre-Delivery - Vehicle") else None)
 			self.s["pdi"].remove(pr)
 		# vehicles that arrived on non-working days are received on the next NA working day
 		self.sim.procurement.intercompany_receipts(day)

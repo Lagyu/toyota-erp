@@ -87,11 +87,12 @@ EOF
 	done
 	"$REPO_ROOT/scripts/deploy/new-site.sh" "$env_file" 2>&1 | tail -3
 
-	# the small dataset: keyed by the generator's inputs, regenerated only when they change
-	# (the end-to-end fixtures in e2e.py do not shape the dataset)
+	# the small dataset: keyed by the generator's inputs and the tenant definitions (companies,
+	# taxes, policies), regenerated only when they change (the end-to-end fixtures in e2e.py do
+	# not shape the dataset; other application changes reach it through bench migrate)
 	seed=apps/automotive_seed/automotive_seed
 	key=$(cd "$REPO_ROOT" && git ls-files -s "$seed/generator" "$seed/profiles" "$seed/reference_data" \
-		"$seed/runner.py" | sha256sum | cut -c1-12)
+		"$seed/runner.py" apps/automotive_core/automotive_core/setup/tenants | sha256sum | cut -c1-12)
 	cache=$REPO_ROOT/.local/reference/small-$key
 	if [[ -f $cache/database.sql.gz ]]; then
 		log "restoring the small dataset ($key)"

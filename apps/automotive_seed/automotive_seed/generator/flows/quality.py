@@ -4,9 +4,10 @@ Andon events with containment and restart, nonconformance closure with CAPA."""
 from __future__ import annotations
 
 import datetime as dt
+import random
 
 import frappe
-from frappe.utils import add_days
+from frappe.utils import add_days, flt
 
 from automotive_manufacturing.quality_control import holds
 from automotive_manufacturing.quality_control.inspections import make_reinspection
@@ -19,17 +20,53 @@ class Quality:
 		self.ctx = sim.ctx
 		self.s = sim.state["sim"]
 
+	def readings(self, template: str, rejected: bool, key: str, samples: int = 1) -> list[dict]:
+		"""Readings for an inspection plan: every measurement inside its range (away from the
+		limits), or, for a rejection, one parameter out of tolerance on the first sample."""
+		rng = random.Random(f"{self.ctx.seed}:qi:{key}")
+		parameters = frappe.get_all("Item Quality Inspection Parameter", filters={"parent": template,
+			"parenttype": "Quality Inspection Template"}, fields=["specification", "numeric", "min_value", "max_value",
+			"value"], order_by="idx")
+		failing = rng.randrange(len(parameters)) if rejected and parameters else None
+		rows = []
+		for i, p in enumerate(parameters):
+			row = {"specification": p.specification, "numeric": p.numeric, "min_value": p.min_value,
+				"max_value": p.max_value, "value": p.value}
+			if p.numeric:
+				low, high = flt(p.min_value), flt(p.max_value)
+				span = high - low
+				for n in range(1, samples + 1):
+					x = rng.uniform(low + 0.15 * span, high - 0.15 * span)
+					if i == failing and n == 1:
+						x = high + span * rng.uniform(0.05, 0.3)
+					row[f"reading_{n}"] = f"{x:.3f}"
+			else:
+				row["reading_value"] = "NG" if i == failing else p.value
+			rows.append(row)
+		return rows
+
 	def _qi(self, item: str, reference_type: str, reference: str, stage: str, inspector: str, status: str,
 			company: str, serial: str | None = None, batch: str | None = None, remarks: str | None = None,
-			child_row: str | None = None) -> str:
-		"""child_row: inspect one unit of a multi-unit row (ERPNext otherwise allows one inspection per row)."""
+			child_row: str | None = None, template: str | None = None, sample_size: int = 1) -> str:
+		"""child_row: inspect one unit of a multi-unit row (ERPNext otherwise allows one inspection per row).
+		Items with an inspection plan get readings and ERPNext decides the status from them."""
+		template = template or frappe.get_cached_value("Item", item, "quality_inspection_template")
+		values = {"doctype": "Quality Inspection", "inspection_type": "Incoming" if stage == "Incoming"
+			else "In Process", "automotive_inspection_stage": stage, "reference_type": reference_type,
+			"reference_name": reference, "child_row_reference": child_row, "item_code": item,
+			"item_serial_no": serial, "batch_no": batch, "sample_size": sample_size, "inspected_by": inspector,
+			"company": company, "remarks": remarks}
+		if template:
+			values.update({"quality_inspection_template": template, "manual_inspection": 0,
+				"readings": self.readings(template, status == "Rejected", f"{reference}:{item}:{serial or batch or ''}",
+					min(sample_size, 3))})
+		else:
+			values.update({"status": status, "manual_inspection": 1})
 		with self.ctx.as_user(inspector):
-			qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "Incoming" if stage == "Incoming"
-				else "In Process", "automotive_inspection_stage": stage, "reference_type": reference_type,
-				"reference_name": reference, "child_row_reference": child_row, "item_code": item,
-				"item_serial_no": serial, "batch_no": batch, "sample_size": 1, "inspected_by": inspector,
-				"status": status, "manual_inspection": 1, "company": company, "remarks": remarks})
+			qi = frappe.get_doc(values)
 			qi.insert()
+			if qi.status != status:
+				raise RuntimeError(f"inspection {qi.name}: readings gave {qi.status}, expected {status}")
 			qi.submit()
 		self.ctx.count("Quality Inspection")
 		return qi.name
@@ -54,7 +91,7 @@ class Quality:
 		inspector = self.sim.person("Quality Inspector", plant)
 		company = frappe.get_cached_value("Plant", plant, "company")
 		return self._qi(item, "Purchase Receipt", receipt, "Incoming", inspector, "Rejected" if rejected else "Accepted",
-			company, batch=batch, remarks="Dimensional check out of tolerance" if rejected else None)
+			company, batch=batch, remarks="Out of tolerance on the first sample" if rejected else None, sample_size=3)
 
 	# -----------------------------------------------------------------------------------
 	def daily(self, day: dt.date) -> None:
@@ -80,8 +117,10 @@ class Quality:
 					with ctx.as_user(inspector):
 						rejected_qi = item.get("inspection") or frappe.db.get_value("Quality Inspection",
 							{"item_serial_no": vin, "status": "Rejected", "docstatus": 1}, "name")
+						template = frappe.db.get_value("Quality Inspection", rejected_qi, "quality_inspection_template")
 						reinspection = frappe.get_doc("Quality Inspection", make_reinspection(rejected_qi,
-							remarks="Re-inspection after rework: seal replaced, water test passed"))
+							remarks="Re-inspection after rework: seal replaced, water test passed",
+							readings=self.readings(template, False, f"rework:{rejected_qi}") if template else None))
 						reinspection.submit()
 					ctx.count("Quality Inspection")
 					holds.release(hold, "Seal replaced and water test passed")
