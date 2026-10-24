@@ -169,11 +169,21 @@ SQL
 pass "$(prev_compose ps --format '{{.Service}}' | wc -l) services"
 
 step "Site and smoke test of the previous release (steps 8-9)"
-if "$prev/scripts/deploy/new-site.sh" "$ENV" >"$out/new-site.log" 2>&1 && "$prev/scripts/deploy/smoke.sh" "$ENV" \
-		>"$out/smoke-previous.log" 2>&1; then
+# releases before wait_ready smoke-test at once after setting the metrics token, inside Frappe's
+# 60 s site config cache (403 for the token): such a release is smoke-tested again after it
+if ! "$prev/scripts/deploy/new-site.sh" "$ENV" >"$out/new-site.log" 2>&1; then
+	fatal "see new-site.log"
+fi
+if "$prev/scripts/deploy/smoke.sh" "$ENV" >"$out/smoke-previous.log" 2>&1; then
 	pass "$(grep -c '^.*ok ' "$out/smoke-previous.log") checks ok"
 else
-	fatal "see new-site.log / smoke-previous.log"
+	mv "$out/smoke-previous.log" "$out/smoke-previous-first.log"
+	sleep 65
+	if "$prev/scripts/deploy/smoke.sh" "$ENV" >"$out/smoke-previous.log" 2>&1; then
+		pass "$(grep -c '^.*ok ' "$out/smoke-previous.log") checks ok (the second time, after the site config cache expired: smoke-previous-first.log)"
+	else
+		fatal "see new-site.log / smoke-previous-first.log / smoke-previous.log"
+	fi
 fi
 
 step "Data before the upgrade"
