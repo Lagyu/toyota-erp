@@ -107,13 +107,7 @@ Every clone is verified against the pinned commit (`scripts/lib/verify-checkout.
    ./scripts/deploy/preflight.sh "$ENV"
    ```
 
-3. **Optionally take an extra, separately tagged snapshot.** `restic forget` groups by host and tags, so `pre-upgrade` snapshots have their own retention group and are not replaced by nightly ones:
-
-   ```bash
-   ./scripts/deploy/compose.sh "$ENV" exec -T -e BACKUP_TAG=pre-upgrade scheduler bash /opt/hinode/ops/backup/backup.sh
-   ```
-
-4. **Run the upgrade:**
+3. **Run the upgrade:**
 
    ```bash
    ./scripts/deploy/upgrade.sh "$ENV"
@@ -122,7 +116,7 @@ Every clone is verified against the pinned commit (`scripts/lib/verify-checkout.
 `upgrade.sh` stops at the first failing step (`set -e`):
 
 1. `bench --site <site> set-maintenance-mode on`.
-2. **Backup** of the running version: `backup.sh` in the current `scheduler` container. Taken inside the maintenance window, it holds exactly the state being upgraded. Note the line `... [backup] done: snapshot <id> <time>`: this is your rollback point.
+2. **Backup** of the running version: `backup.sh` in the current `scheduler` container, tagged `pre-upgrade`. Taken inside the maintenance window, it holds exactly the state being upgraded. Note the line `... [backup] done: snapshot <id> <time>`: this is your rollback point. `restic forget` groups snapshots by host and tags, so the nightly backups' retention (one snapshot a day) never replaces it with a later backup of the same day; `pre-upgrade` snapshots follow the same retention among themselves.
 3. `compose pull --quiet` (failures ignored), then `compose up -d --remove-orphans`, which recreates the containers on the new image.
 4. `bench --site <site> migrate`.
 5. `bench --site <site> set-maintenance-mode off`.

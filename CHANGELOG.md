@@ -224,6 +224,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   write and read of a File. It now answers True and refuses only reading a file that is not yet
   clean while scanning is required; a test attaches and reads files as a desk user. Found by the
   production rehearsal's upload through ClamAV.
+- The upgrade's rollback snapshot could be pruned by a later backup the same day: it carried
+  the nightly backups' tags, and their retention keeps one snapshot a day. `upgrade.sh` tags it
+  `pre-upgrade`, its own retention group.
 - Private files were served before their virus scan, infected ones included: Frappe's
   `/private/files/` route asks `File.is_downloadable`, which skips the permission hooks. The
   scan gate now applies there too (finding C-12).

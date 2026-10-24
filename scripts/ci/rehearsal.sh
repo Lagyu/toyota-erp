@@ -408,11 +408,11 @@ step "A scheduled backup and restore drill by the cron service"
 # the nightly backup and the weekly drill brought forward to the next minutes (UTC, seconds
 # first), the cron service recreated with them and given its own schedules back afterwards
 mapfile -t saved < <(grep -E '^(BACKUP|RESTORE_DRILL)_SCHEDULE=' "$ENV" || true)
-snapshots() {
-	compose exec -T scheduler restic snapshots --tag "site:$SITE" --json 2>/dev/null \
-		| python3 -c 'import json, sys; print(len(json.load(sys.stdin)))' 2>/dev/null || echo 0
+newest() { # the newest backup set's id (retention keeps one a day per tag group: no count)
+	compose exec -T scheduler restic snapshots --tag "site:$SITE" --latest 1 --json 2>/dev/null \
+		| python3 -c 'import json, sys; print(json.load(sys.stdin)[-1]["short_id"])' 2>/dev/null || echo none
 }
-before=$(snapshots)
+snapshot_before=$(newest)
 since=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 backup_at=$(date -u -d '+2 minutes' +'%M %H') drill_at=$(date -u -d '+4 minutes' +'%M %H')
 set_env "BACKUP_SCHEDULE=0 $backup_at * * *" "RESTORE_DRILL_SCHEDULE=0 $drill_at * * *"
@@ -431,13 +431,13 @@ open(path, "w").write("\n".join(lines) + "\n")
 PY
 ((${#saved[@]} == 0)) || set_env "${saved[@]}"
 compose up -d cron >>"$out/cron-schedule.log" 2>&1 || true
-after=$(snapshots)
+snapshot_after=$(newest)
 drill_ok=$(compose exec -T scheduler bash -c "cat sites/$SITE/private/ops/restore-drill-last.json" 2>/dev/null \
 	| python3 -c 'import json, sys; print(json.load(sys.stdin).get("ok"))' 2>/dev/null || true)
-if [[ $ran -ge 2 && $after -gt $before && $drill_ok == True ]]; then
-	pass "backup at $backup_at and drill at $drill_at (minute hour, UTC) run by the schedule: snapshots $before -> $after, drill ok"
+if [[ $ran -ge 2 && $snapshot_after != none && $snapshot_after != "$snapshot_before" && $drill_ok == True ]]; then
+	pass "backup at $backup_at and drill at $drill_at (minute hour, UTC) run by the schedule: newest snapshot $snapshot_before -> $snapshot_after, drill ok"
 else
-	fail "jobs ok $ran of 2, snapshots $before -> $after, drill ok '${drill_ok:-?}' (see cron-schedule.log)"
+	fail "jobs ok $ran of 2, newest snapshot $snapshot_before -> $snapshot_after, drill ok '${drill_ok:-?}' (see cron-schedule.log)"
 fi
 
 step "Monitoring targets"

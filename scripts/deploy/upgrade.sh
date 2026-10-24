@@ -17,7 +17,9 @@ site=${SITE_NAME:?}
 
 "${compose[@]}" exec -T backend bench --site "$site" set-maintenance-mode on
 log "pre-upgrade backup (the rollback point)"
-"${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/backup.sh
+# tagged pre-upgrade: restic forget groups snapshots by host and tags, so the nightly backups'
+# retention (one snapshot a day) cannot replace the rollback point with a later backup that day
+"${compose[@]}" exec -T -e BACKUP_TAG=pre-upgrade scheduler bash /opt/hinode/ops/backup/backup.sh
 "${compose[@]}" pull --quiet || true
 "${compose[@]}" up -d --remove-orphans
 "${compose[@]}" exec -T backend bench --site "$site" migrate
