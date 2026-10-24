@@ -14,16 +14,20 @@ const DESK_PERSONAS: Persona[] = ["buyer", "ap_clerk", "treasury", "controller",
 
 type Target = { type: string; to: string; from: string };
 
-/** Every link_type/link_to pair anywhere in an object (sidebars, workspace cards, shortcuts). */
-function collect(node: unknown, from: string, out: Map<string, Target>) {
+/** Every link_type/link_to pair anywhere in an object (sidebars, workspace cards, shortcuts).
+ * The desk's boot objects hold back-references (a sidebar item points at its parent), so each
+ * object is visited once. */
+function collect(node: unknown, from: string, out: Map<string, Target>, seen = new Set<object>()) {
+	if (!node || typeof node !== "object" || seen.has(node)) return;
+	seen.add(node);
 	if (Array.isArray(node)) {
-		for (const item of node) collect(item, from, out);
-	} else if (node && typeof node === "object") {
+		for (const item of node) collect(item, from, out, seen);
+	} else {
 		const o = node as Record<string, unknown>;
 		const type = (o.link_type ?? o.type) as string | undefined;
 		const to = o.link_to as string | undefined;
 		if (to && type && ["DocType", "Report", "Page"].includes(type)) out.set(`${type}:${to}`, { type, to, from });
-		for (const value of Object.values(o)) if (value && typeof value === "object") collect(value, from, out);
+		for (const value of Object.values(o)) collect(value, from, out, seen);
 	}
 }
 
@@ -65,8 +69,13 @@ const WCAG = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
 
 async function violations(page: Page, impacts: string[]) {
 	const result = await new AxeBuilder({ page }).withTags(WCAG).analyze();
+	const where = (n: { target: unknown[]; any: { data?: any }[] }) => {
+		const data = n.any.find((check) => check.data?.contrastRatio)?.data;
+		const colours = data ? ` [${data.fgColor} on ${data.bgColor}: ${data.contrastRatio}]` : "";
+		return `${n.target.join(" ")}${colours}`;
+	};
 	return result.violations.filter((v) => impacts.includes(v.impact ?? ""))
-		.map((v) => `${v.id} (${v.impact}): ${v.help} — ${v.nodes.slice(0, 3).map((n) => n.target.join(" ")).join(", ")}`);
+		.map((v) => `${v.id} (${v.impact}): ${v.help} — ${v.nodes.slice(0, 8).map(where).join(", ")}`);
 }
 
 for (const [persona, path] of [["supplier", "/supplier-portal"], ["dealer", "/dealer-portal"]] as const) {

@@ -88,14 +88,32 @@ def _user_with(role: str, plant: str | None) -> str | None:
 
 
 def _partner(party_type: str) -> str | None:
+	"""The partner's portal administrator: the specs quote, acknowledge, ship and order, which
+	no single narrower portal role may all do."""
 	if party_type == "Supplier":  # a just-in-time supplier: the Kanban journey needs one
 		rows = frappe.db.sql("""select pua.user from `tabPartner User Access` pua
 			join `tabKanban Loop` kl on kl.supplier = pua.supplier and kl.status = 'Active'
-			where pua.status = 'Active' and pua.party_type = 'Supplier' order by pua.user limit 1""", pluck=True)
+			where pua.status = 'Active' and pua.party_type = 'Supplier'
+			order by pua.partner_role = 'Administrator' desc, pua.user limit 1""", pluck=True)
 		if rows:
 			return rows[0]
-	return frappe.db.get_value("Partner User Access", {"party_type": party_type, "status": "Active"}, "user",
-		order_by="user asc")
+	rows = frappe.db.sql("""select user from `tabPartner User Access` where party_type = %s and status = 'Active'
+		order by partner_role = 'Administrator' desc, user limit 1""", party_type, pluck=True)
+	return rows[0] if rows else None
+
+
+def _second(role: str, first: str | None, plant: str | None) -> str | None:
+	"""Another user with the role and the same plant scope as ``first`` (a second approver
+	must be able to read what the first one raised)."""
+	rows = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
+		where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name != %s
+		and u.name not in ('Administrator', 'Guest') order by u.name""", (role, first or ""), pluck=True)
+	for user in rows:
+		user_plant = frappe.db.get_value("User Permission", {"user": user, "allow": "Plant", "is_default": 1},
+			"for_value")
+		if user_plant == plant:
+			return user
+	return None
 
 
 @_cli
@@ -113,13 +131,11 @@ def prepare_users(password: str | None = None, output: str | None = None) -> str
 	users["supplier"] = _partner("Supplier")
 	users["dealer"] = _partner("Customer")
 	# second approvers: payments need two treasury approvers, dispositions a second quality manager
-	for key, role in (("treasury", "Treasury Approver"), ("quality_manager", "Quality Manager")):
-		others = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
-			where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name != %s
-			and u.name not in ('Administrator', 'Guest') order by u.name""",
-			(role, users.get(key) or ""), pluck=True)
-		if others:
-			users[f"{key}_2"] = others[0]
+	for key in ("treasury", "quality_manager"):
+		role, plant = PERSONAS[key]
+		second = _second(role, users.get(key), plant)
+		if second:
+			users[f"{key}_2"] = second
 	# a Japanese-speaking planner (ERP-12.3): the other personas keep the English desk the specs read
 	planners = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
 		where r.role = 'Production Planner' and u.enabled = 1 and u.user_type = 'System User' and u.name != %s

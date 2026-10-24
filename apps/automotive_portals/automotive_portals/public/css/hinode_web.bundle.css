@@ -1,0 +1,9 @@
+/* Website pages (sign-in, partner portals, account pages): Frappe's own shell at WCAG 2.1 AA
+   contrast. The navbar avatar takes a pale palette colour as an inline style; the footer and
+   the muted navbar links are light grey on white. */
+.avatar .avatar-frame.standard-image { background-color: #e4e7eb !important; color: #1f2933 !important; }
+.web-footer .footer-info,
+.web-footer .footer-powered,
+.web-footer .footer-powered a,
+.web-footer .text-muted,
+.navbar .nav-link.text-muted { color: #52606d !important; }

@@ -11,7 +11,9 @@ export default defineConfig({
 	expect: { timeout: 20_000 },
 	fullyParallel: false, // the journeys share one dataset and one simulated clock
 	workers: 1,
-	retries: process.env.CI ? 1 : 0,
+	// no retries: a journey changes the shared dataset, so a second attempt would not start from
+	// the state the first one found (and would fail for a different reason)
+	retries: 0,
 	reporter: [
 		["list"],
 		["html", { outputFolder: `${reportDir}/report`, open: "never" }],

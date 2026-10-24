@@ -1198,3 +1198,7 @@ msgstr "仕入先"
 msgid "{0} could not be uploaded."
 msgstr "{0}をアップロードできませんでした。"
 
+
+#: automotive_portals/public/js/hinode_web.bundle.js:3
+msgid "App Logo"
+msgstr "アプリのロゴ"

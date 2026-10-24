@@ -10,6 +10,10 @@ required_apps = ['frappe', 'erpnext', 'automotive_core', 'automotive_manufacturi
 # Every app prepares the test site the same way (Frappe runs the tested app's hook only).
 before_tests = "automotive_core.tests.fixtures.before_tests"
 
+# Website pages: Frappe's shell (sign-in, navbar, footer) at WCAG 2.1 AA (ERP-12.3).
+web_include_css = ["hinode_web.bundle.css"]
+web_include_js = ["hinode_web.bundle.js"]
+
 # Partner users land on their portal after login; internal users keep the desk (a
 # role-based mapping would also catch Administrator, who holds every role).
 get_website_user_home_page = "automotive_portals.portal.home_page"
