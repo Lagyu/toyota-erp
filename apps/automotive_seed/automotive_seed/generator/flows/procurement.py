@@ -21,6 +21,13 @@ from automotive_seed.generator.context import working_day
 from automotive_seed.generator.flows.common import company_bank_account, store_for
 from automotive_seed.generator.supply import primary_supplier
 
+
+def _valuation_expense_account(company: str) -> str:
+	"""The company's clearing account for costs added to stock valuation (freight, duty)."""
+	return frappe.get_cached_value("Company", company, "expenses_added_to_stock_account") or frappe.db.get_value(
+		"Account", {"company": company, "account_type": "Expenses Included In Valuation", "is_group": 0}, "name")
+
+
 # the importer's landed costs on vehicle shipments: supplier, supplier group, service item, item name
 IMPORT_SERVICES = (
 	("Pacific Crossing Lines Inc.", "Carriers", "SVC-OCEAN-FREIGHT", "Ocean freight (vehicle shipment)"),
@@ -239,7 +246,7 @@ class Procurement:
 		from automotive_core.finance_controls import bank_accounts as controls
 
 		ctx = self.ctx
-		expense = frappe.get_cached_value("Company", NA, "expenses_included_in_valuation")
+		expense = _valuation_expense_account(NA)
 		out = {}
 		for supplier, group, item, item_name in IMPORT_SERVICES:
 			if not frappe.db.exists("Item", item):
@@ -291,7 +298,7 @@ class Procurement:
 					pi.submit()
 				invoices.append(pi)
 				ctx.count("Purchase Invoice")
-			expense = frappe.get_cached_value("Company", NA, "expenses_included_in_valuation")
+			expense = _valuation_expense_account(NA)
 			with ctx.as_user(clerk):
 				lcv = frappe.get_doc({"doctype": "Landed Cost Voucher", "company": NA, "posting_date": day,
 					"distribute_charges_based_on": "Amount",

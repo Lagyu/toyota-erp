@@ -89,4 +89,6 @@ class Simulation:
 			self.sales.fulfil(day, "NA-PDC")
 			self.sales.collect(day, "US")
 		self.finance.daily(day)
+		if jp_working:
+			self.production.handovers(day)
 		self.procurement.deliver_outbox(day)

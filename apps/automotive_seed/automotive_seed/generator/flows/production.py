@@ -349,6 +349,39 @@ class Production:
 			self.build(wo, 1, supervisor)
 
 	# -----------------------------------------------------------------------------------
+	# shift handovers
+	# -----------------------------------------------------------------------------------
+	def handovers(self, day: dt.date) -> None:
+		"""Each shift's supervisor hands the line over to the next shift's, who acknowledges it
+		(ERP-04.5); the shift's results are computed from its transactions on submit."""
+		from automotive_manufacturing.shop_floor.handover import acknowledge
+
+		ctx = self.ctx
+		for line in frappe.get_all("Production Line", filters={"plant": ("in", ("AICHI-VA", "KYUSHU-PT"))},
+				fields=["name", "plant", "shift_pattern"], order_by="name"):
+			supervisors = frappe.db.sql("""select distinct e.user_id from `tabPlant Assignment` pa
+				join `tabEmployee` e on e.name = pa.employee join `tabHas Role` r on r.parent = e.user_id
+				and r.role = 'Production Supervisor' where pa.production_line = %s and pa.status = 'Active'
+				order by e.user_id""", line.name, pluck=True)
+			if len(supervisors) < 2:  # a small line: the plant's supervisors cover it
+				supervisors = sorted({self.sim.person("Production Supervisor", line.plant, i) for i in range(3)})
+			if len(supervisors) < 2:
+				continue
+			shifts = [row.shift_code for row in frappe.get_cached_doc("Shift Pattern", line.shift_pattern).shifts]
+			for i, code in enumerate(shifts):
+				outgoing, incoming = supervisors[i % len(supervisors)], supervisors[(i + 1) % len(supervisors)]
+				with ctx.step(23, 50):
+					with ctx.as_user(outgoing):
+						doc = frappe.get_doc({"doctype": "Shift Handover", "plant": line.plant, "production_line": line.name,
+							"shift_date": day, "shift_code": code, "incoming_supervisor": incoming,
+							"handover_notes": f"Shift {code} on {line.name}: results and open items as reported.",
+							"safety_notes": "No incidents."}).insert()
+						doc.submit()
+					with ctx.as_user(incoming):
+						acknowledge(doc.name)
+				ctx.count("Shift Handover")
+
+	# -----------------------------------------------------------------------------------
 	# engineering changes
 	# -----------------------------------------------------------------------------------
 	def engineering(self, day: dt.date) -> None:

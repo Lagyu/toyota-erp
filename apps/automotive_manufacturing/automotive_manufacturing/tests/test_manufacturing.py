@@ -5,6 +5,8 @@ and line sequencing."""
 
 from __future__ import annotations
 
+import datetime
+
 import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, nowdate
@@ -288,6 +290,37 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 		self.assertEqual(frappe.db.get_value("Work Order", wo.name, "produced_qty"), 2)
 		self.assertEqual(frappe.get_all("Job Card Time Log", filters={"parent": cards[0].name, "parentfield": "time_logs"},
 			fields=["employee", "completed_qty"]), [{"employee": employee.name, "completed_qty": 2}])
+
+
+class TestShiftHandover(ManufacturingTestCase):
+	def test_handover_reports_the_shift_and_only_the_incoming_supervisor_acknowledges(self):
+		"""ERP-04.5: results are computed at hand-over; the next shift's supervisor confirms."""
+		from automotive_manufacturing.shop_floor.handover import acknowledge, shift_window
+
+		incoming = "supervisor2.mfg@hinode.example"
+		make_user(incoming, ["Production Supervisor", "Manufacturing User"])
+		cat = self.cat
+		self.stock_up(1)
+		wo = catalog.work_order(cat["variants"][("Premium", "AWD")], 1)
+		build_entry(wo.name, 1)
+		shift = frappe.get_cached_doc("Shift Pattern", frappe.get_cached_value("Production Line", catalog.LINE,
+			"shift_pattern")).shifts[0].shift_code
+		start, _end = shift_window(catalog.LINE, nowdate(), shift)
+		frappe.db.set_value("Vehicle Unit", {"work_order": wo.name}, "built_at", start + datetime.timedelta(hours=1))
+		values = {"doctype": "Shift Handover", "plant": catalog.PLANT, "production_line": catalog.LINE,
+			"shift_date": nowdate(), "shift_code": shift, "handover_notes": "Line running to plan."}
+		with as_user(SUPERVISOR), self.assertRaises(frappe.ValidationError):
+			frappe.get_doc({**values, "incoming_supervisor": SUPERVISOR}).insert()
+		with as_user(SUPERVISOR):
+			doc = frappe.get_doc({**values, "incoming_supervisor": incoming}).insert()
+			doc.submit()
+		self.assertEqual((doc.status, doc.outgoing_supervisor), ("Handed Over", SUPERVISOR))
+		self.assertGreaterEqual(doc.built_units, 1)  # the unit built in the shift's window
+		with as_user(SUPERVISOR), self.assertRaises(frappe.PermissionError):
+			acknowledge(doc.name)  # the outgoing supervisor cannot confirm their own handover
+		with as_user(incoming):
+			self.assertEqual(acknowledge(doc.name), "Acknowledged")
+		self.assertTrue(frappe.db.get_value("Shift Handover", doc.name, "acknowledged_at"))
 
 
 class TestJidoka(ManufacturingTestCase):
