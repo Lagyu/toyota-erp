@@ -202,7 +202,7 @@ Both TLS modes run the same pinned Traefik (`TRAEFIK_IMAGE`) on the `edge` netwo
   - `Referrer-Policy: strict-origin-when-cross-origin`;
   - a Permissions-Policy that disables camera, microphone and geolocation.
 
-The CI smoke test runs with `TLS_MODE=none`, so **neither TLS mode has CI evidence**: verify it after installation (step 9).
+The proxy also answers the site's name inside the stack (an alias on the `egress` network): PDF rendering in the backend fetches the print styles from the site's own URL. With certificates from an internal CA, the application image must trust that CA as well, or PDFs fail. `TLS_MODE=files` is exercised by the production rehearsal (`rehearsal.yml`); Let's Encrypt needs a public name and has no CI evidence: verify it after installation (step 9).
 
 ## 6. Preflight
 

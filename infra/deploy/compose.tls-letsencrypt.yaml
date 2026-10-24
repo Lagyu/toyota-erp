@@ -30,7 +30,12 @@ services:
       - ${HTTPS_PUBLISH_PORT:-443}:443
     environment:
       SITES_RULE: ${SITES_RULE:?SITES_RULE not set}
-    networks: [edge]
+    networks:
+      edge: {}
+      # the application reaches the site under its public name through the proxy: PDF
+      # rendering (wkhtmltopdf in the backend) fetches the print styles from that URL
+      egress:
+        aliases: ["${SITE_NAME:?}"]
     security_opt: [no-new-privileges:true]
     logging:
       driver: local

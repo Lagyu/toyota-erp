@@ -200,6 +200,15 @@ else
 	fail "redirect '$redirect'; missing: ${missing[*]:-none}"
 fi
 
+step "The site's own HTTPS name from inside the application (PDF style fetches)"
+inside=$(compose exec -T backend curl -sk -o /dev/null -w '%{http_code}' \
+	"https://$SITE/api/method/automotive_core.ops.health.live" 2>/dev/null || true)
+if [[ $inside == 200 ]]; then
+	pass "backend reaches https://$SITE through the proxy (alias on the egress network)"
+else
+	fail "backend got '$inside' for https://$SITE"
+fi
+
 # 5. reboot, backup, restore drill, monitoring --------------------------------------------
 step "Simulated reboot (Docker daemon restart)"
 sudo systemctl restart docker
