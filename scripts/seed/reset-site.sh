@@ -26,5 +26,5 @@ else
 	bench --site "$site" set-config automotive_environment reference
 	bench --site "$site" migrate
 fi
-rm -rf "sites/$site/private/seed" "sites/$site/private/integration"
+rm -rf "sites/$site/private/seed" "sites/$site/private/files/seed" "sites/$site/private/integration"
 echo "SITE RESET $site"
