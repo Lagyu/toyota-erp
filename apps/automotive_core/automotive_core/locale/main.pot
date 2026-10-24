@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 18:12+0919\n"
-"PO-Revision-Date: 2026-10-24 18:12+0919\n"
+"POT-Creation-Date: 2026-10-24 20:50+0919\n"
+"PO-Revision-Date: 2026-10-24 20:50+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -650,7 +650,8 @@ msgstr ""
 msgid "A request to buy, transfer or make items."
 msgstr ""
 
-#: automotive_core/integration_hub/idempotency.py:102
+#: automotive_core/integration_hub/idempotency.py:88
+#: automotive_core/integration_hub/idempotency.py:111
 msgid "A request with this Idempotency-Key is still being processed."
 msgstr ""
 
@@ -15949,7 +15950,7 @@ msgstr ""
 msgid "Has Variants"
 msgstr ""
 
-#: automotive_core/integration_hub/idempotency.py:52
+#: automotive_core/integration_hub/idempotency.py:53
 #, python-brace-format
 msgid "Header {0} is required for this request."
 msgstr ""
@@ -17685,7 +17686,7 @@ msgstr ""
 msgid "Integration message {0} for {1} is dead-lettered"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:73
+#: automotive_core/integration_hub/inbound.py:85
 #, python-brace-format
 msgid "Integration partner {0} is inactive."
 msgstr ""
@@ -18177,7 +18178,7 @@ msgstr ""
 msgid "Invalid json added in the custom options: {0}"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:124
+#: automotive_core/integration_hub/inbound.py:146
 #, python-brace-format
 msgid "Invalid message: {0}"
 msgstr ""
@@ -22270,7 +22271,7 @@ msgstr ""
 msgid "Message for Supplier"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:139
+#: automotive_core/integration_hub/inbound.py:161
 #, python-brace-format
 msgid "Message id already used with a different payload (inbound {0})."
 msgstr ""
@@ -22278,6 +22279,12 @@ msgstr ""
 #: automotive_core/templates/emails/integration_dead_letter.html:1
 #, python-brace-format
 msgid "Message {0} ({1}) for partner {2} failed {3} times and will not be retried automatically."
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:121
+#: automotive_core/integration_hub/inbound.py:125
+#, python-brace-format
+msgid "Message {0} is being stored by another delivery; retry."
 msgstr ""
 
 #. Label of a Card Break in the Integration Hub Workspace
@@ -24820,7 +24827,7 @@ msgstr ""
 msgid "Only failed or dead-lettered messages can be retried."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:314
+#: automotive_core/integration_hub/inbound.py:336
 msgid "Only failed, rejected or dead-lettered messages can be replayed."
 msgstr ""
 
@@ -26285,11 +26292,11 @@ msgstr ""
 msgid "Partner code {0} is already used by {1}."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:186
+#: automotive_core/integration_hub/inbound.py:208
 msgid "Partner has no inbound credentials configured."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:77
+#: automotive_core/integration_hub/inbound.py:89
 #, python-brace-format
 msgid "Partner {0} may not send {1} messages."
 msgstr ""
@@ -31021,7 +31028,7 @@ msgstr ""
 msgid "Rate at which this tax is applied"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:210
+#: automotive_core/integration_hub/inbound.py:232
 #, python-brace-format
 msgid "Rate limit exceeded for partner {0}."
 msgstr ""
@@ -32053,7 +32060,7 @@ msgstr ""
 msgid "Replay"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:222
+#: automotive_core/integration_hub/inbound.py:244
 msgid "Replayed request (nonce already used)."
 msgstr ""
 
@@ -37750,7 +37757,7 @@ msgstr ""
 msgid "Signature Timestamp Tolerance (Seconds)"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:199
+#: automotive_core/integration_hub/inbound.py:221
 #, python-brace-format
 msgid "Signature rejected: {0}"
 msgstr ""
@@ -41546,7 +41553,7 @@ msgstr ""
 msgid "This DocType is deprecated and may be removed in a future release"
 msgstr ""
 
-#: automotive_core/integration_hub/idempotency.py:100
+#: automotive_core/integration_hub/idempotency.py:109
 msgid "This Idempotency-Key was already used for a different request."
 msgstr ""
 
@@ -43684,7 +43691,7 @@ msgstr ""
 msgid "Unknown notification event {0}"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:170
+#: automotive_core/integration_hub/inbound.py:192
 msgid "Unknown partner."
 msgstr ""
 
@@ -48379,7 +48386,7 @@ msgstr ""
 msgid "{0} is the site's Demo Company and cannot be deleted directly. Use {1} instead."
 msgstr ""
 
-#: automotive_core/integration_hub/idempotency.py:55
+#: automotive_core/integration_hub/idempotency.py:56
 #, python-brace-format
 msgid "{0} is too long."
 msgstr ""

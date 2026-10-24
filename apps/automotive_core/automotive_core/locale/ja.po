@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 18:12+0919\n"
+"POT-Creation-Date: 2026-10-24 20:50+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -681,7 +681,8 @@ msgstr "顧客をグループ化し、目標を設定するための販売地域
 msgid "A request to buy, transfer or make items."
 msgstr "品目の購買、移動、または製造の依頼です。"
 
-#: automotive_core/integration_hub/idempotency.py:102
+#: automotive_core/integration_hub/idempotency.py:88
+#: automotive_core/integration_hub/idempotency.py:111
 msgid "A request with this Idempotency-Key is still being processed."
 msgstr "この Idempotency-Key のリクエストはまだ処理中です。"
 
@@ -15980,7 +15981,7 @@ msgstr "単価品目あり"
 msgid "Has Variants"
 msgstr "仕様バリアントあり"
 
-#: automotive_core/integration_hub/idempotency.py:52
+#: automotive_core/integration_hub/idempotency.py:53
 #, python-brace-format
 msgid "Header {0} is required for this request."
 msgstr "このリクエストには {0} ヘッダーが必要です。"
@@ -17722,7 +17723,7 @@ msgstr "連携パートナー"
 msgid "Integration message {0} for {1} is dead-lettered"
 msgstr "{1}の連携メッセージ{0}がデッドレターになりました"
 
-#: automotive_core/integration_hub/inbound.py:73
+#: automotive_core/integration_hub/inbound.py:85
 #, python-brace-format
 msgid "Integration partner {0} is inactive."
 msgstr "連携パートナー{0}は無効です。"
@@ -18214,7 +18215,7 @@ msgstr "無効なグループフィールドです。"
 msgid "Invalid json added in the custom options: {0}"
 msgstr "カスタムオプションに追加されたJSONが無効です：{0}"
 
-#: automotive_core/integration_hub/inbound.py:124
+#: automotive_core/integration_hub/inbound.py:146
 #, python-brace-format
 msgid "Invalid message: {0}"
 msgstr "無効なメッセージです: {0}"
@@ -22306,7 +22307,7 @@ msgstr "メッセージの一部を省略しました"
 msgid "Message for Supplier"
 msgstr "仕入先へのメッセージ"
 
-#: automotive_core/integration_hub/inbound.py:139
+#: automotive_core/integration_hub/inbound.py:161
 #, python-brace-format
 msgid "Message id already used with a different payload (inbound {0})."
 msgstr "このメッセージIDは、別のペイロードですでに使用されています（受信メッセージ{0}）。"
@@ -22315,6 +22316,12 @@ msgstr "このメッセージIDは、別のペイロードですでに使用さ�
 #, python-brace-format
 msgid "Message {0} ({1}) for partner {2} failed {3} times and will not be retried automatically."
 msgstr "パートナー{2}向けのメッセージ{0}（{1}）は{3}回失敗したため、自動では再試行されません。"
+
+#: automotive_core/integration_hub/inbound.py:121
+#: automotive_core/integration_hub/inbound.py:125
+#, python-brace-format
+msgid "Message {0} is being stored by another delivery; retry."
+msgstr "メッセージ {0} は別の配信で保存中です。再試行してください。"
 
 #. Label of a Card Break in the Integration Hub Workspace
 #: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:36
@@ -24859,7 +24866,7 @@ msgstr "承認を依頼できるのは下書きのドキュメントのみです
 msgid "Only failed or dead-lettered messages can be retried."
 msgstr "再送できるのは、失敗またはデッドレターになったメッセージのみです。"
 
-#: automotive_core/integration_hub/inbound.py:314
+#: automotive_core/integration_hub/inbound.py:336
 msgid "Only failed, rejected or dead-lettered messages can be replayed."
 msgstr "再処理できるのは、失敗、却下、またはデッドレターになったメッセージのみです。"
 
@@ -26324,11 +26331,11 @@ msgstr "パートナーアクセスはポータル（ウェブサイト）ユー
 msgid "Partner code {0} is already used by {1}."
 msgstr "パートナーコード{0}はすでに{1}で使用されています。"
 
-#: automotive_core/integration_hub/inbound.py:186
+#: automotive_core/integration_hub/inbound.py:208
 msgid "Partner has no inbound credentials configured."
 msgstr "パートナーに受信用の認証情報が設定されていません。"
 
-#: automotive_core/integration_hub/inbound.py:77
+#: automotive_core/integration_hub/inbound.py:89
 #, python-brace-format
 msgid "Partner {0} may not send {1} messages."
 msgstr "パートナー{0}には{1}メッセージの送信が許可されていません。"
@@ -31059,7 +31066,7 @@ msgstr "仕入先の通貨を会社の基本通貨に換算するレートです
 msgid "Rate at which this tax is applied"
 msgstr "この税金に適用される税率です。"
 
-#: automotive_core/integration_hub/inbound.py:210
+#: automotive_core/integration_hub/inbound.py:232
 #, python-brace-format
 msgid "Rate limit exceeded for partner {0}."
 msgstr "パートナー{0}のレート制限を超過しました。"
@@ -32091,7 +32098,7 @@ msgstr "繰り返し：{0}"
 msgid "Replay"
 msgstr "再処理"
 
-#: automotive_core/integration_hub/inbound.py:222
+#: automotive_core/integration_hub/inbound.py:244
 msgid "Replayed request (nonce already used)."
 msgstr "リプレイされたリクエストです（ノンスは使用済みです）。"
 
@@ -37816,7 +37823,7 @@ msgstr "新規登録"
 msgid "Signature Timestamp Tolerance (Seconds)"
 msgstr "署名タイムスタンプの許容誤差（秒）"
 
-#: automotive_core/integration_hub/inbound.py:199
+#: automotive_core/integration_hub/inbound.py:221
 #, python-brace-format
 msgid "Signature rejected: {0}"
 msgstr "署名が拒否されました: {0}"
@@ -41611,7 +41618,7 @@ msgstr "サードパーティ認証"
 msgid "This DocType is deprecated and may be removed in a future release"
 msgstr "このドキュメントタイプは非推奨であり、将来のリリースで削除される可能性があります。"
 
-#: automotive_core/integration_hub/idempotency.py:100
+#: automotive_core/integration_hub/idempotency.py:109
 msgid "This Idempotency-Key was already used for a different request."
 msgstr "この Idempotency-Key はすでに別のリクエストで使用されています。"
 
@@ -43749,7 +43756,7 @@ msgstr "不明な受信メッセージタイプです: {0}"
 msgid "Unknown notification event {0}"
 msgstr "不明な通知イベント{0}です。"
 
-#: automotive_core/integration_hub/inbound.py:170
+#: automotive_core/integration_hub/inbound.py:192
 msgid "Unknown partner."
 msgstr "不明なパートナーです。"
 
@@ -48444,7 +48451,7 @@ msgstr "{0}が設定済み"
 msgid "{0} is the site's Demo Company and cannot be deleted directly. Use {1} instead."
 msgstr "{0}はサイトのデモ会社のため、直接削除できません。代わりに{1}を使用してください。"
 
-#: automotive_core/integration_hub/idempotency.py:55
+#: automotive_core/integration_hub/idempotency.py:56
 #, python-brace-format
 msgid "{0} is too long."
 msgstr "{0} の値が長すぎます。"
