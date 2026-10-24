@@ -22,35 +22,37 @@ How to reproduce:
 
 | | |
 |---|---|
-| Image | `toyota-erp/erp:0.1.0-862cffdfad23-reference` (built before this log's image changes) |
-| Tools | Syft 1.33.0 (SBOM, SPDX JSON, 15.6 MB); Trivy 0.67.2 (vulnerabilities only) |
+| Image | `toyota-erp/erp:0.1.0-f37d75af8bcf` (production), CI run 40089255123 (artifact `image-evidence`) |
+| Tools | Syft 1.33.0 (SBOM, SPDX JSON); Trivy 0.67.2 (vulnerabilities only) |
 | Base | Debian 13.7 (frappe/base:version-16) |
 
 Critical and high counts by component:
 
 | Component | Critical | High | Notes |
 |---|---|---|---|
-| Debian packages | 17 | 176 | Only libbrotli1 (high) has a fix published; the rest have none yet. |
-| Python packages | 11 | 57 | 9 packages. Most are pinned by Frappe v16.53.0 (see V-03). |
-| Node.js packages | 2 | 73 | 35 packages, mostly Frappe's asset build toolchain (see V-04, V-05). |
-| esbuild binary (Go 1.19 stdlib) | 4 | 47 | Build tool in Frappe's node_modules. |
-| uv / uvx (Rust) | 1 | 0 | Package installer from the base image. |
+| Debian packages | 9 | 183 | 41 packages; none has a fix published (V-02). |
+| Python packages | 10 | 57 | 8 packages pinned by Frappe v16.53.0; Pillow 12.3.0 carries all 10 criticals (V-03). |
+| Node.js packages | 0 | 11 | 6 packages: the realtime server's engine.io, socket.io-parser and ws (V-05), and the licence files kept of three build tools (V-04). |
+
+Since the first scan of this log (image `0.1.0-862cffdfad23`: 35 critical, 353 high): the esbuild
+binary, uv, npm and the build trees of the desk and ERPNext's banking screen are gone from the
+runtime image, and Debian's published fixes are applied at every build.
 
 ## Vulnerabilities
 
 | ID | Finding | Severity | Status | Action / rationale | Owner decision |
 |---|---|---|---|---|---|
-| V-01 | Debian packages with published fixes (libbrotli1) | High | Fixed (next image) | The runtime stage runs `apt-get upgrade` (`infra/image/Containerfile`), so each build takes Debian's security fixes. | |
-| V-02 | Debian packages without a fix (41 packages: curl, libxml2, libsystemd0, gnupg, libx11, …) | Critical/High | Accepted (owner) | No fixed version exists. Rebuild and rescan weekly (`sbom.sh`), and on Debian security advisories. | |
-| V-03a | `uv` 0.11.33 in the runtime image | Critical | Fixed (next image) | Removed from the runtime stage; it is only needed to build the bench. | |
-| V-03b | `urllib3` 2.7.0 | High | Fixed (next image) | `infra/image/constraints.txt` already pins 2.8.0; the scanned image predates it. | |
+| V-01 | Debian packages with published fixes (libbrotli1) | High | Fixed | The runtime stage runs `apt-get upgrade` (`infra/image/Containerfile`), so each build takes Debian's security fixes; the f37d75a scan has no Debian finding with a published fix. | |
+| V-02 | Debian packages without a fix (41 packages, 9 critical and 183 high: curl, libxml2, libsystemd0, gnupg, libx11, …) | Critical/High | Accepted (owner) | No fixed version exists. Rebuild and rescan weekly (`sbom.sh`), and on Debian security advisories. | |
+| V-03a | `uv` 0.11.33 in the runtime image | Critical | Fixed | Removed from the runtime stage; it is only needed to build the bench. Not in the f37d75a image. | |
+| V-03b | `urllib3` 2.7.0 | High | Fixed | Installed: 2.8.0 in the bench and in the system Python (`infra/image/constraints.txt`). Trivy still lists urllib3 2.7.0, msgpack 1.1.2, setuptools 70.3.0 and a second Pillow 12.3.0 without a file path: no installed copy at those versions was found; recheck with the next base image. | |
 | V-03c | `Pillow` 12.3.0 (28 CVEs, fixed in 13.0) | Critical | Accepted (owner) | Frappe pins `Pillow~=12.3.0`. Mitigations: uploads are limited by type and size per DocType, ClamAV scanning is available, and attachments are private by default (`files/policy.py`). Upgrade with the Frappe patch release that moves the pin. | |
 | V-03d | `pypdf` 6.19.0 | High | Accepted (owner) | Frappe pins `pypdf==6.19.0`. It only parses PDFs produced or uploaded inside the system (print, attachments). | |
 | V-03e | `GitPython` 3.1.62, `filelock` 3.20.4 | High | Accepted | Pinned by Frappe (`~=3.1`, `~=3.20`). Used by bench tooling and local file locks; neither is reachable from requests. | |
 | V-03f | `msgpack` 1.1.2, `setuptools` 70.3.0 | High | Accepted | Packaging and serialisation libraries; no request path reaches them. Recheck with each base image. | |
 | V-03g | `pdfkit` 1.0.0 | High | Accepted (owner) | No fix released. A wrapper around wkhtmltopdf, which renders print formats from our own templates only. | |
-| V-04 | Node build toolchain (esbuild/Go stdlib, postcss, svgo, vite, loader-utils, shell-quote, immutable, json5, minimatch, braces, …) | Critical/High | Mitigated | These build the desk assets during the image build. The runtime image serves the prebuilt assets and runs none of them. Recommended: prune `node_modules` to the socket.io runtime set in the runtime stage. | |
-| V-05 | Node runtime of the realtime server (socket.io-parser 4.2.4/4.2.5, engine.io 6.5.4, ws 8.11/8.17, axios 1.18.1, follow-redirects 1.16.0, undici 6.28.0) | High | Accepted (owner) | Pinned by Frappe's `package.json`. The socket.io endpoint is behind the TLS proxy and needs a valid Frappe session. Upgrade with Frappe. | |
+| V-04 | Node build toolchain (esbuild/Go stdlib, postcss, svgo, vite, loader-utils, shell-quote, immutable, json5, minimatch, braces, …) | Critical/High | Fixed | The runtime image keeps only the realtime server's packages (`infra/image/prune-node-modules.js`, also over ERPNext's banking build tree) and no npm, npx, corepack or yarn. What the scan still lists of the toolchain, postcss 8.4.31, launch-editor 2.6.1 and vite 8.2.1, is the `package.json` and licence files kept of direct dependencies for licence attribution: no code. | |
+| V-05 | Node runtime of the realtime server (socket.io-parser 4.2.4, engine.io 6.5.4, ws 8.11.0) | High | Accepted (owner) | Pinned by Frappe's `package.json`. The socket.io endpoint is behind the TLS proxy and needs a valid Frappe session. Upgrade with Frappe. | |
 
 ## Configuration review
 
