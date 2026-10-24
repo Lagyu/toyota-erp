@@ -167,7 +167,8 @@ def rescan_pending(limit: int = RESCAN_BATCH) -> int:
 		return 0
 	if not ping(settings.clamd_host, cint(settings.clamd_port) or 3310):
 		return 0
-	names = frappe.db.sql("""select name from `tabFile` where is_folder = 0 and ifnull(is_remote_file, 0) = 0
+	# a remote file (a URL) has no content here to scan
+	names = frappe.db.sql("""select name from `tabFile` where is_folder = 0 and ifnull(file_url, '') not like 'http%%'
 		and ifnull(automotive_scan_status, '') in %(pending)s
 		and ifnull(attached_to_doctype, '') not in %(system)s
 		order by ifnull(automotive_scanned_at, '2000-01-01'), creation limit %(limit)s""",

@@ -187,9 +187,11 @@ def apply() -> None:
 
 def report_roles(doctype: str) -> set[str]:
 	"""Roles that may run reports on ``doctype`` (the "report" right at level 0), read as Frappe
-	reads them: from its Custom DocPerms when it has any, else from its DocPerms."""
+	reads them: from its Custom DocPerms when it has any, else from its DocPerms. A right on the
+	user's own documents only (*If Owner*) does not run a report over the DocType."""
 	table = "Custom DocPerm" if frappe.db.exists("Custom DocPerm", {"parent": doctype}) else "DocPerm"
-	return set(frappe.get_all(table, filters={"parent": doctype, "permlevel": 0, "report": 1}, pluck="role"))
+	return set(frappe.get_all(table, filters={"parent": doctype, "permlevel": 0, "report": 1, "if_owner": 0},
+		pluck="role"))
 
 
 def align_report_roles() -> list[str]:
