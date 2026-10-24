@@ -43,10 +43,11 @@ secret_for_frappe() {
 # Administrator password to the value on its stdin (never on a command line).
 #   compose exec -T backend env/bin/python -c "$SET_ADMIN_PASSWORD_PY" SITE <secret_file
 # shellcheck disable=SC2034
-SET_ADMIN_PASSWORD_PY='import sys
+SET_ADMIN_PASSWORD_PY='import os, sys
 import frappe
 from frappe.utils.password import update_password
-frappe.init(site=sys.argv[1], sites_path="sites")
+os.chdir("sites")  # Frappe opens its log files at ../logs from the sites directory
+frappe.init(site=sys.argv[1], sites_path=".")
 frappe.connect()
 update_password("Administrator", sys.stdin.read().strip())
 frappe.db.commit()

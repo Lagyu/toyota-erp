@@ -196,10 +196,11 @@ done
 # the OTP challenge on production, so a user without a two-factor role logs in (password on stdin)
 cookie_user=rehearsal.cookie@hinode.test
 cookie_password=$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')
-compose exec -T backend env/bin/python -c 'import sys
+compose exec -T backend env/bin/python -c 'import os, sys
 import frappe
 from frappe.utils.password import update_password
-frappe.init(site=sys.argv[1], sites_path="sites")
+os.chdir("sites")  # Frappe opens its log files at ../logs from the sites directory
+frappe.init(site=sys.argv[1], sites_path=".")
 frappe.connect()
 if not frappe.db.exists("User", sys.argv[2]):
 	user = frappe.get_doc({"doctype": "User", "email": sys.argv[2], "first_name": "Rehearsal", "send_welcome_email": 0})

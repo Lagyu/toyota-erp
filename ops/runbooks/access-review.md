@@ -244,6 +244,7 @@ Run at the interval your control framework requires, for example quarterly, and 
 - **Password:** the Reset Password action on the User form (System Manager), or the "Forgot Password" link on `/login`. Both send email, so an outgoing Email Account is needed.
 - **Lost OTP device (2FA):** a System Manager opens the User and uses **Password → Reset OTP Secret**. The user enrols again at next login. Verify the person's identity through your own channel before resetting.
 - **Administrator password:** see [security-operations.md](security-operations.md#administrator-password).
+- **Users who sign in through an identity provider:** recovery is the provider's; the account here only has to stay enabled ([security-operations.md](security-operations.md#identity-provider-sso-and-ldap)).
 
 ## Related
 

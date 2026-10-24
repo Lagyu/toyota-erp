@@ -126,7 +126,57 @@ restic supports several keys per repository.
   - A login as a privileged user asks for the OTP.
 - **Recovery:** a System Manager uses **Reset OTP Secret** on the User form ([access-review.md](access-review.md#account-recovery)).
 - **Host-level access bypasses the web login:** `bench` commands, `bench mariadb`, Docker. Treat host access as privileged access: SSH keys, a small admin group, auditing on the host.
-- **Identity-provider (SSO/LDAP) integration is not configured** by this repository.
+- **Identity providers** (SSO, LDAP): none is configured by this repository; see [Identity provider](#identity-provider-sso-and-ldap).
+
+## Identity provider (SSO and LDAP)
+
+Frappe v16 can authenticate users against an identity provider. None is configured here
+(the group is fictional); this is how to connect one without weakening the controls above.
+
+| | OAuth 2.0 / OpenID Connect | LDAP / Active Directory |
+|---|---|---|
+| Configured in | **Social Login Key**: provider *Office 365* (Microsoft Entra ID), *Google*, *Keycloak*, *Frappe*, *GitHub* or *Custom* | **LDAP Settings** |
+| Login | a button on `/login`; register `https://<site>` + the key's *Redirect URL* at the provider (custom providers: `/api/method/frappe.integrations.oauth2_logins.custom/<provider name>`) | the normal login form, checked against the directory |
+| Frappe's OTP for the flagged roles | **not asked**: Frappe trusts the provider's login, so the provider must require MFA from everyone holding a flagged role | asked, as for a password login |
+| Account matched by | the e-mail address the provider returns | the directory's e-mail attribute |
+
+SAML is not supported by Frappe itself.
+
+**Settings that keep the access model:**
+
+1. **Accounts come from provisioning only.** User Provisioning Requests set the approved
+   role profile and the company and plant scope. Set *Sign Ups* = **Deny** on the Social
+   Login Key and tick *Do Not Create New User* in LDAP Settings, so a person the provider
+   knows but the application does not is refused. A user created by the provider would
+   have no company scope and would see every company.
+2. **Roles stay in the application.** Leave LDAP's group mappings empty: LDAP adds and
+   removes mapped roles at every login, outside the approved provisioning (a role profile
+   puts its roles back on the next save, but users with extra roles have none). LDAP adds
+   its *Default Role* at every login and requires one for System Users: create a role with
+   no permissions for it (for example "Directory User").
+3. **Portal Settings → Default Role stays empty**, as the tenant leaves it: Frappe adds that
+   role to every user at their first social login.
+4. **Deprovisioning stays in the application.** Disabling the account at the provider stops
+   new logins, but an open session lasts until it expires (8 hours on production).
+   Deactivate through a User Provisioning Request ([access-review.md](access-review.md#deprovisioning)),
+   which also ends the sessions and removes API keys; a disabled user is refused by both
+   login types.
+5. **Password login stays on.** System Settings → *Disable Username/Password Login* turns it
+   off for everyone, Administrator included: the smoke test's administrator login then
+   fails and break-glass access is only through the host (`bench`). Staff who sign in
+   through the provider need no password here. Password and OTP resets
+   ([access-review.md](access-review.md#account-recovery)) only concern password logins;
+   with a provider, account recovery is the provider's.
+6. **Credentials and transport.** The client secret and the LDAP bind password are Password
+   fields, encrypted with the site's `encryption_key`; rotate them at the provider, then
+   paste the new value. For LDAP use `ldaps://` or *SSL/TLS Mode* StartTLS with *Require
+   Trusted Certificate* = Yes. The backend reaches the provider over the stack's outbound
+   network: allow it in the host firewall (findings C-03). The proxy's CSP
+   (`form-action 'self'`) does not affect either flow: the provider redirects back with GET.
+
+**Verify** with a test account: a login through the provider lands on the desk with the
+provisioned roles and scope; a privileged user is asked for MFA by the provider; an account
+unknown to the application, and a deactivated one, are refused.
 
 ## Dependency audit and the allowlist
 
