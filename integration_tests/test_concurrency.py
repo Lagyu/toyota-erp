@@ -5,8 +5,9 @@ Run against a reference stack whose personas and journey fixtures are prepared
 
 - a portal write sent eight times at once with one Idempotency-Key creates one document,
   and every answer names it (or reports the first as still in progress);
-- eight simultaneous redeliveries of one signed inbound message are accepted once: the
-  others are answered as duplicates of the same stored message;
+- eight simultaneous redeliveries of one inbound message (each signed afresh, as a sender
+  retries) are accepted once: the others are answered as duplicates of the same stored
+  message, or asked to retry (409) while the first is being stored;
 - eight simultaneous submits of one draft journal entry post it once.
 """
 
@@ -82,6 +83,7 @@ class TestConcurrency(unittest.TestCase):
 		guest = Client()
 
 		def deliver(_):
+			# each delivery signed afresh: a reused signature (its nonce) is a replay, refused
 			return guest.request("POST", INBOUND, body=body, headers={
 				"Content-Type": "text/plain" if edi else "application/json",
 				"X-Hinode-Partner": partner["partner"], "X-Hinode-Signature": sign(partner["secret"], body)})
@@ -89,10 +91,13 @@ class TestConcurrency(unittest.TestCase):
 		answers = at_once(deliver)
 		statuses = sorted(status for status, _ in answers)
 		self.assertEqual(statuses.count(202), 1, answers)  # accepted once ...
-		self.assertEqual(statuses.count(200), PARALLEL - 1, answers)  # ... the rest are duplicates
-		results = [data["message"] for _, data in answers]
-		self.assertEqual({r["status"] for r in results if r["status"] != "accepted"}, {"duplicate"})
-		self.assertEqual(len({r["inbound_id"] for r in results}), 1)  # one stored message
+		self.assertTrue(set(statuses) <= {200, 202, 409}, answers)  # ... duplicates, or retry later
+		stored = {data["message"]["inbound_id"] for status, data in answers if status in (200, 202)}
+		self.assertEqual(len(stored), 1, answers)  # one stored message
+		self.assertEqual({data["message"]["status"] for status, data in answers if status == 200} - {"duplicate"}, set())
+		status, again = deliver(0)  # a retry afterwards is a duplicate of it
+		self.assertEqual((status, again["message"]["status"], again["message"]["inbound_id"]),
+			(200, "duplicate", next(iter(stored))))
 
 	def test_simultaneous_submits_post_once(self):
 		password = os.environ.get("INTEGRATION_PASSWORD")
@@ -111,8 +116,9 @@ class TestConcurrency(unittest.TestCase):
 		cash = value("Account", {"company": company, "account_type": "Cash", "is_group": 0}, "name")
 		expense = value("Account", {"company": company, "root_type": "Expense", "account_type": "", "is_group": 0}, "name")
 		cost_center = value("Company", {"name": company}, "cost_center")
-		draft = {"doctype": "Journal Entry", "company": company, "user_remark": "[concurrency]",
-			"posting_date": datetime.date.today().isoformat(),
+		# a cash entry: manual journals (voucher type Journal Entry) need the controller's approval
+		draft = {"doctype": "Journal Entry", "voucher_type": "Cash Entry", "company": company,
+			"user_remark": "[concurrency]", "posting_date": datetime.date.today().isoformat(),
 			"accounts": [{"account": expense, "debit_in_account_currency": 10, "cost_center": cost_center},
 				{"account": cash, "credit_in_account_currency": 10, "cost_center": cost_center}]}
 		status, saved = admin.request("POST", "/api/method/frappe.client.insert",
@@ -125,7 +131,8 @@ class TestConcurrency(unittest.TestCase):
 				headers={"Content-Type": "application/json"})
 
 		answers = at_once(submit)
-		self.assertEqual(sorted(status for status, _ in answers).count(200), 1, [s for s, _ in answers])
+		self.assertEqual(sorted(status for status, _ in answers).count(200), 1,
+			[(status, (data or {}).get("exc_type")) for status, data in answers])
 		status, entries = admin.request("GET", "/api/method/frappe.client.get_count", params={"doctype": "GL Entry",
 			"filters": json.dumps({"voucher_no": saved["message"]["name"], "is_cancelled": 0})})
 		self.assertEqual(entries["message"], 2)  # one posting: a debit and a credit

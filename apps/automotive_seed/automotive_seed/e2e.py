@@ -115,17 +115,20 @@ def prepare_users(password: str | None = None, output: str | None = None) -> str
 	# second approvers: payments need two treasury approvers, dispositions a second quality manager
 	for key, role in (("treasury", "Treasury Approver"), ("quality_manager", "Quality Manager")):
 		others = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
-			where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name != %s order by u.name""",
+			where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name != %s
+			and u.name not in ('Administrator', 'Guest') order by u.name""",
 			(role, users.get(key) or ""), pluck=True)
 		if others:
 			users[f"{key}_2"] = others[0]
 	# a Japanese-speaking planner (ERP-12.3): the other personas keep the English desk the specs read
 	planners = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
 		where r.role = 'Production Planner' and u.enabled = 1 and u.user_type = 'System User' and u.name != %s
-		order by u.name""", users.get("planner") or "", pluck=True)
+		and u.name not in ('Administrator', 'Guest') order by u.name""", users.get("planner") or "", pluck=True)
 	if planners:
 		users["planner_ja"] = planners[0]
 		frappe.db.set_value("User", planners[0], "language", "ja")
+	# Administrator holds every role but is no persona: its password is the stack's own
+	assert "Administrator" not in users.values(), users
 	for user in users.values():
 		if user:
 			update_password(user, password)

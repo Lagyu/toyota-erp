@@ -76,10 +76,11 @@ def idempotent(endpoint: str, required: bool = True):
 			try:
 				frappe.db.savepoint("idempotency")
 				record.insert()
-			except (frappe.DuplicateEntryError, frappe.UniqueValidationError):
-				# the scope key is a unique field, not the name: Frappe reports UniqueValidationError.
-				# This insert waited for the first request to commit; nothing is written yet, so
-				# start over in a new transaction, whose snapshot sees the first one's record.
+			except (frappe.DuplicateEntryError, frappe.UniqueValidationError, frappe.QueryDeadlockError):
+				# the scope key is a unique field, not the name: Frappe reports UniqueValidationError
+				# (or, under MariaDB's snapshot isolation, a deadlock). This insert waited for the
+				# first request to commit; nothing is written yet, so start over in a new
+				# transaction, whose snapshot sees the first one's record.
 				frappe.db.rollback()
 				frappe.clear_messages()  # the duplicate entry message is not this request's answer
 				existing = _load(scope)

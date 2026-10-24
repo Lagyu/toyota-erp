@@ -37,6 +37,18 @@ class PayloadConflictError(frappe.ValidationError):
 	http_status_code = 409
 
 
+class ConcurrentDeliveryError(frappe.ValidationError):
+	"""Another delivery of the same message is being stored right now: retry it (409)."""
+
+	http_status_code = 409
+
+
+# a second insert of a unique value: Frappe's error for the name, for another unique field,
+# and what MariaDB's snapshot isolation reports when the first insert committed after this
+# transaction's snapshot (a deadlock to Frappe; the transaction may be rolled back)
+DUPLICATE_INSERT = (frappe.DuplicateEntryError, frappe.UniqueValidationError)
+
+
 def _settings():
 	return frappe.get_cached_doc("Automotive Settings")
 
@@ -99,9 +111,19 @@ def accept(partner_code: str, raw_body: bytes | str, source: str = "Internal") -
 	try:
 		frappe.db.savepoint("inbound_accept")
 		msg.insert()
-	except frappe.DuplicateEntryError:
+	except DUPLICATE_INSERT:
+		# a concurrent delivery stored it first. This transaction's snapshot may predate that
+		# commit, so the stored message may not be readable here: then the sender retries.
 		frappe.db.rollback(save_point="inbound_accept")
-		return _duplicate_response(_existing(partner.name, envelope.message_id), payload_hash)
+		frappe.clear_messages()
+		existing = _existing(partner.name, envelope.message_id)
+		if not existing:
+			raise ConcurrentDeliveryError(_("Message {0} is being stored by another delivery; retry.").format(
+				envelope.message_id)) from None
+		return _duplicate_response(existing, payload_hash)
+	except frappe.QueryDeadlockError:
+		raise ConcurrentDeliveryError(_("Message {0} is being stored by another delivery; retry.").format(
+			envelope.message_id)) from None
 	log("integration.inbound.accepted", partner=partner.name, message_id=envelope.message_id,
 		message_type=envelope.message_type, inbound=msg.name)
 	_enqueue(msg.name)
@@ -217,8 +239,8 @@ def _remember_nonce(partner: str, nonce: str) -> None:
 	try:
 		frappe.db.savepoint("inbound_nonce")
 		doc.insert()
-	except frappe.DuplicateEntryError:
-		frappe.db.rollback(save_point="inbound_nonce")
+	except (*DUPLICATE_INSERT, frappe.QueryDeadlockError):
+		frappe.clear_messages()
 		raise frappe.AuthenticationError(_("Replayed request (nonce already used).")) from None
 
 
