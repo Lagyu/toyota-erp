@@ -62,6 +62,13 @@ print("\n".join(bad) or "ok")
 sys.exit(1 if bad else 0)
 PY
 
+step "e2e suite: TypeScript type check"
+if command -v npm >/dev/null; then
+	(cd e2e && npm ci --ignore-scripts --no-audit --no-fund >/dev/null && npx --no-install tsc --noEmit -p .) || status=1
+else
+	echo "npm not found: skipped (CI runners have Node)"
+fi
+
 step "identity boundary (customer-facing assets)"
 python3 scripts/ci/identity_check.py || status=1
 
