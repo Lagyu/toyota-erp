@@ -23,6 +23,7 @@ services:
       - --skip-character-set-client-handshake
       - --innodb-buffer-pool-size=${DEV_INNODB_BUFFER_POOL:-1G}
       - --innodb-log-file-size=256M
+      - --innodb-snapshot-isolation=OFF  # as in production (infra/deploy/compose.hinode.yaml)
       - --max-connections=200
       - --max-allowed-packet=256M
     environment:

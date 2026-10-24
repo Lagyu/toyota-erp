@@ -304,3 +304,16 @@ already holds, and duplicates rows of tables without a unique key such as `tabSi
 **Consequences.** The recovery point is about 5 minutes; every drill measures it. Only the
 last three nightly sets can be brought forward from the newest binary log snapshot.
 
+## D-033 InnoDB snapshot isolation off
+
+**Decision.** MariaDB runs with `--innodb-snapshot-isolation=OFF` (production and development
+compose). ERPNext's stock ledger and Frappe's document saves rely on locking reads that wait
+for a concurrent transaction and then see its committed row; MariaDB 11.6+ (snapshot isolation
+on by default) fails such a read with error 1020 instead, which Frappe reports as a deadlock.
+**Alternatives.** Keep the default and retry failing requests (users and jobs would see
+intermittent errors on concurrent stock postings); run ERPNext at READ COMMITTED (not how it
+is tested).
+**Consequences.** The InnoDB behaviour of MariaDB up to 11.5 and of MySQL, under which ERPNext
+is developed. A concurrent duplicate insert still waits and then fails with a duplicate key,
+which the integration hub and the idempotency keys handle.
+

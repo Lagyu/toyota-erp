@@ -148,6 +148,11 @@ services:
       - --skip-character-set-client-handshake
       - --innodb-buffer-pool-size=${DB_BUFFER_POOL:-2G}
       - --innodb-log-file-size=512M
+      # InnoDB's locking reads as ERPNext expects them: wait for the other transaction, then
+      # read its committed row. MariaDB 11.6+ turns snapshot isolation on by default, which
+      # makes such a read fail instead ("Record has changed since last read", 1020), so
+      # concurrent stock postings would error intermittently (docs: database.md)
+      - --innodb-snapshot-isolation=OFF
       - --max-connections=${DB_MAX_CONNECTIONS:-400}
       - --max-allowed-packet=256M
       # binary log: point-in-time recovery between nightly backups

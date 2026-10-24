@@ -22,6 +22,7 @@ Server options from `infra/deploy/compose.hinode.yaml`:
 | `--character-set-server` / `--collation-server` | `utf8mb4` / `utf8mb4_unicode_ci` (+ `--skip-character-set-client-handshake`) | Frappe requirement, Japanese text |
 | `--innodb-buffer-pool-size` | `${DB_BUFFER_POOL:-2G}` (production example `8G`) | cache size |
 | `--innodb-log-file-size` | `512M` | |
+| `--innodb-snapshot-isolation` | `OFF` | ERPNext serialises concurrent stock postings with locking reads that wait for the other transaction and then read its committed row. MariaDB 11.6+ turns snapshot isolation on by default, which makes such a read fail with "Record has changed since last read" (1020) instead: two stock postings at once would error intermittently. Seen in CI while ERPNext reposted stock in a worker. This is the behaviour of MariaDB up to 11.5 and of MySQL |
 | `--max-connections` | `${DB_MAX_CONNECTIONS:-400}` (production example `600`) | gunicorn threads + workers + scheduler |
 | `--max-allowed-packet` | `256M` | large documents and restores |
 | `--log-bin=mariadb-bin`, `--binlog-format=ROW` | | binary log ([below](#binary-logs-and-point-in-time-recovery)) |
