@@ -40,6 +40,7 @@ Create one **Integration Partner** per counterpart:
 | Service User | Required when *Allowed Message Types* is set, and must be enabled. Inbound messages are processed **as this user**, so its normal permissions apply. |
 | Endpoint URL, Key ID, Outbound Secret | HTTPS delivery: the URL must be `https://` and allow-listed. Key ID is sent as `kid=`. |
 | Inbound Secret | Shared secret the partner signs requests with |
+| Previous Inbound Secret, Previous Secret Accepted Until | Set by *Rotate Inbound Secret*: the replaced secret, still accepted until that time (see [Rotating partner secrets](#rotating-partner-secrets)) |
 | Allowed Message Types | One per line; empty means nothing is accepted |
 | Subscribed Events | Outbound event types, one per line |
 
@@ -89,10 +90,11 @@ v1 = HMAC_SHA256(secret, "<t>.<n>." + raw request body)
   3. the partner has an inbound secret;
   4. `t` is within the tolerance;
   5. the nonce is 8–64 alphanumeric characters;
-  6. the HMAC matches;
+  6. the HMAC matches the inbound secret or, during a rotation's overlap, the previous one;
   7. the nonce was not used before. Nonces are stored in Integration Nonce; a replay gives "Replayed request (nonce already used).".
 
-  `kid` is parsed, but the inbound side has a single secret per partner.
+  `kid` is parsed but not used to select the secret: the current secret is tried first, then
+  the previous one while its overlap lasts.
 - **Outbound** (HTTPS Webhook): requests are signed with the partner's *Outbound Secret*. `kid` is the Key ID, or the partner code if Key ID is empty. Other headers sent:
   - `Content-Type`: `application/json`, or `application/edi-x12` for Hinode EDI;
   - `User-Agent: toyota-erp-clone-outbox/1`;
@@ -288,10 +290,30 @@ Inbound EDI failures answer 417. In file drop they go to `rejected/` with the re
 
 ## Rotating partner secrets
 
-There is one inbound and one outbound secret per partner; no overlap window is implemented.
+**Inbound**, with an overlap so the partner switches without refused requests:
 
-- **Inbound:** agree a switch time with the partner, then paste the new secret into *Inbound Secret* and save. Requests signed with the old secret get 401 from then on, and partners are expected to resend (at-least-once). A duplicate resend is harmless.
-- **Outbound:** update *Outbound Secret* (and *Key ID* if the partner selects keys by `kid`). Deliveries that fail meanwhile are retried automatically.
+1. On the partner, an IT Operator or System Manager chooses **Rotate Inbound Secret** and
+   the overlap in hours (default 24, at most 168). The same call over the API:
+   `POST /api/method/automotive_core.integration_hub.partners.rotate_inbound_secret` with
+   `partner` and `overlap_hours`.
+2. The new secret is generated on the server (32 random bytes, URL-safe) and shown **once**.
+   Give it to the partner over a secure channel; it cannot be displayed again (rotate again
+   if it is lost).
+3. Until *Previous Secret Accepted Until*, requests signed with either secret are accepted.
+   Each one still signed with the old secret writes
+   `integration.inbound.previous_secret_used` (with the partner) to the structured log, so
+   you can see whether the partner has switched before the overlap ends.
+4. After that time the old secret gets 401; partners resend (at-least-once), and a duplicate
+   resend is harmless.
+
+An overlap of 0 replaces the secret at once (for a leaked secret). A second rotation during
+an overlap ends the first overlap: only the secret being replaced stays valid. Each rotation
+is recorded as the audit event `integration.inbound_secret_rotated` (the overlap, never the
+secret). Pasting a new value into *Inbound Secret* by hand still works, with no overlap of its own.
+
+**Outbound:** update *Outbound Secret* (and *Key ID* if the partner selects keys by `kid`),
+at the time agreed with the partner: the partner checks one secret, so the two sides switch
+together. Deliveries refused meanwhile are retried automatically.
 
 Secrets are Password fields, encrypted with the site's `encryption_key` (`site_config.json`). See [security-operations.md](security-operations.md#secrets).
 

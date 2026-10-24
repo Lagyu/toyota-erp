@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:13+0919\n"
+"POT-Creation-Date: 2026-10-24 18:12+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -1636,7 +1636,7 @@ msgstr "品目のシリアル番号・バッチ番号を有効化"
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:65
 #: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:53
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:118
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:120
 msgid "Active"
 msgstr "有効"
 
@@ -1714,7 +1714,7 @@ msgid "Actual type tax cannot be included in Item rate in row {0}"
 msgstr "行{0}：「実額」タイプの税金は品目単価に含めることはできません。"
 
 #. Label of the adapter (Select) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:92
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:94
 msgid "Adapter"
 msgstr "アダプター"
 
@@ -2977,7 +2977,7 @@ msgstr "メンション可能"
 
 #. Label of the allowed_message_types (Small Text) field in DocType
 #. 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:163
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:178
 msgid "Allowed Inbound Message Types"
 msgstr "許可する受信メッセージタイプ"
 
@@ -4235,7 +4235,7 @@ msgstr "添付ファイルルール"
 msgid "Attachments"
 msgstr "添付ファイル"
 
-#: automotive_core/files/policy.py:92
+#: automotive_core/files/policy.py:108
 msgid "Attachments to business documents must be private."
 msgstr "業務ドキュメントの添付ファイルは非公開にする必要があります。"
 
@@ -4360,7 +4360,7 @@ msgstr "監査イベントは削除できません。"
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:130
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:210
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:197
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:237
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:252
 msgid "Auditor"
 msgstr "監査人"
 
@@ -4875,8 +4875,8 @@ msgstr "残高の貸借区分"
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
 #. Label of the bank (Link) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:79
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:81
 msgid "Bank"
 msgstr "銀行"
 
@@ -6420,7 +6420,7 @@ msgstr "カード"
 
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
 msgid "Carrier"
 msgstr "運送会社"
 
@@ -7715,7 +7715,7 @@ msgstr "メールの設定を行います。"
 
 #. Option for the 'Connection Status' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:111
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:113
 msgid "Configured (Unverified)"
 msgstr "設定済み（未検証）"
 
@@ -7762,7 +7762,7 @@ msgstr "接続が切断されました"
 
 #. Label of the connection_status (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:110
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:112
 msgid "Connection Status"
 msgstr "接続ステータス"
 
@@ -8845,7 +8845,7 @@ msgstr "作成者のアクセス権"
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:130
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:132
 msgid "Credentials & Endpoint"
 msgstr "認証情報とエンドポイント"
 
@@ -9194,11 +9194,11 @@ msgstr "カスタムレポート"
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:79
+#: automotive_core/access/master_data.py:91
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
 #: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:66
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:68
 msgid "Customer"
 msgstr "顧客"
 
@@ -9821,7 +9821,7 @@ msgstr "デッドロックが発生しました"
 
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
 msgid "Dealer"
 msgstr "販売店"
 
@@ -9842,7 +9842,7 @@ msgstr "販売店（顧客）"
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:280
 #: automotive_core/governance/doctype/approval_request/approval_request.json:270
 #: automotive_core/governance/doctype/notification_preference/notification_preference.json:185
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:247
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:262
 msgid "Dealer Liaison"
 msgstr "販売店窓口担当者"
 
@@ -14051,7 +14051,7 @@ msgstr "ファイルURL"
 msgid "File URL is required when copying an existing attachment."
 msgstr "既存の添付ファイルをコピーする場合は、ファイルURLが必要です。"
 
-#: automotive_core/files/policy.py:83
+#: automotive_core/files/policy.py:99
 #, python-brace-format
 msgid "File exceeds the {0} MB limit."
 msgstr "ファイルが上限の{0} MBを超えています。"
@@ -14081,7 +14081,7 @@ msgstr "{0}のファイル形式は許可されていません。"
 msgid "File {0} does not exist"
 msgstr "ファイル{0}は存在しません。"
 
-#: automotive_core/files/policy.py:80
+#: automotive_core/files/policy.py:96
 #, python-brace-format
 msgid "Files of type .{0} are not allowed here."
 msgstr "ここでは .{0} 形式のファイルは使用できません。"
@@ -14292,7 +14292,7 @@ msgstr "財務統制"
 
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
 msgid "Finance System"
 msgstr "財務システム"
 
@@ -15457,6 +15457,10 @@ msgstr "理由を{0}文字以上で入力してください。"
 msgid "Give free item for every N quantity"
 msgstr "数量Nごとに無償品目を付与します。"
 
+#: automotive_core/public/js/automotive_core.bundle.js:212
+msgid "Give it to the partner over a secure channel. It is not shown again."
+msgstr "安全な経路でパートナーに渡してください。再度表示されることはありません。"
+
 #: frappe/public/js/frappe/list/list_filter/manage_layouts_dialog.js:52
 msgid "Global"
 msgstr "共通"
@@ -15877,7 +15881,7 @@ msgid "HTTPS"
 msgstr "HTTPS"
 
 #. Option for the 'Adapter' (Select) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:93
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:95
 msgid "HTTPS Webhook"
 msgstr "HTTPS Webhook"
 
@@ -15988,7 +15992,7 @@ msgstr "見出し{0}"
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:179
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:194
 msgid "Health"
 msgstr "稼働状況"
 
@@ -16090,7 +16094,7 @@ msgstr "数値が大きいほど優先度が高くなります。"
 
 #. Option for the 'Message Format' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:103
 msgid "Hinode EDI"
 msgstr "Hinode EDI"
 
@@ -16316,7 +16320,7 @@ msgstr "IPアドレス"
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:202
 #: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:56
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:189
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:229
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:244
 msgid "IT Operator"
 msgstr "IT運用担当者"
 
@@ -17106,13 +17110,13 @@ msgstr "パートナーごとの受信リクエスト上限（1分あたり）"
 
 #. Label of the inbound_secret (Password) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:153
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:155
 msgid "Inbound Verification Secret"
 msgstr "受信検証シークレット"
 
 #. Description of the 'Service User' (Link) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:121
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:123
 msgid "Inbound messages are processed as this user, so the partner's normal permissions apply."
 msgstr "受信メッセージはこのユーザーとして処理されるため、パートナーの通常の権限が適用されます。"
 
@@ -17707,7 +17711,7 @@ msgstr "連携送信メッセージ"
 #. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Link in the Integration Hub Workspace
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:209
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:224
 #: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:27
 #: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:26
 msgid "Integration Partner"
@@ -17812,7 +17816,7 @@ msgstr "興味・関心"
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
 msgid "Internal"
 msgstr "内部"
 
@@ -19568,7 +19572,7 @@ msgstr "品目{0}の納品数量に変更がありません。数量を更新し
 msgid "Item {0} has reached its end of life on {1}"
 msgstr "品目{0}は{1}に廃番になりました。"
 
-#: automotive_core/access/master_data.py:103
+#: automotive_core/access/master_data.py:115
 #, python-brace-format
 msgid "Item {0} in {1} already has the name {2}."
 msgstr "{1} の品目 {0} がすでに名称 {2} を使用しています。"
@@ -19702,7 +19706,7 @@ msgstr "サイドバーは、このワークスペースが属するモジュー
 
 #. Option for the 'Message Format' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:103
 msgid "JSON"
 msgstr "JSON"
 
@@ -19948,13 +19952,17 @@ msgstr "行{0}を残して残りをスキップ"
 msgid "Keep the app dock beside the sidebar, or let it slide in from the left edge."
 msgstr "アプリドックをサイドバーの横に固定するか、左端からスライドして表示するかを選択します。"
 
+#: automotive_core/public/js/automotive_core.bundle.js:201
+msgid "Keep the current secret valid for (hours)"
+msgstr "現在のシークレットの有効期間（時間）"
+
 #. Description of a DocType
 #: frappe/core/doctype/communication/communication.json:7
 msgid "Keeps track of all communications"
 msgstr "すべてのコミュニケーションを記録します。"
 
 #. Label of the key_id (Data) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:143
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:145
 msgid "Key ID"
 msgstr "キーID"
 
@@ -20152,13 +20160,13 @@ msgstr "最終更新者：{0}"
 #. Label of the last_error (Small Text) field in DocType 'Integration Partner'
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:159
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:134
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:200
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:215
 msgid "Last Error"
 msgstr "最終エラー"
 
 #. Label of the last_failure_at (Datetime) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:190
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:205
 msgid "Last Failure"
 msgstr "最終失敗日時"
 
@@ -20266,7 +20274,7 @@ msgstr "最後にスキャンした倉庫"
 
 #. Label of the last_success_at (Datetime) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:184
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:199
 msgid "Last Successful Exchange"
 msgstr "最終正常連携日時"
 
@@ -20836,7 +20844,7 @@ msgstr "リスト"
 
 #. Option for the 'Connection Status' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:111
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:113
 msgid "Live"
 msgstr "稼働中"
 
@@ -20846,7 +20854,7 @@ msgstr "最新のアクティビティがここに表示されます。"
 
 #. Description of the 'Connection Status' (Select) field in DocType
 #. 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:105
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:107
 msgid "Live only when an HTTPS endpoint and credentials are configured and a delivery has succeeded."
 msgstr "HTTPSエンドポイントと認証情報が設定され、配信に成功した場合にのみ「稼働中」になります。"
 
@@ -20936,18 +20944,18 @@ msgstr "貸付金・前払金（資産）"
 
 #. Option for the 'Connection Status' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:111
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:113
 msgid "Local Adapter Only"
 msgstr "ローカルアダプターのみ"
 
 #. Label of the local_directory (Read Only) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:174
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:189
 msgid "Local Exchange Directory"
 msgstr "ローカル交換ディレクトリ"
 
 #. Option for the 'Adapter' (Select) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:93
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:95
 msgid "Local File Drop"
 msgstr "ローカルファイル連携"
 
@@ -21032,7 +21040,7 @@ msgstr "物流コーディネーター"
 
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
 msgid "Logistics Provider"
 msgstr "物流事業者"
 
@@ -22271,7 +22279,7 @@ msgid "Message"
 msgstr "メッセージ"
 
 #. Label of the message_format (Select) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:100
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:102
 msgid "Message Format"
 msgstr "メッセージ形式"
 
@@ -23377,6 +23385,10 @@ msgstr "新しいワークスペース"
 msgid "New credit limit is less than current outstanding amount for the customer. Credit limit has to be atleast {0}"
 msgstr "新しい与信限度額が顧客の現在の未決済額を下回っています。与信限度額は{0}以上にする必要があります。"
 
+#: automotive_core/public/js/automotive_core.bundle.js:210
+msgid "New inbound secret"
+msgstr "新しい受信検証シークレット"
+
 #: frappe/www/update-password.html:111
 msgid "New password cannot be same as old password"
 msgstr "新しいパスワードを現在のパスワードと同じにすることはできません。"
@@ -24218,7 +24230,7 @@ msgstr "未請求"
 
 #. Option for the 'Connection Status' (Select) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:111
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:113
 msgid "Not Configured"
 msgstr "未設定"
 
@@ -24748,7 +24760,7 @@ msgstr "1つのドキュメントに対する1回の承認サイクルです。�
 
 #. Description of the 'Outbound Events' (Small Text) field in DocType
 #. 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:166
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:181
 msgid "One event type per line."
 msgstr "1行に1つのイベントタイプを入力してください。"
 
@@ -24760,7 +24772,7 @@ msgstr "1行に1つのホスト名を入力してください。それ以外の�
 
 #. Description of the 'Allowed Inbound Message Types' (Small Text) field in
 #. DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:160
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:175
 msgid ""
 "One per line. Empty = none accepted.\n"
 "dealer_order, dealer_order_change, asn, po_acknowledgement, production_event, inventory_adjustment, supplier_invoice, shipment_status, bank_statement"
@@ -24847,7 +24859,7 @@ msgstr "承認を依頼できるのは下書きのドキュメントのみです
 msgid "Only failed or dead-lettered messages can be retried."
 msgstr "再送できるのは、失敗またはデッドレターになったメッセージのみです。"
 
-#: automotive_core/integration_hub/inbound.py:301
+#: automotive_core/integration_hub/inbound.py:314
 msgid "Only failed, rejected or dead-lettered messages can be replayed."
 msgstr "再処理できるのは、失敗、却下、またはデッドレターになったメッセージのみです。"
 
@@ -25557,13 +25569,13 @@ msgid "Outbound Dead Letters"
 msgstr "送信デッドレター"
 
 #. Label of the endpoint_url (Data) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:136
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:138
 msgid "Outbound Endpoint URL"
 msgstr "送信先エンドポイントURL"
 
 #. Label of the subscribed_events (Small Text) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:169
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:184
 msgid "Outbound Events"
 msgstr "送信イベント"
 
@@ -25582,7 +25594,7 @@ msgstr "送信メッセージ"
 
 #. Label of the outbound_secret (Password) field in DocType 'Integration
 #. Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:148
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:150
 msgid "Outbound Signing Secret"
 msgstr "送信署名シークレット"
 
@@ -26153,7 +26165,7 @@ msgstr "親{0}がファイル内に見つかりません。"
 msgid "Parent-to-child or child-to-different-child grouping is not allowed."
 msgstr "親ドキュメントから子テーブル、または子テーブルから別の子テーブルへのグループ化はできません。"
 
-#: automotive_core/access/master_data.py:92
+#: automotive_core/access/master_data.py:104
 #, python-brace-format
 msgid "Part number {0} of supplier {1} is already item {2}."
 msgstr "仕入先 {1} の部品番号 {0} はすでに品目 {2} で使われています。"
@@ -26274,12 +26286,12 @@ msgid "Partner"
 msgstr "パートナー"
 
 #. Label of the partner_code (Data) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:42
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:44
 msgid "Partner Code"
 msgstr "パートナーコード"
 
 #. Label of the partner_name (Data) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:51
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:53
 msgid "Partner Name"
 msgstr "パートナー名"
 
@@ -26289,7 +26301,7 @@ msgid "Partner Role"
 msgstr "パートナー役割"
 
 #. Label of the partner_type (Select) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:60
 msgid "Partner Type"
 msgstr "パートナータイプ"
 
@@ -26312,7 +26324,7 @@ msgstr "パートナーアクセスはポータル（ウェブサイト）ユー
 msgid "Partner code {0} is already used by {1}."
 msgstr "パートナーコード{0}はすでに{1}で使用されています。"
 
-#: automotive_core/integration_hub/inbound.py:175
+#: automotive_core/integration_hub/inbound.py:186
 msgid "Partner has no inbound credentials configured."
 msgstr "パートナーに受信用の認証情報が設定されていません。"
 
@@ -26334,7 +26346,7 @@ msgid "Partnership"
 msgstr "パートナーシップ"
 
 #. Label of the party (Dynamic Link) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:71
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:73
 msgid "Party"
 msgstr "取引先"
 
@@ -26426,7 +26438,7 @@ msgstr "取引先不要"
 #. Label of the party_type (Select) field in DocType 'Integration Partner'
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:46
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:18
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:65
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:67
 msgid "Party Type"
 msgstr "取引先タイプ"
 
@@ -28751,6 +28763,18 @@ msgstr "前のドキュメント"
 msgid "Previous Hash"
 msgstr "直前のハッシュ"
 
+#. Label of the previous_inbound_secret (Password) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:161
+msgid "Previous Inbound Secret"
+msgstr "旧受信検証シークレット"
+
+#. Label of the previous_inbound_secret_until (Datetime) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:167
+msgid "Previous Secret Accepted Until"
+msgstr "旧シークレットの受付期限"
+
 #: frappe/public/js/frappe/form/form.js:2389
 msgid "Previous Submission"
 msgstr "前回の提出処理"
@@ -29438,7 +29462,7 @@ msgstr "調達"
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:230
 #: automotive_core/governance/doctype/approval_request/approval_request.json:210
 #: automotive_core/governance/doctype/notification_preference/notification_preference.json:153
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:242
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:257
 msgid "Procurement Manager"
 msgstr "調達マネージャー"
 
@@ -31035,7 +31059,7 @@ msgstr "仕入先の通貨を会社の基本通貨に換算するレートです
 msgid "Rate at which this tax is applied"
 msgstr "この税金に適用される税率です。"
 
-#: automotive_core/integration_hub/inbound.py:197
+#: automotive_core/integration_hub/inbound.py:210
 #, python-brace-format
 msgid "Rate limit exceeded for partner {0}."
 msgstr "パートナー{0}のレート制限を超過しました。"
@@ -32067,7 +32091,7 @@ msgstr "繰り返し：{0}"
 msgid "Replay"
 msgstr "再処理"
 
-#: automotive_core/integration_hub/inbound.py:209
+#: automotive_core/integration_hub/inbound.py:222
 msgid "Replayed request (nonce already used)."
 msgstr "リプレイされたリクエストです（ノンスは使用済みです）。"
 
@@ -32896,7 +32920,7 @@ msgstr "保存期間（日）"
 msgid "Retry"
 msgstr "再送"
 
-#: automotive_core/public/js/automotive_core.bundle.js:198
+#: automotive_core/public/js/automotive_core.bundle.js:227
 msgid "Retry Delivery"
 msgstr "配信を再送"
 
@@ -33274,6 +33298,15 @@ msgstr "ルートレコードは削除できません。"
 #: frappe/public/js/frappe/views/treeview.js:564
 msgid "Root records can't be renamed"
 msgstr "ルートレコードの名前は変更できません。"
+
+#: automotive_core/public/js/automotive_core.bundle.js:217
+msgid "Rotate"
+msgstr "ローテーション"
+
+#: automotive_core/public/js/automotive_core.bundle.js:199
+#: automotive_core/public/js/automotive_core.bundle.js:216
+msgid "Rotate Inbound Secret"
+msgstr "受信検証シークレットをローテーション"
 
 #. Label of the round_free_qty (Check) field in DocType 'Pricing Rule'
 #. Label of the round_free_qty (Check) field in DocType 'Promotional Scheme
@@ -36348,7 +36381,7 @@ msgid "Sent Read Receipt"
 msgstr "開封確認を送信済み"
 
 #. Description of the 'Key ID' (Data) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:140
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:142
 msgid "Sent as kid= in the signature header; identifies the secret."
 msgstr "署名ヘッダーで kid= として送信され、シークレットを識別します。"
 
@@ -36773,7 +36806,7 @@ msgid "Service Stop Date cannot be before Service Start Date"
 msgstr "サービス停止日をサービス開始日より前にすることはできません。"
 
 #. Label of the service_user (Link) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:124
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:126
 msgid "Service User"
 msgstr "サービスユーザー"
 
@@ -37783,7 +37816,7 @@ msgstr "新規登録"
 msgid "Signature Timestamp Tolerance (Seconds)"
 msgstr "署名タイムスタンプの許容誤差（秒）"
 
-#: automotive_core/integration_hub/inbound.py:181
+#: automotive_core/integration_hub/inbound.py:199
 #, python-brace-format
 msgid "Signature rejected: {0}"
 msgstr "署名が拒否されました: {0}"
@@ -38383,7 +38416,7 @@ msgid "Statement Line"
 msgstr "項目"
 
 #. Description of the 'Bank' (Link) field in DocType 'Integration Partner'
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:76
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:78
 msgid "Statements are accepted only for company accounts held at this bank."
 msgstr "この銀行にある自社口座の銀行取引明細のみ受け付けます。"
 
@@ -38523,6 +38556,12 @@ msgstr "ステップ"
 #: frappe/public/js/frappe/form/grid_row.js:584
 msgid "Sticky"
 msgstr "固定表示"
+
+#. Description of the 'Previous Inbound Secret' (Password) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:158
+msgid "Still accepted until the time below: the overlap of a rotation."
+msgstr "下記の日時までは引き続き受け付けます（ローテーションの重複期間）。"
 
 #. Option for the 'Account Type' (Select) field in DocType 'Account'
 #. Label of a Desktop Icon
@@ -39690,13 +39729,13 @@ msgstr "支給品目"
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:75
+#: automotive_core/access/master_data.py:87
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:55
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
 #: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:59
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:66
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:61
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:68
 msgid "Supplier"
 msgstr "仕入先"
 
@@ -40104,7 +40143,7 @@ msgstr "システム使用中"
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:195
 #: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:51
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:182
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:220
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:235
 msgid "System Manager"
 msgstr "システム管理者"
 
@@ -41145,7 +41184,7 @@ msgstr "{1}のフィールド{0}のリンク先は{3}ではなく{2}です。"
 msgid "The fieldname you've specified in Attached To Field is invalid"
 msgstr "「添付先フィールド」に指定したフィールド名が無効です。"
 
-#: automotive_core/files/policy.py:90
+#: automotive_core/files/policy.py:62 automotive_core/files/policy.py:106
 #, python-brace-format
 msgid "The file content does not match its .{0} extension."
 msgstr "ファイルの内容が拡張子 .{0} と一致しません。"
@@ -41265,6 +41304,11 @@ msgstr "品目を製造するための工程の順序です。"
 #, python-brace-format
 msgid "The outstanding amount {0} in {1} is lesser than {2}. Updating the outstanding to this invoice."
 msgstr "{1}の未決済額{0}が{2}より少ないため、未決済額はこの請求書自体で更新されます。"
+
+#: automotive_core/integration_hub/partners.py:44
+#, python-brace-format
+msgid "The overlap must be between 0 and {0} hours."
+msgstr "重複期間は 0〜{0} 時間で指定してください。"
 
 #: automotive_core/finance_controls/period_close.py:120
 #, python-brace-format
@@ -48546,7 +48590,7 @@ msgstr "{0}は一意である必要があります。"
 msgid "{0} must be {1} {2}"
 msgstr "{0}は{1} {2}である必要があります。"
 
-#: automotive_core/access/master_data.py:70
+#: automotive_core/access/master_data.py:69
 #, python-brace-format
 msgid "{0} name is too similar to existing {1} ({2}%)."
 msgstr "{0}名が既存の{1}と類似しすぎています（類似度{2}%）。"

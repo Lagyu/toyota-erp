@@ -1947,6 +1947,97 @@
     }
    }
   },
+  "/api/method/automotive_core.integration_hub.partners.rotate_inbound_secret": {
+   "post": {
+    "operationId": "automotive_core.integration_hub.partners.rotate_inbound_secret",
+    "summary": "A new inbound secret for the partner. The current one stays valid for ``overlap_hours``, so the partner can switch without refused deliveries. The new secret is returned once: hand it to the partner over a secure channel.",
+    "tags": [
+     "automotive_core.integration_hub"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "message": {
+           "type": "object",
+           "properties": {
+            "secret": {},
+            "previous_valid_until": {}
+           },
+           "required": [
+            "secret",
+            "previous_valid_until"
+           ]
+          }
+         }
+        }
+       }
+      }
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "404": {
+      "$ref": "#/components/responses/NotFound"
+     },
+     "417": {
+      "$ref": "#/components/responses/ValidationError"
+     }
+    },
+    "x-roles": [
+     "IT Operator",
+     "System Manager"
+    ],
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/CorrelationId"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "partner": {
+          "type": "string"
+         },
+         "overlap_hours": {
+          "type": "integer",
+          "default": 24
+         }
+        },
+        "required": [
+         "partner"
+        ]
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "partner": {
+          "type": "string"
+         },
+         "overlap_hours": {
+          "type": "integer",
+          "default": 24
+         }
+        },
+        "required": [
+         "partner"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/method/automotive_core.ops.health.live": {
    "get": {
     "operationId": "automotive_core.ops.health.live",

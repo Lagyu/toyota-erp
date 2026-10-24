@@ -466,6 +466,7 @@ See [troubleshooting.md](troubleshooting.md#disk-pressure).
 - **Events written:**
   - `integration.inbound.accepted`;
   - `integration.inbound.signature_rejected` (warning);
+  - `integration.inbound.previous_secret_used`: a partner still signs with the secret a rotation replaced;
   - `integration.inbound.processed`, `failed`, `dead_letter`, `rejected`;
   - `integration.outbound.delivered`, `retryable_failure`, `permanent_failure`.
 

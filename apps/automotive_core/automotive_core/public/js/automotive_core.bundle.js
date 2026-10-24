@@ -191,6 +191,35 @@ frappe.ui.form.on("Integration Inbound Message", {
 	},
 });
 
+// Inbound secret rotation: the new secret is shown once; the current one stays valid for the
+// overlap so the partner can switch without refused deliveries.
+frappe.ui.form.on("Integration Partner", {
+	refresh(frm) {
+		if (frm.is_new() || !frappe.user.has_role(["IT Operator", "System Manager"])) return;
+		frm.add_custom_button(__("Rotate Inbound Secret"), () =>
+			frappe.prompt(
+				{ fieldname: "overlap_hours", fieldtype: "Int", label: __("Keep the current secret valid for (hours)"), default: 24, reqd: 1 },
+				(values) =>
+					automotive
+						.call("automotive_core.integration_hub.partners.rotate_inbound_secret", {
+							partner: frm.docname,
+							overlap_hours: values.overlap_hours,
+						})
+						.then((result) => {
+							frappe.msgprint({
+								title: __("New inbound secret"),
+								indicator: "orange",
+								message: `<p>${__("Give it to the partner over a secure channel. It is not shown again.")}</p><pre>${frappe.utils.escape_html(result.secret)}</pre>`,
+							});
+							frm.reload_doc();
+						}),
+				__("Rotate Inbound Secret"),
+				__("Rotate")
+			)
+		);
+	},
+});
+
 frappe.ui.form.on("Integration Outbound Message", {
 	refresh(frm) {
 		if (!["Failed", "Dead Letter"].includes(frm.doc.status)) return;

@@ -163,6 +163,60 @@ class TestInbound(IntegrationTestCase):
 				path.unlink()
 
 
+class TestInboundSecretRotation(IntegrationTestCase):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		make_user("edi.rotation@hinode.example", ["System Manager"])
+		make_user("rotation.clerk@hinode.example", ["Purchase User"])
+		frappe.get_doc(
+			{
+				"doctype": "Integration Partner",
+				"partner_code": "TEST-ROTATE",
+				"partner_name": "Test Rotation",
+				"partner_type": "Supplier",
+				"adapter": "HTTPS Webhook",
+				"message_format": "JSON",
+				"allowed_message_types": "asn",
+				"service_user": "edi.rotation@hinode.example",
+				"key_id": "k-rotate",
+				"inbound_secret": "first-secret-0123456789",
+			}
+		).insert(ignore_permissions=True)
+
+	def delivery(self, secret: str) -> tuple[str, bytes]:
+		body = envelope("ROT-1", message_type="asn")
+		return signing.build_header("k-rotate", secret, body), body
+
+	def verify(self, delivery: tuple[str, bytes]) -> None:
+		inbound.verify_delivery(frappe.get_doc("Integration Partner", "TEST-ROTATE"), *delivery)
+
+	def test_previous_secret_is_accepted_for_the_overlap_only(self):
+		from automotive_core.integration_hub.partners import MAX_OVERLAP_HOURS, rotate_inbound_secret
+
+		old = self.delivery("first-secret-0123456789")
+		result = rotate_inbound_secret("TEST-ROTATE", overlap_hours=2)
+		self.assertNotEqual(result["secret"], "first-secret-0123456789")
+		self.verify(self.delivery(result["secret"]))
+		self.verify(old)  # the partner has not switched yet
+		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "integration.inbound_secret_rotated",
+			"reference_name": "TEST-ROTATE"}))
+		frappe.db.set_value("Integration Partner", "TEST-ROTATE", "previous_inbound_secret_until",
+			frappe.utils.add_to_date(frappe.utils.now_datetime(), minutes=-1))
+		with self.assertRaises(frappe.AuthenticationError):
+			self.verify(old)  # the overlap is over
+		self.verify(self.delivery(result["secret"]))
+		# no overlap: the secret it replaces stops at once
+		second = rotate_inbound_secret("TEST-ROTATE", overlap_hours=0)
+		with self.assertRaises(frappe.AuthenticationError):
+			self.verify(self.delivery(result["secret"]))
+		self.verify(self.delivery(second["secret"]))
+		with self.assertRaises(frappe.ValidationError):
+			rotate_inbound_secret("TEST-ROTATE", overlap_hours=MAX_OVERLAP_HOURS + 1)
+		with self.set_user("rotation.clerk@hinode.example"), self.assertRaises(frappe.PermissionError):
+			rotate_inbound_secret("TEST-ROTATE")
+
+
 def todo(label: str) -> str:
 	return frappe.get_doc({"doctype": "ToDo", "description": label}).insert().name
 

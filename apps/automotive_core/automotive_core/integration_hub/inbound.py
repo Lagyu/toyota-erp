@@ -20,7 +20,7 @@ from typing import Any
 
 import frappe
 from frappe import _
-from frappe.utils import add_to_date, cint, now_datetime
+from frappe.utils import add_to_date, cint, get_datetime, now_datetime
 
 from automotive_core.governance import audit
 from automotive_core.integration_hub import signing
@@ -170,20 +170,33 @@ def receive() -> dict[str, Any]:
 		raise frappe.AuthenticationError(_("Unknown partner."))
 	partner = frappe.get_doc("Integration Partner", partner_code)
 	_rate_limit(partner.name)
-	secret = partner.get_password("inbound_secret", raise_exception=False)
-	if not secret:
-		raise frappe.AuthenticationError(_("Partner has no inbound credentials configured."))
-	tolerance = cint(_settings().webhook_tolerance_seconds) or 300
-	try:
-		sig = signing.verify(request.headers.get(signing.HEADER), body, secret, tolerance)
-	except signing.SignatureError as exc:
-		log("integration.inbound.signature_rejected", level="warning", partner=partner.name, reason=str(exc))
-		raise frappe.AuthenticationError(_("Signature rejected: {0}").format(exc)) from exc
+	sig = verify_delivery(partner, request.headers.get(signing.HEADER), body)
 	_remember_nonce(partner.name, sig.nonce)
 	with as_user(partner.service_user):
 		response = accept(partner.name, body, source="HTTPS")
 	frappe.local.response.http_status_code = 202 if response["status"] == "accepted" else 200
 	return response
+
+
+def verify_delivery(partner, header: str | None, body: bytes) -> signing.Signature:
+	"""A delivery's signature against the partner's inbound secret, or, during a rotation's
+	overlap, the previous one (logged: operators see which partners still use it)."""
+	secret = partner.get_password("inbound_secret", raise_exception=False)
+	if not secret:
+		raise frappe.AuthenticationError(_("Partner has no inbound credentials configured."))
+	tolerance = cint(_settings().webhook_tolerance_seconds) or 300
+	try:
+		return signing.verify(header, body, secret, tolerance)
+	except signing.SignatureError as exc:
+		until = partner.get("previous_inbound_secret_until")
+		previous = partner.get_password("previous_inbound_secret", raise_exception=False) if until else None
+		if previous and get_datetime(until) > now_datetime():
+			with contextlib.suppress(signing.SignatureError):
+				sig = signing.verify(header, body, previous, tolerance)
+				log("integration.inbound.previous_secret_used", partner=partner.name, until=str(until))
+				return sig
+		log("integration.inbound.signature_rejected", level="warning", partner=partner.name, reason=str(exc))
+		raise frappe.AuthenticationError(_("Signature rejected: {0}").format(exc)) from exc
 
 
 def _rate_limit(partner: str) -> None:
