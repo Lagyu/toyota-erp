@@ -1,7 +1,8 @@
 """Cross-domain business journeys through real ERPNext documents and ledgers:
-J-02 Kanban -> call-off -> ASN -> receipt, J-06 invoice match -> dual-approved payment,
-J-07 intercompany shipment with balancing AP/AR, J-01 dealer order to cash, J-09 change
-after allocation, plus supplier onboarding / sourcing / ASL enforcement."""
+J-02 Kanban -> call-off -> ASN -> receipt (and receipt discrepancies), J-06 invoice match ->
+dual-approved payment, J-07 intercompany shipment with balancing AP/AR, J-01 dealer order to
+cash (credit limit, credit note), J-09 change after allocation, plus supplier onboarding /
+sourcing / ASL enforcement."""
 
 from __future__ import annotations
 
@@ -83,6 +84,60 @@ class TestKanbanSupplierJourney(JourneyTestCase):
 		batch = frappe.db.get_value("Purchase Receipt Item", {"parent": pr.name}, "batch_no")
 		self.assertEqual(frappe.db.get_value("Batch", batch, "automotive_supplier_lot"), "KAM-LOT-77")
 		self.assertEqual(flt(frappe.db.get_value("Purchase Order", po.name, "per_received")), 100)
+
+
+class TestReceiptDiscrepancy(JourneyTestCase):
+	"""ERP-05/06: goods received short of their ASN open a discrepancy the supplier is told
+	about; procurement resolves it, once."""
+
+	def test_a_short_receipt_opens_a_discrepancy_that_procurement_resolves(self):
+		from automotive_supply_chain.supplier_collaboration.shipments import (
+			make_purchase_receipt,
+			resolve_discrepancy,
+		)
+
+		wheel = self.cat["wheel"]
+		supplier = h.supplier("Hoshi Metalworks")
+		due = add_days(nowdate(), 5)
+		with as_user(h.BUYER):
+			po = frappe.get_doc({"doctype": "Purchase Order", "supplier": supplier, "company": AICHI,
+				"transaction_date": nowdate(), "schedule_date": due, "items": [{"item_code": wheel, "qty": 10,
+					"rate": 120, "warehouse": catalog.PARTS_STORE, "schedule_date": due}]}).insert()
+		approve(po, h.BUYER, [h.PROC_MGR])
+		with as_user(h.BUYER):
+			po.reload()
+			po.submit()
+		asn = frappe.get_doc({"doctype": "Advance Shipping Notice", "supplier": supplier,
+			"supplier_asn_no": "HOSHI-0001", "company": AICHI, "ship_date": f"{nowdate()} 06:00:00",
+			"expected_arrival": f"{add_days(nowdate(), 1)} 08:00:00", "items": [{"purchase_order": po.name,
+				"po_item": po.items[0].name, "item_code": wheel, "qty": 10, "supplier_lot": "HOSHI-LOT-7"}]})
+		asn.insert(ignore_permissions=True)
+		asn.submit()
+		pr = frappe.get_doc("Purchase Receipt", make_purchase_receipt(asn.name))
+		self.assertEqual(flt(pr.items[0].qty), 10)  # pre-filled with what the supplier announced
+		pr.items[0].qty = pr.items[0].received_qty = 8  # the truck brought two wheels less
+		pr.submit()
+		[disc] = frappe.get_all("Receipt Discrepancy", filters={"advance_shipping_notice": asn.name},
+			fields=["name", "purchase_receipt", "discrepancy_type", "expected_qty", "received_qty", "rejected_qty",
+				"status"])
+		self.assertEqual((disc.purchase_receipt, disc.discrepancy_type, disc.status), (pr.name, "Shortage", "Open"))
+		self.assertEqual((flt(disc.expected_qty), flt(disc.received_qty), flt(disc.rejected_qty)), (10, 8, 0))
+		self.assertEqual(frappe.db.get_value("Advance Shipping Notice", asn.name, "status"), "Partially Received")
+		self.assertEqual(flt(frappe.db.get_value("ASN Item", asn.items[0].name, "received_qty")), 8)
+		self.assertEqual(frappe.db.get_value("Supplier Notice", {"reference_doctype": "Receipt Discrepancy",
+			"reference_name": disc.name}, "supplier"), supplier)  # shown in the supplier's portal
+		with as_user(h.QM), self.assertRaises(frappe.PermissionError):
+			resolve_discrepancy(disc.name, "Accept As Received", "Quality does not settle quantities")
+		with as_user(h.BUYER):
+			self.assertEqual(resolve_discrepancy(disc.name, "Supplier Ships Balance",
+				"The two wheels follow on the next truck"), "Resolved")
+		resolved = frappe.db.get_value("Receipt Discrepancy", disc.name, ["status", "resolution", "resolved_by",
+			"resolved_at"], as_dict=True)
+		self.assertEqual((resolved.status, resolved.resolution, resolved.resolved_by),
+			("Resolved", "Supplier Ships Balance", h.BUYER))
+		self.assertTrue(resolved.resolved_at)
+		with as_user(h.BUYER), self.assertRaises(frappe.ValidationError):
+			resolve_discrepancy(disc.name, "Debit Note", "A second decision on the same shortfall")
 
 
 class TestDeliverySchedule(JourneyTestCase):
@@ -478,6 +533,101 @@ class TestDealerJourney(JourneyTestCase):
 		with as_user(self.portal), self.assertRaises(handlers.InboundRejected):
 			handlers.dealer_order_change(None, None, {"dealer_reference": "ASAHI-PO-0000", "change_type": "Cancel Order",
 				"reason": "No such order"})
+
+
+class TestDealerCreditLimit(JourneyTestCase):
+	"""The credit limit approved with a dealer's registration caps what acceptance commits to:
+	ERPNext checks the dealer's open orders against it when the sales order is submitted."""
+
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		h.item_price(cls.cat["variants"][("Premium", "AWD")], "Dealer Price JP", 2_500_000)
+		registration = frappe.get_doc({"doctype": "Dealer Registration", "dealer_name": "Kurenai Motors Sendai",
+			"dealer_code": "KURENAI-SDJ", "company": AICHI,
+			"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"), "country": "Japan",
+			"tax_id": "JP-T5550002", "requested_credit_limit": 3_000_000, "price_list": "Dealer Price JP",
+			"authorized_models": [{"vehicle_model": catalog.MODEL}],
+			"contacts": [{"first_name": "Aya", "last_name": "Kurenai", "email": "orders@kurenai-motors.example",
+				"partner_role": "Sales"}]})
+		registration.insert(ignore_permissions=True)
+		approve(registration, h.LIAISON, [h.SALES_MGR, h.CONTROLLER])
+		registration.reload()
+		registration.submit()
+		cls.dealer = frappe.db.get_value("Dealer Registration", registration.name, "customer")
+		cls.portal = "orders@kurenai-motors.example"
+
+	def _order(self, reference: str) -> str:
+		from automotive_manufacturing.product_engineering.configuration import configure
+
+		with as_user(self.portal):
+			config = configure(catalog.MODEL, {"Trim": "Premium", "Drivetrain": "AWD"})["configuration"]
+			order = frappe.get_doc({"doctype": "Dealer Order", "dealer": self.dealer, "dealer_reference": reference,
+				"company": AICHI, "requested_delivery_date": add_days(nowdate(), 30),
+				"items": [{"vehicle_model": catalog.MODEL, "configuration": config, "qty": 1}]})
+			order.insert()
+			order.submit()
+		return order.name
+
+	def test_an_order_beyond_the_credit_limit_is_not_accepted(self):
+		from automotive_supply_chain.dealer_operations.orders import accept
+
+		first = self._order("KURENAI-PO-0001")
+		with as_user(h.LIAISON):
+			so = accept(first)["sales_order"]
+		self.assertEqual(frappe.db.get_value("Sales Order", so, "docstatus"), 1)  # 2.75M with tax, limit 3M
+		second = self._order("KURENAI-PO-0002")
+		frappe.db.savepoint("dealer_credit_limit")
+		with as_user(h.LIAISON), self.assertRaises(frappe.ValidationError) as refused:
+			accept(second)
+		frappe.db.rollback(save_point="dealer_credit_limit")  # what the refused request's rollback leaves
+		self.assertIn("credit limit", str(refused.exception).lower())
+		self.assertEqual(frappe.db.get_value("Dealer Order", first, "status"), "Accepted")
+		self.assertEqual(frappe.db.get_value("Dealer Order", second, "status"), "Submitted")  # still to decide
+		self.assertFalse(frappe.db.exists("Sales Order", {"automotive_dealer_order": second}))
+
+
+class TestVehicleCreditNote(JourneyTestCase):
+	"""A credit note against a delivered vehicle's invoice marks the vehicle Credited (it moves no
+	stock: the vehicle stays delivered); cancelling the credit note makes it Invoiced again."""
+
+	def test_credit_note_on_a_delivered_vehicle_invoice(self):
+		from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_sales_return
+		from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_invoice
+
+		from automotive_core.governance.cancellation import cancel_with_reason
+
+		variant = self.cat["variants"][("Premium", "AWD")]
+		vin = catalog.released_vehicle(self.cat, variant)
+		dealer = frappe.get_doc({"doctype": "Customer", "customer_name": "Hakuba Motors Matsumoto",
+			"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+			"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
+		dn = frappe.get_doc({"doctype": "Delivery Note", "company": AICHI, "customer": dealer.name,
+			"items": [{"item_code": variant, "qty": 1, "rate": 2_500_000, "warehouse": catalog.FG,
+				"use_serial_batch_fields": 1, "serial_no": vin}]})
+		dn.insert(ignore_permissions=True)
+		dn.submit()
+		invoice = make_sales_invoice(dn.name)
+		invoice.insert(ignore_permissions=True)
+		invoice.submit()
+
+		def unit() -> tuple:
+			states = frappe.db.get_value("Vehicle Unit", vin, ["inventory_status", "invoice_status"], as_dict=True)
+			return states.inventory_status, states.invoice_status
+
+		self.assertEqual(unit(), ("Delivered", "Invoiced"))
+		credit = make_sales_return(invoice.name)
+		credit.insert(ignore_permissions=True)
+		credit.submit()
+		self.assertEqual((credit.is_return, credit.return_against), (1, invoice.name))
+		self.assertEqual(flt(credit.grand_total), -flt(invoice.grand_total))
+		self.assertEqual(unit(), ("Delivered", "Credited"))
+		# the dealer owes nothing for the vehicle any more: invoice and credit note cancel out
+		receivable = frappe.db.sql("""select sum(debit) - sum(credit) from `tabGL Entry` where voucher_no in (%s, %s)
+			and party = %s and is_cancelled = 0""", (invoice.name, credit.name, dealer.name))[0][0]
+		self.assertAlmostEqual(flt(receivable), 0, places=2)
+		cancel_with_reason("Sales Invoice", credit.name, "Credit note raised against the wrong invoice")
+		self.assertEqual(unit(), ("Delivered", "Invoiced"))
 
 
 class TestSourcing(JourneyTestCase):

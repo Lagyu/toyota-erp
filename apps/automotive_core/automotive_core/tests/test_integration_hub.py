@@ -1,13 +1,17 @@
-"""Integration hub: signing, EDI, idempotent inbox (J-10), outbox delivery and allowlist."""
+"""Integration hub: signing, EDI, idempotent inbox (J-10), replay and rate limits on the signed
+endpoint, outbox delivery and allowlist."""
 
 from __future__ import annotations
 
+import datetime
 import json
 from pathlib import Path
 from unittest import mock
 
 import frappe
 from frappe.tests import IntegrationTestCase, UnitTestCase
+from werkzeug.test import EnvironBuilder
+from werkzeug.wrappers import Request
 
 from automotive_core.integration_hub import inbound, outbox, signing
 from automotive_core.integration_hub.adapters import edi
@@ -215,6 +219,92 @@ class TestInboundSecretRotation(IntegrationTestCase):
 			rotate_inbound_secret("TEST-ROTATE", overlap_hours=MAX_OVERLAP_HOURS + 1)
 		with self.set_user("rotation.clerk@hinode.example"), self.assertRaises(frappe.PermissionError):
 			rotate_inbound_secret("TEST-ROTATE")
+
+
+GUARD = "TEST-GUARD"
+GUARD_SECRET = "guard-secret-0123456789"
+
+
+class TestInboundDeliveryGuards(IntegrationTestCase):
+	"""The signed HTTPS endpoint: a captured delivery sent again is refused, and a partner that
+	sends too much in a minute is throttled (ERP-11)."""
+
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		make_user("edi.guard@hinode.example", ["System Manager"])
+		for code in (GUARD, f"{GUARD}-2"):
+			frappe.get_doc(
+				{
+					"doctype": "Integration Partner",
+					"partner_code": code,
+					"partner_name": code,
+					"partner_type": "Supplier",
+					"adapter": "HTTPS Webhook",
+					"message_format": "JSON",
+					"allowed_message_types": "production_event",
+					"service_user": "edi.guard@hinode.example",
+					"key_id": "k-guard",
+					"inbound_secret": GUARD_SECRET,
+				}
+			).insert(ignore_permissions=True)
+
+	def setUp(self):
+		frappe.flags.automotive_pending_inbound = []
+		self._request = getattr(frappe.local, "request", None)
+
+	def tearDown(self):
+		frappe.local.request = self._request
+		frappe.local.response = frappe._dict({"docs": []})
+
+	def post(self, body: bytes, signature: str, partner: str = GUARD) -> dict:
+		"""The endpoint on a request as the partner's system sends it (no HTTP server)."""
+		frappe.local.request = Request(EnvironBuilder(path="/api/method/automotive_core.integration_hub.inbound.receive",
+			method="POST", data=body, headers={signing.PARTNER_HEADER: partner, signing.HEADER: signature,
+				"Content-Type": "application/json"}).get_environ())
+		return inbound.receive()
+
+	def test_a_replayed_delivery_is_refused_and_stores_nothing(self):
+		body = envelope("GUARD-1")
+		signature = signing.build_header("k-guard", GUARD_SECRET, body)
+		first = self.post(body, signature)
+		self.assertEqual((first["status"], frappe.local.response.http_status_code), ("accepted", 202))
+		# the same request captured and sent again: the signature is still valid, its nonce is spent
+		with self.assertRaises(frappe.AuthenticationError):
+			self.post(body, signature)
+		self.assertEqual(frappe.db.count("Integration Inbound Message", {"partner": GUARD}), 1)
+		self.assertEqual(frappe.db.count("Integration Nonce", {"partner": GUARD}), 1)
+		# the partner's own retry is signed afresh and answered with the stored outcome
+		again = self.post(body, signing.build_header("k-guard", GUARD_SECRET, body))
+		self.assertEqual((again["status"], again["inbound_id"]), ("duplicate", first["inbound_id"]))
+		self.assertEqual(frappe.local.response.http_status_code, 200)
+		self.assertEqual(frappe.db.count("Integration Inbound Message", {"partner": GUARD}), 1)
+		# nonces are remembered per partner: another partner's first use of the value is fine
+		nonce = signing.parse_header(signature).nonce
+		inbound._remember_nonce(f"{GUARD}-2", nonce)
+		with self.assertRaises(frappe.AuthenticationError):
+			inbound._remember_nonce(f"{GUARD}-2", nonce)
+
+	def test_a_partner_over_its_rate_limit_is_refused_until_the_next_minute(self):
+		previous = frappe.db.get_single_value("Automotive Settings", "inbound_rate_limit_per_minute")
+		frappe.db.set_single_value("Automotive Settings", "inbound_rate_limit_per_minute", 3)
+		self.addCleanup(frappe.db.set_single_value, "Automotive Settings", "inbound_rate_limit_per_minute", previous)
+		minute = datetime.datetime(2031, 3, 4, 5, 6, 7)
+		later = minute + datetime.timedelta(minutes=1)
+		# the counters live in Redis (not rolled back with the test): keys of minutes no other test uses
+		keys = [f"automotive:inbound-rate:{partner}:{at:%Y%m%d%H%M}" for partner in (GUARD, f"{GUARD}-2")
+			for at in (minute, later)]
+		frappe.cache.delete(*keys)
+		self.addCleanup(frappe.cache.delete, *keys)
+		with mock.patch.object(inbound, "now_datetime", return_value=minute):
+			for _ in range(3):
+				inbound._rate_limit(GUARD)
+			with self.assertRaises(frappe.TooManyRequestsError):
+				inbound._rate_limit(GUARD)
+			self.assertEqual(frappe.local.response.http_status_code, 429)
+			inbound._rate_limit(f"{GUARD}-2")  # every partner has its own budget
+		with mock.patch.object(inbound, "now_datetime", return_value=later):
+			inbound._rate_limit(GUARD)  # a new minute, a new budget
 
 
 def todo(label: str) -> str:

@@ -25,7 +25,7 @@ Sources (under `apps/automotive_core/automotive_core/integration_hub/`):
 | Outbox Max Attempts | 8 | Outbound delivery attempts before Dead Letter |
 | Outbox Base Backoff Seconds | 30 | Base of the exponential backoff (inbound and outbound): `min(base × 2^(attempt−1), 3600)` seconds |
 | Inbound Max Attempts | 6 | Processing attempts before an inbound message is dead-lettered |
-| Inbound Rate Limit Per Minute | 120 | Requests per partner per minute on the HTTPS endpoint (HTTP 429 above) |
+| Inbound Rate Limit Per Minute | 120 | Signed requests per partner per minute on the HTTPS endpoint (HTTP 429 above); refused requests (bad signature) have the same budget, counted separately |
 
 ## Partners
 
@@ -86,11 +86,13 @@ v1 = HMAC_SHA256(secret, "<t>.<n>." + raw request body)
 
 - **Inbound** (`receive`): the server checks, in this order:
   1. the partner exists (`X-Hinode-Partner`);
-  2. the rate limit;
-  3. the partner has an inbound secret;
-  4. `t` is within the tolerance;
-  5. the nonce is 8–64 alphanumeric characters;
-  6. the HMAC matches the inbound secret or, during a rotation's overlap, the previous one;
+  2. the partner has an inbound secret;
+  3. `t` is within the tolerance;
+  4. the nonce is 8–64 alphanumeric characters;
+  5. the HMAC matches the inbound secret or, during a rotation's overlap, the previous one;
+  6. the rate limit: correctly signed requests count against the partner's budget, refused ones
+     against a budget of their own, so a flood of unsigned requests naming the partner cannot
+     shut out its real deliveries;
   7. the nonce was not used before. Nonces are stored in Integration Nonce; a replay gives "Replayed request (nonce already used).".
 
   `kid` is parsed but not used to select the secret: the current secret is tried first, then

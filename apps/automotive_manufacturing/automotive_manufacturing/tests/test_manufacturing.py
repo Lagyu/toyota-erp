@@ -1,18 +1,21 @@
 """Manufacturing integration tests against real ERPNext documents and ledgers:
 configuration, ECO/BOM pinning (J-04), build + genealogy + recall (J-01/J-08),
-jidoka hold/andon/disposition (J-05), Kanban pull (J-02 internal), planning (J-03),
-and line sequencing."""
+MES production events through the integration hub, jidoka hold/andon/disposition (J-05),
+Kanban pull and stockout escalation (J-02 internal), planning (J-03), and line sequencing."""
 
 from __future__ import annotations
 
 import datetime
+import json
 
 import frappe
 from frappe.tests import IntegrationTestCase
-from frappe.utils import add_days, flt, nowdate
+from frappe.utils import add_days, add_to_date, cint, flt, now_datetime, nowdate
 
 from automotive_core.governance import approvals
+from automotive_core.integration_hub import inbound
 from automotive_core.tests.utils import AICHI, approve, as_user, make_user
+from automotive_core.utils import hook_dict
 from automotive_manufacturing.mes.production import build_entry
 from automotive_manufacturing.product_engineering import bom_revisions, configuration
 from automotive_manufacturing.quality_control.holds import QualityHoldError
@@ -292,6 +295,68 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 			fields=["employee", "completed_qty"]), [{"employee": employee.name, "completed_qty": 2}])
 
 
+AICHI_MES = "mes.aichi.mfg@hinode.example"
+KYUSHU_MES = "mes.kyushu.mfg@hinode.example"
+
+
+class TestProductionEvents(ManufacturingTestCase):
+	"""ERP-04.1 / ERP-11: a plant MES reports builds as production_event messages; the hub runs
+	the registered handler as the partner's service user, which posts the Manufacture entry."""
+
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		for user, code in ((AICHI_MES, "TEST-MES-AICHI"), (KYUSHU_MES, "TEST-MES-KYUSHU")):
+			make_user(user, ["Production Supervisor", "Manufacturing User"])
+			frappe.get_doc({"doctype": "Integration Partner", "partner_code": code, "partner_name": code,
+				"partner_type": "Internal", "adapter": "Local File Drop", "message_format": "JSON",
+				"allowed_message_types": "production_event", "service_user": user}).insert(ignore_permissions=True)
+		# the Kyushu line system's account sees its own plant only
+		frappe.get_doc({"doctype": "User Permission", "user": KYUSHU_MES, "allow": "Plant", "for_value": "KYUSHU-PT",
+			"apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
+
+	def setUp(self):
+		frappe.flags.automotive_pending_inbound = []
+
+	def report(self, partner: str, message_id: str, data: dict):
+		accepted = inbound.accept(partner, json.dumps({"message_id": message_id, "message_type": "production_event",
+			"data": data}))
+		inbound.run_pending_inline()
+		return frappe.db.get_value("Integration Inbound Message", accepted["inbound_id"],
+			["status", "result_doctype", "result_name", "last_error"], as_dict=True)
+
+	def test_a_reported_unit_is_built_and_bad_reports_are_rejected(self):
+		self.assertEqual(hook_dict("automotive_inbound_handlers")["production_event"],
+			"automotive_manufacturing.mes.handlers.production_event")
+		self.stock_up(1)
+		wo = catalog.work_order(self.cat["variants"][("Premium", "AWD")], 1)
+		[vin] = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")
+		built = self.report("TEST-MES-AICHI", "MES-AICHI-0001", {"event": "unit_built", "work_order": wo.name})
+		self.assertEqual((built.status, built.result_doctype), ("Processed", "Stock Entry"), built.last_error)
+		entry = frappe.get_doc("Stock Entry", built.result_name)
+		self.assertEqual((entry.docstatus, entry.purpose, entry.work_order), (1, "Manufacture", wo.name))
+		self.assertEqual(entry.owner, AICHI_MES)  # posted as the partner's service user
+		self.assertEqual(flt(frappe.db.get_value("Work Order", wo.name, "produced_qty")), 1)
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "production_status"), "Built")
+		# an order the plant does not know, and a report outside the message contract: never retried
+		unknown = self.report("TEST-MES-AICHI", "MES-AICHI-0002", {"event": "unit_built", "work_order": "WO-NO-SUCH"})
+		self.assertEqual(unknown.status, "Rejected")
+		self.assertIn("unknown work order WO-NO-SUCH", unknown.last_error)
+		invalid = self.report("TEST-MES-AICHI", "MES-AICHI-0003", {"event": "batch_built", "work_order": wo.name,
+			"qty": 0})
+		self.assertEqual(invalid.status, "Rejected")
+		self.assertIn("invalid production_event", invalid.last_error)
+		self.assertEqual(frappe.db.count("Stock Entry", {"work_order": wo.name, "docstatus": 1}), 1)
+
+	def test_a_plant_system_cannot_report_another_plants_order(self):
+		wo = catalog.work_order(self.cat["variants"][("Premium", "AWD")], 1)  # an Aichi order
+		result = self.report("TEST-MES-KYUSHU", "MES-KYU-0001", {"event": "unit_built", "work_order": wo.name})
+		self.assertEqual(result.status, "Rejected")
+		self.assertIn(f"may not report on work order {wo.name}", result.last_error)
+		self.assertFalse(frappe.db.exists("Stock Entry", {"work_order": wo.name}))
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", {"work_order": wo.name}, "production_status"), "Planned")
+
+
 class TestShiftHandover(ManufacturingTestCase):
 	def test_handover_reports_the_shift_and_only_the_incoming_supervisor_acknowledges(self):
 		"""ERP-04.5: results are computed at hand-over; the next shift's supervisor confirms."""
@@ -469,6 +534,48 @@ class TestKanban(ManufacturingTestCase):
 		transfer.submit()
 		self.assertEqual(frappe.db.get_value("Kanban Signal", signals[0].name, "status"), "Received")
 		self.assertEqual(frappe.db.count("Kanban Card", {"kanban_loop": loop.name, "status": "Full"}), 3)
+
+
+class TestKanbanEscalation(ManufacturingTestCase):
+	def test_an_overdue_signal_escalates_once_and_the_plant_supervisor_hears_of_it(self):
+		"""J-02 stockout risk: a replenishment still open past its due time is escalated to level 1
+		and the plant's supervisors are told; later runs leave it there, and a signal still within
+		its window is not touched."""
+		from automotive_core.governance import notifications
+		from automotive_manufacturing.shop_floor import kanban
+
+		notifications.ensure_templates()
+		# a supervisor of its own: the plant assignment scopes the user (User Permissions, cached)
+		lead = make_user("line.lead.mfg@hinode.example", ["Production Supervisor", "Manufacturing User"])
+		employee = frappe.get_doc({"doctype": "Employee", "first_name": "Ren", "last_name": "Hoshino",
+			"gender": "Female", "date_of_birth": "1988-02-03", "date_of_joining": "2016-04-01", "company": AICHI,
+			"user_id": lead}).insert(ignore_permissions=True)
+		frappe.get_doc({"doctype": "Plant Assignment", "employee": employee.name, "plant": catalog.PLANT,
+			"assignment_role": "Supervisor", "from_date": add_days(nowdate(), -30)}).insert(ignore_permissions=True)
+		catalog.receive(self.cat["wheel"], 8, warehouse=catalog.PARTS_STORE, rate=120)
+		loop = frappe.get_doc({"doctype": "Kanban Loop", "loop_code": "KL-TEST-ESCALATE", "item_code": self.cat["wheel"],
+			"plant": catalog.PLANT, "production_line": catalog.LINE, "supply_type": "Internal Transfer",
+			"line_side_warehouse": catalog.LINE_SIDE, "source_warehouse": catalog.PARTS_STORE, "container_qty": 4,
+			"number_of_cards": 2, "lead_time_hours": 2}).insert(ignore_permissions=True)
+		late = kanban.scan_card(f"{loop.name}-01")
+		on_time = kanban.scan_card(f"{loop.name}-02")
+		self.assertEqual((late["status"], on_time["status"]), ("Ordered", "Ordered"))  # transfers requested
+		frappe.db.set_value("Kanban Signal", late["signal"], "due_by", add_to_date(now_datetime(), hours=-3))
+		kanban.escalate_overdue()
+		kanban.escalate_overdue()  # the next run, five minutes later
+		signal = frappe.db.get_value("Kanban Signal", late["signal"], ["status", "escalation_level", "escalation_note"],
+			as_dict=True)
+		self.assertEqual((signal.status, cint(signal.escalation_level)), ("Escalated", 1))
+		self.assertIn("Overdue since", signal.escalation_note)
+		pending = frappe.db.get_value("Kanban Signal", on_time["signal"], ["status", "escalation_level"], as_dict=True)
+		self.assertEqual((pending.status, cint(pending.escalation_level)), ("Ordered", 0))
+		self.assertEqual(frappe.db.get_value("Kanban Card", f"{loop.name}-01", "status"), "Signaled")
+		# told once: a desk alert (the event sends no e-mail by default), not repeated by the second run
+		told = frappe.get_all("Notification Dispatch", filters={"event": "kanban.overdue", "recipient": lead},
+			fields=["reference_name", "channel", "status"])
+		self.assertEqual(sorted((r.reference_name, r.channel, r.status) for r in told),
+			[(late["signal"], "Email", "Suppressed"), (late["signal"], "In-App", "Delivered")])
+		self.assertTrue(frappe.db.exists("Notification Log", {"for_user": lead, "document_name": late["signal"]}))
 
 
 class TestPlanning(ManufacturingTestCase):

@@ -191,8 +191,14 @@ def receive() -> dict[str, Any]:
 	if not partner_code or not frappe.db.exists("Integration Partner", partner_code):
 		raise frappe.AuthenticationError(_("Unknown partner."))
 	partner = frappe.get_doc("Integration Partner", partner_code)
+	try:
+		sig = verify_delivery(partner, request.headers.get(signing.HEADER), body)
+	except frappe.AuthenticationError:
+		# unsigned or badly signed floods have a budget of their own: counted against the
+		# partner's, anyone who knows a partner code could shut out its real deliveries
+		_rate_limit(partner.name, refused=True)
+		raise
 	_rate_limit(partner.name)
-	sig = verify_delivery(partner, request.headers.get(signing.HEADER), body)
 	_remember_nonce(partner.name, sig.nonce)
 	with as_user(partner.service_user):
 		response = accept(partner.name, body, source="HTTPS")
@@ -221,9 +227,10 @@ def verify_delivery(partner, header: str | None, body: bytes) -> signing.Signatu
 		raise frappe.AuthenticationError(_("Signature rejected: {0}").format(exc)) from exc
 
 
-def _rate_limit(partner: str) -> None:
+def _rate_limit(partner: str, refused: bool = False) -> None:
 	limit = cint(_settings().inbound_rate_limit_per_minute) or 120
-	key = f"automotive:inbound-rate:{partner}:{now_datetime().strftime('%Y%m%d%H%M')}"
+	kind = "inbound-refused" if refused else "inbound-rate"
+	key = f"automotive:{kind}:{partner}:{now_datetime().strftime('%Y%m%d%H%M')}"
 	count = frappe.cache.incrby(key, 1)
 	if count == 1:
 		frappe.cache.expire(key, 120)
