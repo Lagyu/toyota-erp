@@ -47,6 +47,10 @@ done
 
 # one-run passwords for the dataset's personas (0600, never printed)
 stack_bench execute automotive_seed.e2e.prepare_users --kwargs "{'output': '/tmp/credentials.json'}" | tail -1
+# the load shares one account per portal persona among many virtual users, where real partners
+# each have their own: the per-user request limits (Automotive Settings) are lifted for the run
+stack_bench execute frappe.db.set_single_value --args "['Automotive Settings', {'portal_reads_per_minute': 1000000, \
+	'portal_changes_per_minute': 1000000, 'shop_floor_requests_per_minute': 1000000}]" >/dev/null
 "${stack_compose[@]}" exec -T backend bash -c "cat /tmp/credentials.json && rm -f /tmp/credentials.json" \
 	>"$stack_secrets/credentials.json"
 as_of=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["simulated_date"])' "$dataset/status.json")

@@ -18,7 +18,10 @@ form submissions at most 4 s, no unbounded growth of failed jobs), TST-9 and GAT
     dataset user. About 80 % of their actions read (list views with their counts, forms
     opened from a list, workspaces with their number cards, reports); 20 % write (ToDos,
     comments, draft material requests, 1-unit stock transfers that the next one reverses);
-  - supplier and dealer portal users, limited to their portal role's functions;
+  - supplier and dealer portal users, limited to their portal role's functions. One account
+    per portal persona is shared by all its virtual users (real partners each have their
+    own), so the run lifts the per-user request limits of the portals and the shop floor
+    (Automotive Settings, *Request Limits*), which would otherwise throttle the shared account;
   - one background planner starting an MRP planning run every five minutes and waiting
     for it (`job:Planning Run`: completion time, no target).
   Think time 5–15 s between actions.
