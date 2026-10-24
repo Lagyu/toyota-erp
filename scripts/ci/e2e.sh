@@ -158,6 +158,14 @@ fi
 prepare prepare_users credentials
 prepare prepare_journeys fixtures
 if [[ -n $image ]]; then
+	# a restored dataset keeps the Administrator password of the stack that generated it:
+	# report whether this stack's secret is accepted, then set it
+	login=$("${compose[@]}" exec -T -e PW="$(<"$secrets/admin_password")" frontend sh -c \
+		"curl -s -o /tmp/login.out -w '%{http_code}' -H 'Host: $site' -H 'Content-Type: application/json' \
+		-d \"{\\\"usr\\\": \\\"Administrator\\\", \\\"pwd\\\": \\\"\$PW\\\"}\" http://127.0.0.1:8080/api/method/login; \
+		echo ' '; head -c 200 /tmp/login.out; rm -f /tmp/login.out")
+	log "administrator login with this stack's secret before setting it: $login"
+	"${compose[@]}" exec -T backend env/bin/python -c "$SET_ADMIN_PASSWORD_PY" "$site" <"$secrets/admin_password"
 	# the API against its OpenAPI document (integration_tests/), as the stack's administrator
 	"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password"
 fi

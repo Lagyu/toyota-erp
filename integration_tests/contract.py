@@ -50,10 +50,11 @@ class Client:
 
 	def login(self, user: str, password: str) -> None:
 		body = urllib.parse.urlencode({"usr": user, "pwd": password}).encode()
-		status, _ = self.request("POST", "/api/method/login", body=body,
+		status, data = self.request("POST", "/api/method/login", body=body,
 			headers={"Content-Type": "application/x-www-form-urlencoded"})
 		if status != 200:
-			raise AssertionError(f"login as {user} failed ({status})")
+			message = data.get("message") or data.get("exc_type") if isinstance(data, dict) else str(data)[:200]
+			raise AssertionError(f"login as {user} failed ({status}: {message})")
 
 
 def resolve(spec: dict, node: Any) -> Any:

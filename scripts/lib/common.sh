@@ -39,6 +39,19 @@ secret_for_frappe() {
 	done
 }
 
+# Python for a frappe container (working directory: the bench) that sets the site's
+# Administrator password to the value on its stdin (never on a command line).
+#   compose exec -T backend env/bin/python -c "$SET_ADMIN_PASSWORD_PY" SITE <secret_file
+# shellcheck disable=SC2034
+SET_ADMIN_PASSWORD_PY='import sys
+import frappe
+from frappe.utils.password import update_password
+frappe.init(site=sys.argv[1], sites_path="sites")
+frappe.connect()
+update_password("Administrator", sys.stdin.read().strip())
+frappe.db.commit()
+frappe.destroy()'
+
 # Python for a frappe container (working directory: the bench) that sets one
 # site_config.json key to the value on its stdin. Unlike bench set-config, the value never
 # appears on a command line, and one that starts with "-" (token_urlsafe gives those) is
