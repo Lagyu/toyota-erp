@@ -46,10 +46,13 @@ ADMIN_PASSWORD_FILE=$stack_secrets/admin_password
 METRICS_TOKEN_FILE=$stack_secrets/metrics_token
 RESTIC_PASSWORD_FILE=$stack_secrets/restic_password
 RESTIC_REPOSITORY=/home/frappe/frappe-bench/sites/.restic-$name
-BACKUP_SCHEDULE=0 0 0 1 1 *
-RESTORE_DRILL_SCHEDULE=0 0 0 1 1 *
+BACKUP_SCHEDULE=off
+RESTORE_DRILL_SCHEDULE=off
+BINLOG_SCHEDULE=off
+DB_BINLOG_RETENTION_SECONDS=3600
 EOF
-	# (above) the scheduled backup and drill would compete with the generator or the load: once a year
+	# (above) scheduled backups, drills and binary log shipping would compete with the generator
+	# or the load; binary logs older than an hour are purged so a long generation fits the disk
 	printf '%s\n' "$@" >>"$stack_env"
 	stack_compose=("$REPO_ROOT/scripts/deploy/compose.sh" "$stack_env")
 	stack_backups=/home/frappe/frappe-bench/sites/$stack_site/private/backups

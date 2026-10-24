@@ -27,6 +27,25 @@ docker_cmd() {
 
 random_secret() { python3 -c 'import secrets; print(secrets.token_urlsafe(24))'; }
 
+# Wait until the site answers ready (through the front end), and at least MIN_SECONDS:
+# Frappe's workers keep a request's site config for up to 60 s, so after
+# `set-maintenance-mode off` some refuse requests (503) for that long (pass 61 then).
+#   wait_ready ENV_FILE SITE [MIN_SECONDS [LIMIT_SECONDS]]
+wait_ready() {
+	local env_file=$1 site=$2 min=${3:-0} limit=${4:-240} started=$SECONDS
+	while ((SECONDS - started < limit)); do
+		if ((SECONDS - started >= min)) && "$REPO_ROOT/scripts/deploy/compose.sh" "$env_file" exec -T frontend \
+				curl -fsS -o /dev/null -H "Host: $site" \
+				http://127.0.0.1:8080/api/method/automotive_core.ops.health.ready 2>/dev/null; then
+			log "$site ready after $((SECONDS - started)) s"
+			return 0
+		fi
+		sleep 5
+	done
+	log "$site not ready after $limit s"
+	return 1
+}
+
 # A secret file the application containers read as frappe (uid 1000), as preflight.sh
 # requires: owned by uid 1000 and group-readable by the deploying user. A no-op when that
 # user is uid 1000; otherwise (a CI runner) it needs sudo.

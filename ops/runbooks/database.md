@@ -77,7 +77,7 @@ The triggers then belong to the restoring user, and `bench migrate` re-applies t
 
 The binary log (`mariadb-bin.*`, ROW format) is enabled so that changes between nightly backups are recorded. It is kept for `DB_BINLOG_RETENTION_SECONDS` (14 days) **in the `db-data` volume on the same host**.
 
-- **No tooling** copies binary logs off the host or replays them onto a restored dump: point-in-time recovery is **not implemented**. This is why the RPO objective is not met ([backup-restore.md](backup-restore.md#recovery-objectives-and-evidence)).
+- **Shipped off the host** every 5 minutes and replayed onto a restored backup set: [backup-restore.md](backup-restore.md#binary-log-shipping-and-point-in-time-recovery). The local 14 days are the server's own copy; recovery uses the shipped ones.
 - **Disk growth.** Binary logs grow with the write volume. Watch the free space of the Docker data filesystem (`HostDiskSpaceLow`), and shorten the retention if needed by changing `DB_BINLOG_RETENTION_SECONDS` and recreating `db` with `compose.sh "$ENV" up -d db`.
 
 ## Access for diagnosis

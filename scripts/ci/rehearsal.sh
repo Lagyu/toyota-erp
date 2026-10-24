@@ -140,6 +140,9 @@ for _ in $(seq 1 60); do prev_compose exec -T db healthcheck.sh --connect >/dev/
 # the S3 store on the stack's outbound network, as an off-host repository would be reached
 docker_cmd run -d --name rehearsal-s3 --restart unless-stopped --network hinode_egress --network-alias s3 \
 	"$VERSITYGW_IMAGE" --access "$s3_key" --secret "$s3_secret" --port :7070 posix /tmp >/dev/null
+# the bucket exists, as at a storage provider: restic then sees an empty repository at once,
+# instead of retrying a missing bucket for 15 minutes before initialising it
+docker_cmd exec rehearsal-s3 mkdir -p /tmp/hinode-erp-rehearsal
 # the monitoring account of mysqld_exporter.cnf (the statements arrive on stdin)
 prev_compose exec -T -e ROOT="$(<"$SECRETS/db_root_password")" db sh -c 'mariadb -uroot -p"$ROOT"' <<SQL
 CREATE USER IF NOT EXISTS 'exporter'@'%' IDENTIFIED BY '$exporter_password' WITH MAX_USER_CONNECTIONS 3;
@@ -239,12 +242,25 @@ else
 	fail "see smoke-reboot.log"
 fi
 
-step "Off-host backup (restic on S3) and restore drill"
+step "Off-host backup (restic on S3), binary log shipping and restore drill with point-in-time recovery"
+# a change after the backup that only the shipped binary logs hold
 if compose exec -T scheduler bash /opt/hinode/ops/backup/backup.sh >"$out/backup.log" 2>&1 \
+		&& bench execute frappe.client.insert --kwargs \
+			"{'doc': {'doctype': 'ToDo', 'description': 'Rehearsal: recorded after the backup'}}" >/dev/null \
+		&& compose exec -T scheduler /home/frappe/frappe-bench/env/bin/python /opt/hinode/ops/backup/binlog.py ship \
+			>"$out/binlog.log" 2>&1 \
 		&& compose exec -T scheduler bash /opt/hinode/ops/backup/restore-drill.sh >"$out/drill.log" 2>&1; then
-	pass "$(tail -1 "$out/backup.log" | cut -c1-120); drill: $(tail -1 "$out/drill.log" | cut -c1-120)"
+	evidence=$(compose exec -T scheduler bash -c "cat \"\$(ls -t sites/$SITE/private/ops/drills/*.json | head -1)\"")
+	pitr=$(python3 -c 'import json, sys; p = json.load(sys.stdin).get("pitr") or {}
+print("replayed to %s, recovery point %s s" % (p["recovered_to"], p["rpo_seconds"]) if p.get("replayed") else "")' \
+		<<<"$evidence" 2>/dev/null || true)
+	if [[ -n $pitr ]]; then
+		pass "$(tail -1 "$out/backup.log" | cut -c1-100); drill with point-in-time recovery: $pitr"
+	else
+		fail "the drill restored the backup but did not replay the shipped binary logs (see drill.log)"
+	fi
 else
-	fail "see backup.log / drill.log"
+	fail "see backup.log / binlog.log / drill.log"
 fi
 
 step "Scheduled jobs without the Docker socket"
@@ -258,10 +274,16 @@ else
 fi
 
 step "Monitoring targets"
-targets=$(compose exec -T prometheus wget -qO- 'http://localhost:9090/api/v1/targets?state=active' 2>/dev/null || true)
-summary=$(python3 -c 'import json,sys; t=json.load(sys.stdin)["data"]["activeTargets"]; print(sum(x["health"]=="up" for x in t), len(t), ",".join(sorted(x["labels"]["job"] for x in t if x["health"]!="up")))' \
-	<<<"$targets" 2>/dev/null || echo "0 0 unreadable")
-read -r up total down <<<"$summary"
+# a target scraped while its service was starting (after the reboot above) stays down until
+# its next scrape (30 s): wait up to two minutes for every target
+for _ in $(seq 1 12); do
+	targets=$(compose exec -T prometheus wget -qO- 'http://localhost:9090/api/v1/targets?state=active' 2>/dev/null || true)
+	summary=$(python3 -c 'import json,sys; t=json.load(sys.stdin)["data"]["activeTargets"]; print(sum(x["health"]=="up" for x in t), len(t), ",".join(sorted(x["labels"]["job"] for x in t if x["health"]!="up")))' \
+		<<<"$targets" 2>/dev/null || echo "0 0 unreadable")
+	read -r up total down <<<"$summary"
+	[[ $total -gt 0 && $up == "$total" ]] && break
+	sleep 10
+done
 if [[ $total -gt 0 && $up == "$total" ]]; then pass "$up of $total targets up"; else fail "$up of $total up; down: ${down:-?}"; fi
 
 finish

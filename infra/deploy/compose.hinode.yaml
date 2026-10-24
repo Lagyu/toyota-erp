@@ -14,6 +14,8 @@
 
 x-app: &app
   image: ${CUSTOM_IMAGE:?set CUSTOM_IMAGE}:${CUSTOM_TAG:?set CUSTOM_TAG}
+  # as frappe_docker's services; cron is defined only here and would not come back after a reboot
+  restart: ${RESTART_POLICY:-unless-stopped}
   pull_policy: ${PULL_POLICY:-missing}
   init: true
   security_opt: [no-new-privileges:true]
@@ -39,6 +41,8 @@ x-backup-jobs: &backup-jobs
     DB_ROOT_PASSWORD_FILE: /run/secrets/db_password
     BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 30 17 * * *}
     RESTORE_DRILL_SCHEDULE: ${RESTORE_DRILL_SCHEDULE:-0 30 19 * * 6}
+    # binary log shipping (point-in-time recovery between the nightly backups)
+    BINLOG_SCHEDULE: ${BINLOG_SCHEDULE:-0 */5 * * * *}
   secrets: [restic_password, db_password]
   volumes:
     - ../../ops/backup:/opt/hinode/ops/backup:ro
@@ -120,8 +124,9 @@ services:
     mem_limit: 512m
     cpus: 1
 
-  # The scheduled operations jobs (nightly off-host backup, weekly restore drill), run in
-  # the stack by ops/backup/cron.py with the scheduler's environment: no Docker socket (C-02).
+  # The scheduled operations jobs (nightly off-host backup, weekly restore drill, binary log
+  # shipping every 5 minutes), run in the stack by ops/backup/cron.py with the scheduler's
+  # environment: no Docker socket (C-02).
   # Schedules are UTC, seconds first: 17:30 UTC = 02:30 JST; 19:30 UTC Saturday = Sunday 04:30 JST.
   cron:
     <<: [*app, *backup-jobs]

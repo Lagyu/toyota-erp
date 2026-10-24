@@ -38,6 +38,9 @@ ADMIN_PASSWORD_FILE=$secrets/admin_password
 METRICS_TOKEN_FILE=$secrets/metrics_token
 RESTIC_PASSWORD_FILE=$secrets/restic_password
 RESTIC_REPOSITORY=/home/frappe/frappe-bench/sites/.restic-smoke
+BACKUP_SCHEDULE=off
+RESTORE_DRILL_SCHEDULE=off
+BINLOG_SCHEDULE=off
 GUNICORN_WORKERS=2
 BACKEND_MEM_LIMIT=1536m
 BACKEND_CPUS=2
@@ -70,9 +73,24 @@ for _ in $(seq 1 30); do
 	sleep 5
 done
 "$REPO_ROOT/scripts/deploy/smoke.sh" "$env_file" 2>&1 | tee "$work/checks.log"
-log "backup into a local restic repository and restore drill"
-"${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/backup.sh 2>&1 | tail -3 | tee -a "$work/checks.log"
-"${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/restore-drill.sh 2>&1 | tail -3 | tee -a "$work/checks.log"
+log "backup into a local restic repository, binary log shipping and restore drill"
+"${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/backup.sh 2>&1 | tail -4 | tee -a "$work/checks.log"
+# a change after the backup (the shipping job's heartbeat), shipped, must come back with the drill
+"${compose[@]}" exec -T scheduler /home/frappe/frappe-bench/env/bin/python /opt/hinode/ops/backup/binlog.py ship \
+	2>&1 | tail -2 | tee -a "$work/checks.log"
+"${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/restore-drill.sh 2>&1 | tail -4 | tee -a "$work/checks.log"
 "${compose[@]}" exec -T scheduler bash -c 'cat "$(ls -t sites/smoke.localhost/private/ops/drills/*.json | head -1)"' \
 	>"$work/restore-drill.json"
+"${compose[@]}" exec -T scheduler cat sites/smoke.localhost/private/ops/binlog/last-shipped.json >"$work/binlog-shipped.json"
+python3 - "$work/restore-drill.json" "$work/binlog-shipped.json" <<'EOF' | tee -a "$work/checks.log"
+import json
+import sys
+
+drill, shipped = (json.load(open(path)) for path in sys.argv[1:])
+pitr = drill.get("pitr") or {}
+ok = bool(pitr.get("replayed")) and pitr.get("recovered_to") == shipped["heartbeat"]
+print(("ok   " if ok else "FAIL ") + f"point-in-time recovery: replayed to {pitr.get('recovered_to')}, "
+	f"newest shipped change {shipped['heartbeat']} ({pitr.get('reason') or str(pitr.get('logs')) + ' log(s)'})")
+sys.exit(0 if ok else 1)
+EOF
 log "smoke test passed; evidence in ${work#"$REPO_ROOT"/}"

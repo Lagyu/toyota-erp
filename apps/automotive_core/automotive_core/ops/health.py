@@ -26,6 +26,7 @@ from automotive_core.utils import hook_list
 # outside private/backups: bench backup prunes that directory by age (keep_backups_for_hours)
 BACKUP_MARKER = ("private", "ops", "backup-last-success.txt")
 DRILL_MARKER = ("private", "ops", "restore-drill-last.json")  # written by ops/backup/restore-drill.sh
+BINLOG_MARKER = ("private", "ops", "binlog", "last-shipped.json")  # written by ops/backup/binlog.py ship
 
 
 def _respond(payload: dict, status: int) -> dict:
@@ -129,6 +130,14 @@ def collect() -> list[tuple[str, str, dict, float]]:
 		out.append(("erp_restore_drill_last_ok", "1 if the last restore drill passed", {}, float(bool(result["ok"]))))
 		out.append(("erp_restore_drill_duration_seconds", "Duration of the last restore drill", {},
 			float(result.get("seconds") or 0)))
+		pitr = result.get("pitr") or {}
+		if pitr.get("replayed") and pitr.get("rpo_seconds") is not None:
+			out.append(("erp_restore_drill_rpo_seconds",
+				"Recovery point of the last drill: age of the newest change it recovered", {}, float(pitr["rpo_seconds"])))
+	shipped = Path(frappe.get_site_path(*BINLOG_MARKER))
+	if shipped.exists():
+		out.append(("erp_binlog_last_shipped_timestamp_seconds", "Unix time binary logs were last shipped off the host",
+			{}, float(get_datetime(json.loads(shipped.read_text())["shipped_at"]).timestamp())))
 	settings = frappe.get_cached_doc("Automotive Settings")
 	if settings.get("clamd_host"):
 		from automotive_core.files.clamav import ping

@@ -1,0 +1,6 @@
+#!/bin/sh
+# bench backup's dump, run by ops/backup/backup.sh with this directory first on PATH (Frappe
+# looks mariadb-dump up there): --master-data=2 writes the binary log position of the dump's
+# snapshot into the dump as a comment. With --single-transaction MariaDB takes it from the
+# snapshot itself (no lock, no extra privilege). ops/backup/binlog.py position reads it.
+exec /usr/bin/mariadb-dump --master-data=2 "$@"

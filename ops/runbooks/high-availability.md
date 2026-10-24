@@ -16,11 +16,11 @@ brief: RPO ≤ 15 minutes, RTO ≤ 2 hours.
 |---|---|---|
 | Entry | Traefik on the host (`proxy`) | Two load balancer nodes sharing a virtual IP (VRRP, e.g. keepalived), each running the same Traefik configuration with one server per application host in `routes.yaml`, health-checked on `/api/method/automotive_core.ops.health.ready` |
 | Application | `frontend`, `backend`, `websocket`, `queue-short`, `queue-long` | The same services on two or more application hosts, from the same image tag. Stateless: sessions and caches are in Redis and the database |
-| Singletons | `scheduler`, `cron` | Exactly one active instance, on one application host. If that host fails, start them on another (they hold no state of their own); scheduled jobs missed meanwhile run at their next time |
+| Singletons | `scheduler`, `cron` | Exactly one active instance, on one application host. If that host fails, start them on another; scheduled jobs missed meanwhile run at their next time. The binary log mirror (`private/ops/binlog`) is on the shared `sites` storage, so another host continues it |
 | Database | MariaDB container | A primary and at least one replica (semi-synchronous replication), with failover by a proxy (e.g. MaxScale) that the application reaches under one name (`DB_HOST`). Operator-provided or a managed MariaDB |
 | Cache and queue | Two Redis containers (the queue with AOF) | Redis with Sentinel or a managed Redis, the queue with persistence; `REDIS_CACHE` and `REDIS_QUEUE` point at them |
 | Files | the `sites` volume on the host | The `sites` directory on shared storage mounted on every application host (NFS, CephFS or a cloud file service), backed up with the database |
-| Backups | nightly restic to S3, weekly drill | Unchanged (from the singleton host), plus replication; binary-log archiving for point-in-time recovery between nightly backups |
+| Backups | nightly restic to S3, binary logs and new files shipped every 5 minutes, weekly drill with point-in-time recovery | Unchanged (from the singleton host), plus replication; with a managed database, its own point-in-time recovery may replace the binary log shipping |
 
 **Realtime connections.** The socket.io server keeps a connection per browser tab. With
 several application hosts, the load balancer must keep a client on one `websocket` server

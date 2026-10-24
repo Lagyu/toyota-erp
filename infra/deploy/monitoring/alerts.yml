@@ -133,6 +133,23 @@ groups:
         expr: absent(erp_backup_last_success_timestamp_seconds)
         for: 30h
         labels: { severity: critical }
+      - alert: ErpBinlogShippingStale
+        expr: time() - max(erp_binlog_last_shipped_timestamp_seconds) > 20 * 60
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "Binary logs not shipped off the host for 20 minutes: the 15-minute recovery point is not being met"
+      - alert: ErpBinlogNeverShipped
+        expr: absent(erp_binlog_last_shipped_timestamp_seconds)
+        for: 1h
+        labels: { severity: warning }
+        annotations:
+          summary: "Binary logs have never been shipped (BINLOG_SCHEDULE off, or the job fails): no point-in-time recovery"
+      - alert: ErpRecoveryPointLarge
+        expr: max(erp_restore_drill_rpo_seconds) > 30 * 60
+        labels: { severity: warning }
+        annotations:
+          summary: "The last restore drill recovered changes only up to more than 30 minutes before it"
       - alert: HostDiskSpaceLow
         expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes < 0.15
         for: 10m

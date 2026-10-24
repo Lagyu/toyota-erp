@@ -2,7 +2,8 @@
 # Roll the stack to the image in ENV_FILE (CUSTOM_TAG) with a verified backup first.
 #   upgrade.sh ENV_FILE
 # 1. backup (restic, off-host) of the running version   2. maintenance mode on
-# 3. pull/recreate on the new image   4. bench migrate   5. maintenance off   6. smoke test
+# 3. pull/recreate on the new image   4. bench migrate   5. maintenance off, wait until
+# ready   6. smoke test
 # A failed migrate leaves maintenance mode ON; recover with ops/runbooks/upgrade.md
 # (restore the step-1 snapshot, redeploy the previous CUSTOM_TAG).
 set -euo pipefail
@@ -20,5 +21,6 @@ log "pre-upgrade backup"
 "${compose[@]}" up -d --remove-orphans
 "${compose[@]}" exec -T backend bench --site "$site" migrate
 "${compose[@]}" exec -T backend bench --site "$site" set-maintenance-mode off
+wait_ready "$env_file" "$site" 61 || true  # the smoke test below reports what is wrong
 "$REPO_ROOT/scripts/deploy/smoke.sh" "$env_file"
 log "upgraded $site to ${CUSTOM_TAG}"

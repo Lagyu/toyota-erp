@@ -88,6 +88,8 @@ All values are read live from the site. Every series has a `site` label.
 |---|---|---|
 | `erp_backup_last_success_timestamp_seconds` | | from `sites/<site>/private/ops/backup-last-success.txt`; absent until the first successful backup |
 | `erp_restore_drill_last_timestamp_seconds`, `erp_restore_drill_last_ok`, `erp_restore_drill_duration_seconds` | | from `sites/<site>/private/ops/restore-drill-last.json` (written by every drill) |
+| `erp_restore_drill_rpo_seconds` | | the last drill's recovery point: age of the newest change its point-in-time recovery brought back; absent when it replayed nothing |
+| `erp_binlog_last_shipped_timestamp_seconds` | | from `sites/<site>/private/ops/binlog/last-shipped.json` (every binary log shipment) |
 | `erp_clamav_up` | | 1 if clamd answers PING. Only present when Automotive Settings has a clamd host. |
 
 **Requests:**
@@ -198,6 +200,9 @@ Thresholds are starting points for the 50/150-user profiles; tune them after loa
 | | [ErpErrorLogSpike](#erperrorlogspike) | > 100 Error Log entries in 24 h | W |
 | erp-data-protection | [ErpBackupStale](#erpbackupstale--erpbackupneverran) | last successful backup older than 26 h | C |
 | | [ErpBackupNeverRan](#erpbackupstale--erpbackupneverran) | no backup marker at all for 30 h | C |
+| | [ErpBinlogShippingStale](#erpbinlogshippingstale--erpbinlognevershipped) | binary logs last shipped more than 20 m ago, for 5 m | C |
+| | [ErpBinlogNeverShipped](#erpbinlogshippingstale--erpbinlognevershipped) | no shipment marker at all for 1 h | W |
+| | [ErpRecoveryPointLarge](#erprecoverypointlarge) | the last drill's recovery point is older than 30 m | W |
 | | [HostDiskSpaceLow](#hostdiskspacelow) | a non-tmpfs/overlay filesystem has < 15% free, for 10 m | W |
 
 General first steps for any alert:
@@ -398,6 +403,35 @@ Reference performance measurements do not exist yet, so record the occurrence.
    - restic password file unreadable (uid 1000);
    - disk full;
    - `bench backup` failed.
+
+### ErpBinlogShippingStale / ErpBinlogNeverShipped
+
+**Meaning.** The 5-minute binary log shipment (`binlog` job of the `cron` service) has not
+succeeded for 20 minutes, or never: a loss of the host now loses more than the 15-minute
+recovery point objective.
+
+**First response.**
+
+1. Read `logs cron` for the `binlog` runs and their exit status.
+2. Run one by hand and read its error:
+
+   ```bash
+   ./scripts/deploy/compose.sh "$ENV" exec -T scheduler \
+     /home/frappe/frappe-bench/env/bin/python /opt/hinode/ops/backup/binlog.py ship
+   ```
+
+   Typical causes: the repository is unreachable, the database root password changed
+   (`DB_PASSWORD_SECRETS_FILE`), `BINLOG_SCHEDULE` is `off`, or the server runs without
+   binary logging.
+
+### ErpRecoveryPointLarge
+
+**Meaning.** The last restore drill brought its copy forward only to a change more than 30
+minutes old: shipping was behind, or the replay applied less than it should.
+
+**First response.** Read the drill's evidence (`pitr` in the newest
+`private/ops/drills/*.json`, [backup-restore.md](backup-restore.md#weekly-restore-drill)) and
+the `binlog` runs around the drill.
 
 ### HostDiskSpaceLow
 

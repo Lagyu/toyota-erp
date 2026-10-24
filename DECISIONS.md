@@ -285,3 +285,19 @@ until the owner accepts them; an upgrade of the package ends the acceptance by i
 **Decision.** `ops/security/permission-matrix.md` documents each persona's rights on the key
 DocTypes, and an integration test fails on any difference from the live permission tables.
 **Consequences.** A role change is a reviewed change of the documented matrix.
+
+## D-032 Point-in-time recovery from shipped binary logs
+
+**Decision.** Every 5 minutes the `cron` service closes MariaDB's binary log, copies the
+closed logs into a mirror and stores it and the site's files in restic. The nightly dump
+records its own binary log position (`mariadb-dump --master-data=2` through a wrapper on
+`PATH`: with `--single-transaction` MariaDB takes it from the snapshot, without locks or extra
+privileges). A restore replays the logs from that position, filtered on the source database
+and renamed to the target (MariaDB filters before `--rewrite-db`, so the filter names the
+source), then copies the newest files.
+**Alternatives.** A replica on another host (the high-availability option; operator
+infrastructure); replaying from a time instead of a position (re-applies transactions the dump
+already holds, and duplicates rows of tables without a unique key such as `tabSingles`).
+**Consequences.** The recovery point is about 5 minutes; every drill measures it. Only the
+last three nightly sets can be brought forward from the newest binary log snapshot.
+

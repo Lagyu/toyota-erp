@@ -145,8 +145,16 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the synthetic dataset was dated after the history that uses it.
 - The synthetic opening stock exceeded the forward stores' put-away capacity (it now puts the
   excess in reserve storage), and the generator expedited parts that reserve storage held.
+- The `cron` service had no restart policy (it did not come back after a reboot), and the
+  Python that sets a stack's Administrator password ran from the bench directory, where
+  Frappe's logger finds no log directory.
 
 ### Operations
+- Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5
+  minutes; `restore.sh` and the weekly drill bring the nightly backup forward from them (to the
+  newest shipped change or `--until`), and the drill records the recovery point it reached.
+- Upgrades and restores wait until the site is ready before the smoke test: Frappe's workers
+  keep the site config, including maintenance mode, for up to a minute.
 - Dataset workflow: the standard profile generated on hosted runners in chained,
   resumable segments; the validated export is kept for the performance tests.
 - Load tests (`perf/`, `scripts/perf/run.sh`, `perf.yml`): desk personas, partner portals
