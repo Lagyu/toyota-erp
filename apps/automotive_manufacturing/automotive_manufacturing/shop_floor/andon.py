@@ -6,14 +6,16 @@ Raised -> Acknowledged -> Contained -> Restarted -> Closed.
   batch or serial when given): affected work cannot proceed (holds.py).
 * Restart of a quality stop needs a Quality Manager who did not raise the event, and
   the event's hold must be released or dispositioned; other stops need a supervisor.
-* A line stop's duration is booked as a Downtime Entry on the line's workstation.
+* A line stop's duration is booked as a Downtime Entry on the line's workstation, or on the
+  stopping station's when another stop already holds the line's for that time.
+* The minutes a line stood still are the union of its stops' windows (stopped_minutes).
 """
 
 from __future__ import annotations
 
 import frappe
 from frappe import _
-from frappe.utils import now_datetime, time_diff_in_seconds
+from frappe.utils import get_datetime, now_datetime, time_diff_in_seconds
 
 from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
@@ -223,10 +225,21 @@ def _book_downtime(doc, restarted, note: str | None) -> str | None:
 	if not operator:
 		return None
 	line = frappe.get_cached_doc("Production Line", doc.production_line)
+	# ERPNext refuses overlapping entries on one workstation: when another station's stop holds
+	# the line's workstation for part of this window (two cords pulled at once), the stopping
+	# station's own workstation takes the entry, and the restart never fails for it
+	for workstation in dict.fromkeys(w for w in (line.default_workstation, doc.workstation) if w):
+		if not frappe.db.exists(
+			"Downtime Entry",
+			{"workstation": workstation, "from_time": ("<", restarted), "to_time": (">", doc.raised_at)},
+		):
+			break
+	else:
+		return None
 	entry = frappe.get_doc(
 		{
 			"doctype": "Downtime Entry",
-			"workstation": line.default_workstation or doc.workstation,
+			"workstation": workstation,
 			"operator": operator,
 			"from_time": doc.raised_at,
 			"to_time": restarted,
@@ -241,6 +254,26 @@ def _book_downtime(doc, restarted, note: str | None) -> str | None:
 	entry.flags.ignore_permissions = True
 	entry.insert()
 	return entry.name
+
+
+def stopped_minutes(production_line: str, start, end) -> float:
+	"""Minutes ``production_line`` stood still for its restarted line stops raised in
+	[start, end): the union of their raise-to-restart windows, so that stops overlapping in
+	time (two stations' cords) count once."""
+	windows = frappe.db.sql(
+		"""select raised_at, restarted_at from `tabAndon Event` where production_line = %s
+		and stop_type = 'Line Stop' and restarted_at is not null and raised_at >= %s and raised_at < %s
+		order by raised_at""",
+		(production_line, start, end),
+	)
+	seconds, reach = 0.0, None
+	for raised, restarted in windows:
+		raised, restarted = get_datetime(raised), get_datetime(restarted)
+		begin = raised if reach is None else max(raised, reach)
+		if restarted > begin:
+			seconds += (restarted - begin).total_seconds()
+		reach = restarted if reach is None else max(reach, restarted)
+	return round(seconds / 60.0, 2)
 
 
 @frappe.whitelist(methods=["POST"])

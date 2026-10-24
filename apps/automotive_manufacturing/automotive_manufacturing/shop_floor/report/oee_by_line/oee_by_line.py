@@ -1,8 +1,9 @@
 # Copyright (c) 2026, Toyota ERP Clone contributors
 # License: GNU General Public License v3. See license.txt
 """OEE inputs by line and day (ERP-04, KPI MFG-OEE): availability from the released plant
-schedule minus Andon line stops, performance from units built at takt, quality from
-units released at final inspection. Same definitions as the KPI, broken down."""
+schedule minus the time Andon line stops held the line (overlapping stops once), performance
+from units built at takt, quality from units released at final inspection. Same definitions
+as the KPI, broken down."""
 
 import datetime as dt
 
@@ -11,6 +12,7 @@ from frappe import _
 from frappe.utils import add_days, flt, getdate, nowdate
 
 from automotive_core.analytics import scope
+from automotive_manufacturing.shop_floor.andon import stopped_minutes
 
 
 def execute(filters=None):
@@ -62,13 +64,7 @@ def _day(line, day) -> dict:
 			"Plant Schedule", {"production_line": line.name, "schedule_date": day}, "available_minutes"
 		)
 	)
-	stops = flt(
-		frappe.db.sql(
-			"""select sum(duration_minutes) from `tabAndon Event` where production_line = %s
-		and stop_type = 'Line Stop' and raised_at between %s and %s""",
-			(line.name, start, end),
-		)[0][0]
-	)
+	stops = stopped_minutes(line.name, start, dt.datetime.combine(add_days(day, 1), dt.time.min))
 	units = frappe.db.count(
 		"Vehicle Unit", {"production_line": line.name, "built_at": ("between", (start, end))}
 	)

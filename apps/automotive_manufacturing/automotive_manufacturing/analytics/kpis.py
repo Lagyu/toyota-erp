@@ -8,6 +8,7 @@ import frappe
 from frappe.utils import add_days, flt
 
 from automotive_core.analytics.kpi import KpiResult, ratio
+from automotive_manufacturing.shop_floor.andon import stopped_minutes
 
 DEFINITIONS = [
 	{
@@ -86,8 +87,8 @@ DEFINITIONS = [
 		"compute_method": "automotive_manufacturing.analytics.kpis.oee",
 		"reconciliation_method": "automotive_manufacturing.analytics.kpis.reconcile_oee",
 		"owner_role": "Plant Director",
-		"formula": "Availability (planned minutes - line stop minutes)/planned x Performance (units x takt / run minutes) "
-		"x Quality (units released first time / units built)",
+		"formula": "Availability (planned minutes - minutes the line stood still for line stops, overlapping stops "
+		"once)/planned x Performance (units x takt / run minutes) x Quality (units released first time / units built)",
 		"source_doctypes": "Production Line, Shift Pattern, Andon Event, Vehicle Unit, Quality Inspection",
 		"authorization_filter": "Company and Plant User Permissions of the caller.",
 		"reconciliation_check": "Each factor stays within 0..100% and the value is their product.",
@@ -172,12 +173,14 @@ def line_stop_hours(company, from_date, to_date, plant=None) -> KpiResult:
 def reconcile_line_stops(company, from_date, to_date, plant, result) -> tuple[bool, str]:
 	stops = _stops(company, from_date, to_date, plant)
 	booked = [s.downtime_entry for s in stops if s.downtime_entry]
+	# Downtime Entry.downtime is in minutes
 	downtime_hours = (
 		flt(
 			frappe.db.sql(
 				"select sum(downtime) from `tabDowntime Entry` where name in %s", [tuple(booked) or ("",)]
 			)[0][0]
 		)
+		/ 60.0
 		if booked
 		else 0.0
 	)
@@ -300,18 +303,7 @@ def oee(company, from_date, to_date, plant=None) -> KpiResult:
 		line_planned = sum(flt(s.available_minutes) for s in schedules)
 		if not line_planned:
 			continue
-		stops = sum(
-			flt(s.duration_minutes)
-			for s in frappe.get_all(
-				"Andon Event",
-				filters={
-					"production_line": line.name,
-					"stop_type": "Line Stop",
-					"raised_at": ("between", (from_date, add_days(to_date, 1))),
-				},
-				fields=["duration_minutes"],
-			)
-		)
+		stops = stopped_minutes(line.name, from_date, add_days(to_date, 1))
 		units = frappe.db.count(
 			"Vehicle Unit",
 			{"production_line": line.name, "built_at": ("between", (from_date, add_days(to_date, 1)))},
