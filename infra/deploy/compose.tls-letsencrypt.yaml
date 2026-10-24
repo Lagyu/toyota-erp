@@ -16,6 +16,9 @@ services:
       - --entrypoints.websecure.http.underscoreHeadersStrategy=delete
       - --entrypoints.websecure.transport.respondingTimeouts.readTimeout=180s
       - --certificatesresolvers.le.acme.email=${LETSENCRYPT_EMAIL:?set LETSENCRYPT_EMAIL}
+      # Let's Encrypt's production directory; its staging one for a trial
+      # (https://acme-staging-v02.api.letsencrypt.org/directory), or a test CA in CI
+      - --certificatesresolvers.le.acme.caserver=${ACME_CA_SERVER:-https://acme-v02.api.letsencrypt.org/directory}
       - --certificatesresolvers.le.acme.storage=/letsencrypt/acme.json
       - --certificatesresolvers.le.acme.httpchallenge.entrypoint=web
       # Prometheus metrics (requests, certificate expiry) on an internal entrypoint, scraped

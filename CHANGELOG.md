@@ -228,6 +228,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the standard fields and the comment count). Found by a short run on the closing dataset.
 
 ### Operations
+- `TLS_MODE=letsencrypt` is exercised in CI: the rehearsal workflow's `acme` job starts a stack
+  in that mode beside Pebble, Let's Encrypt's ACME test server, and checks the certificate obtained
+  through the HTTP-01 challenge, the redirect and the HTTPS chain. `ACME_CA_SERVER` selects
+  another ACME directory (Let's Encrypt staging for a trial); `COMPOSE_EXTRA_FILES` merges a
+  site's own compose files.
 - Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5
   minutes; `restore.sh` and the weekly drill bring the nightly backup forward from them (to the
   newest shipped change or `--until`), and the drill records the recovery point it reached.

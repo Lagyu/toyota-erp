@@ -228,7 +228,7 @@ Both TLS modes run the same pinned Traefik (`TRAEFIK_IMAGE`) on the `edge` netwo
   - `Referrer-Policy: strict-origin-when-cross-origin`;
   - a Permissions-Policy that disables camera, microphone and geolocation.
 
-The proxy also answers the site's name inside the stack (an alias on the `egress` network): PDF rendering in the backend fetches the print styles from the site's own URL. With certificates from an internal CA, the application image must trust that CA as well, or PDFs fail. `TLS_MODE=files` is exercised by the production rehearsal (`rehearsal.yml`); Let's Encrypt needs a public name and has no CI evidence: verify it after installation (step 9).
+The proxy also answers the site's name inside the stack (an alias on the `egress` network): PDF rendering in the backend fetches the print styles from the site's own URL. With certificates from an internal CA, the application image must trust that CA as well, or PDFs fail. `TLS_MODE=files` is exercised by the production rehearsal (`rehearsal.yml`); `TLS_MODE=letsencrypt` by its `acme` job against Let's Encrypt's ACME test server (Pebble, `scripts/ci/acme-check.sh`: certificate through the HTTP-01 challenge, redirect, HTTPS chain). With the real Let's Encrypt, the name must resolve publicly and ports 80/443 must be reachable: verify it after installation (step 9), or first against the staging directory (`ACME_CA_SERVER`).
 
 ## 6. Preflight
 
@@ -466,6 +466,8 @@ Optional variables, read from the environment file by the compose files.
 | `ALERTMANAGER_CONFIG` | `./monitoring/alertmanager.yml` | Alertmanager routing file |
 | `RESTART_POLICY` | `unless-stopped` | frappe_docker application services |
 | `UPSTREAM_DIR` | `$HOME/.cache/toyota-erp/upstream` | where `compose.sh` keeps frappe_docker |
+| `ACME_CA_SERVER` | Let's Encrypt's production directory | `TLS_MODE=letsencrypt`: another ACME directory, e.g. Let's Encrypt's staging one (`https://acme-staging-v02.api.letsencrypt.org/directory`) for a trial |
+| `COMPOSE_EXTRA_FILES` | none | compose files of the site's own (absolute paths, space separated), merged after the Hinode ones |
 
 ## Related
 

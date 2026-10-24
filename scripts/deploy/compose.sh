@@ -4,6 +4,8 @@
 #   compose.sh ENV_FILE <docker compose arguments...>
 #   compose.sh /etc/hinode/production.env up -d
 #   compose.sh /etc/hinode/production.env config        # review the merged file
+# COMPOSE_EXTRA_FILES in the environment file adds compose files of the site's own (absolute
+# paths, space separated), merged after the Hinode ones.
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 export LOG_TAG=deploy
@@ -46,6 +48,11 @@ if [[ ${MONITORING:-0} == 1 ]]; then
 		files+=(-f "$deploy/compose.monitoring-proxy.yaml")
 	fi
 fi
+
+# site-specific overrides (absolute paths, space separated), merged last
+for extra in ${COMPOSE_EXTRA_FILES:-}; do
+	files+=(-f "$extra")
+done
 
 # frappe_docker's compose.yaml pins nothing; the override supplies every image.
 export ERPNEXT_VERSION=$ERPNEXT_REF
