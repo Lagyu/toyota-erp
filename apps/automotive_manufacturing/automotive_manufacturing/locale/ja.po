@@ -4690,3 +4690,32 @@ msgstr "未発注の購買依頼数量"
 #: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json
 msgid "Planning Proposals Qty (Not Released)"
 msgstr "計画提案数量（未リリース）"
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:38
+msgid "Firm Orders"
+msgstr "確定受注"
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:79
+msgid "Over capacity"
+msgstr "能力超過"
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:81
+msgid "Short of firm orders"
+msgstr "確定受注に不足"
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:87
+msgid "Within capacity"
+msgstr "能力内"
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.js:8
+msgid "From Week"
+msgstr "開始週"
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.js:9
+msgid "Weeks"
+msgstr "週数"
+
+#. Label of a Link in the Production Planning Workspace
+#: automotive_manufacturing/production_planning/workspace/production_planning/production_planning.json
+msgid "Weekly Production Plan"
+msgstr "週次生産計画"

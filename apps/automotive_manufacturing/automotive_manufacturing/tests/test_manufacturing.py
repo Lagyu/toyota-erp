@@ -18,6 +18,7 @@ from automotive_core.tests.utils import AICHI, approve, as_user, make_user
 from automotive_core.utils import hook_dict
 from automotive_manufacturing.mes.production import build_entry
 from automotive_manufacturing.product_engineering import bom_revisions, configuration
+from automotive_manufacturing.production_planning import snapshot
 from automotive_manufacturing.quality_control.holds import QualityHoldError
 from automotive_manufacturing.tests import catalog
 from automotive_manufacturing.traceability import genealogy
@@ -617,12 +618,50 @@ class TestKanbanEscalation(ManufacturingTestCase):
 
 
 class TestPlanning(ManufacturingTestCase):
+	def test_the_weekly_production_plan_sets_work_orders_against_orders_and_capacity(self):
+		"""ERP-03.3: the weekly MPS view: per ISO week and line, the firm orders due, the units the
+		work orders plan and the line's capacity on its working days, with the week flagged when
+		planned beyond capacity or short of the orders."""
+		from frappe.desk.query_report import run
+
+		cat = self.cat
+		variant = cat["variants"][("Base", "FWD")]
+		start = getdate(add_days(nowdate(), 21))
+		monday = start - datetime.timedelta(days=start.weekday())
+		offset = (monday - getdate(nowdate())).days + 1  # the Tuesday of that week
+		line = frappe.get_doc("Production Line", catalog.LINE)
+		days = len(snapshot.working_days(catalog.PLANT, monday, monday + datetime.timedelta(days=6)))
+		capacity = int(line.max_units_per_day or 0) * days
+
+		def week():
+			rows = run("Weekly Production Plan", filters={"company": AICHI, "plant": catalog.PLANT,
+				"from_date": str(monday), "weeks": 1})["result"]
+			return next(r for r in rows if r["production_line"] == catalog.LINE)
+
+		before = week()
+		self.assertEqual((getdate(before["week"]), before["capacity"]), (monday, capacity))
+		catalog.work_order(variant, 2, start_offset_days=offset)
+		after = week()
+		self.assertEqual(after["planned_qty"], before["planned_qty"] + 2)
+		customer = "Weekly Plan Test Dealer"
+		if not frappe.db.exists("Customer", customer):
+			frappe.get_doc({"doctype": "Customer", "customer_name": customer,
+				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
+		due = add_days(nowdate(), offset)
+		order = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": customer,
+			"transaction_date": nowdate(), "delivery_date": due, "items": [{"item_code": variant,
+				"qty": after["planned_qty"] + 3, "rate": 2_000_000, "warehouse": catalog.FG, "delivery_date": due}]})
+		order.insert(ignore_permissions=True)
+		order.submit()
+		short = week()
+		self.assertGreaterEqual(short["firm_orders"], after["planned_qty"] + 3)
+		self.assertIn("Short of firm orders", short["status"])
+
 	def test_the_master_production_schedule_is_the_forecast_firm_orders_consume(self):
 		"""ERP-03.1: with forecasts included, the native Master Production Schedule adds demand; firm
 		orders consume it week by week, so a week asks for the larger of forecast and orders, not
 		their sum. Without consumption the forecast is added in full; without forecasts it is not."""
-		from automotive_manufacturing.production_planning import snapshot
-
 		cat = self.cat
 		variant = cat["variants"][("Base", "FWD")]
 		start = getdate(add_days(nowdate(), 7))

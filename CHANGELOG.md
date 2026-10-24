@@ -85,6 +85,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   every delivery result.
 
 ### Manufacturing (`automotive_manufacturing`)
+- Weekly Production Plan report (the weekly MPS): per ISO week and line, the firm orders due,
+  the units the work orders plan and have built, and the line's capacity on its working days,
+  with weeks over capacity or short of their orders flagged (ERP-03.3).
 - A change request's impact assessment also names the affected items' quantity on open
   material requests and in the newest planning runs' unreleased proposals (ERP-02.3).
 - Vehicle models, option rules and configurator; BOM revisions with effectivity; ECR with

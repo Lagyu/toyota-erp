@@ -123,6 +123,18 @@
    "collapsible": 1,
    "indent": 0,
    "keep_closed": 0,
+   "label": "Weekly Production Plan",
+   "link_to": "Weekly Production Plan",
+   "link_type": "Report",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
    "label": "Production Variance",
    "link_to": "Production Variance",
    "link_type": "Report",
@@ -131,7 +143,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-24 10:07:52.228643",
+ "modified": "2026-10-24 22:41:15.324172",
  "modified_by": "Administrator",
  "module": "Production Planning",
  "name": "Production Planning",

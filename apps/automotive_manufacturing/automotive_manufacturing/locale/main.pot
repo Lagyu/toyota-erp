@@ -4694,3 +4694,32 @@ msgstr ""
 #: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json
 msgid "Planning Proposals Qty (Not Released)"
 msgstr ""
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:38
+msgid "Firm Orders"
+msgstr ""
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:79
+msgid "Over capacity"
+msgstr ""
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:81
+msgid "Short of firm orders"
+msgstr ""
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.py:87
+msgid "Within capacity"
+msgstr ""
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.js:8
+msgid "From Week"
+msgstr ""
+
+#: automotive_manufacturing/production_planning/report/weekly_production_plan/weekly_production_plan.js:9
+msgid "Weeks"
+msgstr ""
+
+#. Label of a Link in the Production Planning Workspace
+#: automotive_manufacturing/production_planning/workspace/production_planning/production_planning.json
+msgid "Weekly Production Plan"
+msgstr ""
