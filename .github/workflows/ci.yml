@@ -12,9 +12,11 @@ on:
 permissions:
   contents: read
 
+# every commit on main keeps its full run (queued behind the running one); a pull request's
+# superseded runs are cancelled
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   lint:
@@ -155,6 +157,7 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
           for tag in "$PRODUCTION" "$REFERENCE"; do
             # 0.1.0-<sha>[-reference] is also published as 0.1.0[-reference]
-            short="${tag%%-*}$([[ $tag == *-reference ]] && echo -reference || true)"
+            short=${tag%%-*}
+            if [[ $tag == *-reference ]]; then short+=-reference; fi
             docker buildx imagetools create --tag "$REPO:$tag" --tag "$REPO:$short" "$REPO:$tag-candidate"
           done

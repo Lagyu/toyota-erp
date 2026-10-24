@@ -284,6 +284,23 @@ def request_stop(run: str) -> None:
 	frappe.db.set_value("Seed Run", run, "stop_requested", 1)
 
 
+def status(profile: str = "small", seed: int | None = None) -> dict:
+	"""A profile run's progress, with its counts and validation once it has them (the
+	evidence scripts/ci/dataset.sh records)."""
+	spec = load_profile(profile)
+	if seed is not None:
+		spec["seed"] = int(seed)
+	name = f"SEED-{spec['profile']}-{spec['seed']}"
+	row = frappe.db.get_value("Seed Run", name, ["status", "stage", "simulated_date", "start_date", "end_date",
+		"started_at", "finished_at", "counts", "validation", "error"], as_dict=True)
+	if not row:
+		return {"run": name, "status": "Not Started"}
+	out = {"run": name, **{k: v for k, v in row.items() if k not in ("counts", "validation")}}
+	for key in ("counts", "validation"):
+		out[key] = json.loads(row[key]) if row.get(key) else None
+	return out
+
+
 def revalidate(profile: str = "small", seed: int | None = None) -> dict:
 	"""Re-run the invariant checks of a finished run and store the result on its Seed Run."""
 	guard()

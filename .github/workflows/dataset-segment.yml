@@ -1,0 +1,75 @@
+# One segment of a dataset run (called by dataset.yml): restores the previous segment's
+# export, generates for a time budget (scripts/ci/dataset.sh) and exports the site again
+# under the same artifact name.
+name: dataset segment
+
+on:
+  workflow_call:
+    inputs:
+      index: { type: number, required: true }
+      profile: { type: string, required: true }
+      minutes: { type: number, required: true }
+      image: { type: string, required: true }
+    outputs:
+      done:
+        description: "true once the run reached validation (no further segment needed)"
+        value: ${{ jobs.segment.outputs.done }}
+
+permissions:
+  contents: read
+
+jobs:
+  segment:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 355
+    outputs:
+      done: ${{ steps.run.outputs.done }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with: { name: reference-image, path: .local/image }
+      - name: Load the reference image
+        run: zstd -dc .local/image/reference-image.tar.zst | docker load && rm -rf .local/image
+      - name: Previous segment
+        if: inputs.index > 1
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with: { name: "dataset-${{ inputs.profile }}", path: .local/dataset-in }
+      - name: Generate
+        id: run
+        env:
+          IMAGE: ${{ inputs.image }}
+          PROFILE: ${{ inputs.profile }}
+          MINUTES: ${{ inputs.minutes }}
+          INDEX: ${{ inputs.index }}
+        run: |
+          previous=()
+          if ((INDEX > 1)); then previous=(.local/dataset-in); fi
+          rc=0
+          ./scripts/ci/dataset.sh "$IMAGE" "$PROFILE" "$MINUTES" .local/dataset-out "${previous[@]}" || rc=$?
+          python3 scripts/ci/dataset_summary.py .local/dataset-out/status.json "$INDEX" >>"$GITHUB_STEP_SUMMARY" || true
+          status=$(python3 -c 'import json; print(json.load(open(".local/dataset-out/status.json"))["status"])' || echo unknown)
+          if [[ $status == Validated || $status == "Validation Failed" ]]; then echo "done=true" >>"$GITHUB_OUTPUT"; fi
+          if [[ -f .local/dataset-out/database.sql.gz ]]; then echo "exported=true" >>"$GITHUB_OUTPUT"; fi
+          exit "$rc"
+      - name: Export for the next segment
+        if: always() && steps.run.outputs.exported == 'true'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}"
+          path: .local/dataset-out/
+          include-hidden-files: true
+          overwrite: true
+          compression-level: 0
+          retention-days: 90
+      - name: Logs
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}-logs-${{ inputs.index }}"
+          path: .local/dataset-logs/
+          include-hidden-files: true
+          retention-days: 30

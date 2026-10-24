@@ -6,8 +6,10 @@ set -euo pipefail
 CI_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 CI_VENV=${CI_VENV:-$CI_ROOT/.local/tools/venv}
 CI_BIN=$CI_VENV/bin
-# babel: the translation catalogue checks (scripts/dev/check_po.py), at the image's version
-TOOL_PINS=(ruff==0.14.1 shellcheck-py==0.10.0.1 pip-audit==2.9.0 PyYAML==6.0.3 babel==2.18.0)
+# babel: the translation catalogue checks (scripts/dev/check_po.py), at the image's version;
+# actionlint: the GitHub workflows
+TOOL_PINS=(ruff==0.14.1 shellcheck-py==0.10.0.1 pip-audit==2.9.0 PyYAML==6.0.3 babel==2.18.0
+	actionlint-py==1.7.12.25)
 if [[ ! -x $CI_BIN/python ]]; then
 	python3 -m venv "$CI_VENV"
 fi

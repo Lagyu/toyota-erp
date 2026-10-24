@@ -1,0 +1,183 @@
+# The synthetic reference dataset on a reference stack (requirements §5, GATE-3), generated
+# in time-boxed segments: a hosted job may run for 6 hours and the standard profile takes
+# longer. Each segment restores the previous one's export and continues from the last
+# simulated day; the one that finishes validates the inventory and accounting invariants.
+# The final export stays as the artifact dataset-<profile> (database, files, encryption key,
+# status.json with counts and validation) for the performance tests.
+name: dataset
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Volume profile
+        type: choice
+        options: [standard, small, large]
+        default: standard
+      minutes:
+        description: Generation budget per segment (minutes)
+        type: number
+        default: 240
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dataset-${{ inputs.profile }}
+  cancel-in-progress: false
+
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    outputs:
+      image: ${{ steps.build.outputs.image }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - name: Build the reference image
+        id: build
+        run: |
+          ./scripts/image/build.sh --reference | tee .local-image-reference.txt
+          image=$(tail -1 .local-image-reference.txt)
+          echo "image=$image" >>"$GITHUB_OUTPUT"
+          mkdir -p .local/image
+          docker save "$image" | zstd -T0 -3 >.local/image/reference-image.tar.zst
+          ls -la .local/image
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reference-image
+          path: .local/image/reference-image.tar.zst
+          include-hidden-files: true
+          compression-level: 0
+          retention-days: 7
+
+  # a segment runs only while the previous one left the run unfinished
+  s01:
+    needs: image
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 1
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s02:
+    needs: [image, s01]
+    if: needs.s01.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 2
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s03:
+    needs: [image, s02]
+    if: needs.s02.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 3
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s04:
+    needs: [image, s03]
+    if: needs.s03.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 4
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s05:
+    needs: [image, s04]
+    if: needs.s04.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 5
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s06:
+    needs: [image, s05]
+    if: needs.s05.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 6
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s07:
+    needs: [image, s06]
+    if: needs.s06.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 7
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s08:
+    needs: [image, s07]
+    if: needs.s07.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 8
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s09:
+    needs: [image, s08]
+    if: needs.s08.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 9
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s10:
+    needs: [image, s09]
+    if: needs.s09.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 10
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s11:
+    needs: [image, s10]
+    if: needs.s10.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 11
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+  s12:
+    needs: [image, s11]
+    if: needs.s11.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 12
+      profile: ${{ inputs.profile }}
+      minutes: ${{ inputs.minutes }}
+      image: ${{ needs.image.outputs.image }}
+
+  # green only when a segment finished the run and its validation passed
+  result:
+    needs: [s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11, s12]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with: { name: "dataset-${{ inputs.profile }}", path: dataset }
+      - name: Final status
+        run: |
+          python3 - <<'EOF'
+          import json, sys
+          status = json.load(open("dataset/status.json"))
+          validation = status.get("validation") or {}
+          print(status["run"], status["status"], status.get("simulated_date"))
+          sys.exit(0 if status["status"] == "Validated" and validation.get("ok") else 1)
+          EOF

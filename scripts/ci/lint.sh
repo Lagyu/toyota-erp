@@ -13,6 +13,9 @@ ruff check apps scripts integration_tests || status=1
 step "shellcheck"
 find scripts ops -name '*.sh' -print0 | xargs -0 shellcheck -x -S warning || status=1
 
+step "GitHub workflows (actionlint)"
+actionlint -shellcheck "$(command -v shellcheck)" .github/workflows/*.yml || status=1
+
 step "schema and desk JSON are generated from the specs"
 python3 scripts/dev/schema/generate.py --check || status=1
 
