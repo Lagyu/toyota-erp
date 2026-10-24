@@ -299,8 +299,10 @@ try:
 except ValueError:
 	data = {}
 error = ""
-if "exc" in data:
-	error = json.loads(data["exc"])[0].strip().splitlines()[-1]
+if "exc" in data:  # the exception and the frames that raised it
+	lines = json.loads(data["exc"])[0].strip().splitlines()
+	frames = [ln.strip() for ln in lines if ln.strip().startswith("File ")][-8:]
+	error = lines[-1] + " | " + " < ".join(reversed(frames))
 if data.get("_server_messages"):
 	error += " " + " ".join(json.loads(m).get("message", "") for m in json.loads(data["_server_messages"]))
 print("upload %s: HTTP %s %s" % (sys.argv[2], status, error or body[:200]))' "$response" "${1##*/}" \
