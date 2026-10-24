@@ -10,7 +10,7 @@ on:
       profile:
         description: Dataset profile
         type: choice
-        options: [standard, small, large]
+        options: [standard, small, large, closing]
         default: standard
       dataset_run:
         description: Run ID of the dataset workflow to load (empty = the latest successful one with this profile)

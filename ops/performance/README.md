@@ -42,9 +42,12 @@ gh workflow run perf.yml -f dataset_run=<run id> -f phases="steady:50:20m"
 ```
 
 Results: the run's summary page, and the `perf-results` artifact (per phase: `summary.txt`,
-`summary.json`, Locust's CSV/HTML/JSON, metrics snapshots, `run.json` with the hardware;
-the stack's container logs). `scripts/perf/run.sh IMAGE DATASET_DIR PHASE...` runs the same
-on any Docker host; never against production (the write scenarios create documents, and
+`summary.json`, Locust's CSV/HTML/JSON, metrics snapshots, `run.json` with the hardware, the
+queue lengths sampled every 15 s (`queues.txt`), the digest of the database's slow query log
+(`slow-queries.json`: statements over 0.5 s grouped by shape, literals masked), the database's
+tables and the files before and after the phase (`db-*.json`, `files-*.txt`); the stack's
+container logs). `summary.txt` reports throughput, queue lengths, slow statements and growth.
+`scripts/perf/run.sh IMAGE DATASET_DIR PHASE...` runs the same on any Docker host; never against production (the write scenarios create documents, and
 the persona passwords are generated for the run).
 
 ## Declared conditions

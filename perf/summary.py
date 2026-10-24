@@ -14,6 +14,16 @@ targets met; 1: a p95 target missed, failures above the ratio, or errors inside 
 The second form saves the site's Prometheus metrics (automotive_core.ops.health.metrics)
 to OUTPUT with the token read from TOKEN_FILE (header X-Hinode-Metrics-Token). The token is never printed.
 
+	summary.py sample URL TOKEN_FILE OUTPUT [SECONDS]
+	summary.py slowlog SLOW_LOG OUTPUT_JSON
+
+sample appends the RQ queue lengths (erp_queue_jobs) to OUTPUT every SECONDS (default 15)
+until it is stopped; slowlog digests a MariaDB slow query log into statements grouped by their
+shape (literals masked), with their count and time. When RESULTS_DIR holds them, the report
+adds: throughput; the queue lengths sampled during the phase (queues.txt); the slow statements
+(slow-queries.json); the database and file storage before and after the phase (db-before.json,
+db-after.json, files-before.txt, files-after.txt).
+
 Groups follow the request names of the locustfile: read:* (GET), write:* (other methods),
 job:* (completion times of background jobs, no target). Client-side times include the
 network; the server histogram (erp_http_request_duration_seconds) does not.
@@ -217,6 +227,154 @@ def scrape(url: str, token_file: str, output: str) -> int:
 	return 0
 
 
+def sample(url: str, token_file: str, output: str, every: str = "15") -> int:
+	"""Until stopped: the queue lengths every few seconds, a line per queue (time, queue, jobs)."""
+	import time
+
+	import requests
+
+	token = Path(token_file).read_text().strip()
+	with open(output, "a") as out:
+		while True:
+			try:
+				response = requests.get(
+					f"{url.rstrip('/')}/api/method/automotive_core.ops.health.metrics",
+					headers={"X-Hinode-Metrics-Token": token},
+					timeout=30,
+				)
+			except requests.RequestException:
+				response = None
+			now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+			for name, labels, value in parse_metrics(response.text if response is not None else ""):
+				if name == "erp_queue_jobs" and labels.get("queue"):
+					out.write(f"{now} {labels['queue']} {value:g}\n")
+			out.flush()
+			time.sleep(float(every))
+
+
+SLOW_LITERALS = (
+	(re.compile(r"'(?:[^'\\]|\\.)*'"), "?"),
+	(re.compile(r"\b\d+(?:\.\d+)?\b"), "?"),
+	(re.compile(r"\((?:\s*\?\s*,)+\s*\?\s*\)"), "(?, ...)"),
+	(re.compile(r"\s+"), " "),
+)
+
+
+def statement_shape(sql: str) -> str:
+	for pattern, replacement in SLOW_LITERALS:
+		sql = pattern.sub(replacement, sql)
+	return sql.strip().rstrip(";")[:400]
+
+
+def slowlog(log_path: str, output: str) -> int:
+	"""MariaDB's slow query log as statements grouped by shape: count, total and longest
+	time, rows examined. Literal values are masked, so the digest carries no data."""
+	groups: dict[str, dict] = {}
+	entry: dict | None = None
+	lines: list[str] = []
+
+	def close() -> None:
+		if entry is None:
+			return
+		sql = " ".join(ln for ln in lines if not ln.lower().startswith(("set timestamp", "use ")))
+		if not sql.strip():
+			return
+		row = groups.setdefault(
+			statement_shape(sql), {"count": 0, "total_s": 0.0, "max_s": 0.0, "rows_examined": 0}
+		)
+		row["count"] += 1
+		row["total_s"] += entry["time"]
+		row["max_s"] = max(row["max_s"], entry["time"])
+		row["rows_examined"] += entry["examined"]
+
+	timing = re.compile(r"# Query_time: ([\d.]+)\s+Lock_time: [\d.]+\s+Rows_sent: \d+\s+Rows_examined: (\d+)")
+	for line in Path(log_path).read_text(errors="replace").splitlines():
+		match = timing.match(line)
+		if match:
+			close()
+			entry, lines = {"time": float(match[1]), "examined": int(match[2])}, []
+		elif line.startswith("#") or entry is None:
+			continue
+		else:
+			lines.append(line.strip())
+	close()
+	rows = [
+		{"statement": shape, **row, "total_s": round(row["total_s"], 3), "max_s": round(row["max_s"], 3)}
+		for shape, row in sorted(groups.items(), key=lambda item: -item[1]["total_s"])
+	]
+	Path(output).write_text(json.dumps({"statements": rows}, indent=1) + "\n")
+	return 0
+
+
+def throughput(entries: list[dict]) -> dict | None:
+	"""Requests per second over the phase, from the first request's start to the last request,
+	and the busiest second."""
+	starts = [e["start_time"] for e in entries if e.get("start_time")]
+	ends = [e["last_request_timestamp"] for e in entries if e.get("last_request_timestamp")]
+	if not starts or not ends or max(ends) <= min(starts):
+		return None
+	seconds = max(ends) - min(starts)
+	by_group: Counter = Counter()
+	per_second: Counter = Counter()
+	for e in entries:
+		by_group[group_of(e["name"])] += e.get("num_requests") or 0
+		per_second.update({k: v for k, v in (e.get("num_reqs_per_sec") or {}).items()})
+	total = sum(by_group.values())
+	return {
+		"seconds": round(seconds, 1),
+		"requests": total,
+		"per_second": round(total / seconds, 2),
+		"busiest_second": max(per_second.values()) if per_second else None,
+		"per_second_by_group": {g: round(n / seconds, 2) for g, n in sorted(by_group.items())},
+	}
+
+
+def queue_samples(results: Path) -> dict | None:
+	path = results / "queues.txt"
+	if not path.exists():
+		return None
+	series: dict[str, list[float]] = {}
+	for line in path.read_text().splitlines():
+		parts = line.split()
+		if len(parts) == 3:
+			series.setdefault(parts[1], []).append(float(parts[2]))
+	return {
+		queue: {"samples": len(values), "max": max(values), "mean": round(sum(values) / len(values), 1)}
+		for queue, values in sorted(series.items())
+	} or None
+
+
+def storage(results: Path) -> dict | None:
+	"""The site database (InnoDB's estimated rows; data and index bytes) and its files, before
+	and after the phase."""
+	before, after = results / "db-before.json", results / "db-after.json"
+	if not (before.exists() and after.exists()):
+		return None
+	first, second = json.loads(before.read_text()), json.loads(after.read_text())
+	tables = {
+		name: {
+			"bytes_before": first.get(name, {}).get("bytes", 0),
+			"bytes_after": row["bytes"],
+			"rows_after": row["rows"],
+			"rows_growth": row["rows"] - first.get(name, {}).get("rows", 0),
+		}
+		for name, row in second.items()
+	}
+	out = {
+		"database_bytes_before": sum(t["bytes"] for t in first.values()),
+		"database_bytes_after": sum(t["bytes"] for t in second.values()),
+		"largest_tables": dict(sorted(tables.items(), key=lambda item: -item[1]["bytes_after"])[:10]),
+		"most_rows_added": dict(sorted(tables.items(), key=lambda item: -item[1]["rows_growth"])[:10]),
+	}
+	for label in ("before", "after"):
+		path = results / f"files-{label}.txt"
+		if path.exists():
+			out[f"files_bytes_{label}"] = sum(
+				int(line.split()[0]) for line in path.read_text().splitlines() if line.split()[:1] != []
+			)
+	return out
+
+
 # ---------------------------------------------------------------------------------------
 # Report
 # ---------------------------------------------------------------------------------------
@@ -290,6 +448,11 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 	}
 	slowest = dict(sorted(requests.items(), key=lambda item: -item[1]["p95_ms"])[:15])
 	server = server_side(results, {"read": targets_s.get("read"), "write": targets_s.get("write")})
+	rate = throughput(entries)
+	queues = queue_samples(results)
+	disk = storage(results)
+	slow_path = results / "slow-queries.json"
+	slow = json.loads(slow_path.read_text())["statements"] if slow_path.exists() else None
 
 	lines = []
 	if run:
@@ -311,6 +474,13 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 			f"Mix: {reads} reads / {writes} writes ({reads / (reads + writes):.0%} / {writes / (reads + writes):.0%})",
 			"",
 		]
+	if rate:
+		groups_rate = ", ".join(f"{g} {r:g}/s" for g, r in rate["per_second_by_group"].items())
+		lines += [
+			f"Throughput: {rate['requests']} requests in {rate['seconds']:g} s, {rate['per_second']:g} per second "
+			f"({groups_rate}); busiest second {rate['busiest_second']}",
+			"",
+		]
 	lines += table("Operations", operations)
 	lines += table("Slowest requests by p95", slowest)
 	if over:
@@ -324,6 +494,39 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 		lines += [
 			f"Failed background jobs (erp_queue_failed_jobs): {server['failed_jobs_before']:g} before, "
 			f"{server['failed_jobs_after']:g} after",
+			"",
+		]
+	if queues:
+		lines += ["Queue lengths during the phase (sampled every 15 s):"]
+		lines += [
+			f"  {q}: max {row['max']:g}, mean {row['mean']:g} ({row['samples']} samples)"
+			for q, row in queues.items()
+		]
+		lines.append("")
+	if slow is not None:
+		lines += [
+			f"Slow statements (over the slow query log's threshold): {sum(r['count'] for r in slow)} in {len(slow)} shapes"
+		]
+		lines += [
+			f"  {r['count']} x, {r['total_s']:g} s total, {r['max_s']:g} s max, {r['rows_examined']} rows examined: {r['statement'][:160]}"
+			for r in slow[:10]
+		]
+		lines.append("")
+	if disk:
+		mib = 1024 * 1024
+		lines += [
+			f"Database: {disk['database_bytes_before'] / mib:.1f} MiB before, {disk['database_bytes_after'] / mib:.1f} MiB after"
+			+ (
+				f"; files {disk['files_bytes_before'] / mib:.1f} MiB before, {disk['files_bytes_after'] / mib:.1f} MiB after"
+				if "files_bytes_before" in disk and "files_bytes_after" in disk
+				else ""
+			),
+			"  most rows added: "
+			+ ", ".join(
+				f"{name} +{row['rows_growth']}"
+				for name, row in disk["most_rows_added"].items()
+				if row["rows_growth"] > 0
+			),
 			"",
 		]
 	lines.append("RESULT: " + ("targets met" if not reasons else "FAILED - " + "; ".join(reasons)))
@@ -343,6 +546,10 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 				"operations": operations,
 				"requests": requests,
 				"server": server,
+				"throughput": rate,
+				"queues": queues,
+				"slow_statements": slow,
+				"storage": disk,
 			},
 			indent=1,
 			sort_keys=True,
@@ -358,6 +565,16 @@ def main(argv: list[str]) -> int:
 			print("usage: summary.py scrape URL TOKEN_FILE OUTPUT", file=sys.stderr)
 			return 2
 		return scrape(*argv[1:])
+	if argv[:1] == ["sample"]:
+		if len(argv) not in (4, 5):
+			print("usage: summary.py sample URL TOKEN_FILE OUTPUT [SECONDS]", file=sys.stderr)
+			return 2
+		return sample(*argv[1:])
+	if argv[:1] == ["slowlog"]:
+		if len(argv) != 3:
+			print("usage: summary.py slowlog SLOW_LOG OUTPUT_JSON", file=sys.stderr)
+			return 2
+		return slowlog(*argv[1:])
 	parser = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
 	parser.add_argument("results", type=Path)
 	parser.add_argument("--read-p95", type=float, default=2.0, help="seconds (default 2)")
