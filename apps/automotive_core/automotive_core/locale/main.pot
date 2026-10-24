@@ -1,0 +1,4382 @@
+# Translations template for Automotive Core.
+# Copyright (C) 2026 Toyota ERP Clone contributors
+# This file is distributed under the same license as the Automotive Core project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Automotive Core VERSION\n"
+"Report-Msgid-Bugs-To: erp-team@hinode.example\n"
+"POT-Creation-Date: 2026-10-24 13:45+0919\n"
+"PO-Revision-Date: 2026-10-24 13:45+0919\n"
+"Last-Translator: erp-team@hinode.example\n"
+"Language-Team: erp-team@hinode.example\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#. Description of the 'Max Amount' (Currency) field in DocType 'Approval
+#. Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:118
+msgid "0 = no limit."
+msgstr ""
+
+#. Description of the 'Applies Up To Amount' (Currency) field in DocType
+#. 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:90
+msgid "0 = no upper bound."
+msgstr ""
+
+#. Description of the 'Default Attachment Retention (Days)' (Int) field in
+#. DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:177
+msgid "0 keeps attachments forever."
+msgstr ""
+
+#. Description of the 'Planned Rate (Units / Hour)' (Float) field in DocType
+#. 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:92
+msgid "3600 / takt time."
+msgstr ""
+
+#. Header text in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:3
+msgid "<span class=\"h4\"><b>Automotive Setup</b></span>"
+msgstr ""
+
+#. Header text in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:3
+msgid "<span class=\"h4\"><b>Finance Controls</b></span>"
+msgstr ""
+
+#. Header text in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:3
+msgid "<span class=\"h4\"><b>Governance</b></span>"
+msgstr ""
+
+#. Header text in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:3
+msgid "<span class=\"h4\"><b>Integration Hub</b></span>"
+msgstr ""
+
+#. Header text in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:3
+msgid "<span class=\"h4\"><b>Management</b></span>"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:355
+msgid "A comment is required when rejecting."
+msgstr ""
+
+#: automotive_core/governance/delegation.py:114
+msgid "A delegation cannot start in the past."
+msgstr ""
+
+#: automotive_core/integration_hub/idempotency.py:102
+msgid "A request with this Idempotency-Key is still being processed."
+msgstr ""
+
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.py:12
+msgid "A rule needs two different roles."
+msgstr ""
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:25
+msgid "A service user is required to process inbound messages."
+msgstr ""
+
+#: automotive_core/governance/delegation.py:107
+msgid "A user cannot delegate to themselves."
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:223
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:206
+#: automotive_core/automotive_setup/doctype/plant/plant.json:326
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:262
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:227
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:208
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:297
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:258
+#: automotive_core/governance/doctype/approval_request/approval_request.json:249
+msgid "AP Clerk"
+msgstr ""
+
+#. Label of a Card Break in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:76
+msgid "Access"
+msgstr ""
+
+#. Label of the tab_break_1 (Tab Break) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:41
+msgid "Access & Audit"
+msgstr ""
+
+#. Label of the access_expiry_date (Date) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:106
+msgid "Access Expires On"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:56
+msgid "Access expiry cannot be in the past."
+msgstr ""
+
+#. Label of a Card Break in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:56
+msgid "Accountability"
+msgstr ""
+
+#. Label of the accounting_period (Link) field in DocType 'Period Close
+#. Checklist'
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:87
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:36
+msgid "Accounting Period"
+msgstr ""
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:180
+msgid "Accounts Payable"
+msgstr ""
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:170
+msgid "Accounts Receivable"
+msgstr ""
+
+#. Label of the is_active (Check) field in DocType 'KPI Definition'
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Label of the is_active (Check) field in DocType 'Plant'
+#. Option for the 'Status' (Select) field in DocType 'Plant Assignment'
+#. Label of the is_active (Check) field in DocType 'Production Line'
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#. Label of the is_active (Check) field in DocType 'Approval Policy'
+#. Label of the is_active (Check) field in DocType 'Segregation of Duties Rule'
+#. Label of the is_active (Check) field in DocType 'Integration Partner'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:107
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/automotive_setup/doctype/plant/plant.json:112
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:109
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:65
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:53
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:108
+msgid "Active"
+msgstr ""
+
+#. Label of the actor (Link) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:73
+msgid "Actor"
+msgstr ""
+
+#. Label of the adapter (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:82
+msgid "Adapter"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'User
+#. Provisioning Request'
+#. Label of the extra_roles (Table MultiSelect) field in DocType 'User
+#. Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:122
+msgid "Additional Roles"
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Administration"
+msgstr ""
+
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+msgid "Administrator"
+msgstr ""
+
+#. Label of the allow_delegation (Check) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:128
+msgid "Allow Delegated Approval"
+msgstr ""
+
+#. Label of the allowed_extensions (Data) field in DocType 'Attachment Policy
+#. Rule'
+#. Label of the allowed_extensions (Small Text) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:27
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:150
+msgid "Allowed Extensions"
+msgstr ""
+
+#. Label of the allowed_message_types (Small Text) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:153
+msgid "Allowed Inbound Message Types"
+msgstr ""
+
+#. Label of the amended_from (Link) field in DocType 'Period Close Checklist'
+#. Label of the amended_from (Link) field in DocType 'Approval Delegation'
+#. Label of the amended_from (Link) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:122
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:137
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:163
+msgid "Amended From"
+msgstr ""
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#. Label of the amount (Currency) field in DocType 'Approval Request'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+#: automotive_core/governance/doctype/approval_request/approval_request.json:95
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:50
+msgid "Amount"
+msgstr ""
+
+#. Label of the amount_field (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:82
+msgid "Amount Field"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:5
+msgid "An external system we exchange messages with, and how (adapter, credentials, status)."
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/plant/plant.json:6
+msgid "An operating site (vehicle assembly, powertrain, preparation & distribution)."
+msgstr ""
+
+#. Title of a Sidebar
+#: automotive_core/analytics/sidebar/analytics/analytics.json:126
+msgid "Analytics"
+msgstr ""
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Andon Point"
+msgstr ""
+
+#. Label of the annual_capacity_units (Int) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:144
+msgid "Annual Capacity (Units)"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/audit_event/audit_event.json:5
+msgid "Append-only audit log, sealed into a SHA-256 hash chain by a background job."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+msgid "Applied"
+msgstr ""
+
+#. Label of the min_amount (Currency) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:87
+msgid "Applies From Amount"
+msgstr ""
+
+#. Label of the max_amount (Currency) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:93
+msgid "Applies Up To Amount"
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:27
+msgid "Applies Up To Amount must be at least Applies From Amount."
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:20
+msgid "Approval"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:142
+msgid "Approval Decision"
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_decision/approval_decision.py:12
+msgid "Approval Decisions are immutable."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_decision/approval_decision.py:14
+msgid "Approval Decisions are recorded only by the approval service."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_decision/approval_decision.py:17
+msgid "Approval Decisions cannot be deleted."
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:151
+#: automotive_core/governance/sidebar/governance/governance.json:53
+#: automotive_core/governance/workspace/governance/governance.json:46
+msgid "Approval Delegation"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a shortcut in the Governance Workspace
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:9
+#: automotive_core/governance/sidebar/governance/governance.json:27
+#: automotive_core/governance/workspace/governance/governance.json:192
+msgid "Approval Inbox"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:174
+#: automotive_core/governance/sidebar/governance/governance.json:90
+#: automotive_core/governance/workspace/governance/governance.json:36
+msgid "Approval Policy"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:63
+msgid "Approval Policy Step"
+msgstr ""
+
+#. Label of the approval_request (Link) field in DocType 'Approval Decision'
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:42
+#: automotive_core/governance/doctype/approval_request/approval_request.json:170
+#: automotive_core/governance/sidebar/governance/governance.json:40
+#: automotive_core/governance/workspace/governance/governance.json:26
+msgid "Approval Request"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:91
+msgid "Approval Request Step"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:353
+#, python-brace-format
+msgid "Approval Request {0} has no pending step."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:350
+#, python-brace-format
+msgid "Approval Request {0} is {1}, not Pending."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_request/approval_request.py:12
+msgid "Approval Requests are changed only by the approval service."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_request/approval_request.py:16
+msgid "Approval history cannot be deleted."
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:5
+msgid "Approval matrix for one DocType: which steps, roles and thresholds apply."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:515
+#, python-brace-format
+msgid "Approval needed: {0} {1} (step {2}: {3})"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:24
+#, python-brace-format
+msgid "Approval {0}: {1}"
+msgstr ""
+
+#. Label of a Card Break in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:18
+msgid "Approvals"
+msgstr ""
+
+#. Option for the 'Decision' (Select) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:75
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:35
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:73
+#: automotive_core/public/js/automotive_core.bundle.js:56
+#: automotive_core/public/js/automotive_core.bundle.js:105
+msgid "Approve"
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:34
+#: automotive_core/public/js/automotive_core.bundle.js:104
+#, python-brace-format
+msgid "Approve {0}"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+msgid "Approved"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:44
+#, python-brace-format
+msgid "Approved ({0}) but the document changed afterwards; request approval again."
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:43
+#, python-brace-format
+msgid "Approved ({0}); the document can be submitted."
+msgstr ""
+
+#. Label of the approver_role (Link) field in DocType 'Approval Policy Step'
+#. Label of the approver_role (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:34
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:37
+msgid "Approver Role"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:7
+msgid "As Of"
+msgstr ""
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Assembly"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:54
+msgid "Attachment Policy Rule"
+msgstr ""
+
+#. Label of the attachment_rules (Table) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:190
+msgid "Attachment Rules"
+msgstr ""
+
+#. Label of the tab_break_3 (Tab Break) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:137
+msgid "Attachments"
+msgstr ""
+
+#: automotive_core/files/policy.py:92
+msgid "Attachments to business documents must be private."
+msgstr ""
+
+#. Label of the attempt_no (Int) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:20
+msgid "Attempt"
+msgstr ""
+
+#. Label of the attempted_at (Datetime) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:27
+msgid "Attempted At"
+msgstr ""
+
+#. Label of the attempts (Int) field in DocType 'Integration Inbound Message'
+#. Label of the attempts (Int) field in DocType 'Integration Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:105
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:109
+msgid "Attempts"
+msgstr ""
+
+#. Label of the audit_chain_head (Read Only) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:75
+msgid "Audit Chain Head"
+msgstr ""
+
+#. Label of the audit_chain_verified_at (Data) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:80
+msgid "Audit Chain Last Verified"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/audit_event/audit_event.json:146
+#: automotive_core/governance/sidebar/governance/governance.json:66
+#: automotive_core/governance/workspace/governance/governance.json:64
+msgid "Audit Event"
+msgstr ""
+
+#: automotive_core/governance/doctype/audit_event/audit_event.py:12
+msgid "Audit Events are append-only."
+msgstr ""
+
+#: automotive_core/governance/doctype/audit_event/audit_event.py:14
+msgid "Audit Events are written only by the audit service."
+msgstr ""
+
+#: automotive_core/governance/doctype/audit_event/audit_event.py:17
+msgid "Audit Events cannot be deleted."
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:248
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:146
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:217
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:163
+#: automotive_core/automotive_setup/doctype/plant/plant.json:351
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:190
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:287
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:252
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:167
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:156
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:182
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:206
+#: automotive_core/governance/doctype/approval_request/approval_request.json:184
+#: automotive_core/governance/doctype/audit_event/audit_event.json:160
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:99
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:216
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:127
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:207
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:194
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:224
+msgid "Auditor"
+msgstr ""
+
+#. Label of the authorization_filter (Small Text) field in DocType 'KPI
+#. Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:129
+msgid "Authorization Filter"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:168
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:151
+#: automotive_core/automotive_setup/doctype/plant/plant.json:271
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:207
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:172
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:172
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:160
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:189
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:210
+#: automotive_core/governance/doctype/approval_request/approval_request.json:189
+msgid "Automotive Executive"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:200
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:92
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:132
+msgid "Automotive Settings"
+msgstr ""
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:106
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:13
+msgid "Automotive Setup"
+msgstr ""
+
+#. Label of the available_minutes (Float) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:55
+msgid "Available Minutes"
+msgstr ""
+
+#. Label of the available_minutes_per_day (Float) field in DocType 'Shift
+#. Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:114
+msgid "Available Minutes Per Working Day"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:52
+#, python-brace-format
+msgid "Awaiting approval ({0}), step {1}"
+msgstr ""
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Bank"
+msgstr ""
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:94
+msgid "Bank Account"
+msgstr ""
+
+#: automotive_core/finance_controls/bank_accounts.py:85
+#, python-brace-format
+msgid "Bank account {0} is {1}; a Treasury Approver must verify it before payment."
+msgstr ""
+
+#: automotive_core/finance_controls/bank_accounts.py:81
+msgid "Bank transfers to suppliers need the supplier's verified bank account."
+msgstr ""
+
+#. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:158
+msgid "Best Effort"
+msgstr ""
+
+#. Option for the 'Enforcement' (Select) field in DocType 'Segregation of
+#. Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:47
+msgid "Block"
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Body Shop"
+msgstr ""
+
+#. Label of the branch (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:85
+msgid "Branch"
+msgstr ""
+
+#. Label of the break_minutes (Int) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:42
+msgid "Break (Minutes)"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:213
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:196
+#: automotive_core/automotive_setup/doctype/plant/plant.json:316
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:252
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:217
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:204
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:288
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:254
+#: automotive_core/governance/doctype/approval_request/approval_request.json:244
+msgid "Buyer"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:117
+msgid "Calendar & Costing"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:130
+msgid "Cancel Document"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:129
+#, python-brace-format
+msgid "Cancel {0}"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Cancelled"
+msgstr ""
+
+#: automotive_core/governance/cancellation.py:51
+#, python-brace-format
+msgid "Cancelled with reason: {0}"
+msgstr ""
+
+#: automotive_core/governance/cancellation.py:65
+#, python-brace-format
+msgid "Cancelled with {0}"
+msgstr ""
+
+#: automotive_core/governance/cancellation.py:35
+#, python-brace-format
+msgid "Cancelling {0} {1} requires a reason (use Cancel With Reason)."
+msgstr ""
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Carrier"
+msgstr ""
+
+#. Label of the category_field (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:99
+msgid "Category Field"
+msgstr ""
+
+#. Label of the category_values (Small Text) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:105
+msgid "Category Values"
+msgstr ""
+
+#. Label of the chain_index (Int) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:118
+msgid "Chain Index"
+msgstr ""
+
+#. Label of the check_code (Data) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:20
+#: automotive_core/public/js/automotive_core.bundle.js:167
+msgid "Check"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:164
+#, python-brace-format
+msgid "Check {0} cannot be waived."
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Period Close
+#. Checklist'
+#. Label of the tasks (Table) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:101
+msgid "Checks"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Checks Failed"
+msgstr ""
+
+#. Label of the checks_run_at (Datetime) field in DocType 'Period Close
+#. Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:95
+msgid "Checks Last Run"
+msgstr ""
+
+#. Label of the clamd_host (Data) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:167
+msgid "ClamAV (clamd) Host"
+msgstr ""
+
+#. Label of the clamd_port (Int) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:173
+msgid "ClamAV (clamd) Port"
+msgstr ""
+
+#. Label of the client_ip (Data) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:122
+msgid "Client IP"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Closed"
+msgstr ""
+
+#. Description of the 'Allowed Extensions' (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:147
+msgid "Comma separated, lower case."
+msgstr ""
+
+#. Description of the 'Fields Bound By The Approval' (Small Text) field in
+#. DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:141
+msgid "Comma separated. Empty = amount field, party, company, dates and item rows."
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Decision'
+#. Label of the comment (Small Text) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:128
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:19
+#: automotive_core/public/js/automotive_core.bundle.js:92
+msgid "Comment"
+msgstr ""
+
+#. Label of the company (Link) field in DocType 'KPI Snapshot'
+#. Label of the company (Link) field in DocType 'Plant'
+#. Label of the company (Link) field in DocType 'Plant Assignment'
+#. Label of the company (Link) field in DocType 'Production Line'
+#. Label of a Link in the Automotive Setup Workspace
+#. Label of the company (Link) field in DocType 'Period Close Checklist'
+#. Label of the scope_company (Link) field in DocType 'Approval Delegation'
+#. Label of the applies_to_company (Link) field in DocType 'Approval Policy'
+#. Label of the company (Link) field in DocType 'Approval Request'
+#. Label of the company (Link) field in DocType 'Audit Event'
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:52
+#: automotive_core/automotive_setup/doctype/plant/plant.json:66
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:76
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:61
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:56
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:42
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:15
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:103
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:57
+#: automotive_core/governance/doctype/approval_request/approval_request.json:66
+#: automotive_core/governance/doctype/audit_event/audit_event.json:60
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:50
+msgid "Company"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
+msgid "Completed"
+msgstr ""
+
+#. Label of the completed_at (Datetime) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:143
+msgid "Completed At"
+msgstr ""
+
+#. Label of the compute_method (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:88
+msgid "Compute Method"
+msgstr ""
+
+#. Label of the computed_at (Datetime) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:103
+msgid "Computed At"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:5
+msgid "Computed KPI value for a period and scope, with its inputs hash and reconciliation result."
+msgstr ""
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Configured (Unverified)"
+msgstr ""
+
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:19
+msgid "Conflicting Role"
+msgstr ""
+
+#. Label of the connection_status (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:100
+msgid "Connection Status"
+msgstr ""
+
+#. Label of the contact (Link) field in DocType 'Partner User Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:103
+msgid "Contact"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:110
+msgid "Controls"
+msgstr ""
+
+#. Label of the correlation_id (Data) field in DocType 'Audit Event'
+#. Label of the correlation_id (Data) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the correlation_id (Data) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:94
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:129
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:87
+msgid "Correlation ID"
+msgstr ""
+
+#. Label of the cost_center (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:138
+msgid "Cost Center"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/plant/plant.py:38
+#, python-brace-format
+msgid "Cost Center {0} does not belong to {1}."
+msgstr ""
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Count"
+msgstr ""
+
+#. Label of the country (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:97
+msgid "Country"
+msgstr ""
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Create"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:5
+msgid "Create, change, deactivate or reactivate an account. Applied on submit after approval."
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:92
+#, python-brace-format
+msgid "Created {0} with {1} role(s)."
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:120
+msgid "Credentials & Endpoint"
+msgstr ""
+
+#. Label of the crosses_midnight (Check) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:48
+msgid "Crosses Midnight"
+msgstr ""
+
+#. Label of the currency (Link) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:102
+msgid "Currency"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:96
+msgid "Currency Translation Difference"
+msgstr ""
+
+#. Label of the current_step (Int) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:109
+msgid "Current Step"
+msgstr ""
+
+#. Option for the 'Party Type' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
+#: automotive_core/access/master_data.py:74
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:65
+msgid "Customer"
+msgstr ""
+
+#. Label of the cycle_time_seconds (Float) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:55
+msgid "Cycle Time (Seconds)"
+msgstr ""
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "Daily"
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'User
+#. Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:133
+msgid "Data Scope"
+msgstr ""
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Days"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#. Label of a number card in the Finance Controls Workspace
+#: automotive_core/analytics/workspace/management/management.json:158
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:194
+msgid "Days Sales Outstanding"
+msgstr ""
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Deactivate"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:105
+#, python-brace-format
+msgid "Deactivated {0}; sessions and API keys revoked."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Dead Letter"
+msgstr ""
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Dealer"
+msgstr ""
+
+#. Label of the customer (Link) field in DocType 'Partner User Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:64
+msgid "Dealer (Customer)"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:238
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:221
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:156
+#: automotive_core/automotive_setup/doctype/plant/plant.json:341
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:277
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:242
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:212
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:306
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:262
+#: automotive_core/governance/doctype/approval_request/approval_request.json:254
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:232
+msgid "Dealer Liaison"
+msgstr ""
+
+#. Label of the decided_at (Datetime) field in DocType 'Approval Decision'
+#. Label of the decided_at (Datetime) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:109
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:75
+msgid "Decided At"
+msgstr ""
+
+#. Label of the decided_by (Link) field in DocType 'Approval Decision'
+#. Label of the decided_by (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:87
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:61
+msgid "Decided By"
+msgstr ""
+
+#. Label of the decision (Select) field in DocType 'Approval Decision'
+#. Label of the decision (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:74
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:81
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:52
+msgid "Decision"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:346
+msgid "Decision must be Approve or Reject."
+msgstr ""
+
+#. Label of the is_default (Check) field in DocType 'User Provisioning Scope'
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:33
+msgid "Default"
+msgstr ""
+
+#. Label of the default_retention_days (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:180
+msgid "Default Attachment Retention (Days)"
+msgstr ""
+
+#. Label of the max_upload_mb (Int) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:143
+msgid "Default Max Upload Size (MB)"
+msgstr ""
+
+#. Label of the default_shift_pattern (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:128
+msgid "Default Shift Pattern"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'KPI
+#. Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:112
+msgid "Definition"
+msgstr ""
+
+#. Label of the delegate (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:53
+msgid "Delegate"
+msgstr ""
+
+#: automotive_core/governance/delegation.py:118
+#, python-brace-format
+msgid "Delegate {0} is not an active user."
+msgstr ""
+
+#. Label of the delegation (Link) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:102
+msgid "Delegation"
+msgstr ""
+
+#: automotive_core/governance/delegation.py:112
+#, python-brace-format
+msgid "Delegations are limited to {0} days."
+msgstr ""
+
+#. Label of the delegator (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:44
+msgid "Delegator"
+msgstr ""
+
+#. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Delivered"
+msgstr ""
+
+#. Label of the delivered_at (Datetime) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:122
+msgid "Delivered At"
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Delivery"
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Integration
+#. Outbound Message'
+#. Label of the delivery_attempts (Table) field in DocType 'Integration
+#. Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:158
+msgid "Delivery Attempts"
+msgstr ""
+
+#. Label of the denominator (Float) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:97
+msgid "Denominator"
+msgstr ""
+
+#. Label of the department (Link) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:93
+msgid "Department"
+msgstr ""
+
+#. Description of the 'Enforce Plant Scope' (Check) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:45
+msgid "Derive and require the Plant on plant-scoped documents."
+msgstr ""
+
+#. Label of the description (Small Text) field in DocType 'Plant'
+#. Label of the description (Data) field in DocType 'Period Close Task'
+#. Label of the description (Small Text) field in DocType 'Approval Policy'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:230
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:28
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:166
+msgid "Description"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:101
+msgid "Details"
+msgstr ""
+
+#. Label of the direction (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:64
+msgid "Direction"
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Director"
+msgstr ""
+
+#. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:158
+msgid "Disabled"
+msgstr ""
+
+#. Label of the reference_doctype (Link) field in DocType 'Attachment Policy
+#. Rule'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Decision'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Delegation'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Policy'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Request'
+#. Label of the reference_doctype (Link) field in DocType 'Audit Event'
+#. Label of the reference_doctype (Link) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:19
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:51
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:110
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:47
+#: automotive_core/governance/doctype/approval_request/approval_request.json:47
+#: automotive_core/governance/doctype/audit_event/audit_event.json:43
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:64
+msgid "DocType"
+msgstr ""
+
+#. Label of the reference_name (Dynamic Link) field in DocType 'Approval
+#. Decision'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Approval
+#. Request'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Audit Event'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Integration
+#. Outbound Message'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:59
+#: automotive_core/governance/doctype/approval_request/approval_request.json:56
+#: automotive_core/governance/doctype/audit_event/audit_event.json:51
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:49
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:71
+msgid "Document"
+msgstr ""
+
+#. Label of the document_hash (Data) field in DocType 'Approval Decision'
+#. Label of the document_hash (Data) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:116
+#: automotive_core/governance/doctype/approval_request/approval_request.json:133
+msgid "Document Hash"
+msgstr ""
+
+#. Label of the domain (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:50
+msgid "Domain"
+msgstr ""
+
+#. Description of the 'Compute Method' (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:85
+msgid "Dotted path of the whitelisted function."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+msgid "Draft"
+msgstr ""
+
+#. Label of the duration_ms (Int) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:34
+msgid "Duration (ms)"
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "E-Drive Assembly"
+msgstr ""
+
+#. Label of the distinct_approvers (Check) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:122
+msgid "Each Step Needs A Different Approver"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:340
+#, python-brace-format
+msgid "Each step of {0} must be approved by a different person."
+msgstr ""
+
+#. Label of the email (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:63
+msgid "Email"
+msgstr ""
+
+#. Label of the employee (Link) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:44
+msgid "Employee"
+msgstr ""
+
+#. Label of the employee_name (Data) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:52
+msgid "Employee Name"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:6
+msgid "Employee-to-plant assignment with effective dates; drives plant User Permissions."
+msgstr ""
+
+#. Description of the 'Company' (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:100
+msgid "Empty = every company."
+msgstr ""
+
+#. Description of the 'DocType' (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:107
+msgid "Empty = every governed DocType."
+msgstr ""
+
+#. Label of the end_time (Time) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:34
+msgid "End"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Status' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
+msgid "Ended"
+msgstr ""
+
+#. Label of the endpoint (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:37
+msgid "Endpoint"
+msgstr ""
+
+#. Label of the enforce_plant_scope (Check) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:48
+msgid "Enforce Plant Scope"
+msgstr ""
+
+#. Label of the enforcement (Select) field in DocType 'Segregation of Duties
+#. Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:46
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:20
+msgid "Enforcement"
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Engineering"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:258
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:236
+#: automotive_core/automotive_setup/doctype/plant/plant.json:361
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:297
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:262
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:188
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:252
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:238
+#: automotive_core/governance/doctype/approval_request/approval_request.json:224
+msgid "Engineering Manager"
+msgstr ""
+
+#. Label of the error (Small Text) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:55
+msgid "Error"
+msgstr ""
+
+#. Label of the escalate_after_hours (Int) field in DocType 'Approval Policy
+#. Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:55
+msgid "Escalate After (Hours)"
+msgstr ""
+
+#. Label of the event_hash (Data) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:131
+msgid "Event Hash"
+msgstr ""
+
+#. Label of the event_time (Datetime) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:88
+msgid "Event Time"
+msgstr ""
+
+#. Label of the event_type (Data) field in DocType 'Audit Event'
+#. Label of the event_type (Data) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:33
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:57
+msgid "Event Type"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:5
+msgid "Every inbound message, deduplicated by (partner, message_id) and processed exactly once."
+msgstr ""
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:56
+msgid "Exchange Rate Revaluation"
+msgstr ""
+
+#. Label of the user (Link) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:55
+msgid "Existing User"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+msgid "Expired"
+msgstr ""
+
+#. Label of the expires_at (Datetime) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:84
+msgid "Expires At"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:160
+msgid "Explain the waiver (at least 10 characters)."
+msgstr ""
+
+#. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Failed"
+msgstr ""
+
+#. Label of a number card in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:78
+msgid "Failed Inbound Messages"
+msgstr ""
+
+#. Label of the hash_fields (Small Text) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:144
+msgid "Fields Bound By The Approval"
+msgstr ""
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+msgid "File Drop"
+msgstr ""
+
+#: automotive_core/files/policy.py:83
+#, python-brace-format
+msgid "File exceeds the {0} MB limit."
+msgstr ""
+
+#: automotive_core/files/policy.py:80
+#, python-brace-format
+msgid "Files of type .{0} are not allowed here."
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Final Assembly"
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Finance"
+msgstr ""
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:141
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:13
+msgid "Finance Controls"
+msgstr ""
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Finance System"
+msgstr ""
+
+#. Label of the finished_goods_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:195
+msgid "Finished Goods"
+msgstr ""
+
+#. Label of the first_name (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:71
+msgid "First Name"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:38
+msgid "First Name is required to create an account."
+msgstr ""
+
+#. Label of the fiscal_year (Link) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:49
+msgid "Fiscal Year"
+msgstr ""
+
+#. Label of the formula (Small Text) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:117
+msgid "Formula"
+msgstr ""
+
+#. Label of the friday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:87
+msgid "Friday"
+msgstr ""
+
+#. Label of the from_date (Date) field in DocType 'Partner User Access'
+#. Label of the from_date (Date) field in DocType 'Plant Assignment'
+#. Label of the from_date (Date) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:83
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:107
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:73
+msgid "From Date"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:127
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:160
+msgid "General Ledger"
+msgstr ""
+
+#: automotive_core/governance/cancellation.py:44
+#, python-brace-format
+msgid "Give a reason of at least {0} characters."
+msgstr ""
+
+#. Label of the in_transit_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:207
+msgid "Goods In Transit"
+msgstr ""
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/governance/sidebar/governance/governance.json:152
+#: automotive_core/governance/workspace/governance/governance.json:13
+msgid "Governance"
+msgstr ""
+
+#. Label of the grant_plant_access (Check) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:130
+msgid "Grant Plant Data Access"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#. Label of a number card in the Finance Controls Workspace
+#: automotive_core/analytics/workspace/management/management.json:162
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:198
+msgid "Gross Margin"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#. Name of a report
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:64
+#: automotive_core/analytics/workspace/management/management.json:54
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.json:19
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:103
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:140
+msgid "Group Consolidation"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:173
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:156
+#: automotive_core/automotive_setup/doctype/plant/plant.json:276
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:212
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:177
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:159
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:164
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:198
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:199
+#: automotive_core/governance/doctype/approval_request/approval_request.json:194
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:92
+msgid "Group Controller"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:87
+msgid "Group Total"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:91
+msgid "Group excl. Intercompany"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:4
+msgid "Group-wide controls for integrations, attachments, audit and plant scoping."
+msgstr ""
+
+#. Label of the http_status (Int) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:78
+msgid "HTTP Status"
+msgstr ""
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+msgid "HTTPS"
+msgstr ""
+
+#. Option for the 'Adapter' (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:83
+msgid "HTTPS Webhook"
+msgstr ""
+
+#: automotive_core/integration_hub/idempotency.py:52
+#, python-brace-format
+msgid "Header {0} is required for this request."
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:169
+msgid "Health"
+msgstr ""
+
+#. Option for the 'Direction' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:65
+msgid "Higher Is Better"
+msgstr ""
+
+#. Option for the 'Message Format' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:91
+msgid "Hinode EDI"
+msgstr ""
+
+#. Label of the holiday_list (Link) field in DocType 'Plant'
+#. Label of the holiday_list (Link) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:122
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:52
+msgid "Holiday List"
+msgstr ""
+
+#. Label of a Sidebar Item
+#: automotive_core/analytics/sidebar/analytics/analytics.json:14
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:14
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:14
+#: automotive_core/governance/sidebar/governance/governance.json:14
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:14
+msgid "Home"
+msgstr ""
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "Hourly"
+msgstr ""
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Hours"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:162
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:226
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:212
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:139
+#: automotive_core/automotive_setup/doctype/plant/plant.json:264
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:174
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:193
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:149
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:192
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:174
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:192
+#: automotive_core/governance/doctype/approval_request/approval_request.json:229
+#: automotive_core/governance/doctype/audit_event/audit_event.json:165
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:85
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:200
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:120
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:200
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:54
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:187
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:217
+msgid "IT Operator"
+msgstr ""
+
+#. Label of the idempotency_key (Data) field in DocType 'Idempotency Record'
+#. Label of the idempotency_key (Data) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:45
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:79
+msgid "Idempotency Key"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:106
+msgid "Idempotency Record"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:66
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:64
+msgid "Idempotency Records"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:5
+msgid "Immutable record of one approver's decision."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
+msgid "In Progress"
+msgstr ""
+
+#. Label of the inbound_max_attempts (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:126
+msgid "Inbound Max Attempts"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:40
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:44
+msgid "Inbound Messages"
+msgstr ""
+
+#. Label of the inbound_rate_limit_per_minute (Int) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:132
+msgid "Inbound Requests Per Minute Per Partner"
+msgstr ""
+
+#. Label of the inbound_secret (Password) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:143
+msgid "Inbound Verification Secret"
+msgstr ""
+
+#. Description of the 'Service User' (Link) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:111
+msgid "Inbound messages are processed as this user, so the partner's normal permissions apply."
+msgstr ""
+
+#. Label of the inputs_hash (Data) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:109
+msgid "Inputs Hash"
+msgstr ""
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Inspection"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:64
+msgid "Integration Delivery Attempt"
+msgstr ""
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:80
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:13
+msgid "Integration Hub"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:186
+msgid "Integration Inbound Message"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:44
+msgid "Integration Nonce"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:173
+msgid "Integration Outbound Message"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:199
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:27
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:26
+msgid "Integration Partner"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:73
+#, python-brace-format
+msgid "Integration partner {0} is inactive."
+msgstr ""
+
+#. Label of the tab_break_2 (Tab Break) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:92
+msgid "Integrations"
+msgstr ""
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Internal"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:124
+#, python-brace-format
+msgid "Invalid message: {0}"
+msgstr ""
+
+#. Label of the bind_to_document_hash (Check) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:138
+msgid "Invalidate Approval When Document Changes"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+msgid "Invalidated"
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Inventory"
+msgstr ""
+
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:104
+msgid "Inventory Position"
+msgstr ""
+
+#. Label of the item (Link) field in DocType 'Production Line Product'
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:17
+msgid "Item / Template"
+msgstr ""
+
+#. Label of the item_group (Link) field in DocType 'Production Line Product'
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:24
+msgid "Item Group"
+msgstr ""
+
+#. Option for the 'Message Format' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:91
+msgid "JSON"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:79
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:122
+msgid "Journal Entry"
+msgstr ""
+
+#. Label of the section_break_3 (Section Break) field in DocType 'User
+#. Provisioning Request'
+#. Label of the justification (Small Text) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:144
+msgid "Justification"
+msgstr ""
+
+#. Label of the kpi (Link) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:42
+msgid "KPI"
+msgstr ""
+
+#. Label of the kpi_code (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:33
+msgid "KPI Code"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:144
+#: automotive_core/analytics/sidebar/analytics/analytics.json:27
+#: automotive_core/analytics/workspace/management/management.json:26
+msgid "KPI Definition"
+msgstr ""
+
+#. Label of the kpi_name (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:41
+msgid "KPI Name"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:132
+#: automotive_core/analytics/sidebar/analytics/analytics.json:40
+#: automotive_core/analytics/workspace/management/management.json:36
+msgid "KPI Snapshot"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:5
+msgid "KPI catalogue entry: formula, sources, authorization filter, refresh and reconciliation (ERP-12)."
+msgstr ""
+
+#. Label of a Card Break in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:18
+msgid "KPIs"
+msgstr ""
+
+#. Label of the key_id (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:133
+msgid "Key ID"
+msgstr ""
+
+#. Label of the language (Link) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:100
+msgid "Language"
+msgstr ""
+
+#. Label of the last_error (Text) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the last_error (Text) field in DocType 'Integration Outbound
+#. Message'
+#. Label of the last_error (Small Text) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:159
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:134
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:190
+msgid "Last Error"
+msgstr ""
+
+#. Label of the last_failure_at (Datetime) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:180
+msgid "Last Failure"
+msgstr ""
+
+#. Label of the last_name (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:77
+msgid "Last Name"
+msgstr ""
+
+#. Label of the last_response_code (Int) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:128
+msgid "Last Response Code"
+msgstr ""
+
+#. Label of the last_success_at (Datetime) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:174
+msgid "Last Successful Exchange"
+msgstr ""
+
+#. Label of the audit_chain_last_result (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:86
+msgid "Last Verification Result"
+msgstr ""
+
+#. Description of the 'Company' (Link) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:52
+msgid "Leave empty to apply to every company."
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:82
+msgid "Line"
+msgstr ""
+
+#. Label of the line_code (Data) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:36
+msgid "Line Code"
+msgstr ""
+
+#. Label of the line_name (Data) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:45
+msgid "Line Name"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:193
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:176
+#: automotive_core/automotive_setup/doctype/plant/plant.json:296
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:232
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:197
+msgid "Line Operator"
+msgstr ""
+
+#. Label of the line_side_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:173
+msgid "Line Side (group)"
+msgstr ""
+
+#. Label of the line_side_warehouse (Link) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:119
+msgid "Line Side Warehouse"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:126
+msgid "Line Stop Hours"
+msgstr ""
+
+#. Label of the line_type (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:69
+msgid "Line Type"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:5
+msgid "Links a website user to exactly one supplier or dealer with effective dates."
+msgstr ""
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Live"
+msgstr ""
+
+#. Description of the 'Connection Status' (Select) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:95
+msgid "Live only when an HTTPS endpoint and credentials are configured and a delivery has succeeded."
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:39
+msgid "Loading…"
+msgstr ""
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Local Adapter Only"
+msgstr ""
+
+#. Label of the local_directory (Read Only) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:164
+msgid "Local Exchange Directory"
+msgstr ""
+
+#. Option for the 'Adapter' (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:83
+msgid "Local File Drop"
+msgstr ""
+
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Logistics"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:263
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:241
+#: automotive_core/automotive_setup/doctype/plant/plant.json:366
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:302
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:267
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:228
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:342
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:278
+#: automotive_core/governance/doctype/approval_request/approval_request.json:274
+msgid "Logistics Coordinator"
+msgstr ""
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Logistics Provider"
+msgstr ""
+
+#. Option for the 'Direction' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:65
+msgid "Lower Is Better"
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Machining"
+msgstr ""
+
+#. Description of the 'Grant Plant Data Access' (Check) field in DocType 'Plant
+#. Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:127
+msgid "Maintain a Plant User Permission for the employee's user while active."
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Maintenance"
+msgstr ""
+
+#. Label of the maker_cannot_approve (Check) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:116
+msgid "Maker Cannot Approve"
+msgstr ""
+
+#. Name of a Workspace
+#: automotive_core/analytics/workspace/management/management.json:13
+msgid "Management"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:114
+msgid "Material Flow"
+msgstr ""
+
+#. Label of the max_amount (Currency) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:121
+msgid "Max Amount"
+msgstr ""
+
+#. Label of the max_size_mb (Int) field in DocType 'Attachment Policy Rule'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:33
+msgid "Max Size (MB)"
+msgstr ""
+
+#. Label of the max_units_per_day (Int) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:102
+msgid "Max Units Per Working Day"
+msgstr ""
+
+#. Label of the max_delegation_days (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:66
+msgid "Maximum Delegation Length (Days)"
+msgstr ""
+
+#. Label of the message_format (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:90
+msgid "Message Format"
+msgstr ""
+
+#. Label of the message_id (Data) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:58
+msgid "Message ID"
+msgstr ""
+
+#. Label of the message_type (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:68
+msgid "Message Type"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:139
+#, python-brace-format
+msgid "Message id already used with a different payload (inbound {0})."
+msgstr ""
+
+#. Label of a Card Break in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:36
+msgid "Messages"
+msgstr ""
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Modify"
+msgstr ""
+
+#. Label of the monday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:63
+msgid "Monday"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:5
+msgid "Month/period close: automated ledger checks, then approval; submitting locks the period."
+msgstr ""
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "Monthly"
+msgstr ""
+
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:15
+msgid "Name"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:95
+msgid "Net Profit (Income - Expense)"
+msgstr ""
+
+#. Label of the next_attempt_at (Datetime) field in DocType 'Integration
+#. Inbound Message'
+#. Label of the next_attempt_at (Datetime) field in DocType 'Integration
+#. Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:117
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:115
+msgid "Next Attempt At"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:194
+#, python-brace-format
+msgid "No active approval policy applies to {0} {1}."
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:52
+#, python-brace-format
+msgid "No exchange rate {0} → {1} on or before {2}."
+msgstr ""
+
+#. Label of the nonce_key (Data) field in DocType 'Integration Nonce'
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:18
+msgid "Nonce Key"
+msgstr ""
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Not Configured"
+msgstr ""
+
+#. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
+msgid "Not Run"
+msgstr ""
+
+#. Label of the section_break_3 (Section Break) field in DocType 'Plant'
+#. Label of the section_break_1 (Section Break) field in DocType 'Plant
+#. Assignment'
+#. Label of the notes (Small Text) field in DocType 'Plant Assignment'
+#. Label of the section_break_2 (Section Break) field in DocType 'Period Close
+#. Checklist'
+#. Label of the notes (Small Text) field in DocType 'Period Close Checklist'
+#. Label of the section_break_3 (Section Break) field in DocType 'Approval
+#. Policy'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:225
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:135
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:112
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:161
+msgid "Notes"
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:43
+msgid "Nothing is waiting for your decision."
+msgstr ""
+
+#. Label of the numerator (Float) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:91
+msgid "Numerator"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:150
+msgid "OEE"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:76
+#: automotive_core/analytics/workspace/management/management.json:64
+msgid "OEE by Line"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:122
+msgid "OTIF"
+msgstr ""
+
+#. Label of the on_behalf_of (Link) field in DocType 'Approval Decision'
+#. Label of the on_behalf_of (Link) field in DocType 'Approval Request Step'
+#. Label of the on_behalf_of (Link) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:95
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:68
+#: automotive_core/governance/doctype/audit_event/audit_event.json:80
+msgid "On Behalf Of"
+msgstr ""
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "On Read"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_request/approval_request.json:5
+msgid "One approval cycle for one document. Created and advanced only by the approval service."
+msgstr ""
+
+#. Description of the 'Outbound Events' (Small Text) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:156
+msgid "One event type per line."
+msgstr ""
+
+#. Description of the 'Outbound Host Allowlist' (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:95
+msgid "One hostname per line. Outbound webhooks to any other host are refused."
+msgstr ""
+
+#. Description of the 'Allowed Inbound Message Types' (Small Text) field in
+#. DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:150
+msgid ""
+"One per line. Empty = none accepted.\n"
+"dealer_order, dealer_order_change, asn, po_acknowledgement, production_event, inventory_adjustment, supplier_invoice, shipment_status, bank_statement"
+msgstr ""
+
+#. Description of the 'Category Values' (Small Text) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:102
+msgid "One per line; empty = any."
+msgstr ""
+
+#. Label of the min_amount (Currency) field in DocType 'Approval Policy Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:43
+msgid "Only From Amount"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:167
+msgid "Only a failed check can be waived."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:191
+msgid "Only draft documents can be sent for approval."
+msgstr ""
+
+#: automotive_core/integration_hub/outbox.py:211
+msgid "Only failed or dead-lettered messages can be retried."
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:297
+msgid "Only failed, rejected or dead-lettered messages can be replayed."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:281
+msgid "Only pending requests can be withdrawn."
+msgstr ""
+
+#: automotive_core/governance/cancellation.py:48
+msgid "Only submitted documents can be cancelled."
+msgstr ""
+
+#: automotive_core/governance/delegation.py:132
+msgid "Only the delegator or an IT Operator can create this delegation."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:283
+msgid "Only the requester can withdraw an approval request."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Open"
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Operator"
+msgstr ""
+
+#. Label of a Card Break in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:18
+msgid "Organisation"
+msgstr ""
+
+#. Label of a number card in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:82
+msgid "Outbound Dead Letters"
+msgstr ""
+
+#. Label of the endpoint_url (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:126
+msgid "Outbound Endpoint URL"
+msgstr ""
+
+#. Label of the subscribed_events (Small Text) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:159
+msgid "Outbound Events"
+msgstr ""
+
+#. Label of the outbound_host_allowlist (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:98
+msgid "Outbound Host Allowlist"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:53
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:54
+msgid "Outbound Messages"
+msgstr ""
+
+#. Label of the outbound_secret (Password) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:138
+msgid "Outbound Signing Secret"
+msgstr ""
+
+#. Label of the outbound_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:201
+msgid "Outbound Staging"
+msgstr ""
+
+#. Label of the outbox_base_backoff_seconds (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:120
+msgid "Outbox Base Backoff (Seconds)"
+msgstr ""
+
+#. Label of the outbox_max_attempts (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:114
+msgid "Outbox Max Attempts"
+msgstr ""
+
+#. Label of the outcome (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:48
+msgid "Outcome"
+msgstr ""
+
+#. Label of the owner_role (Link) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:100
+msgid "Owner Role"
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Paint Shop"
+msgstr ""
+
+#. Label of the partner (Link) field in DocType 'Integration Inbound Message'
+#. Label of the partner (Link) field in DocType 'Integration Nonce'
+#. Label of the partner (Link) field in DocType 'Integration Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:49
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:27
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:47
+msgid "Partner"
+msgstr ""
+
+#. Label of the partner_code (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:41
+msgid "Partner Code"
+msgstr ""
+
+#. Label of the partner_name (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:50
+msgid "Partner Name"
+msgstr ""
+
+#. Label of the partner_role (Select) field in DocType 'Partner User Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:76
+msgid "Partner Role"
+msgstr ""
+
+#. Label of the partner_type (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:57
+msgid "Partner Type"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:113
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:79
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:94
+msgid "Partner User Access"
+msgstr ""
+
+#: automotive_core/automotive_setup/access_sync.py:175
+#, python-brace-format
+msgid "Partner access is for portal (Website) users; {0} is a desk user."
+msgstr ""
+
+#: automotive_core/access/master_data.py:50
+#, python-brace-format
+msgid "Partner code {0} is already used by {1}."
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:175
+msgid "Partner has no inbound credentials configured."
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:77
+#, python-brace-format
+msgid "Partner {0} may not send {1} messages."
+msgstr ""
+
+#. Label of a Card Break in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:18
+msgid "Partners"
+msgstr ""
+
+#. Label of the party (Dynamic Link) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:70
+msgid "Party"
+msgstr ""
+
+#. Label of the party_type (Select) field in DocType 'Partner User Access'
+#. Label of the party_type (Select) field in DocType 'Integration Partner'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:46
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:64
+msgid "Party Type"
+msgstr ""
+
+#. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+msgid "Passed"
+msgstr ""
+
+#. Label of the pattern_name (Data) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:30
+msgid "Pattern Name"
+msgstr ""
+
+#. Label of a Card Break in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:66
+msgid "Payables & Treasury"
+msgstr ""
+
+#. Label of the payload (JSON) field in DocType 'Audit Event'
+#. Label of the section_break_2 (Section Break) field in DocType 'Integration
+#. Inbound Message'
+#. Label of the payload (Code) field in DocType 'Integration Inbound Message'
+#. Label of the section_break_1 (Section Break) field in DocType 'Integration
+#. Outbound Message'
+#. Label of the payload (Code) field in DocType 'Integration Outbound Message'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:106
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:165
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:140
+msgid "Payload"
+msgstr ""
+
+#. Label of the payload_sha256 (Data) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the payload_sha256 (Data) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:170
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:145
+msgid "Payload SHA-256"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:40
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:84
+msgid "Payment Entry"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Pending"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+msgid "Pending Approval"
+msgstr ""
+
+#. Label of a number card in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:116
+msgid "Pending Approvals"
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:47
+msgid "Pending approvals"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:185
+msgid "Per-DocType Rules"
+msgstr ""
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Percent"
+msgstr ""
+
+#. Label of a Card Break in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:18
+msgid "Period Close"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:136
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:27
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:26
+msgid "Period Close Checklist"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:64
+msgid "Period Close Task"
+msgstr ""
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:46
+msgid "Period Closing Voucher"
+msgstr ""
+
+#. Label of the period_end (Date) field in DocType 'KPI Snapshot'
+#. Label of the period_end (Date) field in DocType 'Period Close Checklist'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:74
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:64
+msgid "Period End"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:6
+msgid "Period From"
+msgstr ""
+
+#. Label of the period_start (Date) field in DocType 'KPI Snapshot'
+#. Label of the period_start (Date) field in DocType 'Period Close Checklist'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:67
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:57
+msgid "Period Start"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:117
+msgid "Period start must not be after period end."
+msgstr ""
+
+#. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
+msgid "Permanent Failure"
+msgstr ""
+
+#. Label of the role_profile (Link) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:93
+msgid "Persona (Role Profile)"
+msgstr ""
+
+#. Label of the planned_rate_per_hour (Float) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:95
+msgid "Planned Rate (Units / Hour)"
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Planner"
+msgstr ""
+
+#. Label of the plant (Link) field in DocType 'KPI Snapshot'
+#. Name of a DocType
+#. Label of the plant (Link) field in DocType 'Plant Assignment'
+#. Label of the plant (Link) field in DocType 'Production Line'
+#. Label of the plant (Link) field in DocType 'Shift Pattern'
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:60
+#: automotive_core/automotive_setup/doctype/plant/plant.json:238
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:68
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:53
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:39
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:27
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:26
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+msgid "Plant"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:148
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:66
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:84
+msgid "Plant Assignment"
+msgstr ""
+
+#. Label of the plant_code (Data) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:49
+msgid "Plant Code"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:178
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:161
+#: automotive_core/automotive_setup/doctype/plant/plant.json:281
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:183
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:201
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:158
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:177
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:168
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:207
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:218
+#: automotive_core/governance/doctype/approval_request/approval_request.json:199
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:209
+msgid "Plant Director"
+msgstr ""
+
+#. Label of the plant_floor (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:91
+msgid "Plant Floor"
+msgstr ""
+
+#. Label of the plant_name (Data) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:58
+msgid "Plant Name"
+msgstr ""
+
+#. Label of the plant_type (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:74
+msgid "Plant Type"
+msgstr ""
+
+#: automotive_core/access/plant_scope.py:117
+#, python-brace-format
+msgid "Plant {0} belongs to {1}, not {2}."
+msgstr ""
+
+#. Label of the policy (Link) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:73
+msgid "Policy"
+msgstr ""
+
+#. Label of the policy_name (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:38
+msgid "Policy Name"
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:40
+#, python-brace-format
+msgid "Policy {0} has approval history; deactivate it instead."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:206
+#, python-brace-format
+msgid "Policy {0} has no step for an amount of {1}."
+msgstr ""
+
+#. Description of the 'Chain Index' (Int) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:115
+msgid "Position in the hash chain; 0 until sealed."
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Powertrain Assembly"
+msgstr ""
+
+#. Option for the 'Plant Type' (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+msgid "Powertrain Manufacturing"
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Pre-Delivery Inspection"
+msgstr ""
+
+#. Option for the 'Plant Type' (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+msgid "Preparation & Distribution"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:10
+msgid "Presentation Currency"
+msgstr ""
+
+#. Label of the previous_hash (Data) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:125
+msgid "Previous Hash"
+msgstr ""
+
+#. Label of the default_workstation (Link) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:136
+msgid "Primary Workstation"
+msgstr ""
+
+#. Label of the priority (Int) field in DocType 'Production Line Product'
+#. Label of the priority (Int) field in DocType 'Approval Policy'
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:32
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:72
+msgid "Priority"
+msgstr ""
+
+#. Label of the private_only (Check) field in DocType 'Attachment Policy Rule'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:46
+msgid "Private Files Only"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Processed"
+msgstr ""
+
+#. Label of the processed_at (Datetime) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:123
+msgid "Processed At"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Processing"
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Procurement"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:218
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:201
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:148
+#: automotive_core/automotive_setup/doctype/plant/plant.json:321
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:257
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:222
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:182
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:172
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:216
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:222
+#: automotive_core/governance/doctype/approval_request/approval_request.json:204
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:228
+msgid "Procurement Manager"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:253
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:231
+#: automotive_core/automotive_setup/doctype/plant/plant.json:356
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:292
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:257
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:216
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:315
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:266
+#: automotive_core/governance/doctype/approval_request/approval_request.json:259
+msgid "Product Engineer"
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Production"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:118
+msgid "Production Attainment"
+msgstr ""
+
+#. Label of the production_line (Link) field in DocType 'Plant Assignment'
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:87
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:167
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:40
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:36
+msgid "Production Line"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:40
+msgid "Production Line Product"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:64
+msgid "Production Line Station"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:183
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:166
+#: automotive_core/automotive_setup/doctype/plant/plant.json:286
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:222
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:166
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:200
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:279
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:250
+#: automotive_core/governance/doctype/approval_request/approval_request.json:239
+msgid "Production Planner"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:188
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:171
+#: automotive_core/automotive_setup/doctype/plant/plant.json:291
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:227
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:192
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:196
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:270
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:246
+#: automotive_core/governance/doctype/approval_request/approval_request.json:234
+msgid "Production Supervisor"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:100
+#: automotive_core/analytics/workspace/management/management.json:74
+msgid "Production Variance"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:17
+#, python-brace-format
+msgid "Production line {0} is not in plant {1}."
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:142
+msgid "Products"
+msgstr ""
+
+#. Label of the products (Table) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:147
+msgid "Products Built On This Line"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:53
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:74
+msgid "Purchase Invoice"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:112
+#: automotive_core/analytics/workspace/management/management.json:94
+msgid "Purchase Price Variance"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:154
+msgid "Purchase-to-Pay Cycle"
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Quality"
+msgstr ""
+
+#. Label of the is_quality_gate (Check) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:50
+msgid "Quality Gate"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:203
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:186
+#: automotive_core/automotive_setup/doctype/plant/plant.json:306
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:242
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:207
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:220
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:324
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:270
+#: automotive_core/governance/doctype/approval_request/approval_request.json:264
+msgid "Quality Inspector"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:208
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:191
+#: automotive_core/automotive_setup/doctype/plant/plant.json:311
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:247
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:212
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:180
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:234
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:230
+#: automotive_core/governance/doctype/approval_request/approval_request.json:214
+msgid "Quality Manager"
+msgstr ""
+
+#. Label of the quarantine_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:185
+msgid "Quarantine"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:197
+#, python-brace-format
+msgid "Rate limit exceeded for partner {0}."
+msgstr ""
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Ratio"
+msgstr ""
+
+#. Label of the rationale (Small Text) field in DocType 'Segregation of Duties
+#. Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:58
+msgid "Rationale"
+msgstr ""
+
+#. Label of the raw_material_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:167
+msgid "Raw Material Store"
+msgstr ""
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Reactivate"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:108
+#, python-brace-format
+msgid "Reactivated {0}."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Ready For Approval"
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Approval
+#. Delegation'
+#. Label of the reason (Small Text) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:126
+#: automotive_core/public/js/automotive_core.bundle.js:169
+msgid "Reason"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:116
+msgid "Reason for cancellation"
+msgstr ""
+
+#. Label of a Card Break in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:104
+msgid "Receivables"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Received"
+msgstr ""
+
+#. Label of the received_at (Datetime) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:111
+msgid "Received At"
+msgstr ""
+
+#. Label of the receiving_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:155
+msgid "Receiving Dock"
+msgstr ""
+
+#. Label of the inspection_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:161
+msgid "Receiving Inspection"
+msgstr ""
+
+#. Label of the reconciliation_status (Select) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:116
+msgid "Reconciliation"
+msgstr ""
+
+#. Label of the reconciliation_check (Small Text) field in DocType 'KPI
+#. Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:135
+msgid "Reconciliation Check"
+msgstr ""
+
+#. Label of the reconciliation_method (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:94
+msgid "Reconciliation Method"
+msgstr ""
+
+#. Label of the reconciliation_note (Small Text) field in DocType 'KPI
+#. Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:123
+msgid "Reconciliation Note"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:118
+msgid "Recorded in the audit trail. At least 10 characters."
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:11
+msgid "Refresh"
+msgstr ""
+
+#. Label of the refresh_policy (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:80
+msgid "Refresh Policy"
+msgstr ""
+
+#. Option for the 'Decision' (Select) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:75
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:35
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:77
+#: automotive_core/public/js/automotive_core.bundle.js:57
+#: automotive_core/public/js/automotive_core.bundle.js:105
+msgid "Reject"
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:34
+#: automotive_core/public/js/automotive_core.bundle.js:104
+#, python-brace-format
+msgid "Reject {0}"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Rejected"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:142
+msgid "Rejected Material"
+msgstr ""
+
+#. Label of the remarks (Small Text) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:149
+msgid "Remarks"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Reopened"
+msgstr ""
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+#: automotive_core/public/js/automotive_core.bundle.js:186
+msgid "Replay"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:209
+msgid "Replayed request (nonce already used)."
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Card Break in the Management Workspace
+#. Label of a Card Break in the Finance Controls Workspace
+#. Label of a Card Break in the Governance Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:53
+#: automotive_core/analytics/workspace/management/management.json:46
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:92
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:132
+#: automotive_core/governance/sidebar/governance/governance.json:127
+#: automotive_core/governance/workspace/governance/governance.json:94
+msgid "Reports"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:115
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:49
+msgid "Request"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:30
+#: automotive_core/public/js/automotive_core.bundle.js:47
+msgid "Request Approval"
+msgstr ""
+
+#. Label of the request_sha256 (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:72
+msgid "Request SHA-256"
+msgstr ""
+
+#. Label of the request_type (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:47
+msgid "Request Type"
+msgstr ""
+
+#. Label of the requested_at (Datetime) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:127
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:52
+msgid "Requested At"
+msgstr ""
+
+#. Label of the requested_by (Link) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:120
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:51
+msgid "Requested By"
+msgstr ""
+
+#. Label of the require_cancel_reason (Check) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:54
+msgid "Require Reason To Cancel Governed Documents"
+msgstr ""
+
+#. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:158
+msgid "Required"
+msgstr ""
+
+#. Description of the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:154
+msgid "Required: unscanned or infected files cannot be downloaded."
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Idempotency
+#. Record'
+#. Label of the response (Code) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:91
+msgid "Response"
+msgstr ""
+
+#. Label of the response_code (Int) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:41
+msgid "Response Code"
+msgstr ""
+
+#. Label of the allow (Select) field in DocType 'User Provisioning Scope'
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:17
+msgid "Restrict To"
+msgstr ""
+
+#. Label of the result (Small Text) field in DocType 'Period Close Task'
+#. Label of the result (Small Text) field in DocType 'User Provisioning
+#. Request'
+#. Label of the section_break_1 (Section Break) field in DocType 'Integration
+#. Inbound Message'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:43
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:156
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:136
+msgid "Result"
+msgstr ""
+
+#. Label of the result_doctype (Link) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:141
+msgid "Result DocType"
+msgstr ""
+
+#. Label of the result_name (Dynamic Link) field in DocType 'Integration
+#. Inbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:148
+msgid "Result Document"
+msgstr ""
+
+#. Label of the retention_days (Int) field in DocType 'Attachment Policy Rule'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:39
+msgid "Retention (Days)"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:198
+msgid "Retry Delivery"
+msgstr ""
+
+#. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
+msgid "Retryable Failure"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+msgid "Revoked"
+msgstr ""
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Rework"
+msgstr ""
+
+#. Label of the role (Link) field in DocType 'User Provisioning Role'
+#: automotive_core/governance/doctype/user_provisioning_role/user_provisioning_role.json:15
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:18
+msgid "Role"
+msgstr ""
+
+#. Label of the role_a (Link) field in DocType 'Segregation of Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:29
+msgid "Role A"
+msgstr ""
+
+#. Label of the role_b (Link) field in DocType 'Segregation of Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:37
+msgid "Role B"
+msgstr ""
+
+#. Label of the approver_role (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:61
+msgid "Role Delegated"
+msgstr ""
+
+#. Label of the assignment_role (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:99
+msgid "Role In Plant"
+msgstr ""
+
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:114
+msgid "Role Profile"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:54
+#, python-brace-format
+msgid "Row {0}: {1} {2} does not exist."
+msgstr ""
+
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:16
+msgid "Rule"
+msgstr ""
+
+#. Label of the rule_name (Data) field in DocType 'Segregation of Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:21
+msgid "Rule Name"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:159
+msgid "Run Checks"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:179
+msgid "Run the checks and resolve or waive every failure before closing the period."
+msgstr ""
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+msgid "Sales"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:66
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:112
+msgid "Sales Invoice"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:233
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:216
+#: automotive_core/automotive_setup/doctype/plant/plant.json:336
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:272
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:237
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:187
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:184
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:243
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:234
+#: automotive_core/governance/doctype/approval_request/approval_request.json:219
+msgid "Sales Manager"
+msgstr ""
+
+#. Label of the saturday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:92
+msgid "Saturday"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Status' (Select) field in DocType 'Plant Assignment'
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+msgid "Scheduled"
+msgstr ""
+
+#. Label of the schema_version (Data) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:77
+msgid "Schema Version"
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:97
+msgid "Scope"
+msgstr ""
+
+#. Label of the scope_key (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:27
+msgid "Scope Key"
+msgstr ""
+
+#. Label of the scopes (Table) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:138
+msgid "Scope Restrictions"
+msgstr ""
+
+#. Label of the scrap_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:213
+msgid "Scrap"
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:112
+msgid "Seal"
+msgstr ""
+
+#. Label of the audit_chain_enabled (Check) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:60
+msgid "Seal Audit Events In A Hash Chain"
+msgstr ""
+
+#. Label of the sealed_at (Datetime) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:137
+msgid "Sealed At"
+msgstr ""
+
+#. Label of the seen_at (Datetime) field in DocType 'Integration Nonce'
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:35
+msgid "Seen At"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:5
+msgid "Seen request nonces for inbound signature replay protection (pruned after the tolerance window)."
+msgstr ""
+
+#. Name of a report
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.json:19
+#: automotive_core/governance/sidebar/governance/governance.json:138
+#: automotive_core/governance/workspace/governance/governance.json:102
+msgid "Segregation of Duties Review"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:67
+#: automotive_core/governance/sidebar/governance/governance.json:102
+#: automotive_core/governance/workspace/governance/governance.json:74
+msgid "Segregation of Duties Rule"
+msgstr ""
+
+#: automotive_core/governance/sod.py:40
+#, python-brace-format
+msgid "Segregation of duties warning ({0}): {1} and {2}. {3}"
+msgstr ""
+
+#: automotive_core/governance/delegation.py:127
+#, python-brace-format
+msgid "Segregation of duties warning ({0}): {1} would hold {2} and {3}."
+msgstr ""
+
+#: automotive_core/governance/sod.py:34
+#, python-brace-format
+msgid "Segregation of duties: {0} cannot hold both {1}."
+msgstr ""
+
+#: automotive_core/governance/delegation.py:124
+#, python-brace-format
+msgid "Segregation of duties: {0} may not act as {1} ({2})."
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:28
+msgid "Select at least one working day."
+msgstr ""
+
+#: automotive_core/analytics/kpi.py:49
+msgid "Select one of your plants."
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:41
+msgid "Select the existing user."
+msgstr ""
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:21
+#, python-brace-format
+msgid "Select the {0} this partner represents."
+msgstr ""
+
+#: automotive_core/automotive_setup/access_sync.py:178
+#, python-brace-format
+msgid "Select the {0}."
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Sending"
+msgstr ""
+
+#. Description of the 'Key ID' (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:130
+msgid "Sent as kid= in the signature header; identifies the secret."
+msgstr ""
+
+#. Label of the sequence (Int) field in DocType 'Production Line Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:27
+msgid "Sequence"
+msgstr ""
+
+#. Label of the naming_series (Select) field in DocType 'KPI Snapshot'
+#. Label of the naming_series (Select) field in DocType 'Partner User Access'
+#. Label of the naming_series (Select) field in DocType 'Plant Assignment'
+#. Label of the naming_series (Select) field in DocType 'Period Close
+#. Checklist'
+#. Label of the naming_series (Select) field in DocType 'Approval Decision'
+#. Label of the naming_series (Select) field in DocType 'Approval Delegation'
+#. Label of the naming_series (Select) field in DocType 'Approval Request'
+#. Label of the naming_series (Select) field in DocType 'User Provisioning
+#. Request'
+#. Label of the naming_series (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the naming_series (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:30
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:27
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:33
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:30
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:31
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:32
+#: automotive_core/governance/doctype/approval_request/approval_request.json:35
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:36
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:37
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:35
+msgid "Series"
+msgstr ""
+
+#. Label of the service_user (Link) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:114
+msgid "Service User"
+msgstr ""
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:23
+#, python-brace-format
+msgid "Service user {0} is disabled."
+msgstr ""
+
+#. Label of a Card Break in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:124
+msgid "Settings"
+msgstr ""
+
+#. Label of a Sidebar Item
+#: automotive_core/governance/sidebar/governance/governance.json:79
+msgid "Setup"
+msgstr ""
+
+#. Label of the shift_code (Data) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:20
+msgid "Shift Code"
+msgstr ""
+
+#. Label of the shift_pattern (Link) field in DocType 'Production Line'
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:80
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:123
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:53
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:46
+msgid "Shift Pattern"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:64
+msgid "Shift Pattern Slot"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:33
+#, python-brace-format
+msgid "Shift code {0} appears twice."
+msgstr ""
+
+#. Description of the 'Max Units Per Working Day' (Int) field in DocType
+#. 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:99
+msgid "Shift pattern available minutes x 60 / takt."
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:37
+#, python-brace-format
+msgid "Shift {0}: break is longer than the shift."
+msgstr ""
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Shift
+#. Pattern'
+#. Label of the shifts (Table) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:102
+msgid "Shifts"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:42
+msgid "Shifts add up to more than 24 hours per day."
+msgstr ""
+
+#. Description of the 'Plant Code' (Data) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:45
+msgid "Short immutable code, e.g. AICHI-VA."
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:130
+msgid "Shortage Risk"
+msgstr ""
+
+#. Label of the webhook_tolerance_seconds (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:104
+msgid "Signature Timestamp Tolerance (Seconds)"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:181
+#, python-brace-format
+msgid "Signature rejected: {0}"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+msgid "Skipped"
+msgstr ""
+
+#. Label of the source (Select) field in DocType 'Integration Inbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:83
+msgid "Source"
+msgstr ""
+
+#. Label of the source_doctypes (Small Text) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:123
+msgid "Source DocTypes"
+msgstr ""
+
+#. Label of the approver_user (Link) field in DocType 'Approval Policy Step'
+#. Label of the approver_user (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:48
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:44
+msgid "Specific Approver"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:43
+msgid "Standard users cannot be provisioned."
+msgstr ""
+
+#. Label of the start_time (Time) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:27
+msgid "Start"
+msgstr ""
+
+#. Label of the station_code (Data) field in DocType 'Production Line Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:20
+msgid "Station Code"
+msgstr ""
+
+#. Label of the station_type (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:43
+msgid "Station Type"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:27
+#, python-brace-format
+msgid "Station {0} appears twice."
+msgstr ""
+
+#. Label of the section_break_3 (Section Break) field in DocType 'Production
+#. Line'
+#. Label of the stations (Table) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:153
+msgid "Stations"
+msgstr ""
+
+#. Label of the status (Select) field in DocType 'Partner User Access'
+#. Label of the status (Select) field in DocType 'Plant Assignment'
+#. Label of the status (Select) field in DocType 'Period Close Checklist'
+#. Label of the status (Select) field in DocType 'Period Close Task'
+#. Label of the status (Select) field in DocType 'Approval Delegation'
+#. Label of the status (Select) field in DocType 'Approval Request'
+#. Label of the status (Select) field in DocType 'Approval Request Step'
+#. Label of the status (Select) field in DocType 'User Provisioning Request'
+#. Label of the status (Select) field in DocType 'Idempotency Record'
+#. Label of the status (Select) field in DocType 'Integration Inbound Message'
+#. Label of the status (Select) field in DocType 'Integration Outbound Message'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:96
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:121
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:78
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:36
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:89
+#: automotive_core/governance/doctype/approval_request/approval_request.json:87
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:53
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:114
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:65
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:97
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:101
+msgid "Status"
+msgstr ""
+
+#. Label of the step_no (Int) field in DocType 'Approval Decision'
+#. Label of the step_no (Int) field in DocType 'Approval Policy Step'
+#. Label of the step_no (Int) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:67
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:20
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:23
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:51
+msgid "Step"
+msgstr ""
+
+#. Label of the step_name (Data) field in DocType 'Approval Policy Step'
+#. Label of the step_name (Data) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:27
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:30
+msgid "Step Name"
+msgstr ""
+
+#. Description of the 'Only From Amount' (Currency) field in DocType 'Approval
+#. Policy Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:39
+msgid "Step is skipped below this amount."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:30
+msgid "Step numbers must be unique."
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Approval
+#. Policy'
+#. Label of the steps (Table) field in DocType 'Approval Policy'
+#. Label of the section_break_2 (Section Break) field in DocType 'Approval
+#. Request'
+#. Label of the steps (Table) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:149
+#: automotive_core/governance/doctype/approval_request/approval_request.json:155
+msgid "Steps"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:134
+msgid "Stock Accuracy"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:5
+msgid "Stored result of a state-changing API call, replayed for retries with the same key."
+msgstr ""
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Sub-Assembly"
+msgstr ""
+
+#. Label of the sunday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:97
+msgid "Sunday"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:201
+msgid "Superseded by a new request after the document changed."
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Supervisor"
+msgstr ""
+
+#. Option for the 'Party Type' (Select) field in DocType 'Partner User Access'
+#. Label of the supplier (Link) field in DocType 'Partner User Access'
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
+#: automotive_core/access/master_data.py:70
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:55
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:65
+msgid "Supplier"
+msgstr ""
+
+#. Label of the consignment_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:219
+msgid "Supplier Consignment"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:138
+msgid "Supplier On-Time Delivery"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:88
+#: automotive_core/analytics/workspace/management/management.json:84
+msgid "Supplier Performance"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:154
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:140
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:206
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:126
+#: automotive_core/automotive_setup/doctype/plant/plant.json:251
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:161
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:180
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:136
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:148
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:150
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:163
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:184
+#: automotive_core/governance/doctype/approval_request/approval_request.json:178
+#: automotive_core/governance/doctype/audit_event/audit_event.json:154
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:77
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:189
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:114
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:194
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:50
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:181
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:209
+msgid "System Manager"
+msgstr ""
+
+#. Option for the 'User Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:88
+msgid "System User"
+msgstr ""
+
+#. Label of the takt_time_seconds (Float) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:87
+msgid "Takt Time (Seconds)"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:14
+msgid "Takt time must be greater than zero."
+msgstr ""
+
+#. Label of the target_value (Float) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:71
+msgid "Target"
+msgstr ""
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Test"
+msgstr ""
+
+#: automotive_core/governance/approvals.py:366
+msgid "The document changed after approval was requested."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:367
+msgid "The document changed; a new approval request is needed."
+msgstr ""
+
+#: automotive_core/files/policy.py:90
+#, python-brace-format
+msgid "The file content does not match its .{0} extension."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:335
+#, python-brace-format
+msgid "The maker of {0} cannot approve it (maker/checker)."
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:120
+#, python-brace-format
+msgid "The period must lie within fiscal year {0}."
+msgstr ""
+
+#: automotive_core/finance_controls/bank_accounts.py:60
+msgid "The person who entered or changed the account cannot verify it."
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:49
+#, python-brace-format
+msgid "The requested roles violate segregation of duties: {0}"
+msgstr ""
+
+#: automotive_core/integration_hub/idempotency.py:100
+msgid "This Idempotency-Key was already used for a different request."
+msgstr ""
+
+#. Label of the thursday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:81
+msgid "Thursday"
+msgstr ""
+
+#. Label of the time_zone (Data) field in DocType 'Plant'
+#. Label of the time_zone (Data) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:104
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:46
+msgid "Time Zone"
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:5
+msgid "Time-bounded delegation of approval authority. Submit to activate, cancel to revoke."
+msgstr ""
+
+#. Label of the to_date (Date) field in DocType 'Partner User Access'
+#. Label of the to_date (Date) field in DocType 'Plant Assignment'
+#. Label of the to_date (Date) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:89
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:114
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:80
+msgid "To Date"
+msgstr ""
+
+#: automotive_core/automotive_setup/access_sync.py:189
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:15
+#: automotive_core/governance/delegation.py:109
+msgid "To Date must be on or after From Date."
+msgstr ""
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:5
+msgid "Transactional outbox: written with the business change, delivered by the dispatcher with retries."
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:228
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:211
+#: automotive_core/automotive_setup/doctype/plant/plant.json:331
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:267
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:232
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:176
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:225
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:226
+#: automotive_core/governance/doctype/approval_request/approval_request.json:209
+msgid "Treasury Approver"
+msgstr ""
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:115
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:150
+msgid "Trial Balance"
+msgstr ""
+
+#. Label of the tuesday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:69
+msgid "Tuesday"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:29
+#, python-brace-format
+msgid "Two stations share sequence {0}."
+msgstr ""
+
+#. Label of the unit (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:57
+msgid "Unit"
+msgstr ""
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:19
+#, python-brace-format
+msgid "Unknown inbound message types: {0}"
+msgstr ""
+
+#: automotive_core/integration_hub/inbound.py:170
+msgid "Unknown partner."
+msgstr ""
+
+#: automotive_core/finance_controls/bank_accounts.py:86
+msgid "Unverified"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:102
+#, python-brace-format
+msgid "Updated {0}: {1} role(s)."
+msgstr ""
+
+#. Label of the user (Link) field in DocType 'Partner User Access'
+#. Label of the user (Link) field in DocType 'Plant Assignment'
+#. Label of a Link in the Automotive Setup Workspace
+#. Label of the user (Link) field in DocType 'Idempotency Record'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:38
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:59
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:104
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:14
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:53
+msgid "User"
+msgstr ""
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:177
+#: automotive_core/governance/sidebar/governance/governance.json:114
+#: automotive_core/governance/workspace/governance/governance.json:84
+msgid "User Provisioning Request"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/user_provisioning_role/user_provisioning_role.json:25
+msgid "User Provisioning Role"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:41
+msgid "User Provisioning Scope"
+msgstr ""
+
+#. Label of the user_type (Select) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:87
+msgid "User Type"
+msgstr ""
+
+#: automotive_core/governance/provisioning.py:36
+#, python-brace-format
+msgid "User {0} already exists; use a Modify request."
+msgstr ""
+
+#. Label of the value (Float) field in DocType 'KPI Snapshot'
+#. Label of the for_value (Dynamic Link) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:85
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:25
+msgid "Value"
+msgstr ""
+
+#. Option for the 'Plant Type' (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+msgid "Vehicle Assembly"
+msgstr ""
+
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+msgid "Viewer"
+msgstr ""
+
+#. Label of the virus_scan_mode (Select) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:157
+msgid "Virus Scan Mode"
+msgstr ""
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:146
+msgid "WIP Value"
+msgstr ""
+
+#. Label of the wip_warehouse (Link) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:125
+msgid "WIP Warehouse"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:173
+msgid "Waive"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:164
+msgid "Waive a Check"
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:172
+msgid "Waive a failed check"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+msgid "Waived"
+msgstr ""
+
+#. Label of the waived_by (Link) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:54
+msgid "Waived By"
+msgstr ""
+
+#. Label of the waiver_reason (Small Text) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:49
+msgid "Waiver Reason"
+msgstr ""
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#. Label of a Link in the Automotive Setup Workspace
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:66
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+msgid "Warehouse"
+msgstr ""
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:198
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:181
+#: automotive_core/automotive_setup/doctype/plant/plant.json:301
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:237
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:202
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:224
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:333
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:274
+#: automotive_core/governance/doctype/approval_request/approval_request.json:269
+msgid "Warehouse Clerk"
+msgstr ""
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:150
+msgid "Warehouses"
+msgstr ""
+
+#. Option for the 'Enforcement' (Select) field in DocType 'Segregation of
+#. Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:47
+msgid "Warn"
+msgstr ""
+
+#. Option for the 'User Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:88
+msgid "Website User"
+msgstr ""
+
+#. Label of the wednesday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:75
+msgid "Wednesday"
+msgstr ""
+
+#. Description of the 'Priority' (Int) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:69
+msgid "When several policies match, the highest priority wins."
+msgstr ""
+
+#: automotive_core/public/js/automotive_core.bundle.js:61
+msgid "Withdraw Request"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+msgid "Withdrawn"
+msgstr ""
+
+#. Label of the wip_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:179
+msgid "Work In Progress"
+msgstr ""
+
+#. Label of the workstation (Link) field in DocType 'Production Line Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:34
+msgid "Workstation"
+msgstr ""
+
+#. Description of the 'Primary Workstation' (Link) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:133
+msgid "Workstation used for line-level capacity and Downtime Entries."
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:34
+#, python-brace-format
+msgid "Workstation {0} belongs to plant {1}."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:326
+#, python-brace-format
+msgid "You are not authorised to approve step {0} ({1}) of {2}."
+msgstr ""
+
+#: automotive_core/analytics/kpi.py:45 automotive_core/analytics/scope.py:22
+#, python-brace-format
+msgid "You have no access to company {0}."
+msgstr ""
+
+#: automotive_core/analytics/kpi.py:51 automotive_core/analytics/scope.py:34
+#, python-brace-format
+msgid "You have no access to plant {0}."
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "asn"
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "bank_statement"
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "dealer_order"
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "dealer_order_change"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:51
+#, python-brace-format
+msgid "debit {0}, credit {1}"
+msgstr ""
+
+#. Description of the 'Amount Field' (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:79
+msgid "e.g. base_grand_total, paid_amount."
+msgstr ""
+
+#. Description of the 'Category Field' (Data) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:96
+msgid "e.g. item_group or purchase_category."
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "inventory_adjustment"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:96
+msgid "no foreign-currency monetary balances"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:99
+msgid "no submitted Exchange Rate Revaluation in the period"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:60
+msgid "none"
+msgstr ""
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:89
+msgid "of which Intercompany"
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "po_acknowledgement"
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "production_event"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:74
+msgid "reconciled"
+msgstr ""
+
+#. Description of the 'Scope Key' (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:24
+msgid "sha256(endpoint, user, idempotency key)."
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "shipment_status"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:86
+#, python-brace-format
+msgid "stock ledger {0} vs GL {1}"
+msgstr ""
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "supplier_invoice"
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:125
+#, python-brace-format
+msgid "{0} already closes an overlapping period for {1}."
+msgstr ""
+
+#: automotive_core/governance/delegation.py:146
+#, python-brace-format
+msgid "{0} already delegates {1} in this period ({2})."
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:26
+#, python-brace-format
+msgid "{0} already has an overlapping assignment to {1} ({2})."
+msgstr ""
+
+#: automotive_core/automotive_setup/access_sync.py:186
+#, python-brace-format
+msgid "{0} already represents {1}; a portal user belongs to exactly one partner."
+msgstr ""
+
+#: automotive_core/governance/delegation.py:116
+#, python-brace-format
+msgid "{0} does not hold the role {1} and cannot delegate it."
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:108
+#, python-brace-format
+msgid "{0} events checked"
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:17
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:25
+#, python-brace-format
+msgid "{0} has no field {1}."
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:136
+#, python-brace-format
+msgid "{0} is already submitted."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:360
+#, python-brace-format
+msgid "{0} is no longer a draft."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:23
+#, python-brace-format
+msgid "{0} is not a valid child-table field path."
+msgstr ""
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:15
+#, python-brace-format
+msgid "{0} is not submittable; approval policies govern submission."
+msgstr ""
+
+#: automotive_core/integration_hub/idempotency.py:55
+#, python-brace-format
+msgid "{0} is too long."
+msgstr ""
+
+#: automotive_core/access/master_data.py:65
+#, python-brace-format
+msgid "{0} name is too similar to existing {1} ({2}%)."
+msgstr ""
+
+#: automotive_core/access/master_data.py:42
+#, python-brace-format
+msgid "{0} {1} already uses tax id {2}."
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:23
+#, python-brace-format
+msgid "{0} {1} belongs to plant {2}."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:442
+#, python-brace-format
+msgid "{0} {1} changed after it was approved ({2}); request approval again."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:436
+#, python-brace-format
+msgid "{0} {1} needs approval under policy {2} before it can be submitted."
+msgstr ""
+
+#: automotive_core/governance/approvals.py:520
+#, python-brace-format
+msgid "{0} {1}: approval {2}"
+msgstr ""
+
+#: automotive_core/access/plant_scope.py:121
+#, python-brace-format
+msgid "{0} {1}: set the Plant (it could not be derived from warehouses or the work order)."
+msgstr ""
+
+#: automotive_core/finance_controls/period_close.py:73
+#, python-brace-format
+msgid "{0}: GL {1} vs payment ledger {2}"
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/plant/plant.py:32
+#, python-brace-format
+msgid "{0}: warehouse {1} belongs to {2}, not {3}."
+msgstr ""
+
+#: automotive_core/automotive_setup/doctype/plant/plant.py:35
+#, python-brace-format
+msgid "{0}: warehouse {1} is assigned to plant {2}."
+msgstr ""
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:31
+#, python-brace-format
+msgid "{0}: {1}"
+msgstr ""
+

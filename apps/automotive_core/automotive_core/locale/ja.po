@@ -1,0 +1,4375 @@
+# Japanese translations for Automotive Core.
+# Copyright (C) 2026 Toyota ERP Clone contributors
+# This file is distributed under the same license as the Automotive Core project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Automotive Core VERSION\n"
+"Report-Msgid-Bugs-To: erp-team@hinode.example\n"
+"POT-Creation-Date: 2026-10-24 13:45+0919\n"
+"PO-Revision-Date: 2026-10-24 13:45+0919\n"
+"Last-Translator: erp-team@hinode.example\n"
+"Language: ja\n"
+"Language-Team: erp-team@hinode.example\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#. Description of the 'Max Amount' (Currency) field in DocType 'Approval
+#. Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:118
+msgid "0 = no limit."
+msgstr "0を指定すると上限なしになります。"
+
+#. Description of the 'Applies Up To Amount' (Currency) field in DocType
+#. 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:90
+msgid "0 = no upper bound."
+msgstr "0を指定すると上限なしになります。"
+
+#. Description of the 'Default Attachment Retention (Days)' (Int) field in
+#. DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:177
+msgid "0 keeps attachments forever."
+msgstr "0を指定すると添付ファイルを無期限に保存します。"
+
+#. Description of the 'Planned Rate (Units / Hour)' (Float) field in DocType
+#. 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:92
+msgid "3600 / takt time."
+msgstr "3600 / タクトタイムで算出されます。"
+
+#. Header text in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:3
+msgid "<span class=\"h4\"><b>Automotive Setup</b></span>"
+msgstr "<span class=\"h4\"><b>自動車事業セットアップ</b></span>"
+
+#. Header text in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:3
+msgid "<span class=\"h4\"><b>Finance Controls</b></span>"
+msgstr "<span class=\"h4\"><b>財務統制</b></span>"
+
+#. Header text in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:3
+msgid "<span class=\"h4\"><b>Governance</b></span>"
+msgstr "<span class=\"h4\"><b>ガバナンス</b></span>"
+
+#. Header text in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:3
+msgid "<span class=\"h4\"><b>Integration Hub</b></span>"
+msgstr "<span class=\"h4\"><b>連携ハブ</b></span>"
+
+#. Header text in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:3
+msgid "<span class=\"h4\"><b>Management</b></span>"
+msgstr "<span class=\"h4\"><b>経営管理</b></span>"
+
+#: automotive_core/governance/approvals.py:355
+msgid "A comment is required when rejecting."
+msgstr "却下する場合はコメントが必要です。"
+
+#: automotive_core/governance/delegation.py:114
+msgid "A delegation cannot start in the past."
+msgstr "権限委任の開始日を過去の日付にすることはできません。"
+
+#: automotive_core/integration_hub/idempotency.py:102
+msgid "A request with this Idempotency-Key is still being processed."
+msgstr "この Idempotency-Key のリクエストはまだ処理中です。"
+
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.py:12
+msgid "A rule needs two different roles."
+msgstr "ルールには異なる2つのロールが必要です。"
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:25
+msgid "A service user is required to process inbound messages."
+msgstr "受信メッセージを処理するにはサービスユーザーが必要です。"
+
+#: automotive_core/governance/delegation.py:107
+msgid "A user cannot delegate to themselves."
+msgstr "自分自身に権限を委任することはできません。"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:223
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:206
+#: automotive_core/automotive_setup/doctype/plant/plant.json:326
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:262
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:227
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:208
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:297
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:258
+#: automotive_core/governance/doctype/approval_request/approval_request.json:249
+msgid "AP Clerk"
+msgstr "買掛金担当者"
+
+#. Label of a Card Break in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:76
+msgid "Access"
+msgstr "アクセス"
+
+#. Label of the tab_break_1 (Tab Break) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:41
+msgid "Access & Audit"
+msgstr "アクセスと監査"
+
+#. Label of the access_expiry_date (Date) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:106
+msgid "Access Expires On"
+msgstr "アクセス有効期限"
+
+#: automotive_core/governance/provisioning.py:56
+msgid "Access expiry cannot be in the past."
+msgstr "アクセス有効期限を過去の日付にすることはできません。"
+
+#. Label of a Card Break in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:56
+msgid "Accountability"
+msgstr "説明責任"
+
+#. Label of the accounting_period (Link) field in DocType 'Period Close
+#. Checklist'
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:87
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:36
+msgid "Accounting Period"
+msgstr "会計期間"
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:180
+msgid "Accounts Payable"
+msgstr "買掛金"
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:170
+msgid "Accounts Receivable"
+msgstr "売掛金"
+
+#. Label of the is_active (Check) field in DocType 'KPI Definition'
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Label of the is_active (Check) field in DocType 'Plant'
+#. Option for the 'Status' (Select) field in DocType 'Plant Assignment'
+#. Label of the is_active (Check) field in DocType 'Production Line'
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#. Label of the is_active (Check) field in DocType 'Approval Policy'
+#. Label of the is_active (Check) field in DocType 'Segregation of Duties Rule'
+#. Label of the is_active (Check) field in DocType 'Integration Partner'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:107
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/automotive_setup/doctype/plant/plant.json:112
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:109
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:65
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:53
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:108
+msgid "Active"
+msgstr "有効"
+
+#. Label of the actor (Link) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:73
+msgid "Actor"
+msgstr "実行者"
+
+#. Label of the adapter (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:82
+msgid "Adapter"
+msgstr "アダプター"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'User
+#. Provisioning Request'
+#. Label of the extra_roles (Table MultiSelect) field in DocType 'User
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:122
+msgid "Additional Roles"
+msgstr "追加ロール"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Administration"
+msgstr "管理部門"
+
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+msgid "Administrator"
+msgstr "管理者"
+
+#. Label of the allow_delegation (Check) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:128
+msgid "Allow Delegated Approval"
+msgstr "委任による承認を許可"
+
+#. Label of the allowed_extensions (Data) field in DocType 'Attachment Policy
+#. Rule'
+#. Label of the allowed_extensions (Small Text) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:27
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:150
+msgid "Allowed Extensions"
+msgstr "許可する拡張子"
+
+#. Label of the allowed_message_types (Small Text) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:153
+msgid "Allowed Inbound Message Types"
+msgstr "許可する受信メッセージタイプ"
+
+#. Label of the amended_from (Link) field in DocType 'Period Close Checklist'
+#. Label of the amended_from (Link) field in DocType 'Approval Delegation'
+#. Label of the amended_from (Link) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:122
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:137
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:163
+msgid "Amended From"
+msgstr "修正元"
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#. Label of the amount (Currency) field in DocType 'Approval Request'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+#: automotive_core/governance/doctype/approval_request/approval_request.json:95
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:50
+msgid "Amount"
+msgstr "金額"
+
+#. Label of the amount_field (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:82
+msgid "Amount Field"
+msgstr "金額フィールド"
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:5
+msgid "An external system we exchange messages with, and how (adapter, credentials, status)."
+msgstr "メッセージを交換する外部システムと、その交換方法（アダプター、認証情報、ステータス）です。"
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/plant/plant.json:6
+msgid "An operating site (vehicle assembly, powertrain, preparation & distribution)."
+msgstr "事業拠点（車両組立、パワートレイン、納車準備・配送）です。"
+
+#. Title of a Sidebar
+#: automotive_core/analytics/sidebar/analytics/analytics.json:126
+msgid "Analytics"
+msgstr "分析"
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Andon Point"
+msgstr "アンドンポイント"
+
+#. Label of the annual_capacity_units (Int) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:144
+msgid "Annual Capacity (Units)"
+msgstr "年間生産能力（台）"
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/audit_event/audit_event.json:5
+msgid "Append-only audit log, sealed into a SHA-256 hash chain by a background job."
+msgstr "追記専用の監査ログです。バックグラウンドジョブによってSHA-256ハッシュチェーンに封印されます。"
+
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+msgid "Applied"
+msgstr "適用済み"
+
+#. Label of the min_amount (Currency) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:87
+msgid "Applies From Amount"
+msgstr "適用下限金額"
+
+#. Label of the max_amount (Currency) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:93
+msgid "Applies Up To Amount"
+msgstr "適用上限金額"
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:27
+msgid "Applies Up To Amount must be at least Applies From Amount."
+msgstr "適用上限金額は適用下限金額以上にしてください。"
+
+#: automotive_core/public/js/automotive_core.bundle.js:20
+msgid "Approval"
+msgstr "承認"
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:142
+msgid "Approval Decision"
+msgstr "承認判断"
+
+#: automotive_core/governance/doctype/approval_decision/approval_decision.py:12
+msgid "Approval Decisions are immutable."
+msgstr "承認判断は変更できません。"
+
+#: automotive_core/governance/doctype/approval_decision/approval_decision.py:14
+msgid "Approval Decisions are recorded only by the approval service."
+msgstr "承認判断を記録できるのは承認サービスのみです。"
+
+#: automotive_core/governance/doctype/approval_decision/approval_decision.py:17
+msgid "Approval Decisions cannot be deleted."
+msgstr "承認判断は削除できません。"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:151
+#: automotive_core/governance/sidebar/governance/governance.json:53
+#: automotive_core/governance/workspace/governance/governance.json:46
+msgid "Approval Delegation"
+msgstr "承認権限委任"
+
+#. Label of a Sidebar Item
+#. Label of a shortcut in the Governance Workspace
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:9
+#: automotive_core/governance/sidebar/governance/governance.json:27
+#: automotive_core/governance/workspace/governance/governance.json:192
+msgid "Approval Inbox"
+msgstr "承認受信トレイ"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:174
+#: automotive_core/governance/sidebar/governance/governance.json:90
+#: automotive_core/governance/workspace/governance/governance.json:36
+msgid "Approval Policy"
+msgstr "承認ポリシー"
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:63
+msgid "Approval Policy Step"
+msgstr "承認ポリシーステップ"
+
+#. Label of the approval_request (Link) field in DocType 'Approval Decision'
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:42
+#: automotive_core/governance/doctype/approval_request/approval_request.json:170
+#: automotive_core/governance/sidebar/governance/governance.json:40
+#: automotive_core/governance/workspace/governance/governance.json:26
+msgid "Approval Request"
+msgstr "承認依頼"
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:91
+msgid "Approval Request Step"
+msgstr "承認依頼ステップ"
+
+#: automotive_core/governance/approvals.py:353
+#, python-brace-format
+msgid "Approval Request {0} has no pending step."
+msgstr "承認依頼{0}には処理待ちのステップがありません。"
+
+#: automotive_core/governance/approvals.py:350
+#, python-brace-format
+msgid "Approval Request {0} is {1}, not Pending."
+msgstr "承認依頼{0}のステータスは「処理待ち」ではなく「{1}」です。"
+
+#: automotive_core/governance/doctype/approval_request/approval_request.py:12
+msgid "Approval Requests are changed only by the approval service."
+msgstr "承認依頼を変更できるのは承認サービスのみです。"
+
+#: automotive_core/governance/doctype/approval_request/approval_request.py:16
+msgid "Approval history cannot be deleted."
+msgstr "承認履歴は削除できません。"
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:5
+msgid "Approval matrix for one DocType: which steps, roles and thresholds apply."
+msgstr "1つのドキュメントタイプに対する承認マトリクスです。適用するステップ、ロール、しきい値を定義します。"
+
+#: automotive_core/governance/approvals.py:515
+#, python-brace-format
+msgid "Approval needed: {0} {1} (step {2}: {3})"
+msgstr "承認が必要です: {0} {1}（ステップ{2}: {3}）"
+
+#: automotive_core/public/js/automotive_core.bundle.js:24
+#, python-brace-format
+msgid "Approval {0}: {1}"
+msgstr "承認依頼{1}は{0}です"
+
+#. Label of a Card Break in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:18
+msgid "Approvals"
+msgstr "承認"
+
+#. Option for the 'Decision' (Select) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:75
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:35
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:73
+#: automotive_core/public/js/automotive_core.bundle.js:56
+#: automotive_core/public/js/automotive_core.bundle.js:105
+msgid "Approve"
+msgstr "承認する"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:34
+#: automotive_core/public/js/automotive_core.bundle.js:104
+#, python-brace-format
+msgid "Approve {0}"
+msgstr "{0}を承認する"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+msgid "Approved"
+msgstr "承認済み"
+
+#: automotive_core/public/js/automotive_core.bundle.js:44
+#, python-brace-format
+msgid "Approved ({0}) but the document changed afterwards; request approval again."
+msgstr "承認済み（{0}）ですが、その後ドキュメントが変更されました。再度承認を依頼してください。"
+
+#: automotive_core/public/js/automotive_core.bundle.js:43
+#, python-brace-format
+msgid "Approved ({0}); the document can be submitted."
+msgstr "承認済みです（{0}）。ドキュメントを提出できます。"
+
+#. Label of the approver_role (Link) field in DocType 'Approval Policy Step'
+#. Label of the approver_role (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:34
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:37
+msgid "Approver Role"
+msgstr "承認者ロール"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:7
+msgid "As Of"
+msgstr "基準日"
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Assembly"
+msgstr "組立"
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:54
+msgid "Attachment Policy Rule"
+msgstr "添付ファイルポリシールール"
+
+#. Label of the attachment_rules (Table) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:190
+msgid "Attachment Rules"
+msgstr "添付ファイルルール"
+
+#. Label of the tab_break_3 (Tab Break) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:137
+msgid "Attachments"
+msgstr "添付ファイル"
+
+#: automotive_core/files/policy.py:92
+msgid "Attachments to business documents must be private."
+msgstr "業務ドキュメントの添付ファイルは非公開にする必要があります。"
+
+#. Label of the attempt_no (Int) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:20
+msgid "Attempt"
+msgstr "試行番号"
+
+#. Label of the attempted_at (Datetime) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:27
+msgid "Attempted At"
+msgstr "試行日時"
+
+#. Label of the attempts (Int) field in DocType 'Integration Inbound Message'
+#. Label of the attempts (Int) field in DocType 'Integration Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:105
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:109
+msgid "Attempts"
+msgstr "試行回数"
+
+#. Label of the audit_chain_head (Read Only) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:75
+msgid "Audit Chain Head"
+msgstr "監査チェーン先頭"
+
+#. Label of the audit_chain_verified_at (Data) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:80
+msgid "Audit Chain Last Verified"
+msgstr "監査チェーン最終検証日時"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/audit_event/audit_event.json:146
+#: automotive_core/governance/sidebar/governance/governance.json:66
+#: automotive_core/governance/workspace/governance/governance.json:64
+msgid "Audit Event"
+msgstr "監査イベント"
+
+#: automotive_core/governance/doctype/audit_event/audit_event.py:12
+msgid "Audit Events are append-only."
+msgstr "監査イベントは追記のみ可能です。"
+
+#: automotive_core/governance/doctype/audit_event/audit_event.py:14
+msgid "Audit Events are written only by the audit service."
+msgstr "監査イベントを書き込めるのは監査サービスのみです。"
+
+#: automotive_core/governance/doctype/audit_event/audit_event.py:17
+msgid "Audit Events cannot be deleted."
+msgstr "監査イベントは削除できません。"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:248
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:146
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:217
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:163
+#: automotive_core/automotive_setup/doctype/plant/plant.json:351
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:190
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:287
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:252
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:167
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:156
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:182
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:206
+#: automotive_core/governance/doctype/approval_request/approval_request.json:184
+#: automotive_core/governance/doctype/audit_event/audit_event.json:160
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:99
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:216
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:127
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:207
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:194
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:224
+msgid "Auditor"
+msgstr "監査担当者"
+
+#. Label of the authorization_filter (Small Text) field in DocType 'KPI
+#. Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:129
+msgid "Authorization Filter"
+msgstr "権限フィルター"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:168
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:151
+#: automotive_core/automotive_setup/doctype/plant/plant.json:271
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:207
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:172
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:172
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:160
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:189
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:210
+#: automotive_core/governance/doctype/approval_request/approval_request.json:189
+msgid "Automotive Executive"
+msgstr "経営幹部"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:200
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:92
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:132
+msgid "Automotive Settings"
+msgstr "自動車事業設定"
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:106
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:13
+msgid "Automotive Setup"
+msgstr "自動車事業セットアップ"
+
+#. Label of the available_minutes (Float) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:55
+msgid "Available Minutes"
+msgstr "稼働可能時間（分）"
+
+#. Label of the available_minutes_per_day (Float) field in DocType 'Shift
+#. Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:114
+msgid "Available Minutes Per Working Day"
+msgstr "稼働日あたりの稼働可能時間（分）"
+
+#: automotive_core/public/js/automotive_core.bundle.js:52
+#, python-brace-format
+msgid "Awaiting approval ({0}), step {1}"
+msgstr "承認待ち（{0}）、ステップ{1}"
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Bank"
+msgstr "銀行"
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:94
+msgid "Bank Account"
+msgstr "銀行口座"
+
+#: automotive_core/finance_controls/bank_accounts.py:85
+#, python-brace-format
+msgid "Bank account {0} is {1}; a Treasury Approver must verify it before payment."
+msgstr "銀行口座{0}のステータスは「{1}」です。支払の前に財務承認者が確認する必要があります。"
+
+#: automotive_core/finance_controls/bank_accounts.py:81
+msgid "Bank transfers to suppliers need the supplier's verified bank account."
+msgstr "仕入先への銀行振込には、確認済みの仕入先銀行口座が必要です。"
+
+#. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:158
+msgid "Best Effort"
+msgstr "ベストエフォート"
+
+#. Option for the 'Enforcement' (Select) field in DocType 'Segregation of
+#. Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:47
+msgid "Block"
+msgstr "ブロック"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Body Shop"
+msgstr "車体工程"
+
+#. Label of the branch (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:85
+msgid "Branch"
+msgstr "事業所"
+
+#. Label of the break_minutes (Int) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:42
+msgid "Break (Minutes)"
+msgstr "休憩時間（分）"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:213
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:196
+#: automotive_core/automotive_setup/doctype/plant/plant.json:316
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:252
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:217
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:204
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:288
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:254
+#: automotive_core/governance/doctype/approval_request/approval_request.json:244
+msgid "Buyer"
+msgstr "購買担当者"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:117
+msgid "Calendar & Costing"
+msgstr "カレンダーと原価計算"
+
+#: automotive_core/public/js/automotive_core.bundle.js:130
+msgid "Cancel Document"
+msgstr "ドキュメントを取消"
+
+#: automotive_core/public/js/automotive_core.bundle.js:129
+#, python-brace-format
+msgid "Cancel {0}"
+msgstr "{0}を取消"
+
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Cancelled"
+msgstr "取消済み"
+
+#: automotive_core/governance/cancellation.py:51
+#, python-brace-format
+msgid "Cancelled with reason: {0}"
+msgstr "理由を付けて取消: {0}"
+
+#: automotive_core/governance/cancellation.py:65
+#, python-brace-format
+msgid "Cancelled with {0}"
+msgstr "連動して取消: {0}"
+
+#: automotive_core/governance/cancellation.py:35
+#, python-brace-format
+msgid "Cancelling {0} {1} requires a reason (use Cancel With Reason)."
+msgstr "{0} {1}を取り消すには理由が必要です（「理由を付けて取消」を使用してください）。"
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Carrier"
+msgstr "運送会社"
+
+#. Label of the category_field (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:99
+msgid "Category Field"
+msgstr "カテゴリフィールド"
+
+#. Label of the category_values (Small Text) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:105
+msgid "Category Values"
+msgstr "カテゴリ値"
+
+#. Label of the chain_index (Int) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:118
+msgid "Chain Index"
+msgstr "チェーン番号"
+
+#. Label of the check_code (Data) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:20
+#: automotive_core/public/js/automotive_core.bundle.js:167
+msgid "Check"
+msgstr "チェック"
+
+#: automotive_core/finance_controls/period_close.py:164
+#, python-brace-format
+msgid "Check {0} cannot be waived."
+msgstr "チェック{0}は免除できません。"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Period Close
+#. Checklist'
+#. Label of the tasks (Table) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:101
+msgid "Checks"
+msgstr "チェック"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Checks Failed"
+msgstr "チェック失敗"
+
+#. Label of the checks_run_at (Datetime) field in DocType 'Period Close
+#. Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:95
+msgid "Checks Last Run"
+msgstr "チェック最終実行日時"
+
+#. Label of the clamd_host (Data) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:167
+msgid "ClamAV (clamd) Host"
+msgstr "ClamAV (clamd) ホスト"
+
+#. Label of the clamd_port (Int) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:173
+msgid "ClamAV (clamd) Port"
+msgstr "ClamAV (clamd) ポート"
+
+#. Label of the client_ip (Data) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:122
+msgid "Client IP"
+msgstr "クライアントIP"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Closed"
+msgstr "クローズ"
+
+#. Description of the 'Allowed Extensions' (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:147
+msgid "Comma separated, lower case."
+msgstr "カンマ区切りの小文字で入力してください。"
+
+#. Description of the 'Fields Bound By The Approval' (Small Text) field in
+#. DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:141
+msgid "Comma separated. Empty = amount field, party, company, dates and item rows."
+msgstr "カンマ区切りで指定します。空欄の場合は、金額フィールド、取引先、会社、日付、明細行が対象になります。"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Decision'
+#. Label of the comment (Small Text) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:128
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:19
+#: automotive_core/public/js/automotive_core.bundle.js:92
+msgid "Comment"
+msgstr "コメント"
+
+#. Label of the company (Link) field in DocType 'KPI Snapshot'
+#. Label of the company (Link) field in DocType 'Plant'
+#. Label of the company (Link) field in DocType 'Plant Assignment'
+#. Label of the company (Link) field in DocType 'Production Line'
+#. Label of a Link in the Automotive Setup Workspace
+#. Label of the company (Link) field in DocType 'Period Close Checklist'
+#. Label of the scope_company (Link) field in DocType 'Approval Delegation'
+#. Label of the applies_to_company (Link) field in DocType 'Approval Policy'
+#. Label of the company (Link) field in DocType 'Approval Request'
+#. Label of the company (Link) field in DocType 'Audit Event'
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:52
+#: automotive_core/automotive_setup/doctype/plant/plant.json:66
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:76
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:61
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:56
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:42
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:15
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:103
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:57
+#: automotive_core/governance/doctype/approval_request/approval_request.json:66
+#: automotive_core/governance/doctype/audit_event/audit_event.json:60
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:50
+msgid "Company"
+msgstr "会社"
+
+#. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
+msgid "Completed"
+msgstr "完了"
+
+#. Label of the completed_at (Datetime) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:143
+msgid "Completed At"
+msgstr "完了日時"
+
+#. Label of the compute_method (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:88
+msgid "Compute Method"
+msgstr "計算メソッド"
+
+#. Label of the computed_at (Datetime) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:103
+msgid "Computed At"
+msgstr "計算日時"
+
+#. Description of a DocType
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:5
+msgid "Computed KPI value for a period and scope, with its inputs hash and reconciliation result."
+msgstr "期間と範囲ごとに計算したKPI値です。入力ハッシュと照合結果も記録します。"
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Configured (Unverified)"
+msgstr "設定済み（未検証）"
+
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:19
+msgid "Conflicting Role"
+msgstr "競合するロール"
+
+#. Label of the connection_status (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:100
+msgid "Connection Status"
+msgstr "接続ステータス"
+
+#. Label of the contact (Link) field in DocType 'Partner User Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:103
+msgid "Contact"
+msgstr "連絡先"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:110
+msgid "Controls"
+msgstr "統制"
+
+#. Label of the correlation_id (Data) field in DocType 'Audit Event'
+#. Label of the correlation_id (Data) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the correlation_id (Data) field in DocType 'Integration Outbound
+#: automotive_core/governance/doctype/audit_event/audit_event.json:94
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:129
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:87
+msgid "Correlation ID"
+msgstr "相関ID"
+
+#. Label of the cost_center (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:138
+msgid "Cost Center"
+msgstr "原価センター"
+
+#: automotive_core/automotive_setup/doctype/plant/plant.py:38
+#, python-brace-format
+msgid "Cost Center {0} does not belong to {1}."
+msgstr "原価センター{0}は{1}に属していません。"
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Count"
+msgstr "件数"
+
+#. Label of the country (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:97
+msgid "Country"
+msgstr "国"
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Create"
+msgstr "作成"
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:5
+msgid "Create, change, deactivate or reactivate an account. Applied on submit after approval."
+msgstr "アカウントの作成、変更、無効化、再有効化を依頼します。承認後、提出時に適用されます。"
+
+#: automotive_core/governance/provisioning.py:92
+#, python-brace-format
+msgid "Created {0} with {1} role(s)."
+msgstr "{0}を作成しました（ロール{1}件）。"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:120
+msgid "Credentials & Endpoint"
+msgstr "認証情報とエンドポイント"
+
+#. Label of the crosses_midnight (Check) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:48
+msgid "Crosses Midnight"
+msgstr "日付をまたぐ"
+
+#. Label of the currency (Link) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:102
+msgid "Currency"
+msgstr "通貨"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:96
+msgid "Currency Translation Difference"
+msgstr "為替換算調整額"
+
+#. Label of the current_step (Int) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:109
+msgid "Current Step"
+msgstr "現在のステップ"
+
+#. Option for the 'Party Type' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
+#: automotive_core/access/master_data.py:74
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:65
+msgid "Customer"
+msgstr "顧客"
+
+#. Label of the cycle_time_seconds (Float) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:55
+msgid "Cycle Time (Seconds)"
+msgstr "サイクルタイム（秒）"
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "Daily"
+msgstr "毎日"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'User
+#. Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:133
+msgid "Data Scope"
+msgstr "データ範囲"
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Days"
+msgstr "日数"
+
+#. Label of a number card in the Management Workspace
+#. Label of a number card in the Finance Controls Workspace
+#: automotive_core/analytics/workspace/management/management.json:158
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:194
+msgid "Days Sales Outstanding"
+msgstr "売上債権回転日数"
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Deactivate"
+msgstr "無効化"
+
+#: automotive_core/governance/provisioning.py:105
+#, python-brace-format
+msgid "Deactivated {0}; sessions and API keys revoked."
+msgstr "{0}を無効化し、セッションとAPIキーを失効させました。"
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Dead Letter"
+msgstr "デッドレター"
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Dealer"
+msgstr "販売店"
+
+#. Label of the customer (Link) field in DocType 'Partner User Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:64
+msgid "Dealer (Customer)"
+msgstr "販売店（顧客）"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:238
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:221
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:156
+#: automotive_core/automotive_setup/doctype/plant/plant.json:341
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:277
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:242
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:212
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:306
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:262
+#: automotive_core/governance/doctype/approval_request/approval_request.json:254
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:232
+msgid "Dealer Liaison"
+msgstr "販売店窓口担当者"
+
+#. Label of the decided_at (Datetime) field in DocType 'Approval Decision'
+#. Label of the decided_at (Datetime) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:109
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:75
+msgid "Decided At"
+msgstr "判断日時"
+
+#. Label of the decided_by (Link) field in DocType 'Approval Decision'
+#. Label of the decided_by (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:87
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:61
+msgid "Decided By"
+msgstr "判断者"
+
+#. Label of the decision (Select) field in DocType 'Approval Decision'
+#. Label of the decision (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:74
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:81
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:52
+msgid "Decision"
+msgstr "判断"
+
+#: automotive_core/governance/approvals.py:346
+msgid "Decision must be Approve or Reject."
+msgstr "判断は「承認する」または「却下する」のいずれかにしてください。"
+
+#. Label of the is_default (Check) field in DocType 'User Provisioning Scope'
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:33
+msgid "Default"
+msgstr "既定"
+
+#. Label of the default_retention_days (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:180
+msgid "Default Attachment Retention (Days)"
+msgstr "既定の添付ファイル保存期間（日）"
+
+#. Label of the max_upload_mb (Int) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:143
+msgid "Default Max Upload Size (MB)"
+msgstr "既定の最大アップロードサイズ (MB)"
+
+#. Label of the default_shift_pattern (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:128
+msgid "Default Shift Pattern"
+msgstr "既定のシフトパターン"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'KPI
+#. Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:112
+msgid "Definition"
+msgstr "定義"
+
+#. Label of the delegate (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:53
+msgid "Delegate"
+msgstr "受任者"
+
+#: automotive_core/governance/delegation.py:118
+#, python-brace-format
+msgid "Delegate {0} is not an active user."
+msgstr "受任者{0}は有効なユーザーではありません。"
+
+#. Label of the delegation (Link) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:102
+msgid "Delegation"
+msgstr "権限委任"
+
+#: automotive_core/governance/delegation.py:112
+#, python-brace-format
+msgid "Delegations are limited to {0} days."
+msgstr "権限委任の期間は最長{0}日です。"
+
+#. Label of the delegator (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:44
+msgid "Delegator"
+msgstr "委任者"
+
+#. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Delivered"
+msgstr "配信済み"
+
+#. Label of the delivered_at (Datetime) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:122
+msgid "Delivered At"
+msgstr "配信日時"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Delivery"
+msgstr "納入"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Integration
+#. Outbound Message'
+#. Label of the delivery_attempts (Table) field in DocType 'Integration
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:158
+msgid "Delivery Attempts"
+msgstr "配信試行"
+
+#. Label of the denominator (Float) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:97
+msgid "Denominator"
+msgstr "分母"
+
+#. Label of the department (Link) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:93
+msgid "Department"
+msgstr "部門"
+
+#. Description of the 'Enforce Plant Scope' (Check) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:45
+msgid "Derive and require the Plant on plant-scoped documents."
+msgstr "工場スコープのドキュメントで工場を自動設定し、必須にします。"
+
+#. Label of the description (Small Text) field in DocType 'Plant'
+#. Label of the description (Data) field in DocType 'Period Close Task'
+#. Label of the description (Small Text) field in DocType 'Approval Policy'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:230
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:28
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:166
+msgid "Description"
+msgstr "説明"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:101
+msgid "Details"
+msgstr "詳細"
+
+#. Label of the direction (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:64
+msgid "Direction"
+msgstr "方向"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Director"
+msgstr "工場長"
+
+#. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:158
+msgid "Disabled"
+msgstr "無効"
+
+#. Label of the reference_doctype (Link) field in DocType 'Attachment Policy
+#. Rule'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Decision'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Delegation'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Policy'
+#. Label of the reference_doctype (Link) field in DocType 'Approval Request'
+#. Label of the reference_doctype (Link) field in DocType 'Audit Event'
+#. Label of the reference_doctype (Link) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:19
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:51
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:110
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:47
+#: automotive_core/governance/doctype/approval_request/approval_request.json:47
+#: automotive_core/governance/doctype/audit_event/audit_event.json:43
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:64
+msgid "DocType"
+msgstr "ドキュメントタイプ"
+
+#. Label of the reference_name (Dynamic Link) field in DocType 'Approval
+#. Decision'
+#. Request'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Audit Event'
+#. Label of the reference_name (Dynamic Link) field in DocType 'Integration
+#. Outbound Message'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:59
+#: automotive_core/governance/doctype/approval_request/approval_request.json:56
+#: automotive_core/governance/doctype/audit_event/audit_event.json:51
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:49
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:71
+msgid "Document"
+msgstr "ドキュメント"
+
+#. Label of the document_hash (Data) field in DocType 'Approval Decision'
+#. Label of the document_hash (Data) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:116
+#: automotive_core/governance/doctype/approval_request/approval_request.json:133
+msgid "Document Hash"
+msgstr "ドキュメントハッシュ"
+
+#. Label of the domain (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:50
+msgid "Domain"
+msgstr "分野"
+
+#. Description of the 'Compute Method' (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:85
+msgid "Dotted path of the whitelisted function."
+msgstr "ホワイトリスト登録された関数のドット区切りパスです。"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+msgid "Draft"
+msgstr "下書き"
+
+#. Label of the duration_ms (Int) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:34
+msgid "Duration (ms)"
+msgstr "所要時間 (ms)"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "E-Drive Assembly"
+msgstr "eドライブ組立"
+
+#. Label of the distinct_approvers (Check) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:122
+msgid "Each Step Needs A Different Approver"
+msgstr "ステップごとに異なる承認者が必要"
+
+#: automotive_core/governance/approvals.py:340
+#, python-brace-format
+msgid "Each step of {0} must be approved by a different person."
+msgstr "{0}の各ステップは、それぞれ別の人が承認する必要があります。"
+
+#. Label of the email (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:63
+msgid "Email"
+msgstr "メール"
+
+#. Label of the employee (Link) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:44
+msgid "Employee"
+msgstr "従業員"
+
+#. Label of the employee_name (Data) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:52
+msgid "Employee Name"
+msgstr "従業員名"
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:6
+msgid "Employee-to-plant assignment with effective dates; drives plant User Permissions."
+msgstr "有効期間付きで従業員を工場に配属します。工場のユーザー権限はこの配属に基づいて設定されます。"
+
+#. Description of the 'Company' (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:100
+msgid "Empty = every company."
+msgstr "空欄の場合はすべての会社が対象です。"
+
+#. Description of the 'DocType' (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:107
+msgid "Empty = every governed DocType."
+msgstr "空欄の場合は統制対象のすべてのドキュメントタイプが対象です。"
+
+#. Label of the end_time (Time) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:34
+msgid "End"
+msgstr "終了"
+
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Status' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
+msgid "Ended"
+msgstr "終了済み"
+
+#. Label of the endpoint (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:37
+msgid "Endpoint"
+msgstr "エンドポイント"
+
+#. Label of the enforce_plant_scope (Check) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:48
+msgid "Enforce Plant Scope"
+msgstr "工場スコープを適用"
+
+#. Label of the enforcement (Select) field in DocType 'Segregation of Duties
+#. Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:46
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:20
+msgid "Enforcement"
+msgstr "制御方法"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Engineering"
+msgstr "技術"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:258
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:236
+#: automotive_core/automotive_setup/doctype/plant/plant.json:361
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:297
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:262
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:188
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:252
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:238
+#: automotive_core/governance/doctype/approval_request/approval_request.json:224
+msgid "Engineering Manager"
+msgstr "技術マネージャー"
+
+#. Label of the error (Small Text) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:55
+msgid "Error"
+msgstr "エラー"
+
+#. Label of the escalate_after_hours (Int) field in DocType 'Approval Policy
+#. Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:55
+msgid "Escalate After (Hours)"
+msgstr "エスカレーションまで（時間）"
+
+#. Label of the event_hash (Data) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:131
+msgid "Event Hash"
+msgstr "イベントハッシュ"
+
+#. Label of the event_time (Datetime) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:88
+msgid "Event Time"
+msgstr "イベント日時"
+
+#. Label of the event_type (Data) field in DocType 'Audit Event'
+#. Label of the event_type (Data) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:33
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:57
+msgid "Event Type"
+msgstr "イベントタイプ"
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:5
+msgid "Every inbound message, deduplicated by (partner, message_id) and processed exactly once."
+msgstr "すべての受信メッセージを記録します。(partner, message_id) で重複を排除し、厳密に1回だけ処理します。"
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:56
+msgid "Exchange Rate Revaluation"
+msgstr "外貨評価替え"
+
+#. Label of the user (Link) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:55
+msgid "Existing User"
+msgstr "既存ユーザー"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+msgid "Expired"
+msgstr "期限切れ"
+
+#. Label of the expires_at (Datetime) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:84
+msgid "Expires At"
+msgstr "有効期限"
+
+#: automotive_core/finance_controls/period_close.py:160
+msgid "Explain the waiver (at least 10 characters)."
+msgstr "免除の理由を10文字以上で説明してください。"
+
+#. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Failed"
+msgstr "失敗"
+
+#. Label of a number card in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:78
+msgid "Failed Inbound Messages"
+msgstr "失敗した受信メッセージ"
+
+#. Label of the hash_fields (Small Text) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:144
+msgid "Fields Bound By The Approval"
+msgstr "承認で固定するフィールド"
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+msgid "File Drop"
+msgstr "ファイル連携"
+
+#: automotive_core/files/policy.py:83
+#, python-brace-format
+msgid "File exceeds the {0} MB limit."
+msgstr "ファイルが上限の{0} MBを超えています。"
+
+#: automotive_core/files/policy.py:80
+#, python-brace-format
+msgid "Files of type .{0} are not allowed here."
+msgstr "ここでは .{0} 形式のファイルは使用できません。"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Final Assembly"
+msgstr "最終組立"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Finance"
+msgstr "財務"
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:141
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:13
+msgid "Finance Controls"
+msgstr "財務統制"
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Finance System"
+msgstr "財務システム"
+
+#. Label of the finished_goods_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:195
+msgid "Finished Goods"
+msgstr "完成品"
+
+#. Label of the first_name (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:71
+msgid "First Name"
+msgstr "名"
+
+#: automotive_core/governance/provisioning.py:38
+msgid "First Name is required to create an account."
+msgstr "アカウントを作成するには「名」の入力が必要です。"
+
+#. Label of the fiscal_year (Link) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:49
+msgid "Fiscal Year"
+msgstr "会計年度"
+
+#. Label of the formula (Small Text) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:117
+msgid "Formula"
+msgstr "計算式"
+
+#. Label of the friday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:87
+msgid "Friday"
+msgstr "金曜日"
+
+#. Label of the from_date (Date) field in DocType 'Partner User Access'
+#. Label of the from_date (Date) field in DocType 'Plant Assignment'
+#. Label of the from_date (Date) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:83
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:107
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:73
+msgid "From Date"
+msgstr "開始日"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:127
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:160
+msgid "General Ledger"
+msgstr "総勘定元帳"
+
+#: automotive_core/governance/cancellation.py:44
+#, python-brace-format
+msgid "Give a reason of at least {0} characters."
+msgstr "理由を{0}文字以上で入力してください。"
+
+#. Label of the in_transit_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:207
+msgid "Goods In Transit"
+msgstr "輸送中在庫"
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/governance/sidebar/governance/governance.json:152
+#: automotive_core/governance/workspace/governance/governance.json:13
+msgid "Governance"
+msgstr "ガバナンス"
+
+#. Label of the grant_plant_access (Check) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:130
+msgid "Grant Plant Data Access"
+msgstr "工場データへのアクセスを付与"
+
+#. Label of a number card in the Management Workspace
+#. Label of a number card in the Finance Controls Workspace
+#: automotive_core/analytics/workspace/management/management.json:162
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:198
+msgid "Gross Margin"
+msgstr "売上総利益率"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#. Name of a report
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:64
+#: automotive_core/analytics/workspace/management/management.json:54
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.json:19
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:103
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:140
+msgid "Group Consolidation"
+msgstr "グループ連結"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:173
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:156
+#: automotive_core/automotive_setup/doctype/plant/plant.json:276
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:212
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:177
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:159
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:164
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:198
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:199
+#: automotive_core/governance/doctype/approval_request/approval_request.json:194
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:92
+msgid "Group Controller"
+msgstr "グループコントローラー"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:87
+msgid "Group Total"
+msgstr "グループ合計"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:91
+msgid "Group excl. Intercompany"
+msgstr "グループ合計（グループ会社間を除く）"
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:4
+msgid "Group-wide controls for integrations, attachments, audit and plant scoping."
+msgstr "連携、添付ファイル、監査、工場スコープに関するグループ全体の統制設定です。"
+
+#. Label of the http_status (Int) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:78
+msgid "HTTP Status"
+msgstr "HTTPステータス"
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+msgid "HTTPS"
+msgstr "HTTPS"
+
+#. Option for the 'Adapter' (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:83
+msgid "HTTPS Webhook"
+msgstr "HTTPS Webhook"
+
+#: automotive_core/integration_hub/idempotency.py:52
+#, python-brace-format
+msgid "Header {0} is required for this request."
+msgstr "このリクエストには {0} ヘッダーが必要です。"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:169
+msgid "Health"
+msgstr "稼働状況"
+
+#. Option for the 'Direction' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:65
+msgid "Higher Is Better"
+msgstr "高いほど良い"
+
+#. Option for the 'Message Format' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:91
+msgid "Hinode EDI"
+msgstr "Hinode EDI"
+
+#. Label of the holiday_list (Link) field in DocType 'Plant'
+#. Label of the holiday_list (Link) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:122
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:52
+msgid "Holiday List"
+msgstr "休日リスト"
+
+#. Label of a Sidebar Item
+#: automotive_core/analytics/sidebar/analytics/analytics.json:14
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:14
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:14
+#: automotive_core/governance/sidebar/governance/governance.json:14
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:14
+msgid "Home"
+msgstr "ホーム"
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "Hourly"
+msgstr "毎時"
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Hours"
+msgstr "時間"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:162
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:226
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:212
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:139
+#: automotive_core/automotive_setup/doctype/plant/plant.json:264
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:174
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:193
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:149
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:192
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:174
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:192
+#: automotive_core/governance/doctype/approval_request/approval_request.json:229
+#: automotive_core/governance/doctype/audit_event/audit_event.json:165
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:85
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:200
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:120
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:200
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:54
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:187
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:217
+msgid "IT Operator"
+msgstr "IT運用担当者"
+
+#. Label of the idempotency_key (Data) field in DocType 'Idempotency Record'
+#. Label of the idempotency_key (Data) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:45
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:79
+msgid "Idempotency Key"
+msgstr "冪等キー"
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:106
+msgid "Idempotency Record"
+msgstr "冪等レコード"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:66
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:64
+msgid "Idempotency Records"
+msgstr "冪等レコード"
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:5
+msgid "Immutable record of one approver's decision."
+msgstr "1人の承認者による判断の記録です。変更できません。"
+
+#. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
+msgid "In Progress"
+msgstr "処理中"
+
+#. Label of the inbound_max_attempts (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:126
+msgid "Inbound Max Attempts"
+msgstr "受信の最大試行回数"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:40
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:44
+msgid "Inbound Messages"
+msgstr "受信メッセージ"
+
+#. Label of the inbound_rate_limit_per_minute (Int) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:132
+msgid "Inbound Requests Per Minute Per Partner"
+msgstr "パートナーごとの受信リクエスト上限（1分あたり）"
+
+#. Label of the inbound_secret (Password) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:143
+msgid "Inbound Verification Secret"
+msgstr "受信検証シークレット"
+
+#. Description of the 'Service User' (Link) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:111
+msgid "Inbound messages are processed as this user, so the partner's normal permissions apply."
+msgstr "受信メッセージはこのユーザーとして処理されるため、パートナーの通常の権限が適用されます。"
+
+#. Label of the inputs_hash (Data) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:109
+msgid "Inputs Hash"
+msgstr "入力ハッシュ"
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Inspection"
+msgstr "検査"
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:64
+msgid "Integration Delivery Attempt"
+msgstr "連携配信試行"
+
+#. Title of a Sidebar
+#. Name of a Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:80
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:13
+msgid "Integration Hub"
+msgstr "連携ハブ"
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:186
+msgid "Integration Inbound Message"
+msgstr "連携受信メッセージ"
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:44
+msgid "Integration Nonce"
+msgstr "連携ノンス"
+
+#. Name of a DocType
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:173
+msgid "Integration Outbound Message"
+msgstr "連携送信メッセージ"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:199
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:27
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:26
+msgid "Integration Partner"
+msgstr "連携パートナー"
+
+#: automotive_core/integration_hub/inbound.py:73
+#, python-brace-format
+msgid "Integration partner {0} is inactive."
+msgstr "連携パートナー{0}は無効です。"
+
+#. Label of the tab_break_2 (Tab Break) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:92
+msgid "Integrations"
+msgstr "連携"
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Internal"
+msgstr "内部"
+
+#: automotive_core/integration_hub/inbound.py:124
+#, python-brace-format
+msgid "Invalid message: {0}"
+msgstr "無効なメッセージです: {0}"
+
+#. Label of the bind_to_document_hash (Check) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:138
+msgid "Invalidate Approval When Document Changes"
+msgstr "ドキュメント変更時に承認を無効化"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+msgid "Invalidated"
+msgstr "無効化済み"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Inventory"
+msgstr "在庫"
+
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:104
+msgid "Inventory Position"
+msgstr "在庫状況"
+
+#. Label of the item (Link) field in DocType 'Production Line Product'
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:17
+msgid "Item / Template"
+msgstr "品目 / テンプレート"
+
+#. Label of the item_group (Link) field in DocType 'Production Line Product'
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:24
+msgid "Item Group"
+msgstr "品目グループ"
+
+#. Option for the 'Message Format' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:91
+msgid "JSON"
+msgstr "JSON"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:79
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:122
+msgid "Journal Entry"
+msgstr "仕訳伝票"
+
+#. Label of the section_break_3 (Section Break) field in DocType 'User
+#. Provisioning Request'
+#. Label of the justification (Small Text) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:144
+msgid "Justification"
+msgstr "理由の説明"
+
+#. Label of the kpi (Link) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:42
+msgid "KPI"
+msgstr "KPI"
+
+#. Label of the kpi_code (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:33
+msgid "KPI Code"
+msgstr "KPIコード"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:144
+#: automotive_core/analytics/sidebar/analytics/analytics.json:27
+#: automotive_core/analytics/workspace/management/management.json:26
+msgid "KPI Definition"
+msgstr "KPI定義"
+
+#. Label of the kpi_name (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:41
+msgid "KPI Name"
+msgstr "KPI名"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:132
+#: automotive_core/analytics/sidebar/analytics/analytics.json:40
+#: automotive_core/analytics/workspace/management/management.json:36
+msgid "KPI Snapshot"
+msgstr "KPIスナップショット"
+
+#. Description of a DocType
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:5
+msgid "KPI catalogue entry: formula, sources, authorization filter, refresh and reconciliation (ERP-12)."
+msgstr "KPIカタログの項目です。計算式、データソース、権限フィルター、更新、照合を定義します（ERP-12）。"
+
+#. Label of a Card Break in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:18
+msgid "KPIs"
+msgstr "KPI"
+
+#. Label of the key_id (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:133
+msgid "Key ID"
+msgstr "キーID"
+
+#. Label of the language (Link) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:100
+msgid "Language"
+msgstr "言語"
+
+#. Label of the last_error (Text) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the last_error (Text) field in DocType 'Integration Outbound
+#. Label of the last_error (Small Text) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:159
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:134
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:190
+msgid "Last Error"
+msgstr "最終エラー"
+
+#. Label of the last_failure_at (Datetime) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:180
+msgid "Last Failure"
+msgstr "最終失敗日時"
+
+#. Label of the last_name (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:77
+msgid "Last Name"
+msgstr "姓"
+
+#. Label of the last_response_code (Int) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:128
+msgid "Last Response Code"
+msgstr "最終応答コード"
+
+#. Label of the last_success_at (Datetime) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:174
+msgid "Last Successful Exchange"
+msgstr "最終正常連携日時"
+
+#. Label of the audit_chain_last_result (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:86
+msgid "Last Verification Result"
+msgstr "最終検証結果"
+
+#. Description of the 'Company' (Link) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:52
+msgid "Leave empty to apply to every company."
+msgstr "すべての会社に適用する場合は空欄のままにしてください。"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:82
+msgid "Line"
+msgstr "項目"
+
+#. Label of the line_code (Data) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:36
+msgid "Line Code"
+msgstr "ラインコード"
+
+#. Label of the line_name (Data) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:45
+msgid "Line Name"
+msgstr "ライン名"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:193
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:176
+#: automotive_core/automotive_setup/doctype/plant/plant.json:296
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:232
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:197
+msgid "Line Operator"
+msgstr "ライン作業者"
+
+#. Label of the line_side_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:173
+msgid "Line Side (group)"
+msgstr "ラインサイド（グループ）"
+
+#. Label of the line_side_warehouse (Link) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:119
+msgid "Line Side Warehouse"
+msgstr "ラインサイド倉庫"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:126
+msgid "Line Stop Hours"
+msgstr "ライン停止時間"
+
+#. Label of the line_type (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:69
+msgid "Line Type"
+msgstr "ラインタイプ"
+
+#. Description of a DocType
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:5
+msgid "Links a website user to exactly one supplier or dealer with effective dates."
+msgstr "ウェブサイトユーザーを、有効期間付きで1つの仕入先または販売店に紐付けます。"
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Live"
+msgstr "稼働中"
+
+#. Description of the 'Connection Status' (Select) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:95
+msgid "Live only when an HTTPS endpoint and credentials are configured and a delivery has succeeded."
+msgstr "HTTPSエンドポイントと認証情報が設定され、配信に成功した場合にのみ「稼働中」になります。"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:39
+msgid "Loading…"
+msgstr "読み込み中…"
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Local Adapter Only"
+msgstr "ローカルアダプターのみ"
+
+#. Label of the local_directory (Read Only) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:164
+msgid "Local Exchange Directory"
+msgstr "ローカル交換ディレクトリ"
+
+#. Option for the 'Adapter' (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:83
+msgid "Local File Drop"
+msgstr "ローカルファイル連携"
+
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Logistics"
+msgstr "物流"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:263
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:241
+#: automotive_core/automotive_setup/doctype/plant/plant.json:366
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:302
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:267
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:228
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:342
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:278
+#: automotive_core/governance/doctype/approval_request/approval_request.json:274
+msgid "Logistics Coordinator"
+msgstr "物流コーディネーター"
+
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+msgid "Logistics Provider"
+msgstr "物流事業者"
+
+#. Option for the 'Direction' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:65
+msgid "Lower Is Better"
+msgstr "低いほど良い"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Machining"
+msgstr "機械加工"
+
+#. Description of the 'Grant Plant Data Access' (Check) field in DocType 'Plant
+#. Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:127
+msgid "Maintain a Plant User Permission for the employee's user while active."
+msgstr "有効な間、従業員のユーザーに工場のユーザー権限を付与し続けます。"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Maintenance"
+msgstr "保全"
+
+#. Label of the maker_cannot_approve (Check) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:116
+msgid "Maker Cannot Approve"
+msgstr "作成者は承認不可"
+
+#. Name of a Workspace
+#: automotive_core/analytics/workspace/management/management.json:13
+msgid "Management"
+msgstr "経営管理"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:114
+msgid "Material Flow"
+msgstr "マテリアルフロー"
+
+#. Label of the max_amount (Currency) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:121
+msgid "Max Amount"
+msgstr "上限金額"
+
+#. Label of the max_size_mb (Int) field in DocType 'Attachment Policy Rule'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:33
+msgid "Max Size (MB)"
+msgstr "最大サイズ (MB)"
+
+#. Label of the max_units_per_day (Int) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:102
+msgid "Max Units Per Working Day"
+msgstr "稼働日あたりの最大生産台数"
+
+#. Label of the max_delegation_days (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:66
+msgid "Maximum Delegation Length (Days)"
+msgstr "権限委任の最長期間（日）"
+
+#. Label of the message_format (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:90
+msgid "Message Format"
+msgstr "メッセージ形式"
+
+#. Label of the message_id (Data) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:58
+msgid "Message ID"
+msgstr "メッセージID"
+
+#. Label of the message_type (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:68
+msgid "Message Type"
+msgstr "メッセージタイプ"
+
+#: automotive_core/integration_hub/inbound.py:139
+#, python-brace-format
+msgid "Message id already used with a different payload (inbound {0})."
+msgstr "このメッセージIDは、別のペイロードですでに使用されています（受信メッセージ{0}）。"
+
+#. Label of a Card Break in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:36
+msgid "Messages"
+msgstr "メッセージ"
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Modify"
+msgstr "変更"
+
+#. Label of the monday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:63
+msgid "Monday"
+msgstr "月曜日"
+
+#. Description of a DocType
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:5
+msgid "Month/period close: automated ledger checks, then approval; submitting locks the period."
+msgstr "月次・期間の締め処理です。元帳の自動チェックの後に承認を行い、提出すると期間がロックされます。"
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "Monthly"
+msgstr "毎月"
+
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:15
+msgid "Name"
+msgstr "名前"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:95
+msgid "Net Profit (Income - Expense)"
+msgstr "当期純利益（収益 - 費用）"
+
+#. Label of the next_attempt_at (Datetime) field in DocType 'Integration
+#. Inbound Message'
+#. Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:117
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:115
+msgid "Next Attempt At"
+msgstr "次回試行日時"
+
+#: automotive_core/governance/approvals.py:194
+#, python-brace-format
+msgid "No active approval policy applies to {0} {1}."
+msgstr "{0} {1}に適用される有効な承認ポリシーがありません。"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:52
+#, python-brace-format
+msgid "No exchange rate {0} → {1} on or before {2}."
+msgstr "{2}以前の{0} → {1}の為替レートがありません。"
+
+#. Label of the nonce_key (Data) field in DocType 'Integration Nonce'
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:18
+msgid "Nonce Key"
+msgstr "ノンスキー"
+
+#. Option for the 'Connection Status' (Select) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:101
+msgid "Not Configured"
+msgstr "未設定"
+
+#. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
+msgid "Not Run"
+msgstr "未実行"
+
+#. Label of the section_break_3 (Section Break) field in DocType 'Plant'
+#. Label of the section_break_1 (Section Break) field in DocType 'Plant
+#. Assignment'
+#. Label of the notes (Small Text) field in DocType 'Plant Assignment'
+#. Label of the section_break_2 (Section Break) field in DocType 'Period Close
+#. Checklist'
+#. Label of the notes (Small Text) field in DocType 'Period Close Checklist'
+#. Label of the section_break_3 (Section Break) field in DocType 'Approval
+#. Policy'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:225
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:135
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:112
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:161
+msgid "Notes"
+msgstr "メモ"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:43
+msgid "Nothing is waiting for your decision."
+msgstr "判断待ちの依頼はありません。"
+
+#. Label of the numerator (Float) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:91
+msgid "Numerator"
+msgstr "分子"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:150
+msgid "OEE"
+msgstr "OEE"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:76
+#: automotive_core/analytics/workspace/management/management.json:64
+msgid "OEE by Line"
+msgstr "ライン別OEE"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:122
+msgid "OTIF"
+msgstr "OTIF"
+
+#. Label of the on_behalf_of (Link) field in DocType 'Approval Decision'
+#. Label of the on_behalf_of (Link) field in DocType 'Approval Request Step'
+#. Label of the on_behalf_of (Link) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:95
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:68
+#: automotive_core/governance/doctype/audit_event/audit_event.json:80
+msgid "On Behalf Of"
+msgstr "代理元"
+
+#. Option for the 'Refresh Policy' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:81
+msgid "On Read"
+msgstr "参照時"
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_request/approval_request.json:5
+msgid "One approval cycle for one document. Created and advanced only by the approval service."
+msgstr "1つのドキュメントに対する1回の承認サイクルです。作成と進行は承認サービスのみが行います。"
+
+#. Description of the 'Outbound Events' (Small Text) field in DocType
+#. 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:156
+msgid "One event type per line."
+msgstr "1行に1つのイベントタイプを入力してください。"
+
+#. Description of the 'Outbound Host Allowlist' (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:95
+msgid "One hostname per line. Outbound webhooks to any other host are refused."
+msgstr "1行に1つのホスト名を入力してください。それ以外のホストへの送信Webhookは拒否されます。"
+
+#. Description of the 'Allowed Inbound Message Types' (Small Text) field in
+#. DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:150
+msgid ""
+"One per line. Empty = none accepted.\n"
+"dealer_order, dealer_order_change, asn, po_acknowledgement, production_event, inventory_adjustment, supplier_invoice, shipment_status, bank_statement"
+msgstr ""
+"1行に1つ入力してください。空欄の場合は何も受け付けません。\n"
+"dealer_order, dealer_order_change, asn, po_acknowledgement, production_event, inventory_adjustment, supplier_invoice, shipment_status, bank_statement"
+
+#. Description of the 'Category Values' (Small Text) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:102
+msgid "One per line; empty = any."
+msgstr "1行に1つ入力してください。空欄の場合はすべての値が対象です。"
+
+#. Label of the min_amount (Currency) field in DocType 'Approval Policy Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:43
+msgid "Only From Amount"
+msgstr "適用開始金額"
+
+#: automotive_core/finance_controls/period_close.py:167
+msgid "Only a failed check can be waived."
+msgstr "免除できるのは失敗したチェックのみです。"
+
+#: automotive_core/governance/approvals.py:191
+msgid "Only draft documents can be sent for approval."
+msgstr "承認を依頼できるのは下書きのドキュメントのみです。"
+
+#: automotive_core/integration_hub/outbox.py:211
+msgid "Only failed or dead-lettered messages can be retried."
+msgstr "再送できるのは、失敗またはデッドレターになったメッセージのみです。"
+
+#: automotive_core/integration_hub/inbound.py:297
+msgid "Only failed, rejected or dead-lettered messages can be replayed."
+msgstr "再処理できるのは、失敗、却下、またはデッドレターになったメッセージのみです。"
+
+#: automotive_core/governance/approvals.py:281
+msgid "Only pending requests can be withdrawn."
+msgstr "取り下げられるのは処理待ちの依頼のみです。"
+
+#: automotive_core/governance/cancellation.py:48
+msgid "Only submitted documents can be cancelled."
+msgstr "取り消せるのは提出済みのドキュメントのみです。"
+
+#: automotive_core/governance/delegation.py:132
+msgid "Only the delegator or an IT Operator can create this delegation."
+msgstr "この権限委任を作成できるのは、委任者またはIT運用担当者のみです。"
+
+#: automotive_core/governance/approvals.py:283
+msgid "Only the requester can withdraw an approval request."
+msgstr "承認依頼を取り下げられるのは依頼者のみです。"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Open"
+msgstr "オープン"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Operator"
+msgstr "作業者"
+
+#. Label of a Card Break in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:18
+msgid "Organisation"
+msgstr "組織"
+
+#. Label of a number card in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:82
+msgid "Outbound Dead Letters"
+msgstr "送信デッドレター"
+
+#. Label of the endpoint_url (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:126
+msgid "Outbound Endpoint URL"
+msgstr "送信先エンドポイントURL"
+
+#. Label of the subscribed_events (Small Text) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:159
+msgid "Outbound Events"
+msgstr "送信イベント"
+
+#. Label of the outbound_host_allowlist (Small Text) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:98
+msgid "Outbound Host Allowlist"
+msgstr "送信先ホスト許可リスト"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Integration Hub Workspace
+#: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:53
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:54
+msgid "Outbound Messages"
+msgstr "送信メッセージ"
+
+#. Label of the outbound_secret (Password) field in DocType 'Integration
+#. Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:138
+msgid "Outbound Signing Secret"
+msgstr "送信署名シークレット"
+
+#. Label of the outbound_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:201
+msgid "Outbound Staging"
+msgstr "出荷準備"
+
+#. Label of the outbox_base_backoff_seconds (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:120
+msgid "Outbox Base Backoff (Seconds)"
+msgstr "アウトボックスの基本バックオフ（秒）"
+
+#. Label of the outbox_max_attempts (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:114
+msgid "Outbox Max Attempts"
+msgstr "アウトボックスの最大試行回数"
+
+#. Label of the outcome (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:48
+msgid "Outcome"
+msgstr "結果"
+
+#. Label of the owner_role (Link) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:100
+msgid "Owner Role"
+msgstr "責任者ロール"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Paint Shop"
+msgstr "塗装工程"
+
+#. Label of the partner (Link) field in DocType 'Integration Inbound Message'
+#. Label of the partner (Link) field in DocType 'Integration Nonce'
+#. Label of the partner (Link) field in DocType 'Integration Outbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:49
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:27
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:47
+msgid "Partner"
+msgstr "パートナー"
+
+#. Label of the partner_code (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:41
+msgid "Partner Code"
+msgstr "パートナーコード"
+
+#. Label of the partner_name (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:50
+msgid "Partner Name"
+msgstr "パートナー名"
+
+#. Label of the partner_role (Select) field in DocType 'Partner User Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:76
+msgid "Partner Role"
+msgstr "パートナー役割"
+
+#. Label of the partner_type (Select) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:57
+msgid "Partner Type"
+msgstr "パートナータイプ"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:113
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:79
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:94
+msgid "Partner User Access"
+msgstr "パートナーユーザーアクセス"
+
+#: automotive_core/automotive_setup/access_sync.py:175
+#, python-brace-format
+msgid "Partner access is for portal (Website) users; {0} is a desk user."
+msgstr "パートナーアクセスはポータル（ウェブサイト）ユーザー専用です。{0}はデスクユーザーです。"
+
+#: automotive_core/access/master_data.py:50
+#, python-brace-format
+msgid "Partner code {0} is already used by {1}."
+msgstr "パートナーコード{0}はすでに{1}で使用されています。"
+
+#: automotive_core/integration_hub/inbound.py:175
+msgid "Partner has no inbound credentials configured."
+msgstr "パートナーに受信用の認証情報が設定されていません。"
+
+#: automotive_core/integration_hub/inbound.py:77
+#, python-brace-format
+msgid "Partner {0} may not send {1} messages."
+msgstr "パートナー{0}には{1}メッセージの送信が許可されていません。"
+
+#. Label of a Card Break in the Integration Hub Workspace
+#: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:18
+msgid "Partners"
+msgstr "パートナー"
+
+#. Label of the party (Dynamic Link) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:70
+msgid "Party"
+msgstr "取引先"
+
+#. Label of the party_type (Select) field in DocType 'Partner User Access'
+#. Label of the party_type (Select) field in DocType 'Integration Partner'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:46
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:64
+msgid "Party Type"
+msgstr "取引先タイプ"
+
+#. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+msgid "Passed"
+msgstr "合格"
+
+#. Label of the pattern_name (Data) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:30
+msgid "Pattern Name"
+msgstr "パターン名"
+
+#. Label of a Card Break in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:66
+msgid "Payables & Treasury"
+msgstr "買掛金・資金管理"
+
+#. Label of the payload (JSON) field in DocType 'Audit Event'
+#. Label of the section_break_2 (Section Break) field in DocType 'Integration
+#. Inbound Message'
+#. Label of the payload (Code) field in DocType 'Integration Inbound Message'
+#. Label of the section_break_1 (Section Break) field in DocType 'Integration
+#. Outbound Message'
+#. Label of the payload (Code) field in DocType 'Integration Outbound Message'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:106
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:165
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:140
+msgid "Payload"
+msgstr "ペイロード"
+
+#. Label of the payload_sha256 (Data) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the payload_sha256 (Data) field in DocType 'Integration Outbound
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:170
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:145
+msgid "Payload SHA-256"
+msgstr "ペイロードSHA-256"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:40
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:84
+msgid "Payment Entry"
+msgstr "入出金伝票"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Pending"
+msgstr "処理待ち"
+
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+msgid "Pending Approval"
+msgstr "承認待ち"
+
+#. Label of a number card in the Governance Workspace
+#: automotive_core/governance/workspace/governance/governance.json:116
+msgid "Pending Approvals"
+msgstr "承認待ち件数"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:47
+msgid "Pending approvals"
+msgstr "承認待ちの依頼"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:185
+msgid "Per-DocType Rules"
+msgstr "ドキュメントタイプ別ルール"
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Percent"
+msgstr "パーセント"
+
+#. Label of a Card Break in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:18
+msgid "Period Close"
+msgstr "締め処理"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:136
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:27
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:26
+msgid "Period Close Checklist"
+msgstr "締め処理チェックリスト"
+
+#. Name of a DocType
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:64
+msgid "Period Close Task"
+msgstr "締め処理タスク"
+
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:46
+msgid "Period Closing Voucher"
+msgstr "決算振替伝票"
+
+#. Label of the period_end (Date) field in DocType 'KPI Snapshot'
+#. Label of the period_end (Date) field in DocType 'Period Close Checklist'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:74
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:64
+msgid "Period End"
+msgstr "期間終了日"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:6
+msgid "Period From"
+msgstr "期間開始日"
+
+#. Label of the period_start (Date) field in DocType 'KPI Snapshot'
+#. Label of the period_start (Date) field in DocType 'Period Close Checklist'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:67
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:57
+msgid "Period Start"
+msgstr "期間開始日"
+
+#: automotive_core/finance_controls/period_close.py:117
+msgid "Period start must not be after period end."
+msgstr "期間開始日を期間終了日より後にすることはできません。"
+
+#. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
+msgid "Permanent Failure"
+msgstr "恒久的な失敗"
+
+#. Label of the role_profile (Link) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:93
+msgid "Persona (Role Profile)"
+msgstr "ペルソナ（ロールプロファイル）"
+
+#. Label of the planned_rate_per_hour (Float) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:95
+msgid "Planned Rate (Units / Hour)"
+msgstr "計画レート（台/時）"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Planner"
+msgstr "計画担当者"
+
+#. Label of the plant (Link) field in DocType 'KPI Snapshot'
+#. Name of a DocType
+#. Label of the plant (Link) field in DocType 'Plant Assignment'
+#. Label of the plant (Link) field in DocType 'Production Line'
+#. Label of the plant (Link) field in DocType 'Shift Pattern'
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:60
+#: automotive_core/automotive_setup/doctype/plant/plant.json:238
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:68
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:53
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:39
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:27
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:26
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+msgid "Plant"
+msgstr "工場"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:148
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:66
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:84
+msgid "Plant Assignment"
+msgstr "工場配属"
+
+#. Label of the plant_code (Data) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:49
+msgid "Plant Code"
+msgstr "工場コード"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:178
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:161
+#: automotive_core/automotive_setup/doctype/plant/plant.json:281
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:183
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:201
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:158
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:177
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:168
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:207
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:218
+#: automotive_core/governance/doctype/approval_request/approval_request.json:199
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:209
+msgid "Plant Director"
+msgstr "工場長"
+
+#. Label of the plant_floor (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:91
+msgid "Plant Floor"
+msgstr "工場フロア"
+
+#. Label of the plant_name (Data) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:58
+msgid "Plant Name"
+msgstr "工場名"
+
+#. Label of the plant_type (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:74
+msgid "Plant Type"
+msgstr "工場タイプ"
+
+#: automotive_core/access/plant_scope.py:117
+#, python-brace-format
+msgid "Plant {0} belongs to {1}, not {2}."
+msgstr "工場{0}は{2}ではなく{1}に属しています。"
+
+#. Label of the policy (Link) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:73
+msgid "Policy"
+msgstr "ポリシー"
+
+#. Label of the policy_name (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:38
+msgid "Policy Name"
+msgstr "ポリシー名"
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:40
+#, python-brace-format
+msgid "Policy {0} has approval history; deactivate it instead."
+msgstr "ポリシー{0}には承認履歴があります。削除せずに無効化してください。"
+
+#: automotive_core/governance/approvals.py:206
+#, python-brace-format
+msgid "Policy {0} has no step for an amount of {1}."
+msgstr "ポリシー{0}には金額{1}に該当するステップがありません。"
+
+#. Description of the 'Chain Index' (Int) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:115
+msgid "Position in the hash chain; 0 until sealed."
+msgstr "ハッシュチェーン内の位置です。封印されるまでは0です。"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Powertrain Assembly"
+msgstr "パワートレイン組立"
+
+#. Option for the 'Plant Type' (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+msgid "Powertrain Manufacturing"
+msgstr "パワートレイン製造"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Pre-Delivery Inspection"
+msgstr "納車前点検"
+
+#. Option for the 'Plant Type' (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+msgid "Preparation & Distribution"
+msgstr "納車準備・配送"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.js:10
+msgid "Presentation Currency"
+msgstr "表示通貨"
+
+#. Label of the previous_hash (Data) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:125
+msgid "Previous Hash"
+msgstr "直前のハッシュ"
+
+#. Label of the default_workstation (Link) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:136
+msgid "Primary Workstation"
+msgstr "主作業区"
+
+#. Label of the priority (Int) field in DocType 'Production Line Product'
+#. Label of the priority (Int) field in DocType 'Approval Policy'
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:32
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:72
+msgid "Priority"
+msgstr "優先度"
+
+#. Label of the private_only (Check) field in DocType 'Attachment Policy Rule'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:46
+msgid "Private Files Only"
+msgstr "非公開ファイルのみ"
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Processed"
+msgstr "処理済み"
+
+#. Label of the processed_at (Datetime) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:123
+msgid "Processed At"
+msgstr "処理日時"
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Processing"
+msgstr "処理中"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Procurement"
+msgstr "調達"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:218
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:201
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:148
+#: automotive_core/automotive_setup/doctype/plant/plant.json:321
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:257
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:222
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:182
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:172
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:216
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:222
+#: automotive_core/governance/doctype/approval_request/approval_request.json:204
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:228
+msgid "Procurement Manager"
+msgstr "調達マネージャー"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:253
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:231
+#: automotive_core/automotive_setup/doctype/plant/plant.json:356
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:292
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:257
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:216
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:315
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:266
+#: automotive_core/governance/doctype/approval_request/approval_request.json:259
+msgid "Product Engineer"
+msgstr "製品エンジニア"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+msgid "Production"
+msgstr "生産"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:118
+msgid "Production Attainment"
+msgstr "生産達成率"
+
+#. Label of the production_line (Link) field in DocType 'Plant Assignment'
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:87
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:167
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:40
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:36
+msgid "Production Line"
+msgstr "生産ライン"
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/production_line_product/production_line_product.json:40
+msgid "Production Line Product"
+msgstr "生産ライン製品"
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:64
+msgid "Production Line Station"
+msgstr "生産ラインステーション"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:183
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:166
+#: automotive_core/automotive_setup/doctype/plant/plant.json:286
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:222
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:166
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:200
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:279
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:250
+#: automotive_core/governance/doctype/approval_request/approval_request.json:239
+msgid "Production Planner"
+msgstr "生産計画担当者"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:188
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:171
+#: automotive_core/automotive_setup/doctype/plant/plant.json:291
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:227
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:192
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:196
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:270
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:246
+#: automotive_core/governance/doctype/approval_request/approval_request.json:234
+msgid "Production Supervisor"
+msgstr "生産監督者"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:100
+#: automotive_core/analytics/workspace/management/management.json:74
+msgid "Production Variance"
+msgstr "生産差異"
+
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:17
+#, python-brace-format
+msgid "Production line {0} is not in plant {1}."
+msgstr "生産ライン{0}は工場{1}に属していません。"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:142
+msgid "Products"
+msgstr "製品"
+
+#. Label of the products (Table) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:147
+msgid "Products Built On This Line"
+msgstr "このラインで生産する製品"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:53
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:74
+msgid "Purchase Invoice"
+msgstr "仕入請求書"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:112
+#: automotive_core/analytics/workspace/management/management.json:94
+msgid "Purchase Price Variance"
+msgstr "購入価格差異"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:154
+msgid "Purchase-to-Pay Cycle"
+msgstr "発注から支払までのサイクル"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Quality"
+msgstr "品質"
+
+#. Label of the is_quality_gate (Check) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:50
+msgid "Quality Gate"
+msgstr "品質ゲート"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:203
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:186
+#: automotive_core/automotive_setup/doctype/plant/plant.json:306
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:242
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:207
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:220
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:324
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:270
+#: automotive_core/governance/doctype/approval_request/approval_request.json:264
+msgid "Quality Inspector"
+msgstr "品質検査員"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:208
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:191
+#: automotive_core/automotive_setup/doctype/plant/plant.json:311
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:247
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:212
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:180
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:234
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:230
+#: automotive_core/governance/doctype/approval_request/approval_request.json:214
+msgid "Quality Manager"
+msgstr "品質マネージャー"
+
+#. Label of the quarantine_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:185
+msgid "Quarantine"
+msgstr "隔離"
+
+#: automotive_core/integration_hub/inbound.py:197
+#, python-brace-format
+msgid "Rate limit exceeded for partner {0}."
+msgstr "パートナー{0}のレート制限を超過しました。"
+
+#. Option for the 'Unit' (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:58
+msgid "Ratio"
+msgstr "比率"
+
+#. Label of the rationale (Small Text) field in DocType 'Segregation of Duties
+#. Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:58
+msgid "Rationale"
+msgstr "根拠"
+
+#. Label of the raw_material_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:167
+msgid "Raw Material Store"
+msgstr "原材料倉庫"
+
+#. Option for the 'Request Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:48
+msgid "Reactivate"
+msgstr "再有効化"
+
+#: automotive_core/governance/provisioning.py:108
+#, python-brace-format
+msgid "Reactivated {0}."
+msgstr "{0}を再有効化しました。"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Ready For Approval"
+msgstr "承認準備完了"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Approval
+#. Delegation'
+#. Label of the reason (Small Text) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:126
+#: automotive_core/public/js/automotive_core.bundle.js:169
+msgid "Reason"
+msgstr "理由"
+
+#: automotive_core/public/js/automotive_core.bundle.js:116
+msgid "Reason for cancellation"
+msgstr "取消理由"
+
+#. Label of a Card Break in the Finance Controls Workspace
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:104
+msgid "Receivables"
+msgstr "売掛金"
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Received"
+msgstr "受信済み"
+
+#. Label of the received_at (Datetime) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:111
+msgid "Received At"
+msgstr "受信日時"
+
+#. Label of the receiving_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:155
+msgid "Receiving Dock"
+msgstr "荷受場"
+
+#. Label of the inspection_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:161
+msgid "Receiving Inspection"
+msgstr "受入検査"
+
+#. Label of the reconciliation_status (Select) field in DocType 'KPI Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:116
+msgid "Reconciliation"
+msgstr "照合"
+
+#. Label of the reconciliation_check (Small Text) field in DocType 'KPI
+#. Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:135
+msgid "Reconciliation Check"
+msgstr "照合チェック"
+
+#. Label of the reconciliation_method (Data) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:94
+msgid "Reconciliation Method"
+msgstr "照合メソッド"
+
+#. Label of the reconciliation_note (Small Text) field in DocType 'KPI
+#. Snapshot'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:123
+msgid "Reconciliation Note"
+msgstr "照合メモ"
+
+#: automotive_core/public/js/automotive_core.bundle.js:118
+msgid "Recorded in the audit trail. At least 10 characters."
+msgstr "監査証跡に記録されます。10文字以上で入力してください。"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:11
+msgid "Refresh"
+msgstr "更新"
+
+#. Label of the refresh_policy (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:80
+msgid "Refresh Policy"
+msgstr "更新ポリシー"
+
+#. Option for the 'Decision' (Select) field in DocType 'Approval Decision'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:75
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:35
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:77
+#: automotive_core/public/js/automotive_core.bundle.js:57
+#: automotive_core/public/js/automotive_core.bundle.js:105
+msgid "Reject"
+msgstr "却下する"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:34
+#: automotive_core/public/js/automotive_core.bundle.js:104
+#, python-brace-format
+msgid "Reject {0}"
+msgstr "{0}を却下する"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#. Option for the 'Status' (Select) field in DocType 'User Provisioning
+#. Request'
+#. Option for the 'Status' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
+msgid "Rejected"
+msgstr "却下済み"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:142
+msgid "Rejected Material"
+msgstr "受入不合格率"
+
+#. Label of the remarks (Small Text) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:149
+msgid "Remarks"
+msgstr "備考"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Checklist'
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:80
+msgid "Reopened"
+msgstr "再オープン"
+
+#. Option for the 'Source' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:84
+#: automotive_core/public/js/automotive_core.bundle.js:186
+msgid "Replay"
+msgstr "再処理"
+
+#: automotive_core/integration_hub/inbound.py:209
+msgid "Replayed request (nonce already used)."
+msgstr "リプレイされたリクエストです（ノンスは使用済みです）。"
+
+#. Label of a Sidebar Item
+#. Label of a Card Break in the Management Workspace
+#. Label of a Card Break in the Finance Controls Workspace
+#. Label of a Card Break in the Governance Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:53
+#: automotive_core/analytics/workspace/management/management.json:46
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:92
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:132
+#: automotive_core/governance/sidebar/governance/governance.json:127
+#: automotive_core/governance/workspace/governance/governance.json:94
+msgid "Reports"
+msgstr "レポート"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:115
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:49
+msgid "Request"
+msgstr "依頼"
+
+#: automotive_core/public/js/automotive_core.bundle.js:30
+#: automotive_core/public/js/automotive_core.bundle.js:47
+msgid "Request Approval"
+msgstr "承認を依頼"
+
+#. Label of the request_sha256 (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:72
+msgid "Request SHA-256"
+msgstr "リクエストSHA-256"
+
+#. Label of the request_type (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:47
+msgid "Request Type"
+msgstr "依頼タイプ"
+
+#. Label of the requested_at (Datetime) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:127
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:52
+msgid "Requested At"
+msgstr "依頼日時"
+
+#. Label of the requested_by (Link) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:120
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:51
+msgid "Requested By"
+msgstr "依頼者"
+
+#. Label of the require_cancel_reason (Check) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:54
+msgid "Require Reason To Cancel Governed Documents"
+msgstr "統制対象ドキュメントの取消時に理由を必須にする"
+
+#. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:158
+msgid "Required"
+msgstr "必須"
+
+#. Description of the 'Virus Scan Mode' (Select) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:154
+msgid "Required: unscanned or infected files cannot be downloaded."
+msgstr "必須: スキャンされていないファイルや感染したファイルはダウンロードできません。"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Idempotency
+#. Record'
+#. Label of the response (Code) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:91
+msgid "Response"
+msgstr "応答"
+
+#. Label of the response_code (Int) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:41
+msgid "Response Code"
+msgstr "応答コード"
+
+#. Label of the allow (Select) field in DocType 'User Provisioning Scope'
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:17
+msgid "Restrict To"
+msgstr "制限対象"
+
+#. Label of the result (Small Text) field in DocType 'Period Close Task'
+#. Label of the result (Small Text) field in DocType 'User Provisioning
+#. Request'
+#. Label of the section_break_1 (Section Break) field in DocType 'Integration
+#. Inbound Message'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:43
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:156
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:136
+msgid "Result"
+msgstr "結果"
+
+#. Label of the result_doctype (Link) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:141
+msgid "Result DocType"
+msgstr "結果ドキュメントタイプ"
+
+#. Label of the result_name (Dynamic Link) field in DocType 'Integration
+#. Inbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:148
+msgid "Result Document"
+msgstr "結果ドキュメント"
+
+#. Label of the retention_days (Int) field in DocType 'Attachment Policy Rule'
+#: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:39
+msgid "Retention (Days)"
+msgstr "保存期間（日）"
+
+#: automotive_core/public/js/automotive_core.bundle.js:198
+msgid "Retry Delivery"
+msgstr "配信を再送"
+
+#. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
+#. Attempt'
+#: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
+msgid "Retryable Failure"
+msgstr "再送可能な失敗"
+
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+msgid "Revoked"
+msgstr "失効"
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Rework"
+msgstr "手直し"
+
+#. Label of the role (Link) field in DocType 'User Provisioning Role'
+#: automotive_core/governance/doctype/user_provisioning_role/user_provisioning_role.json:15
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:18
+msgid "Role"
+msgstr "ロール"
+
+#. Label of the role_a (Link) field in DocType 'Segregation of Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:29
+msgid "Role A"
+msgstr "ロールA"
+
+#. Label of the role_b (Link) field in DocType 'Segregation of Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:37
+msgid "Role B"
+msgstr "ロールB"
+
+#. Label of the approver_role (Link) field in DocType 'Approval Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:61
+msgid "Role Delegated"
+msgstr "委任するロール"
+
+#. Label of the assignment_role (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:99
+msgid "Role In Plant"
+msgstr "工場での役割"
+
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:114
+msgid "Role Profile"
+msgstr "ロールプロファイル"
+
+#: automotive_core/governance/provisioning.py:54
+#, python-brace-format
+msgid "Row {0}: {1} {2} does not exist."
+msgstr "行{0}: {1} {2}は存在しません。"
+
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:16
+msgid "Rule"
+msgstr "ルール"
+
+#. Label of the rule_name (Data) field in DocType 'Segregation of Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:21
+msgid "Rule Name"
+msgstr "ルール名"
+
+#: automotive_core/public/js/automotive_core.bundle.js:159
+msgid "Run Checks"
+msgstr "チェックを実行"
+
+#: automotive_core/finance_controls/period_close.py:179
+msgid "Run the checks and resolve or waive every failure before closing the period."
+msgstr "期間を締める前にチェックを実行し、すべての失敗を解消するか免除してください。"
+
+#. Option for the 'Domain' (Select) field in DocType 'KPI Definition'
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:51
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+msgid "Sales"
+msgstr "販売"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:66
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:112
+msgid "Sales Invoice"
+msgstr "請求書"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:233
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:216
+#: automotive_core/automotive_setup/doctype/plant/plant.json:336
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:272
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:237
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:187
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:184
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:243
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:234
+#: automotive_core/governance/doctype/approval_request/approval_request.json:219
+msgid "Sales Manager"
+msgstr "販売マネージャー"
+
+#. Label of the saturday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:92
+msgid "Saturday"
+msgstr "土曜日"
+
+#. Option for the 'Status' (Select) field in DocType 'Partner User Access'
+#. Option for the 'Status' (Select) field in DocType 'Plant Assignment'
+#. Option for the 'Status' (Select) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
+msgid "Scheduled"
+msgstr "開始前"
+
+#. Label of the schema_version (Data) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:77
+msgid "Schema Version"
+msgstr "スキーマバージョン"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Approval
+#. Delegation'
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:97
+msgid "Scope"
+msgstr "範囲"
+
+#. Label of the scope_key (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:27
+msgid "Scope Key"
+msgstr "スコープキー"
+
+#. Label of the scopes (Table) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:138
+msgid "Scope Restrictions"
+msgstr "範囲の制限"
+
+#. Label of the scrap_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:213
+msgid "Scrap"
+msgstr "廃棄"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:112
+msgid "Seal"
+msgstr "封印"
+
+#. Label of the audit_chain_enabled (Check) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:60
+msgid "Seal Audit Events In A Hash Chain"
+msgstr "監査イベントをハッシュチェーンで封印"
+
+#. Label of the sealed_at (Datetime) field in DocType 'Audit Event'
+#: automotive_core/governance/doctype/audit_event/audit_event.json:137
+msgid "Sealed At"
+msgstr "封印日時"
+
+#. Label of the seen_at (Datetime) field in DocType 'Integration Nonce'
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:35
+msgid "Seen At"
+msgstr "検出日時"
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:5
+msgid "Seen request nonces for inbound signature replay protection (pruned after the tolerance window)."
+msgstr "受信署名のリプレイ攻撃を防ぐために記録した、受信済みリクエストのノンスです（許容時間を過ぎると削除されます）。"
+
+#. Name of a report
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.json:19
+#: automotive_core/governance/sidebar/governance/governance.json:138
+#: automotive_core/governance/workspace/governance/governance.json:102
+msgid "Segregation of Duties Review"
+msgstr "職務分掌レビュー"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:67
+#: automotive_core/governance/sidebar/governance/governance.json:102
+#: automotive_core/governance/workspace/governance/governance.json:74
+msgid "Segregation of Duties Rule"
+msgstr "職務分掌ルール"
+
+#: automotive_core/governance/sod.py:40
+#, python-brace-format
+msgid "Segregation of duties warning ({0}): {1} and {2}. {3}"
+msgstr "職務分掌の警告（{0}）: {1}と{2}の兼務です。{3}"
+
+#: automotive_core/governance/delegation.py:127
+#, python-brace-format
+msgid "Segregation of duties warning ({0}): {1} would hold {2} and {3}."
+msgstr "職務分掌の警告（{0}）: {1}が{2}と{3}を兼務することになります。"
+
+#: automotive_core/governance/sod.py:34
+#, python-brace-format
+msgid "Segregation of duties: {0} cannot hold both {1}."
+msgstr "職務分掌: {0}は{1}を兼務できません。"
+
+#: automotive_core/governance/delegation.py:124
+#, python-brace-format
+msgid "Segregation of duties: {0} may not act as {1} ({2})."
+msgstr "職務分掌: {0}は{1}の役割を担うことができません（{2}）。"
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:28
+msgid "Select at least one working day."
+msgstr "稼働日を1日以上選択してください。"
+
+#: automotive_core/analytics/kpi.py:49
+msgid "Select one of your plants."
+msgstr "アクセス権のある工場を1つ選択してください。"
+
+#: automotive_core/governance/provisioning.py:41
+msgid "Select the existing user."
+msgstr "既存のユーザーを選択してください。"
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:21
+#, python-brace-format
+msgid "Select the {0} this partner represents."
+msgstr "このパートナーに対応する{0}を選択してください。"
+
+#: automotive_core/automotive_setup/access_sync.py:178
+#, python-brace-format
+msgid "Select the {0}."
+msgstr "{0}を選択してください。"
+
+#. Option for the 'Status' (Select) field in DocType 'Integration Outbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
+msgid "Sending"
+msgstr "送信中"
+
+#. Description of the 'Key ID' (Data) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:130
+msgid "Sent as kid= in the signature header; identifies the secret."
+msgstr "署名ヘッダーで kid= として送信され、シークレットを識別します。"
+
+#. Label of the sequence (Int) field in DocType 'Production Line Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:27
+msgid "Sequence"
+msgstr "順序"
+
+#. Label of the naming_series (Select) field in DocType 'KPI Snapshot'
+#. Label of the naming_series (Select) field in DocType 'Partner User Access'
+#. Label of the naming_series (Select) field in DocType 'Plant Assignment'
+#. Label of the naming_series (Select) field in DocType 'Period Close
+#. Checklist'
+#. Label of the naming_series (Select) field in DocType 'Approval Decision'
+#. Label of the naming_series (Select) field in DocType 'Approval Delegation'
+#. Label of the naming_series (Select) field in DocType 'Approval Request'
+#. Label of the naming_series (Select) field in DocType 'User Provisioning
+#. Request'
+#. Label of the naming_series (Select) field in DocType 'Integration Inbound
+#. Message'
+#. Label of the naming_series (Select) field in DocType 'Integration Outbound
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:30
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:27
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:33
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:30
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:31
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:32
+#: automotive_core/governance/doctype/approval_request/approval_request.json:35
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:36
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:37
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:35
+msgid "Series"
+msgstr "採番シリーズ"
+
+#. Label of the service_user (Link) field in DocType 'Integration Partner'
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:114
+msgid "Service User"
+msgstr "サービスユーザー"
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:23
+#, python-brace-format
+msgid "Service user {0} is disabled."
+msgstr "サービスユーザー{0}は無効になっています。"
+
+#. Label of a Card Break in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:124
+msgid "Settings"
+msgstr "設定"
+
+#. Label of a Sidebar Item
+#: automotive_core/governance/sidebar/governance/governance.json:79
+msgid "Setup"
+msgstr "セットアップ"
+
+#. Label of the shift_code (Data) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:20
+msgid "Shift Code"
+msgstr "シフトコード"
+
+#. Label of the shift_pattern (Link) field in DocType 'Production Line'
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Automotive Setup Workspace
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:80
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:123
+#: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:53
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:46
+msgid "Shift Pattern"
+msgstr "シフトパターン"
+
+#. Name of a DocType
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:64
+msgid "Shift Pattern Slot"
+msgstr "シフトパターン枠"
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:33
+#, python-brace-format
+msgid "Shift code {0} appears twice."
+msgstr "シフトコード{0}が重複しています。"
+
+#. Description of the 'Max Units Per Working Day' (Int) field in DocType
+#. 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:99
+msgid "Shift pattern available minutes x 60 / takt."
+msgstr "シフトパターンの稼働可能時間（分）× 60 / タクトタイムで算出されます。"
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:37
+#, python-brace-format
+msgid "Shift {0}: break is longer than the shift."
+msgstr "シフト{0}: 休憩時間がシフトより長くなっています。"
+
+#. Label of the section_break_1 (Section Break) field in DocType 'Shift
+#. Pattern'
+#. Label of the shifts (Table) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:102
+msgid "Shifts"
+msgstr "シフト"
+
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.py:42
+msgid "Shifts add up to more than 24 hours per day."
+msgstr "シフトの合計が1日あたり24時間を超えています。"
+
+#. Description of the 'Plant Code' (Data) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:45
+msgid "Short immutable code, e.g. AICHI-VA."
+msgstr "変更できない短いコードです（例: AICHI-VA）。"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:130
+msgid "Shortage Risk"
+msgstr "欠品リスク"
+
+#. Label of the webhook_tolerance_seconds (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:104
+msgid "Signature Timestamp Tolerance (Seconds)"
+msgstr "署名タイムスタンプの許容誤差（秒）"
+
+#: automotive_core/integration_hub/inbound.py:181
+#, python-brace-format
+msgid "Signature rejected: {0}"
+msgstr "署名が拒否されました: {0}"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+msgid "Skipped"
+msgstr "スキップ"
+
+#. Label of the source (Select) field in DocType 'Integration Inbound Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:83
+msgid "Source"
+msgstr "ソース"
+
+#. Label of the source_doctypes (Small Text) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:123
+msgid "Source DocTypes"
+msgstr "ソースドキュメントタイプ"
+
+#. Label of the approver_user (Link) field in DocType 'Approval Policy Step'
+#. Label of the approver_user (Link) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:48
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:44
+msgid "Specific Approver"
+msgstr "指定承認者"
+
+#: automotive_core/governance/provisioning.py:43
+msgid "Standard users cannot be provisioned."
+msgstr "標準ユーザーはプロビジョニングできません。"
+
+#. Label of the start_time (Time) field in DocType 'Shift Pattern Slot'
+#: automotive_core/automotive_setup/doctype/shift_pattern_slot/shift_pattern_slot.json:27
+msgid "Start"
+msgstr "開始"
+
+#. Label of the station_code (Data) field in DocType 'Production Line Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:20
+msgid "Station Code"
+msgstr "ステーションコード"
+
+#. Label of the station_type (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:43
+msgid "Station Type"
+msgstr "ステーションタイプ"
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:27
+#, python-brace-format
+msgid "Station {0} appears twice."
+msgstr "ステーション{0}が重複しています。"
+
+#. Label of the section_break_3 (Section Break) field in DocType 'Production
+#. Line'
+#. Label of the stations (Table) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:153
+msgid "Stations"
+msgstr "ステーション"
+
+#. Label of the status (Select) field in DocType 'Partner User Access'
+#. Label of the status (Select) field in DocType 'Plant Assignment'
+#. Label of the status (Select) field in DocType 'Period Close Checklist'
+#. Label of the status (Select) field in DocType 'Period Close Task'
+#. Label of the status (Select) field in DocType 'Approval Delegation'
+#. Label of the status (Select) field in DocType 'Approval Request'
+#. Label of the status (Select) field in DocType 'Approval Request Step'
+#. Label of the status (Select) field in DocType 'User Provisioning Request'
+#. Label of the status (Select) field in DocType 'Idempotency Record'
+#. Label of the status (Select) field in DocType 'Integration Inbound Message'
+#. Label of the status (Select) field in DocType 'Integration Outbound Message'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:96
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:121
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:78
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:36
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:89
+#: automotive_core/governance/doctype/approval_request/approval_request.json:87
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:53
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:114
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:65
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:97
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:101
+msgid "Status"
+msgstr "ステータス"
+
+#. Label of the step_no (Int) field in DocType 'Approval Decision'
+#. Label of the step_no (Int) field in DocType 'Approval Policy Step'
+#. Label of the step_no (Int) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:67
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:20
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:23
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:51
+msgid "Step"
+msgstr "ステップ"
+
+#. Label of the step_name (Data) field in DocType 'Approval Policy Step'
+#. Label of the step_name (Data) field in DocType 'Approval Request Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:27
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:30
+msgid "Step Name"
+msgstr "ステップ名"
+
+#. Description of the 'Only From Amount' (Currency) field in DocType 'Approval
+#. Policy Step'
+#: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:39
+msgid "Step is skipped below this amount."
+msgstr "この金額未満の場合、このステップはスキップされます。"
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:30
+msgid "Step numbers must be unique."
+msgstr "ステップ番号は重複しないようにしてください。"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Approval
+#. Policy'
+#. Label of the steps (Table) field in DocType 'Approval Policy'
+#. Request'
+#. Label of the steps (Table) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:149
+#: automotive_core/governance/doctype/approval_request/approval_request.json:155
+msgid "Steps"
+msgstr "ステップ"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:134
+msgid "Stock Accuracy"
+msgstr "在庫精度"
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:5
+msgid "Stored result of a state-changing API call, replayed for retries with the same key."
+msgstr "状態を変更するAPI呼び出しの結果を保存したものです。同じキーでの再試行にはこの結果を返します。"
+
+#. Option for the 'Line Type' (Select) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:70
+msgid "Sub-Assembly"
+msgstr "サブアセンブリ"
+
+#. Label of the sunday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:97
+msgid "Sunday"
+msgstr "日曜日"
+
+#: automotive_core/governance/approvals.py:201
+msgid "Superseded by a new request after the document changed."
+msgstr "ドキュメントの変更後に、新しい依頼に置き換えられました。"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+msgid "Supervisor"
+msgstr "監督者"
+
+#. Option for the 'Party Type' (Select) field in DocType 'Partner User Access'
+#. Label of the supplier (Link) field in DocType 'Partner User Access'
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#. Option for the 'Partner Type' (Select) field in DocType 'Integration
+#. Partner'
+#. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
+#: automotive_core/access/master_data.py:70
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:55
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:58
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:65
+msgid "Supplier"
+msgstr "仕入先"
+
+#. Label of the consignment_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:219
+msgid "Supplier Consignment"
+msgstr "仕入先預託在庫"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:138
+msgid "Supplier On-Time Delivery"
+msgstr "仕入先納期遵守率"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Management Workspace
+#: automotive_core/analytics/sidebar/analytics/analytics.json:88
+#: automotive_core/analytics/workspace/management/management.json:84
+msgid "Supplier Performance"
+msgstr "仕入先評価"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:154
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:140
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:206
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:126
+#: automotive_core/automotive_setup/doctype/plant/plant.json:251
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:161
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:180
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:136
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:148
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:150
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:163
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:184
+#: automotive_core/governance/doctype/approval_request/approval_request.json:178
+#: automotive_core/governance/doctype/audit_event/audit_event.json:154
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:77
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:189
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:114
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:194
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:50
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:181
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:209
+msgid "System Manager"
+msgstr "システム管理者"
+
+#. Option for the 'User Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:88
+msgid "System User"
+msgstr "システムユーザー"
+
+#. Label of the takt_time_seconds (Float) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:87
+msgid "Takt Time (Seconds)"
+msgstr "タクトタイム（秒）"
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:14
+msgid "Takt time must be greater than zero."
+msgstr "タクトタイムは0より大きい値にしてください。"
+
+#. Label of the target_value (Float) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:71
+msgid "Target"
+msgstr "目標"
+
+#. Option for the 'Station Type' (Select) field in DocType 'Production Line
+#. Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:44
+msgid "Test"
+msgstr "テスト"
+
+#: automotive_core/governance/approvals.py:366
+msgid "The document changed after approval was requested."
+msgstr "承認依頼後にドキュメントが変更されました。"
+
+#: automotive_core/governance/approvals.py:367
+msgid "The document changed; a new approval request is needed."
+msgstr "ドキュメントが変更されました。新しい承認依頼が必要です。"
+
+#: automotive_core/files/policy.py:90
+#, python-brace-format
+msgid "The file content does not match its .{0} extension."
+msgstr "ファイルの内容が拡張子 .{0} と一致しません。"
+
+#: automotive_core/governance/approvals.py:335
+#, python-brace-format
+msgid "The maker of {0} cannot approve it (maker/checker)."
+msgstr "{0}の作成者は承認できません（作成者と承認者の分離）。"
+
+#: automotive_core/finance_controls/period_close.py:120
+#, python-brace-format
+msgid "The period must lie within fiscal year {0}."
+msgstr "期間は会計年度{0}の範囲内にしてください。"
+
+#: automotive_core/finance_controls/bank_accounts.py:60
+msgid "The person who entered or changed the account cannot verify it."
+msgstr "口座を登録または変更した人は、その口座を確認できません。"
+
+#: automotive_core/governance/provisioning.py:49
+#, python-brace-format
+msgid "The requested roles violate segregation of duties: {0}"
+msgstr "依頼されたロールは職務分掌に違反しています: {0}"
+
+#: automotive_core/integration_hub/idempotency.py:100
+msgid "This Idempotency-Key was already used for a different request."
+msgstr "この Idempotency-Key はすでに別のリクエストで使用されています。"
+
+#. Label of the thursday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:81
+msgid "Thursday"
+msgstr "木曜日"
+
+#. Label of the time_zone (Data) field in DocType 'Plant'
+#. Label of the time_zone (Data) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:104
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:46
+msgid "Time Zone"
+msgstr "タイムゾーン"
+
+#. Description of a DocType
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:5
+msgid "Time-bounded delegation of approval authority. Submit to activate, cancel to revoke."
+msgstr "期間を限定した承認権限の委任です。提出すると有効になり、取り消すと失効します。"
+
+#. Label of the to_date (Date) field in DocType 'Partner User Access'
+#. Label of the to_date (Date) field in DocType 'Plant Assignment'
+#. Label of the to_date (Date) field in DocType 'Approval Delegation'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:89
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:114
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:80
+msgid "To Date"
+msgstr "終了日"
+
+#: automotive_core/automotive_setup/access_sync.py:189
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:15
+#: automotive_core/governance/delegation.py:109
+msgid "To Date must be on or after From Date."
+msgstr "終了日は開始日以降の日付にしてください。"
+
+#. Description of a DocType
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:5
+msgid "Transactional outbox: written with the business change, delivered by the dispatcher with retries."
+msgstr "トランザクショナルアウトボックスです。業務データの変更と同じトランザクションで書き込まれ、ディスパッチャーが再送しながら配信します。"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:228
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:211
+#: automotive_core/automotive_setup/doctype/plant/plant.json:331
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:267
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:232
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:176
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:225
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:226
+#: automotive_core/governance/doctype/approval_request/approval_request.json:209
+msgid "Treasury Approver"
+msgstr "財務承認者"
+
+#. Label of a Sidebar Item
+#. Label of a Link in the Finance Controls Workspace
+#: automotive_core/finance_controls/sidebar/finance_controls/finance_controls.json:115
+#: automotive_core/finance_controls/workspace/finance_controls/finance_controls.json:150
+msgid "Trial Balance"
+msgstr "試算表"
+
+#. Label of the tuesday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:69
+msgid "Tuesday"
+msgstr "火曜日"
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:29
+#, python-brace-format
+msgid "Two stations share sequence {0}."
+msgstr "2つのステーションが同じ順序{0}を使用しています。"
+
+#. Label of the unit (Select) field in DocType 'KPI Definition'
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:57
+msgid "Unit"
+msgstr "単位"
+
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:19
+#, python-brace-format
+msgid "Unknown inbound message types: {0}"
+msgstr "不明な受信メッセージタイプです: {0}"
+
+#: automotive_core/integration_hub/inbound.py:170
+msgid "Unknown partner."
+msgstr "不明なパートナーです。"
+
+#: automotive_core/finance_controls/bank_accounts.py:86
+msgid "Unverified"
+msgstr "未確認"
+
+#: automotive_core/governance/provisioning.py:102
+#, python-brace-format
+msgid "Updated {0}: {1} role(s)."
+msgstr "{0}を更新しました（ロール{1}件）。"
+
+#. Label of the user (Link) field in DocType 'Partner User Access'
+#. Label of the user (Link) field in DocType 'Plant Assignment'
+#. Label of a Link in the Automotive Setup Workspace
+#. Label of the user (Link) field in DocType 'Idempotency Record'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:38
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:59
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:104
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:14
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:53
+msgid "User"
+msgstr "ユーザー"
+
+#. Name of a DocType
+#. Label of a Sidebar Item
+#. Label of a Link in the Governance Workspace
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:177
+#: automotive_core/governance/sidebar/governance/governance.json:114
+#: automotive_core/governance/workspace/governance/governance.json:84
+msgid "User Provisioning Request"
+msgstr "ユーザープロビジョニング依頼"
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/user_provisioning_role/user_provisioning_role.json:25
+msgid "User Provisioning Role"
+msgstr "ユーザープロビジョニングロール"
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:41
+msgid "User Provisioning Scope"
+msgstr "ユーザープロビジョニング範囲"
+
+#. Label of the user_type (Select) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:87
+msgid "User Type"
+msgstr "ユーザータイプ"
+
+#: automotive_core/governance/provisioning.py:36
+#, python-brace-format
+msgid "User {0} already exists; use a Modify request."
+msgstr "ユーザー{0}はすでに存在します。「変更」の依頼を使用してください。"
+
+#. Label of the value (Float) field in DocType 'KPI Snapshot'
+#. Label of the for_value (Dynamic Link) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:85
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:25
+msgid "Value"
+msgstr "値"
+
+#. Option for the 'Plant Type' (Select) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+msgid "Vehicle Assembly"
+msgstr "車両組立"
+
+#. Option for the 'Partner Role' (Select) field in DocType 'Partner User
+#. Access'
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:77
+msgid "Viewer"
+msgstr "閲覧者"
+
+#. Label of the virus_scan_mode (Select) field in DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:157
+msgid "Virus Scan Mode"
+msgstr "ウイルススキャンモード"
+
+#. Label of a number card in the Management Workspace
+#: automotive_core/analytics/workspace/management/management.json:146
+msgid "WIP Value"
+msgstr "WIP金額"
+
+#. Label of the wip_warehouse (Link) field in DocType 'Production Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:125
+msgid "WIP Warehouse"
+msgstr "WIP倉庫"
+
+#: automotive_core/public/js/automotive_core.bundle.js:173
+msgid "Waive"
+msgstr "免除"
+
+#: automotive_core/public/js/automotive_core.bundle.js:164
+msgid "Waive a Check"
+msgstr "チェックを免除"
+
+#: automotive_core/public/js/automotive_core.bundle.js:172
+msgid "Waive a failed check"
+msgstr "失敗したチェックを免除"
+
+#. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+msgid "Waived"
+msgstr "免除済み"
+
+#. Label of the waived_by (Link) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:54
+msgid "Waived By"
+msgstr "免除者"
+
+#. Label of the waiver_reason (Small Text) field in DocType 'Period Close Task'
+#: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:49
+msgid "Waiver Reason"
+msgstr "免除理由"
+
+#. Option for the 'Role In Plant' (Select) field in DocType 'Plant Assignment'
+#. Label of a Link in the Automotive Setup Workspace
+#. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
+#. Scope'
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:100
+#: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:66
+#: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
+msgid "Warehouse"
+msgstr "倉庫"
+
+#. Name of a role
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:198
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:181
+#: automotive_core/automotive_setup/doctype/plant/plant.json:301
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:237
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:202
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:224
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:333
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:274
+#: automotive_core/governance/doctype/approval_request/approval_request.json:269
+msgid "Warehouse Clerk"
+msgstr "倉庫担当者"
+
+#. Label of the section_break_2 (Section Break) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:150
+msgid "Warehouses"
+msgstr "倉庫"
+
+#. Option for the 'Enforcement' (Select) field in DocType 'Segregation of
+#. Duties Rule'
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:47
+msgid "Warn"
+msgstr "警告"
+
+#. Option for the 'User Type' (Select) field in DocType 'User Provisioning
+#. Request'
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:88
+msgid "Website User"
+msgstr "ウェブサイトユーザー"
+
+#. Label of the wednesday (Check) field in DocType 'Shift Pattern'
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:75
+msgid "Wednesday"
+msgstr "水曜日"
+
+#. Description of the 'Priority' (Int) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:69
+msgid "When several policies match, the highest priority wins."
+msgstr "複数のポリシーが該当する場合は、優先度が最も高いものが適用されます。"
+
+#: automotive_core/public/js/automotive_core.bundle.js:61
+msgid "Withdraw Request"
+msgstr "依頼を取り下げ"
+
+#. Option for the 'Status' (Select) field in DocType 'Approval Request'
+#: automotive_core/governance/doctype/approval_request/approval_request.json:88
+msgid "Withdrawn"
+msgstr "取り下げ済み"
+
+#. Label of the wip_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:179
+msgid "Work In Progress"
+msgstr "仕掛品"
+
+#. Label of the workstation (Link) field in DocType 'Production Line Station'
+#: automotive_core/automotive_setup/doctype/production_line_station/production_line_station.json:34
+msgid "Workstation"
+msgstr "作業区"
+
+#. Description of the 'Primary Workstation' (Link) field in DocType 'Production
+#. Line'
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:133
+msgid "Workstation used for line-level capacity and Downtime Entries."
+msgstr "ライン単位の能力計算とダウンタイム記録に使用する作業区です。"
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:34
+#, python-brace-format
+msgid "Workstation {0} belongs to plant {1}."
+msgstr "作業区{0}は工場{1}に属しています。"
+
+#: automotive_core/governance/approvals.py:326
+#, python-brace-format
+msgid "You are not authorised to approve step {0} ({1}) of {2}."
+msgstr "{2}のステップ{0}（{1}）を承認する権限がありません。"
+
+#: automotive_core/analytics/kpi.py:45 automotive_core/analytics/scope.py:22
+#, python-brace-format
+msgid "You have no access to company {0}."
+msgstr "会社{0}へのアクセス権がありません。"
+
+#: automotive_core/analytics/kpi.py:51 automotive_core/analytics/scope.py:34
+#, python-brace-format
+msgid "You have no access to plant {0}."
+msgstr "工場{0}へのアクセス権がありません。"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "asn"
+msgstr "asn"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "bank_statement"
+msgstr "bank_statement"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "dealer_order"
+msgstr "dealer_order"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "dealer_order_change"
+msgstr "dealer_order_change"
+
+#: automotive_core/finance_controls/period_close.py:51
+#, python-brace-format
+msgid "debit {0}, credit {1}"
+msgstr "借方 {0}、貸方 {1}"
+
+#. Description of the 'Amount Field' (Data) field in DocType 'Approval Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:79
+msgid "e.g. base_grand_total, paid_amount."
+msgstr "例: base_grand_total、paid_amount。"
+
+#. Description of the 'Category Field' (Data) field in DocType 'Approval
+#. Policy'
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:96
+msgid "e.g. item_group or purchase_category."
+msgstr "例: item_group または purchase_category。"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "inventory_adjustment"
+msgstr "inventory_adjustment"
+
+#: automotive_core/finance_controls/period_close.py:96
+msgid "no foreign-currency monetary balances"
+msgstr "外貨建ての貨幣性残高なし"
+
+#: automotive_core/finance_controls/period_close.py:99
+msgid "no submitted Exchange Rate Revaluation in the period"
+msgstr "期間内に提出済みの外貨評価替えなし"
+
+#: automotive_core/finance_controls/period_close.py:60
+msgid "none"
+msgstr "なし"
+
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:89
+msgid "of which Intercompany"
+msgstr "うちグループ会社間"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "po_acknowledgement"
+msgstr "po_acknowledgement"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "production_event"
+msgstr "production_event"
+
+#: automotive_core/finance_controls/period_close.py:74
+msgid "reconciled"
+msgstr "照合済み"
+
+#. Description of the 'Scope Key' (Data) field in DocType 'Idempotency Record'
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:24
+msgid "sha256(endpoint, user, idempotency key)."
+msgstr "sha256(エンドポイント, ユーザー, 冪等キー) の値です。"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "shipment_status"
+msgstr "shipment_status"
+
+#: automotive_core/finance_controls/period_close.py:86
+#, python-brace-format
+msgid "stock ledger {0} vs GL {1}"
+msgstr "在庫元帳 {0} / 総勘定元帳 {1}"
+
+#. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
+#. Message'
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
+msgid "supplier_invoice"
+msgstr "supplier_invoice"
+
+#: automotive_core/finance_controls/period_close.py:125
+#, python-brace-format
+msgid "{0} already closes an overlapping period for {1}."
+msgstr "{1}の重複する期間は、すでに{0}で締められています。"
+
+#: automotive_core/governance/delegation.py:146
+#, python-brace-format
+msgid "{0} already delegates {1} in this period ({2})."
+msgstr "{0}はこの期間にすでに{1}を委任しています（{2}）。"
+
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:26
+#, python-brace-format
+msgid "{0} already has an overlapping assignment to {1} ({2})."
+msgstr "{0}にはすでに{1}への期間が重複する配属があります（{2}）。"
+
+#: automotive_core/automotive_setup/access_sync.py:186
+#, python-brace-format
+msgid "{0} already represents {1}; a portal user belongs to exactly one partner."
+msgstr "{0}はすでに{1}に紐付けられています。ポータルユーザーが所属できるパートナーは1つだけです。"
+
+#: automotive_core/governance/delegation.py:116
+#, python-brace-format
+msgid "{0} does not hold the role {1} and cannot delegate it."
+msgstr "{0}はロール{1}を持っていないため、委任できません。"
+
+#: automotive_core/finance_controls/period_close.py:108
+#, python-brace-format
+msgid "{0} events checked"
+msgstr "{0}件のイベントを検証済み"
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:17
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:25
+#, python-brace-format
+msgid "{0} has no field {1}."
+msgstr "{0}にはフィールド{1}がありません。"
+
+#: automotive_core/finance_controls/period_close.py:136
+#, python-brace-format
+msgid "{0} is already submitted."
+msgstr "{0}はすでに提出済みです。"
+
+#: automotive_core/governance/approvals.py:360
+#, python-brace-format
+msgid "{0} is no longer a draft."
+msgstr "{0}はすでに下書きではありません。"
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:23
+#, python-brace-format
+msgid "{0} is not a valid child-table field path."
+msgstr "{0}は有効な子テーブルのフィールドパスではありません。"
+
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:15
+#, python-brace-format
+msgid "{0} is not submittable; approval policies govern submission."
+msgstr "{0}は提出できないドキュメントタイプです。承認ポリシーは提出を統制するためのものです。"
+
+#: automotive_core/integration_hub/idempotency.py:55
+#, python-brace-format
+msgid "{0} is too long."
+msgstr "{0} の値が長すぎます。"
+
+#: automotive_core/access/master_data.py:65
+#, python-brace-format
+msgid "{0} name is too similar to existing {1} ({2}%)."
+msgstr "{0}名が既存の{1}と類似しすぎています（類似度{2}%）。"
+
+#: automotive_core/access/master_data.py:42
+#, python-brace-format
+msgid "{0} {1} already uses tax id {2}."
+msgstr "{0} {1}がすでに税番号{2}を使用しています。"
+
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:23
+#, python-brace-format
+msgid "{0} {1} belongs to plant {2}."
+msgstr "{0} {1}は工場{2}に属しています。"
+
+#: automotive_core/governance/approvals.py:442
+#, python-brace-format
+msgid "{0} {1} changed after it was approved ({2}); request approval again."
+msgstr "{0} {1}は承認後に変更されました（{2}）。再度承認を依頼してください。"
+
+#: automotive_core/governance/approvals.py:436
+#, python-brace-format
+msgid "{0} {1} needs approval under policy {2} before it can be submitted."
+msgstr "{0} {1}を提出するには、ポリシー{2}に基づく承認が必要です。"
+
+#: automotive_core/governance/approvals.py:520
+#, python-brace-format
+msgid "{0} {1}: approval {2}"
+msgstr "{0} {1}: 承認依頼は{2}です"
+
+#: automotive_core/access/plant_scope.py:121
+#, python-brace-format
+msgid "{0} {1}: set the Plant (it could not be derived from warehouses or the work order)."
+msgstr "{0} {1}: 工場を設定してください（倉庫または作業指示から特定できませんでした）。"
+
+#: automotive_core/finance_controls/period_close.py:73
+#, python-brace-format
+msgid "{0}: GL {1} vs payment ledger {2}"
+msgstr "{0}: 総勘定元帳 {1} / 支払台帳 {2}"
+
+#: automotive_core/automotive_setup/doctype/plant/plant.py:32
+#, python-brace-format
+msgid "{0}: warehouse {1} belongs to {2}, not {3}."
+msgstr "{0}: 倉庫{1}は{3}ではなく{2}に属しています。"
+
+#: automotive_core/automotive_setup/doctype/plant/plant.py:35
+#, python-brace-format
+msgid "{0}: warehouse {1} is assigned to plant {2}."
+msgstr "{0}: 倉庫{1}は工場{2}に割り当てられています。"
+
+#: automotive_core/governance/page/approval_inbox/approval_inbox.js:31
+#, python-brace-format
+msgid "{0}: {1}"
+msgstr "{0}: {1}"
+
