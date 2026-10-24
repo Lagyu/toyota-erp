@@ -174,5 +174,14 @@ class TestProvisioning(IntegrationTestCase):
 		frappe.db.set_value(
 			"User", "contractor@hinode.example", "automotive_access_expiry_date", add_days(nowdate(), -1)
 		)
+		# an account that expires later, and one without an expiry date, stay enabled
+		make_user("temporary@hinode.example", ["Buyer"])
+		frappe.db.set_value(
+			"User", "temporary@hinode.example", "automotive_access_expiry_date", add_days(nowdate(), 30)
+		)
+		make_user("permanent@hinode.example", ["Buyer"])
+		frappe.db.set_value("User", "permanent@hinode.example", "automotive_access_expiry_date", None)
 		provisioning.expire_accounts()
 		self.assertEqual(frappe.db.get_value("User", "contractor@hinode.example", "enabled"), 0)
+		for kept in ("temporary@hinode.example", "permanent@hinode.example", "it.maker@hinode.example"):
+			self.assertEqual(frappe.db.get_value("User", kept, "enabled"), 1, kept)

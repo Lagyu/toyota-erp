@@ -37,6 +37,10 @@ class TestTenantStructure(IntegrationTestCase):
 		):
 			self.assertIn(role, roles)
 		self.assertEqual(frappe.db.get_value("Company", NA, "default_currency"), "USD")
+		# the month-end revaluation of foreign-currency balances posts to this account
+		for company in (AICHI, KYUSHU, NA):
+			account = frappe.db.get_value("Company", company, "unrealized_exchange_gain_loss_account")
+			self.assertEqual(frappe.db.get_value("Account", account, "company"), company)
 		self.assertTrue(
 			frappe.db.exists("Customer", {"is_internal_customer": 1, "represents_company": AICHI})
 		)

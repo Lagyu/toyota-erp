@@ -234,6 +234,39 @@ def _company_defaults(company: dict, definition, log: TenantLog) -> None:
 	if doc.default_holiday_list != wanted and frappe.db.exists("Holiday List", wanted):
 		if log.change(f"{company['abbr']}: default holiday list {wanted}"):
 			frappe.db.set_value("Company", doc.name, "default_holiday_list", wanted)
+	revaluation_account(doc.name, log)
+
+
+def revaluation_account(company: str, log: TenantLog) -> None:
+	"""The month-end Exchange Rate Revaluation of foreign-currency balances posts to the company's
+	unrealized exchange gain/loss account, which ERPNext neither creates nor sets: one beside the
+	realised Exchange Gain/Loss account (Indirect Expenses)."""
+	abbr = frappe.db.get_value("Company", company, "abbr")
+	name = f"Unrealized Exchange Gain/Loss - {abbr}"
+	if not frappe.db.exists("Account", name) and log.change(f"account {name}"):
+		realised = frappe.db.get_value("Company", company, "exchange_gain_loss_account")
+		parent = (
+			realised and frappe.db.get_value("Account", realised, "parent_account")
+		) or frappe.db.get_value(
+			"Account", {"company": company, "account_name": "Indirect Expenses", "is_group": 1}, "name"
+		)
+		if not parent:  # a chart without either: left to the company's accountants
+			return
+		frappe.get_doc(
+			{
+				"doctype": "Account",
+				"account_name": "Unrealized Exchange Gain/Loss",
+				"company": company,
+				"parent_account": parent,
+				"is_group": 0,
+			}
+		).insert(ignore_permissions=True)
+	if (
+		frappe.db.exists("Account", name)
+		and frappe.db.get_value("Company", company, "unrealized_exchange_gain_loss_account") != name
+		and log.change(f"{abbr}: unrealized exchange gain/loss account {name}")
+	):
+		frappe.db.set_value("Company", company, "unrealized_exchange_gain_loss_account", name)
 
 
 def _branches(companies, log: TenantLog) -> None:

@@ -275,7 +275,9 @@ direct=$(compose exec -T -e KEYS="$keys" backend sh -c "curl -s -w ' %{http_code
 	-H \"Authorization: token \$KEYS\" http://127.0.0.1:8000/api/method/frappe.auth.get_logged_user" 2>&1 || true)
 proxied=$(https -s -w ' %{http_code}' -H "Authorization: token $keys" \
 	"https://$SITE/api/method/frappe.auth.get_logged_user" 2>&1 || true)
-echo "api key: ${#keys} characters; backend: ${direct:0:200}; through the proxy: ${proxied:0:200}" >>"$out/scan.log"
+enabled=$(bench execute frappe.db.get_value --args "['User', '$cookie_user', 'enabled']" 2>/dev/null | tail -1)
+echo "api key: ${#keys} characters; user enabled: ${enabled:-?}; backend: ${direct:0:200};" \
+	"through the proxy: ${proxied:0:200}" >>"$out/scan.log"
 files=$(mktemp -d)
 # the EICAR test file, the harmless sample every scanner reports (written in two parts, so that a
 # scanner does not flag this script)

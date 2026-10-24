@@ -195,6 +195,13 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The `cron` service had no restart policy (it did not come back after a reboot), and the
   Python that sets a stack's Administrator password ran from the bench directory, where
   Frappe's logger finds no log directory.
+- The daily account-expiry job disabled every account without an access expiry date (a
+  `frappe.get_all` date filter reads a missing date as 0001-01-01), and revoked their API keys:
+  it now disables only accounts whose expiry date has passed. Found when persona logins and the
+  rehearsal's API key were refused after the first midnight (site time) of a new site.
+- The month-end exchange-rate revaluation of foreign-currency balances failed: no company had
+  an unrealized exchange gain/loss account. The tenant setup creates one beside the realised
+  Exchange Gain/Loss account, and a patch adds it to existing sites.
 
 ### Operations
 - Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5

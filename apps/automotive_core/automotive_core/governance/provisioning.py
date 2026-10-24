@@ -143,12 +143,20 @@ def deactivate(user: str, reason: str | None = None) -> None:
 
 
 def expire_accounts() -> None:
-	"""Daily: disable accounts whose access expiry date has passed."""
+	"""Daily: disable accounts whose access expiry date has passed. An account without one is
+	kept: the query builder compares the date itself, where a ``frappe.get_all`` filter would
+	read a missing date as 0001-01-01 and disable every such account."""
 	today = getdate(nowdate())
-	users = frappe.get_all(
-		"User",
-		filters={"enabled": 1, "automotive_access_expiry_date": ("<", today)},
-		pluck="name",
+	user = frappe.qb.DocType("User")
+	users = (
+		frappe.qb.from_(user)
+		.select(user.name)
+		.where(
+			(user.enabled == 1)
+			& user.automotive_access_expiry_date.isnotnull()
+			& (user.automotive_access_expiry_date < today)
+		)
+		.run(pluck=True)
 	)
 	for user in users:
 		if user in ("Administrator", "Guest"):
