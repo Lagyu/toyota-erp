@@ -8,7 +8,8 @@
 #
 # WORK holds the restored set (*-binlog.json, *-site_config_backup.json). REPORT receives
 # {"replayed", "reason" | "recovered_to", "rpo_seconds", ...}; the recovery point is measured
-# from REFERENCE_EPOCH (default now): what a loss of the host at that moment would lose.
+# from REFERENCE_EPOCH (default now): what a loss of the host at that moment would lose, 0 when
+# the replay reaches past it (logs the cron service shipped while a drill ran).
 # Exit 0 when replayed, or skipped for a reason that is no fault (no position in the set, no
 # logs shipped since the backup); 1 when shipped logs exist but cannot bring the set forward.
 # Runs in the scheduler or cron container (ops/backup/restore-drill.sh, scripts/deploy/restore.sh).
@@ -78,6 +79,6 @@ result = json.load(open(replay_path))
 result.update(replayed=True, binlog_snapshot=snapshot)
 if result.get("recovered_to"):
 	recovered = dt.datetime.fromisoformat(result["recovered_to"].replace("Z", "+00:00"))
-	result["rpo_seconds"] = round(int(reference) - recovered.timestamp(), 1)
+	result["rpo_seconds"] = max(0.0, round(int(reference) - recovered.timestamp(), 1))
 json.dump(result, open(report_path, "w"))
 EOF
