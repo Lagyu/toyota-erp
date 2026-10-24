@@ -16,6 +16,7 @@ Snapshot shape (all dates ISO strings)::
       "items": {code: {"lead_time_days", "safety_stock", "min_order_qty", "is_purchased",
                        "supplier", "uom", "warehouse", "line", "kanban", "daily_usage"}},
       "boms": {bom_no: {"item", "quantity", "effective_from", "effective_to", "is_default",
+                        "process_loss_percent",      # the yield: output lost in the process
                         "lines": [{"item_code", "qty"}]}},
       "on_hand": {code: qty},
       "scheduled_receipts": [{"item_code", "qty", "date", "source"}],
@@ -179,6 +180,7 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 				continue
 			need = safety - projected
 			qty = lot_size(need, item, params.get("lot_sizing", "Lot For Lot"))
+			output = qty  # what the proposal adds to stock: less than started where a process loses some
 			manufactured = not item.get("is_purchased")
 			lead = _lead_time(item, params)
 			release = (
@@ -211,6 +213,15 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 				else:
 					bom_no, bom = chosen
 					proposal["bom_no"] = bom_no
+					# the yield: start enough units that the good ones cover the lot; components and
+					# line load follow the units started
+					loss = float(bom.get("process_loss_percent") or 0) / 100
+					if 0 < loss < 1:
+						qty = lot_size(qty / (1 - loss), item, "Lot For Lot")
+						output = _r(qty * (1 - loss))
+						proposal["qty"] = qty
+						proposal["pegging"] = (f"yield {_r((1 - loss) * 100)}%: {output} good; "
+							+ proposal["pegging"])[:500]
 					factor = qty / float(bom.get("quantity") or 1)
 					start = max(release, as_of)
 					for line in bom["lines"]:
@@ -222,7 +233,7 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 				shortages.append(_shortage(item_code, day, need, projected, None, "No Supply Source",
 					"assign an approved supplier"))
 			proposals.append(proposal)
-			projected += qty
+			projected += output
 			pending_sources = []
 
 	capacity = []

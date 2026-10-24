@@ -85,6 +85,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   every delivery result.
 
 ### Manufacturing (`automotive_manufacturing`)
+- Planning honours a BOM's process loss (ERPNext's *Process Loss %*) as the yield: it starts
+  enough units for the good ones it needs, and explodes components and loads the line from
+  the units started (ENT-11).
 - Weekly Production Plan report (the weekly MPS): per ISO week and line, the firm orders due,
   the units the work orders plan and have built, and the line's capacity on its working days,
   with weeks over capacity or short of their orders flagged (ERP-03.3).

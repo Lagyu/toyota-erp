@@ -132,6 +132,23 @@ class TestMrp(unittest.TestCase):
 		self.assertEqual(mrp.lot_size(130, bought, "Minimum Order Qty Multiples"), 200)
 		self.assertEqual(mrp.lot_size(3, {"min_order_qty": 100}, "Lot For Lot"), 3)  # made in-house
 
+	def test_a_process_loss_starts_enough_units_for_the_good_ones(self):
+		"""ENT-11 yield: a BOM losing 10 % in its process starts 12 cars for 10 good (ceil(10/0.9)),
+		explodes the components of the 12 and loads the line with 12; stock rises by the good units."""
+		snapshot = base_snapshot()
+		snapshot["boms"]["BOM-CAR-A"]["process_loss_percent"] = 10
+		snapshot["demand"] = [{"item_code": "CAR", "qty": 10, "date": "2026-04-13", "source": "SO-1"}]
+		out = mrp.plan(snapshot)
+		[car] = [p for p in out["proposals"] if p["item_code"] == "CAR"]
+		self.assertEqual((car["qty"], car["bom_no"]), (12, "BOM-CAR-A"))
+		self.assertTrue(car["pegging"].startswith("yield 90.0%"))
+		seats = sum(p["qty"] for p in out["proposals"] if p["item_code"] == "SEAT")
+		self.assertEqual(seats, 12 * 2 - 4)  # the seats of the 12 started, net of 4 on hand
+		self.assertEqual(sum(c["required_units"] for c in out["capacity"]), 12)
+		# without the loss: 10 started, as before
+		snapshot["boms"]["BOM-CAR-A"].pop("process_loss_percent")
+		self.assertEqual([p["qty"] for p in mrp.plan(snapshot)["proposals"] if p["item_code"] == "CAR"], [10])
+
 	def test_bom_cycle_is_rejected(self):
 		snapshot = base_snapshot()
 		snapshot["boms"]["BOM-FOAM"] = {"item": "FOAM", "quantity": 1, "lines": [{"item_code": "CAR", "qty": 1}]}

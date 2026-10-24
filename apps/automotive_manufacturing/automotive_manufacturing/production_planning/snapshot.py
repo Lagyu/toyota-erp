@@ -48,7 +48,8 @@ def _boms_for(item_code: str) -> list[dict]:
 	return frappe.get_all(
 		"BOM",
 		filters={"item": item_code, "docstatus": 1, "is_active": 1},
-		fields=["name", "item", "quantity", "is_default", "automotive_effective_from", "automotive_effective_to"],
+		fields=["name", "item", "quantity", "is_default", "automotive_effective_from", "automotive_effective_to",
+			"process_loss_percentage"],
 		order_by="name asc",
 	)
 
@@ -139,6 +140,8 @@ def collect(run, params) -> dict[str, Any]:
 				"effective_to": str(bom.automotive_effective_to) if bom.automotive_effective_to else None,
 				"lines": [{"item_code": li.item_code, "qty": flt(li.stock_qty)} for li in lines],
 			}
+			if flt(bom.process_loss_percentage):  # the yield (only when there is a loss: older snapshots replay alike)
+				boms[bom.name]["process_loss_percent"] = flt(bom.process_loss_percentage)
 			queue.extend(sorted(li.item_code for li in lines if li.item_code not in seen))
 		manufactured = bool(item_boms)
 		items[code] = {
