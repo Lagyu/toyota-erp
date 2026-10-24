@@ -404,6 +404,42 @@ else
 	fail "cron state '$(compose ps --format '{{.State}}' cron)', schedules logged $next, socket mounts $sockets"
 fi
 
+step "A scheduled backup and restore drill by the cron service"
+# the nightly backup and the weekly drill brought forward to the next minutes (UTC, seconds
+# first), the cron service recreated with them and given its own schedules back afterwards
+mapfile -t saved < <(grep -E '^(BACKUP|RESTORE_DRILL)_SCHEDULE=' "$ENV" || true)
+snapshots() {
+	compose exec -T scheduler restic snapshots --tag "site:$SITE" --json 2>/dev/null \
+		| python3 -c 'import json, sys; print(len(json.load(sys.stdin)))' 2>/dev/null || echo 0
+}
+before=$(snapshots)
+since=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+backup_at=$(date -u -d '+2 minutes' +'%M %H') drill_at=$(date -u -d '+4 minutes' +'%M %H')
+set_env "BACKUP_SCHEDULE=0 $backup_at * * *" "RESTORE_DRILL_SCHEDULE=0 $drill_at * * *"
+compose up -d cron >"$out/cron-schedule.log" 2>&1 || true
+for _ in $(seq 1 60); do
+	ran=$(compose logs --no-color --since "$since" cron 2>/dev/null | grep -cE '(backup|restore-drill): exit status 0' || true)
+	[[ $ran -ge 2 ]] && break
+	sleep 10
+done
+compose logs --no-color --since "$since" cron >>"$out/cron-schedule.log" 2>&1 || true
+python3 - "$ENV" <<'PY'
+import sys
+path = sys.argv[1]
+lines = [l for l in open(path).read().splitlines() if not l.startswith(("BACKUP_SCHEDULE=", "RESTORE_DRILL_SCHEDULE="))]
+open(path, "w").write("\n".join(lines) + "\n")
+PY
+((${#saved[@]} == 0)) || set_env "${saved[@]}"
+compose up -d cron >>"$out/cron-schedule.log" 2>&1 || true
+after=$(snapshots)
+drill_ok=$(compose exec -T scheduler bash -c "cat sites/$SITE/private/ops/restore-drill-last.json" 2>/dev/null \
+	| python3 -c 'import json, sys; print(json.load(sys.stdin).get("ok"))' 2>/dev/null || true)
+if [[ $ran -ge 2 && $after -gt $before && $drill_ok == True ]]; then
+	pass "backup at $backup_at and drill at $drill_at (minute hour, UTC) run by the schedule: snapshots $before -> $after, drill ok"
+else
+	fail "jobs ok $ran of 2, snapshots $before -> $after, drill ok '${drill_ok:-?}' (see cron-schedule.log)"
+fi
+
 step "Monitoring targets"
 # a target scraped while its service was starting (after the reboot above) stays down until
 # its next scrape (30 s): wait up to two minutes for every target

@@ -233,6 +233,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the standard fields and the comment count). Found by a short run on the closing dataset.
 
 ### Operations
+- The production rehearsal observes a scheduled backup and restore drill: it brings the cron
+  service's schedules forward to the next minutes, checks both jobs and the new off-host
+  snapshot, and puts the schedules back.
 - `TLS_MODE=letsencrypt` is exercised in CI: the rehearsal workflow's `acme` job starts a stack
   in that mode beside Pebble, Let's Encrypt's ACME test server, and checks the certificate obtained
   through the HTTP-01 challenge, the redirect and the HTTPS chain. `ACME_CA_SERVER` selects
