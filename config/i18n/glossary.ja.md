@@ -80,6 +80,8 @@ runs the same commands on the host from the bootstrapped bench's sources):
 | Replay / Retry / Dead Letter | 再処理 / 再送 / デッドレター |
 | Idempotency key | 冪等キー |
 | Workspace / Dashboard / Report | ワークスペース / ダッシュボード / レポート |
+| Raw material store (forward) / Reserve storage | 原材料倉庫 / ストック保管庫 (not 予約: that is reservation) |
+| Put-away / Putaway Rule / Pick List | 格納 / 格納ルール / ピッキングリスト |
 | Overview / Notices / Remittances | 概要 / お知らせ / 送金通知 |
 
 ## Standard documents and desk terms

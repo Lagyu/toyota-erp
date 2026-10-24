@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Supply Chain VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 16:44+0919\n"
+"POT-Creation-Date: 2026-10-24 17:05+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -135,7 +135,7 @@ msgstr "ASN明細"
 msgid "ASN number {0} was already sent ({1})."
 msgstr "ASN番号 {0} はすでに送信されています（{1}）。"
 
-#: automotive_supply_chain/supplier_collaboration/shipments.py:69
+#: automotive_supply_chain/supplier_collaboration/shipments.py:71
 #, python-brace-format
 msgid "ASN {0} is {1}."
 msgstr "ASN {0} のステータスは {1} です。"
@@ -346,7 +346,7 @@ msgstr "金額"
 msgid "Amounts differ"
 msgstr "金額不一致"
 
-#: automotive_supply_chain/supplier_collaboration/shipments.py:133
+#: automotive_supply_chain/supplier_collaboration/shipments.py:140
 #, python-brace-format
 msgid "Announced {0}, received {1}, rejected {2}."
 msgstr "通知数 {0}、入荷数 {1}、不合格数 {2}。"
@@ -1206,8 +1206,8 @@ msgstr "納期"
 #: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:34
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:20
 #: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:97
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:102
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:104
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:150
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:142
 msgid "Delivery Note"
 msgstr "納品書"
 
@@ -1685,8 +1685,8 @@ msgstr "社内棚卸"
 #. Label of a Sidebar Item
 #. Label of a Link in the Logistics Workspace
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.json:19
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:150
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:122
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:198
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:160
 msgid "Inventory Position"
 msgstr "在庫状況"
 
@@ -1923,7 +1923,7 @@ msgstr "積込済み"
 #. Name of a Workspace
 #. Option for the 'Portal Role' (Select) field in DocType 'Supplier Onboarding
 #: automotive_supply_chain/dealer_operations/doctype/dealer_registration_contact/dealer_registration_contact.json:41
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:176
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:224
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:13
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding_contact/supplier_onboarding_contact.json:42
 msgid "Logistics"
@@ -1986,8 +1986,12 @@ msgstr "積荷目録 {0} のステータスは {1} です。"
 msgid "Match exceptions are kept as audit evidence."
 msgstr "照合例外は監査証拠として保持されます。"
 
+#. Label of a Sidebar Item
+#. Label of a Link in the Logistics Workspace
 #. Label of the material_request (Link) field in DocType 'Supplier Schedule
 #. Line'
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:102
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:84
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_schedule_line/supplier_schedule_line.json:55
 msgid "Material Request"
 msgstr "資材要求"
@@ -2047,7 +2051,7 @@ msgstr "車種"
 
 #. Label of a Sidebar Item
 #: automotive_supply_chain/dealer_operations/sidebar/dealer_operations/dealer_operations.json:66
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:79
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:127
 msgid "More"
 msgstr "その他"
 
@@ -2186,7 +2190,7 @@ msgid "Open Receipt Discrepancies"
 msgstr "未解決の入荷差異"
 
 #. Label of a number card in the Logistics Workspace
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:160
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:198
 msgid "Open Transport Exceptions"
 msgstr "未解決の輸送例外"
 
@@ -2329,6 +2333,13 @@ msgstr "写真"
 msgid "Physical"
 msgstr "実在庫"
 
+#. Label of a Sidebar Item
+#. Label of a Link in the Logistics Workspace
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:90
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:94
+msgid "Pick List"
+msgstr "ピッキングリスト"
+
 #. Label of the pickup_window_start (Datetime) field in DocType 'Transport
 #. Booking'
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:84
@@ -2392,6 +2403,11 @@ msgstr "工場"
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:177
 msgid "Plant Director"
 msgstr "工場長"
+
+#: automotive_supply_chain/logistics/storage.py:37
+#, python-brace-format
+msgid "Plant {0} needs a raw material store and reserve storage."
+msgstr "工場 {0} には原材料倉庫とストック保管庫が必要です。"
 
 #. Label of the portal_access (Check) field in DocType 'Supplier Onboarding
 #. Contact'
@@ -2713,6 +2729,13 @@ msgstr "売手の請求書がない仕入請求書"
 msgid "Purchase-to-Pay Cycle"
 msgstr "発注から支払までのサイクル"
 
+#. Label of a Sidebar Item
+#. Label of a Link in the Logistics Workspace
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:114
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:74
+msgid "Putaway Rule"
+msgstr "格納ルール"
+
 #. Label of the qty (Int) field in DocType 'Dealer Order Item'
 #. Label of the qty (Float) field in DocType 'Consignment Movement Item'
 #. Label of the qty (Float) field in DocType 'Shipment Manifest Item'
@@ -3015,8 +3038,8 @@ msgstr "報告元"
 #. Label of a Card Break in the Supplier Collaboration Workspace
 #: automotive_supply_chain/intercompany/sidebar/intercompany/intercompany.json:40
 #: automotive_supply_chain/intercompany/workspace/intercompany/intercompany.json:36
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:139
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:114
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:187
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:152
 #: automotive_supply_chain/procurement_controls/sidebar/procurement_controls/procurement_controls.json:66
 #: automotive_supply_chain/procurement_controls/workspace/procurement_controls/procurement_controls.json:56
 #: automotive_supply_chain/supplier_collaboration/sidebar/supplier_collaboration/supplier_collaboration.json:199
@@ -3461,7 +3484,7 @@ msgstr "配分比率（%）"
 #: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:1
 #: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:45
 #: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:53
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:84
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:122
 msgid "Shipment Manifest"
 msgstr "出荷積荷目録"
 
@@ -3593,12 +3616,12 @@ msgid "Status"
 msgstr "ステータス"
 
 #. Label of a number card in the Logistics Workspace
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:156
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:194
 msgid "Stock Accuracy"
 msgstr "在庫精度"
 
 #. Label of a Link in the Logistics Workspace
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:142
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:180
 msgid "Stock Balance"
 msgstr "在庫残高"
 
@@ -3613,8 +3636,8 @@ msgstr "在庫移動"
 
 #. Label of a Sidebar Item
 #. Label of a Link in the Logistics Workspace
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:162
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:132
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:210
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:170
 msgid "Stock Ledger"
 msgstr "在庫元帳"
 
@@ -3627,7 +3650,7 @@ msgstr "在庫注文"
 #. Label of a Sidebar Item
 #. Label of a Link in the Logistics Workspace
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:136
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:114
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:162
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:46
 msgid "Stock Reconciliation"
 msgstr "在庫調整"
@@ -3646,6 +3669,13 @@ msgstr "在庫金額"
 #, python-brace-format
 msgid "Stock reconciliation for count {0}"
 msgstr "棚卸 {0} の在庫調整"
+
+#. Label of a Sidebar Item
+#. Label of a Card Break in the Logistics Workspace
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:79
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:66
+msgid "Storage"
+msgstr "保管"
 
 #. Label of the subject (Data) field in DocType 'Supplier Notice'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:44
@@ -3960,6 +3990,10 @@ msgstr "この注文は受理済みです。販売店注文変更で取り消し
 msgid "The person who entered the invoice cannot resolve its exceptions."
 msgstr "請求書を入力した担当者は、その請求書の例外を解決できません。"
 
+#: automotive_supply_chain/logistics/storage.py:46
+msgid "The reorder level must be below the forward capacity, and the reorder quantity positive."
+msgstr "再発注点は原材料倉庫の容量より小さく、再発注数量は正の値にしてください。"
+
 #: automotive_supply_chain/partners.py:36
 #, python-brace-format
 msgid "This portal is for {0} users."
@@ -4021,7 +4055,7 @@ msgstr "移転価格契約"
 #. Label of a Card Break in the Logistics Workspace
 #. Label of the section_break_1 (Section Break) field in DocType 'Advance
 #. Shipping Notice'
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:66
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:104
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:107
 msgid "Transport"
 msgstr "輸送"
@@ -4033,8 +4067,8 @@ msgstr "輸送"
 #: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:63
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:131
 #: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:59
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:90
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:74
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:138
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:112
 msgid "Transport Booking"
 msgstr "輸送手配"
 
@@ -4046,7 +4080,7 @@ msgstr "輸送手配"
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:79
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:116
 #: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:66
-#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:94
+#: automotive_supply_chain/logistics/workspace/logistics/logistics.json:132
 msgid "Transport Exception"
 msgstr "輸送例外"
 
@@ -4235,7 +4269,7 @@ msgstr "閲覧者"
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:52
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.js:8
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.py:19
-#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:126
+#: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:174
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:18
 msgid "Warehouse"
 msgstr "倉庫"
@@ -4333,7 +4367,7 @@ msgstr "{0} には完成品倉庫がありません。"
 msgid "{0} is already on manifest {1}."
 msgstr "{0} はすでに積荷目録 {1} に含まれています。"
 
-#: automotive_supply_chain/supplier_collaboration/shipments.py:156
+#: automotive_supply_chain/supplier_collaboration/shipments.py:163
 #, python-brace-format
 msgid "{0} is already resolved."
 msgstr "{0} はすでに解決済みです。"
@@ -4373,7 +4407,7 @@ msgstr "{0} は仕入先グループ「Carriers」に属していません。"
 msgid "{0} is {1}."
 msgstr "{0} のステータスは {1} です。"
 
-#: automotive_supply_chain/supplier_collaboration/shipments.py:131
+#: automotive_supply_chain/supplier_collaboration/shipments.py:138
 #, python-brace-format
 msgid "{0} on ASN {1} / {2}"
 msgstr "{0}（ASN {1} / {2}）"

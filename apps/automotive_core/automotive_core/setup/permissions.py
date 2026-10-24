@@ -88,6 +88,10 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Account", "Warehouse Clerk", ("select",)),
 	# receiving registers supplier lots as batches
 	("Batch", "Warehouse Clerk", WRITE),
+	# storage: logistics and the plant director set where parts are put away (ERPNext
+	# reserves Putaway Rule for Stock Manager)
+	("Putaway Rule", "Logistics Coordinator", WRITE),
+	("Putaway Rule", "Plant Director", WRITE),
 	# Logistics: shipments and dispatch.
 	("Shipment", "Logistics Coordinator", SUBMIT),
 	("Delivery Note", "Logistics Coordinator", READ),
@@ -124,6 +128,8 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 			"Purchase Order",
 			"Sales Order",
 			"Material Request",
+			"Pick List",
+			"Putaway Rule",
 			"Item",
 			"Warehouse",
 			"Stock Reconciliation",

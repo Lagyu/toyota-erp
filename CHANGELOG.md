@@ -81,6 +81,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   intercompany reconciliation; Goods In Transit report.
 - Landed costs: ocean freight and import duty ordered, invoiced and allocated to imported
   vehicles with Landed Cost Vouchers.
+- Storage at the plants: put-away rules fill each forward store (the raw material store) up
+  to a part's capacity and keep the rest in reserve storage; reorder rules on the forward
+  store raise a daily transfer request from on-hand stock, which the warehouse clerk
+  fulfils with a pick list from reserve storage.
 - Print formats (A4, Japanese/English): shipment manifest with driver and receiver
   signature boxes, advance shipping notice, kanban card with a QR code, vehicle
   certificate. Every role that can read a document can print it.

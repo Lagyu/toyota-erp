@@ -63,6 +63,8 @@ def make_purchase_receipt(asn: str) -> str:
 	"""Warehouse receiving: a draft Purchase Receipt pre-filled from the ASN (lots -> batches)."""
 	from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_receipt as from_po
 
+	from automotive_supply_chain.logistics.storage import putaway_applies
+
 	doc = frappe.get_doc("Advance Shipping Notice", asn)
 	frappe.has_permission("Purchase Receipt", "create", throw=True)
 	if doc.docstatus != 1 or doc.status in ("Received", "Cancelled"):
@@ -86,6 +88,8 @@ def make_purchase_receipt(asn: str) -> str:
 			item.serial_no = row.serial_nos
 	pr.automotive_asn = doc.name
 	pr.posting_date = nowdate()
+	# into a forward store: put away up to each part's capacity, the rest to reserve storage
+	pr.apply_putaway_rule = int(putaway_applies(pr))
 	pr.flags.ignore_permissions = True
 	pr.insert()
 	if doc.status == "In Transit":
@@ -110,25 +114,28 @@ def on_purchase_receipt_submit(doc, method=None) -> None:
 	if not doc.get("automotive_asn") or doc.get("is_return"):
 		return
 	asn = frappe.get_doc("Advance Shipping Notice", doc.automotive_asn)
+	# per ASN line: put-away can split one announced line over several receipt lines
+	received_lines: dict[str, list[float]] = {}
 	for item in doc.items:
-		if not item.get("automotive_asn_item"):
+		if item.get("automotive_asn_item"):
+			line = received_lines.setdefault(item.automotive_asn_item, [0.0, 0.0])
+			line[0] += flt(item.qty)
+			line[1] += flt(item.rejected_qty)
+	for row in asn.items:
+		if row.name not in received_lines:
 			continue
-		row = next((r for r in asn.items if r.name == item.automotive_asn_item), None)
-		if not row:
-			continue
-		received = flt(row.received_qty) + flt(item.qty)
-		frappe.db.set_value("ASN Item", row.name, "received_qty", received)
-		accepted, rejected = flt(item.qty), flt(item.rejected_qty)
+		accepted, rejected = received_lines[row.name]
+		frappe.db.set_value("ASN Item", row.name, "received_qty", flt(row.received_qty) + accepted)
 		if abs(accepted + rejected - flt(row.qty)) > 1e-9 or rejected:
 			kind = "Damaged" if rejected else ("Shortage" if accepted < flt(row.qty) else "Overage")
 			disc = frappe.get_doc({"doctype": "Receipt Discrepancy", "supplier": doc.supplier,
-				"advance_shipping_notice": asn.name, "purchase_receipt": doc.name, "item_code": item.item_code,
+				"advance_shipping_notice": asn.name, "purchase_receipt": doc.name, "item_code": row.item_code,
 				"discrepancy_type": kind, "expected_qty": row.qty, "received_qty": accepted, "rejected_qty": rejected,
 				"status": "Open"})
 			disc.flags.ignore_permissions = True
 			disc.insert()
 			frappe.get_doc({"doctype": "Supplier Notice", "supplier": doc.supplier,
-				"subject": _("{0} on ASN {1} / {2}").format(kind, asn.supplier_asn_no, item.item_code),
+				"subject": _("{0} on ASN {1} / {2}").format(kind, asn.supplier_asn_no, row.item_code),
 				"notice_type": "Receipt Discrepancy", "reference_doctype": "Receipt Discrepancy",
 				"reference_name": disc.name, "message": _("Announced {0}, received {1}, rejected {2}.").format(
 					row.qty, accepted, rejected)}).insert(ignore_permissions=True)

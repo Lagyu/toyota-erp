@@ -30,6 +30,9 @@ ROLE_FIELDS = {
 	"receiving": ("receiving_warehouse", "Receiving"),
 	"inspection": ("inspection_warehouse", "Receiving Inspection"),
 	"raw_material": ("raw_material_warehouse", "Raw Material"),
+	# overflow behind the raw material store (the forward store): put-away fills the
+	# forward store up to its capacity and stores the rest here
+	"reserve": ("reserve_warehouse", "Reserve Storage"),
 	"wip": ("wip_warehouse", "Work In Progress"),
 	"quarantine": ("quarantine_warehouse", "Quarantine"),
 	"finished_goods": ("finished_goods_warehouse", "Finished Goods"),

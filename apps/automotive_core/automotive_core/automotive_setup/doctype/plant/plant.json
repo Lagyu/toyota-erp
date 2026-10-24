@@ -28,10 +28,11 @@
   "receiving_warehouse",
   "inspection_warehouse",
   "raw_material_warehouse",
+  "reserve_warehouse",
   "line_side_warehouse",
   "wip_warehouse",
-  "quarantine_warehouse",
   "column_break_3",
+  "quarantine_warehouse",
   "finished_goods_warehouse",
   "outbound_warehouse",
   "in_transit_warehouse",
@@ -168,6 +169,12 @@
    "options": "Warehouse"
   },
   {
+   "fieldname": "reserve_warehouse",
+   "fieldtype": "Link",
+   "label": "Reserve Storage",
+   "options": "Warehouse"
+  },
+  {
    "fieldname": "line_side_warehouse",
    "fieldtype": "Link",
    "label": "Line Side (group)",
@@ -180,14 +187,14 @@
    "options": "Warehouse"
   },
   {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "quarantine_warehouse",
    "fieldtype": "Link",
    "label": "Quarantine",
    "options": "Warehouse"
-  },
-  {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "finished_goods_warehouse",
@@ -232,7 +239,7 @@
  ],
  "icon": "factory",
  "links": [],
- "modified": "2026-10-24 16:23:33.996069",
+ "modified": "2026-10-24 16:53:12.111390",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Plant",

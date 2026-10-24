@@ -191,6 +191,7 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		return f"{len(state['loops'])} kanban items"
 
 	stage("kanban", kanban)
+	stage("storage", lambda: supply.storage(ctx, state["structure"], state["loops"]))
 
 	def pricing():
 		catalog.price_lists(ctx, state["structure"])

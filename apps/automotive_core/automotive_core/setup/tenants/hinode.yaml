@@ -65,6 +65,7 @@ plants:
       receiving: Aichi Receiving Dock
       inspection: Aichi Receiving Inspection
       raw_material: Aichi Parts Store
+      reserve: Aichi High-Bay Reserve
       wip: Aichi Body & Paint WIP
       quarantine: Aichi Quarantine
       finished_goods: Aichi Finished Vehicle Yard
@@ -107,6 +108,7 @@ plants:
       receiving: Kyushu Receiving Dock
       inspection: Kyushu Receiving Inspection
       raw_material: Kyushu Materials Store
+      reserve: Kyushu High-Bay Reserve
       wip: Kyushu Machining WIP
       quarantine: Kyushu Quarantine
       finished_goods: Kyushu Finished Powertrains
@@ -265,6 +267,10 @@ settings:
     action_if_quality_inspection_is_not_submitted: Stop
     # pre-delivery inspection at the North American centre inspects vehicles already received
     allow_to_make_quality_inspection_after_purchase_or_delivery: 1
+    # forward stores are replenished from reserve storage on on-hand stock (the daily run in
+    # automotive_supply_chain.logistics.storage); ERPNext's projected-quantity reorder job
+    # would wait for open purchase orders and raise duplicate requests
+    auto_indent: 0
   Buying Settings:
     po_required: "Yes"
     pr_required: "Yes"

@@ -30,6 +30,7 @@ PLANT_WAREHOUSES = [
 	("receiving_warehouse", "Receiving Dock"),
 	("inspection_warehouse", "Receiving Inspection"),
 	("raw_material_warehouse", "Raw Material Store"),
+	("reserve_warehouse", "Reserve Storage"),
 	("line_side_warehouse", "Line Side (group)"),
 	("wip_warehouse", "Work In Progress"),
 	("quarantine_warehouse", "Quarantine"),

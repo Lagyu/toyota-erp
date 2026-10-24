@@ -9,6 +9,7 @@ WAREHOUSE_FIELDS = (
 	"receiving_warehouse",
 	"inspection_warehouse",
 	"raw_material_warehouse",
+	"reserve_warehouse",
 	"line_side_warehouse",
 	"wip_warehouse",
 	"quarantine_warehouse",

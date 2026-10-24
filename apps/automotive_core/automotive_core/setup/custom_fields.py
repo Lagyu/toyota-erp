@@ -17,6 +17,7 @@ WAREHOUSE_ROLES = [
 	"Receiving",
 	"Receiving Inspection",
 	"Raw Material",
+	"Reserve Storage",
 	"Line Side",
 	"Work In Progress",
 	"Quarantine",

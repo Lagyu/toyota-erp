@@ -216,6 +216,28 @@ def capital_account(company: str) -> str:
 	return frappe.db.get_value("Account", {"company": company, "account_name": "Capital Stock", "is_group": 0}, "name")
 
 
+def storage(ctx: SeedContext, structure, loops: dict) -> str:
+	"""Forward stores and reserve storage: put-away and reorder rules for every stored part
+	(purchased, not delivered just in time to the line, not inspected on receipt), sized from
+	its daily usage: three days in the forward store, replenished at a day and a half.
+	Runs before the opening stock (a rule's capacity may not be below the stock on hand)."""
+	from automotive_supply_chain.logistics.storage import set_storage
+
+	stored = 0
+	for code, per_day in sorted(daily_usage(structure, ctx).items()):
+		info = structure["purchased"].get(code)
+		if not info or info["inspect"] or code in loops or per_day <= 0:
+			continue
+		if info["plant"] == "AICHI-VA" and code.startswith(JIT_PREFIXES):
+			continue
+		capacity = max(math.ceil(per_day * 3), 3)
+		level = max(math.ceil(per_day * 1.5), 1)
+		set_storage(code, info["plant"], capacity, level, capacity - level)
+		stored += 1
+	frappe.db.commit()
+	return f"{stored} stored parts"
+
+
 def opening(ctx: SeedContext, structure, roster) -> None:
 	"""Opening capital (bank) per company and opening stock (Stock Reconciliation) the day before history starts."""
 	from automotive_seed.generator.flows.common import company_bank_account

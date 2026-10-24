@@ -73,6 +73,54 @@
   {
    "child": 0,
    "collapsible": 1,
+   "icon": "layers",
+   "indent": 1,
+   "keep_closed": 1,
+   "label": "Storage",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Pick List",
+   "link_to": "Pick List",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Material Request",
+   "link_to": "Material Request",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Putaway Rule",
+   "link_to": "Putaway Rule",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
    "icon": "list",
    "indent": 1,
    "keep_closed": 1,
@@ -167,7 +215,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-24 10:07:52.243386",
+ "modified": "2026-10-24 17:00:36.801360",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Logistics",

@@ -76,6 +76,8 @@ doc_events = {
 }
 
 scheduler_events = {
+	# forward-store replenishment requests from reserve storage, before the first shift
+	"daily_long": ["automotive_supply_chain.logistics.storage.raise_all_transfer_requests"],
 	"cron": {
 		"*/5 * * * *": ["automotive_supply_chain.supplier_collaboration.schedules.release_kanban_calloffs"],
 		"*/15 * * * *": ["automotive_supply_chain.dealer_operations.allocation.allocate_all"],

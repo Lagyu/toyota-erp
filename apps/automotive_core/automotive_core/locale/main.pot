@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 16:44+0919\n"
-"PO-Revision-Date: 2026-10-24 16:44+0919\n"
+"POT-Creation-Date: 2026-10-24 17:05+0919\n"
+"PO-Revision-Date: 2026-10-24 17:05+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -773,7 +773,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:237
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:220
-#: automotive_core/automotive_setup/doctype/plant/plant.json:338
+#: automotive_core/automotive_setup/doctype/plant/plant.json:345
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:275
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:241
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:223
@@ -1605,7 +1605,7 @@ msgstr ""
 #. Label of the is_active (Check) field in DocType 'Integration Partner'
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:107
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
-#: automotive_core/automotive_setup/doctype/plant/plant.json:112
+#: automotive_core/automotive_setup/doctype/plant/plant.json:113
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:109
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
@@ -3234,7 +3234,7 @@ msgid "Annual Budget for Account {0} against {1}: {2} is {3}. It will be exceede
 msgstr ""
 
 #. Label of the annual_capacity_units (Int) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:144
+#: automotive_core/automotive_setup/doctype/plant/plant.json:145
 msgid "Annual Capacity (Units)"
 msgstr ""
 
@@ -4310,7 +4310,7 @@ msgstr ""
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:148
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:232
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:166
-#: automotive_core/automotive_setup/doctype/plant/plant.json:368
+#: automotive_core/automotive_setup/doctype/plant/plant.json:375
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:192
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:305
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:271
@@ -4454,7 +4454,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:171
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:154
-#: automotive_core/automotive_setup/doctype/plant/plant.json:272
+#: automotive_core/automotive_setup/doctype/plant/plant.json:279
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:209
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:175
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:176
@@ -5536,7 +5536,7 @@ msgid "Bounced"
 msgstr ""
 
 #. Label of the branch (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:85
+#: automotive_core/automotive_setup/doctype/plant/plant.json:86
 msgid "Branch"
 msgstr ""
 
@@ -5671,7 +5671,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:225
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:208
-#: automotive_core/automotive_setup/doctype/plant/plant.json:326
+#: automotive_core/automotive_setup/doctype/plant/plant.json:333
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:263
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:229
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:218
@@ -5774,7 +5774,7 @@ msgid "Calendar"
 msgstr ""
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:117
+#: automotive_core/automotive_setup/doctype/plant/plant.json:118
 msgid "Calendar & Costing"
 msgstr ""
 
@@ -7250,7 +7250,7 @@ msgstr ""
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:52
-#: automotive_core/automotive_setup/doctype/plant/plant.json:66
+#: automotive_core/automotive_setup/doctype/plant/plant.json:67
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:76
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:61
 #: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:56
@@ -8230,7 +8230,7 @@ msgid "Cost Allocation / Process Loss"
 msgstr ""
 
 #. Label of the cost_center (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:138
+#: automotive_core/automotive_setup/doctype/plant/plant.json:139
 msgid "Cost Center"
 msgstr ""
 
@@ -8272,7 +8272,7 @@ msgstr ""
 msgid "Cost Center with existing transactions can not be converted to ledger"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:38
+#: automotive_core/automotive_setup/doctype/plant/plant.py:39
 #, python-brace-format
 msgid "Cost Center {0} does not belong to {1}."
 msgstr ""
@@ -8429,7 +8429,7 @@ msgid "Counter"
 msgstr ""
 
 #. Label of the country (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:97
+#: automotive_core/automotive_setup/doctype/plant/plant.json:98
 msgid "Country"
 msgstr ""
 
@@ -9803,7 +9803,7 @@ msgstr ""
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:255
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:238
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:158
-#: automotive_core/automotive_setup/doctype/plant/plant.json:356
+#: automotive_core/automotive_setup/doctype/plant/plant.json:363
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:293
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:259
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:228
@@ -10205,7 +10205,7 @@ msgid "Default Selling Terms"
 msgstr ""
 
 #. Label of the default_shift_pattern (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:128
+#: automotive_core/automotive_setup/doctype/plant/plant.json:129
 msgid "Default Shift Pattern"
 msgstr ""
 
@@ -10939,7 +10939,7 @@ msgstr ""
 #. Label of the description (Small Text) field in DocType 'Plant'
 #. Label of the description (Data) field in DocType 'Period Close Task'
 #. Label of the description (Small Text) field in DocType 'Approval Policy'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:230
+#: automotive_core/automotive_setup/doctype/plant/plant.json:237
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:28
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:166
 msgid "Description"
@@ -12776,7 +12776,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:279
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:256
-#: automotive_core/automotive_setup/doctype/plant/plant.json:380
+#: automotive_core/automotive_setup/doctype/plant/plant.json:387
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:317
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:283
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:198
@@ -14353,7 +14353,7 @@ msgid "Finished Good Serial / Batch No"
 msgstr ""
 
 #. Label of the finished_goods_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:195
+#: automotive_core/automotive_setup/doctype/plant/plant.json:202
 msgid "Finished Goods"
 msgstr ""
 
@@ -15476,7 +15476,7 @@ msgid "Good morning, {0}"
 msgstr ""
 
 #. Label of the in_transit_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:207
+#: automotive_core/automotive_setup/doctype/plant/plant.json:214
 msgid "Goods In Transit"
 msgstr ""
 
@@ -15680,7 +15680,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:177
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:160
-#: automotive_core/automotive_setup/doctype/plant/plant.json:278
+#: automotive_core/automotive_setup/doctype/plant/plant.json:285
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:215
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:181
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:161
@@ -16068,7 +16068,7 @@ msgstr ""
 
 #. Label of the holiday_list (Link) field in DocType 'Plant'
 #. Label of the holiday_list (Link) field in DocType 'Shift Pattern'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:122
+#: automotive_core/automotive_setup/doctype/plant/plant.json:123
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:52
 msgid "Holiday List"
 msgstr ""
@@ -16244,7 +16244,7 @@ msgstr ""
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:244
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:226
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:139
-#: automotive_core/automotive_setup/doctype/plant/plant.json:264
+#: automotive_core/automotive_setup/doctype/plant/plant.json:271
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:174
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:193
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:149
@@ -20523,7 +20523,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:201
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:184
-#: automotive_core/automotive_setup/doctype/plant/plant.json:302
+#: automotive_core/automotive_setup/doctype/plant/plant.json:309
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:239
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:205
 #: automotive_core/governance/doctype/notification_preference/notification_preference.json:113
@@ -20531,7 +20531,7 @@ msgid "Line Operator"
 msgstr ""
 
 #. Label of the line_side_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:173
+#: automotive_core/automotive_setup/doctype/plant/plant.json:180
 msgid "Line Side (group)"
 msgstr ""
 
@@ -20954,7 +20954,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:285
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:262
-#: automotive_core/automotive_setup/doctype/plant/plant.json:386
+#: automotive_core/automotive_setup/doctype/plant/plant.json:393
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:323
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:289
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:248
@@ -24357,7 +24357,7 @@ msgstr ""
 #. Label of the notes (Small Text) field in DocType 'Period Close Checklist'
 #. Label of the section_break_3 (Section Break) field in DocType 'Approval
 #. Policy'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:225
+#: automotive_core/automotive_setup/doctype/plant/plant.json:232
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:135
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:112
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:161
@@ -25518,7 +25518,7 @@ msgid "Outbound Signing Secret"
 msgstr ""
 
 #. Label of the outbound_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:201
+#: automotive_core/automotive_setup/doctype/plant/plant.json:208
 msgid "Outbound Staging"
 msgstr ""
 
@@ -27321,7 +27321,7 @@ msgstr ""
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:60
-#: automotive_core/automotive_setup/doctype/plant/plant.json:238
+#: automotive_core/automotive_setup/doctype/plant/plant.json:245
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:68
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:53
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:39
@@ -27341,14 +27341,14 @@ msgid "Plant Assignment"
 msgstr ""
 
 #. Label of the plant_code (Data) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:49
+#: automotive_core/automotive_setup/doctype/plant/plant.json:50
 msgid "Plant Code"
 msgstr ""
 
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:183
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:166
-#: automotive_core/automotive_setup/doctype/plant/plant.json:284
+#: automotive_core/automotive_setup/doctype/plant/plant.json:291
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:184
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:202
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:159
@@ -27363,17 +27363,17 @@ msgid "Plant Director"
 msgstr ""
 
 #. Label of the plant_floor (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:91
+#: automotive_core/automotive_setup/doctype/plant/plant.json:92
 msgid "Plant Floor"
 msgstr ""
 
 #. Label of the plant_name (Data) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:58
+#: automotive_core/automotive_setup/doctype/plant/plant.json:59
 msgid "Plant Name"
 msgstr ""
 
 #. Label of the plant_type (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:74
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
 msgid "Plant Type"
 msgstr ""
 
@@ -28486,7 +28486,7 @@ msgid "Powertrain Assembly"
 msgstr ""
 
 #. Option for the 'Plant Type' (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+#: automotive_core/automotive_setup/doctype/plant/plant.json:76
 msgid "Powertrain Manufacturing"
 msgstr ""
 
@@ -28538,7 +28538,7 @@ msgid "Prepaid Expenses"
 msgstr ""
 
 #. Option for the 'Plant Type' (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+#: automotive_core/automotive_setup/doctype/plant/plant.json:76
 msgid "Preparation & Distribution"
 msgstr ""
 
@@ -29356,7 +29356,7 @@ msgstr ""
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:231
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:214
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:149
-#: automotive_core/automotive_setup/doctype/plant/plant.json:332
+#: automotive_core/automotive_setup/doctype/plant/plant.json:339
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:269
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:235
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:188
@@ -29440,7 +29440,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:273
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:250
-#: automotive_core/automotive_setup/doctype/plant/plant.json:374
+#: automotive_core/automotive_setup/doctype/plant/plant.json:381
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:311
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:277
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:233
@@ -29586,7 +29586,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:189
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:172
-#: automotive_core/automotive_setup/doctype/plant/plant.json:290
+#: automotive_core/automotive_setup/doctype/plant/plant.json:297
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:227
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:168
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:213
@@ -29600,7 +29600,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:195
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:178
-#: automotive_core/automotive_setup/doctype/plant/plant.json:296
+#: automotive_core/automotive_setup/doctype/plant/plant.json:303
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:233
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:199
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:208
@@ -30467,7 +30467,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:213
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:196
-#: automotive_core/automotive_setup/doctype/plant/plant.json:314
+#: automotive_core/automotive_setup/doctype/plant/plant.json:321
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:251
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:217
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:238
@@ -30485,7 +30485,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:219
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:202
-#: automotive_core/automotive_setup/doctype/plant/plant.json:320
+#: automotive_core/automotive_setup/doctype/plant/plant.json:327
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:257
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:223
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:188
@@ -30695,7 +30695,7 @@ msgid "Quantity to Scan"
 msgstr ""
 
 #. Label of the quarantine_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:185
+#: automotive_core/automotive_setup/doctype/plant/plant.json:196
 msgid "Quarantine"
 msgstr ""
 
@@ -31017,7 +31017,7 @@ msgid "Raw Material Group Warehouse"
 msgstr ""
 
 #. Label of the raw_material_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:167
+#: automotive_core/automotive_setup/doctype/plant/plant.json:168
 msgid "Raw Material Store"
 msgstr ""
 
@@ -31293,12 +31293,12 @@ msgid "Received Stock Entries"
 msgstr ""
 
 #. Label of the receiving_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:155
+#: automotive_core/automotive_setup/doctype/plant/plant.json:156
 msgid "Receiving Dock"
 msgstr ""
 
 #. Label of the inspection_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:161
+#: automotive_core/automotive_setup/doctype/plant/plant.json:162
 msgid "Receiving Inspection"
 msgstr ""
 
@@ -32478,6 +32478,11 @@ msgstr ""
 #: erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.js:278
 #: erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:492
 msgid "Reserve Stock"
+msgstr ""
+
+#. Label of the reserve_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:174
+msgid "Reserve Storage"
 msgstr ""
 
 #: erpnext/manufacturing/doctype/production_plan/production_plan.js:313
@@ -34739,7 +34744,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:249
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:232
-#: automotive_core/automotive_setup/doctype/plant/plant.json:350
+#: automotive_core/automotive_setup/doctype/plant/plant.json:357
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:287
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:253
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:194
@@ -35384,7 +35389,7 @@ msgid "Scope Restrictions"
 msgstr ""
 
 #. Label of the scrap_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:213
+#: automotive_core/automotive_setup/doctype/plant/plant.json:220
 msgid "Scrap"
 msgstr ""
 
@@ -37339,7 +37344,7 @@ msgid "Short biography for website and other publications."
 msgstr ""
 
 #. Description of the 'Plant Code' (Data) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:45
+#: automotive_core/automotive_setup/doctype/plant/plant.json:46
 msgid "Short immutable code, e.g. AICHI-VA."
 msgstr ""
 
@@ -39623,7 +39628,7 @@ msgid "Supplier Address Details"
 msgstr ""
 
 #. Label of the consignment_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:219
+#: automotive_core/automotive_setup/doctype/plant/plant.json:226
 msgid "Supplier Consignment"
 msgstr ""
 
@@ -39981,7 +39986,7 @@ msgstr ""
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:141
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:220
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:126
-#: automotive_core/automotive_setup/doctype/plant/plant.json:251
+#: automotive_core/automotive_setup/doctype/plant/plant.json:258
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:161
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:180
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:136
@@ -41824,7 +41829,7 @@ msgstr ""
 
 #. Label of the time_zone (Data) field in DocType 'Plant'
 #. Label of the time_zone (Data) field in DocType 'Shift Pattern'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:104
+#: automotive_core/automotive_setup/doctype/plant/plant.json:105
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:46
 msgid "Time Zone"
 msgstr ""
@@ -43047,7 +43052,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:243
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:226
-#: automotive_core/automotive_setup/doctype/plant/plant.json:344
+#: automotive_core/automotive_setup/doctype/plant/plant.json:351
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:281
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:247
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:183
@@ -44684,7 +44689,7 @@ msgid "Vehicle"
 msgstr ""
 
 #. Option for the 'Plant Type' (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+#: automotive_core/automotive_setup/doctype/plant/plant.json:76
 msgid "Vehicle Assembly"
 msgstr ""
 
@@ -45087,7 +45092,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:207
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:190
-#: automotive_core/automotive_setup/doctype/plant/plant.json:308
+#: automotive_core/automotive_setup/doctype/plant/plant.json:315
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:245
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:211
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:243
@@ -45184,7 +45189,7 @@ msgid "Warehouse {0} is not linked to any account, please mention the account in
 msgstr ""
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:150
+#: automotive_core/automotive_setup/doctype/plant/plant.json:151
 msgid "Warehouses"
 msgstr ""
 
@@ -45643,7 +45648,7 @@ msgid "Withdrawn"
 msgstr ""
 
 #. Label of the wip_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:179
+#: automotive_core/automotive_setup/doctype/plant/plant.json:186
 msgid "Work In Progress"
 msgstr ""
 
@@ -48991,12 +48996,12 @@ msgstr ""
 msgid "{0}: select the typed value {1} from the list or clear it"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:32
+#: automotive_core/automotive_setup/doctype/plant/plant.py:33
 #, python-brace-format
 msgid "{0}: warehouse {1} belongs to {2}, not {3}."
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:35
+#: automotive_core/automotive_setup/doctype/plant/plant.py:36
 #, python-brace-format
 msgid "{0}: warehouse {1} is assigned to plant {2}."
 msgstr ""

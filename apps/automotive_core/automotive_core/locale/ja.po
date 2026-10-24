@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 16:44+0919\n"
+"POT-Creation-Date: 2026-10-24 17:05+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -804,7 +804,7 @@ msgstr "保守契約満了日"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:237
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:220
-#: automotive_core/automotive_setup/doctype/plant/plant.json:338
+#: automotive_core/automotive_setup/doctype/plant/plant.json:345
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:275
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:241
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:223
@@ -1636,7 +1636,7 @@ msgstr "品目のシリアル番号・バッチ番号を有効化"
 #. Label of the is_active (Check) field in DocType 'Integration Partner'
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:107
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:97
-#: automotive_core/automotive_setup/doctype/plant/plant.json:112
+#: automotive_core/automotive_setup/doctype/plant/plant.json:113
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:122
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:109
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:91
@@ -3264,7 +3264,7 @@ msgid "Annual Budget for Account {0} against {1}: {2} is {3}. It will be exceede
 msgstr "{1}：{2}に対する勘定科目{0}の年間予算は{3}です。{4}超過します。"
 
 #. Label of the annual_capacity_units (Int) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:144
+#: automotive_core/automotive_setup/doctype/plant/plant.json:145
 msgid "Annual Capacity (Units)"
 msgstr "年間生産能力（台）"
 
@@ -4340,7 +4340,7 @@ msgstr "監査イベントは削除できません。"
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:148
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:232
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:166
-#: automotive_core/automotive_setup/doctype/plant/plant.json:368
+#: automotive_core/automotive_setup/doctype/plant/plant.json:375
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:192
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:305
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:271
@@ -4484,7 +4484,7 @@ msgstr "最近のデータに絞り込むフィルターを自動で適用しま
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:171
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:154
-#: automotive_core/automotive_setup/doctype/plant/plant.json:272
+#: automotive_core/automotive_setup/doctype/plant/plant.json:279
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:209
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:175
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:176
@@ -5566,7 +5566,7 @@ msgid "Bounced"
 msgstr "バウンス"
 
 #. Label of the branch (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:85
+#: automotive_core/automotive_setup/doctype/plant/plant.json:86
 msgid "Branch"
 msgstr "事業所"
 
@@ -5701,7 +5701,7 @@ msgstr "購買・販売"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:225
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:208
-#: automotive_core/automotive_setup/doctype/plant/plant.json:326
+#: automotive_core/automotive_setup/doctype/plant/plant.json:333
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:263
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:229
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:218
@@ -5804,7 +5804,7 @@ msgid "Calendar"
 msgstr "カレンダー"
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:117
+#: automotive_core/automotive_setup/doctype/plant/plant.json:118
 msgid "Calendar & Costing"
 msgstr "カレンダーと原価計算"
 
@@ -7280,7 +7280,7 @@ msgstr "会社"
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:52
-#: automotive_core/automotive_setup/doctype/plant/plant.json:66
+#: automotive_core/automotive_setup/doctype/plant/plant.json:67
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:76
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:61
 #: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:56
@@ -8259,7 +8259,7 @@ msgid "Cost Allocation / Process Loss"
 msgstr "原価配分 / 工程ロス"
 
 #. Label of the cost_center (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:138
+#: automotive_core/automotive_setup/doctype/plant/plant.json:139
 msgid "Cost Center"
 msgstr "原価センター"
 
@@ -8301,7 +8301,7 @@ msgstr "取引がある原価センターはグループに変換できません
 msgid "Cost Center with existing transactions can not be converted to ledger"
 msgstr "取引がある原価センターは非グループに変換できません。"
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:38
+#: automotive_core/automotive_setup/doctype/plant/plant.py:39
 #, python-brace-format
 msgid "Cost Center {0} does not belong to {1}."
 msgstr "原価センター{0}は{1}に属していません。"
@@ -8458,7 +8458,7 @@ msgid "Counter"
 msgstr "カウンター"
 
 #. Label of the country (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:97
+#: automotive_core/automotive_setup/doctype/plant/plant.json:98
 msgid "Country"
 msgstr "国"
 
@@ -9831,7 +9831,7 @@ msgstr "販売店（顧客）"
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:255
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:238
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:158
-#: automotive_core/automotive_setup/doctype/plant/plant.json:356
+#: automotive_core/automotive_setup/doctype/plant/plant.json:363
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:293
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:259
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:228
@@ -10233,7 +10233,7 @@ msgid "Default Selling Terms"
 msgstr "既定の販売条件"
 
 #. Label of the default_shift_pattern (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:128
+#: automotive_core/automotive_setup/doctype/plant/plant.json:129
 msgid "Default Shift Pattern"
 msgstr "既定のシフトパターン"
 
@@ -10966,7 +10966,7 @@ msgstr "降順"
 #. Label of the description (Small Text) field in DocType 'Plant'
 #. Label of the description (Data) field in DocType 'Period Close Task'
 #. Label of the description (Small Text) field in DocType 'Approval Policy'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:230
+#: automotive_core/automotive_setup/doctype/plant/plant.json:237
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:28
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:166
 msgid "Description"
@@ -12802,7 +12802,7 @@ msgstr "技術"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:279
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:256
-#: automotive_core/automotive_setup/doctype/plant/plant.json:380
+#: automotive_core/automotive_setup/doctype/plant/plant.json:387
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:317
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:283
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:198
@@ -14383,7 +14383,7 @@ msgid "Finished Good Serial / Batch No"
 msgstr "完成品のシリアル番号 / バッチ番号"
 
 #. Label of the finished_goods_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:195
+#: automotive_core/automotive_setup/doctype/plant/plant.json:202
 msgid "Finished Goods"
 msgstr "完成品"
 
@@ -15508,7 +15508,7 @@ msgid "Good morning, {0}"
 msgstr "おはようございます、{0}さん"
 
 #. Label of the in_transit_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:207
+#: automotive_core/automotive_setup/doctype/plant/plant.json:214
 msgid "Goods In Transit"
 msgstr "輸送中在庫"
 
@@ -15712,7 +15712,7 @@ msgstr "グループ連結"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:177
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:160
-#: automotive_core/automotive_setup/doctype/plant/plant.json:278
+#: automotive_core/automotive_setup/doctype/plant/plant.json:285
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:215
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:181
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:161
@@ -16100,7 +16100,7 @@ msgstr "休日{0}が複数回追加されています。"
 
 #. Label of the holiday_list (Link) field in DocType 'Plant'
 #. Label of the holiday_list (Link) field in DocType 'Shift Pattern'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:122
+#: automotive_core/automotive_setup/doctype/plant/plant.json:123
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:52
 msgid "Holiday List"
 msgstr "休日リスト"
@@ -16276,7 +16276,7 @@ msgstr "IPアドレス"
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:244
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:226
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:139
-#: automotive_core/automotive_setup/doctype/plant/plant.json:264
+#: automotive_core/automotive_setup/doctype/plant/plant.json:271
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:174
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:193
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:149
@@ -20560,7 +20560,7 @@ msgstr "ライン名"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:201
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:184
-#: automotive_core/automotive_setup/doctype/plant/plant.json:302
+#: automotive_core/automotive_setup/doctype/plant/plant.json:309
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:239
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:205
 #: automotive_core/governance/doctype/notification_preference/notification_preference.json:113
@@ -20568,7 +20568,7 @@ msgid "Line Operator"
 msgstr "ライン作業者"
 
 #. Label of the line_side_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:173
+#: automotive_core/automotive_setup/doctype/plant/plant.json:180
 msgid "Line Side (group)"
 msgstr "ラインサイド（グループ）"
 
@@ -20991,7 +20991,7 @@ msgstr "物流"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:285
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:262
-#: automotive_core/automotive_setup/doctype/plant/plant.json:386
+#: automotive_core/automotive_setup/doctype/plant/plant.json:393
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:323
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:289
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:248
@@ -24395,7 +24395,7 @@ msgstr "注：品目を統合するには、旧品目{0}に対して別途在庫
 #. Label of the notes (Small Text) field in DocType 'Period Close Checklist'
 #. Label of the section_break_3 (Section Break) field in DocType 'Approval
 #. Policy'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:225
+#: automotive_core/automotive_setup/doctype/plant/plant.json:232
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:135
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:112
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:161
@@ -25558,7 +25558,7 @@ msgid "Outbound Signing Secret"
 msgstr "送信署名シークレット"
 
 #. Label of the outbound_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:201
+#: automotive_core/automotive_setup/doctype/plant/plant.json:208
 msgid "Outbound Staging"
 msgstr "出荷準備"
 
@@ -27360,7 +27360,7 @@ msgstr "需要に必要な作業指示と資材を計画します。"
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:60
-#: automotive_core/automotive_setup/doctype/plant/plant.json:238
+#: automotive_core/automotive_setup/doctype/plant/plant.json:245
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:68
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:53
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:39
@@ -27380,14 +27380,14 @@ msgid "Plant Assignment"
 msgstr "工場配属"
 
 #. Label of the plant_code (Data) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:49
+#: automotive_core/automotive_setup/doctype/plant/plant.json:50
 msgid "Plant Code"
 msgstr "工場コード"
 
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:183
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:166
-#: automotive_core/automotive_setup/doctype/plant/plant.json:284
+#: automotive_core/automotive_setup/doctype/plant/plant.json:291
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:184
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:202
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:159
@@ -27402,17 +27402,17 @@ msgid "Plant Director"
 msgstr "工場長"
 
 #. Label of the plant_floor (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:91
+#: automotive_core/automotive_setup/doctype/plant/plant.json:92
 msgid "Plant Floor"
 msgstr "工場フロア"
 
 #. Label of the plant_name (Data) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:58
+#: automotive_core/automotive_setup/doctype/plant/plant.json:59
 msgid "Plant Name"
 msgstr "工場名"
 
 #. Label of the plant_type (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:74
+#: automotive_core/automotive_setup/doctype/plant/plant.json:75
 msgid "Plant Type"
 msgstr "工場タイプ"
 
@@ -28525,7 +28525,7 @@ msgid "Powertrain Assembly"
 msgstr "パワートレイン組立"
 
 #. Option for the 'Plant Type' (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+#: automotive_core/automotive_setup/doctype/plant/plant.json:76
 msgid "Powertrain Manufacturing"
 msgstr "パワートレイン製造"
 
@@ -28577,7 +28577,7 @@ msgid "Prepaid Expenses"
 msgstr "前払費用"
 
 #. Option for the 'Plant Type' (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+#: automotive_core/automotive_setup/doctype/plant/plant.json:76
 msgid "Preparation & Distribution"
 msgstr "納車準備・配送"
 
@@ -29395,7 +29395,7 @@ msgstr "調達"
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:231
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:214
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:149
-#: automotive_core/automotive_setup/doctype/plant/plant.json:332
+#: automotive_core/automotive_setup/doctype/plant/plant.json:339
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:269
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:235
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:188
@@ -29479,7 +29479,7 @@ msgstr "製品値引スキーム"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:273
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:250
-#: automotive_core/automotive_setup/doctype/plant/plant.json:374
+#: automotive_core/automotive_setup/doctype/plant/plant.json:381
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:311
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:277
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:233
@@ -29625,7 +29625,7 @@ msgstr "生産計画サマリー"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:189
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:172
-#: automotive_core/automotive_setup/doctype/plant/plant.json:290
+#: automotive_core/automotive_setup/doctype/plant/plant.json:297
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:227
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:168
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:213
@@ -29639,7 +29639,7 @@ msgstr "生産計画担当者"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:195
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:178
-#: automotive_core/automotive_setup/doctype/plant/plant.json:296
+#: automotive_core/automotive_setup/doctype/plant/plant.json:303
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:233
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:199
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:208
@@ -30506,7 +30506,7 @@ msgstr "品質検査"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:213
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:196
-#: automotive_core/automotive_setup/doctype/plant/plant.json:314
+#: automotive_core/automotive_setup/doctype/plant/plant.json:321
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:251
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:217
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:238
@@ -30524,7 +30524,7 @@ msgstr "品質管理"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:219
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:202
-#: automotive_core/automotive_setup/doctype/plant/plant.json:320
+#: automotive_core/automotive_setup/doctype/plant/plant.json:327
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:257
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:223
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:188
@@ -30734,7 +30734,7 @@ msgid "Quantity to Scan"
 msgstr "スキャン数量"
 
 #. Label of the quarantine_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:185
+#: automotive_core/automotive_setup/doctype/plant/plant.json:196
 msgid "Quarantine"
 msgstr "隔離"
 
@@ -31056,7 +31056,7 @@ msgid "Raw Material Group Warehouse"
 msgstr "原材料グループ倉庫"
 
 #. Label of the raw_material_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:167
+#: automotive_core/automotive_setup/doctype/plant/plant.json:168
 msgid "Raw Material Store"
 msgstr "原材料倉庫"
 
@@ -31332,12 +31332,12 @@ msgid "Received Stock Entries"
 msgstr "受入済みの在庫移動"
 
 #. Label of the receiving_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:155
+#: automotive_core/automotive_setup/doctype/plant/plant.json:156
 msgid "Receiving Dock"
 msgstr "荷受場"
 
 #. Label of the inspection_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:161
+#: automotive_core/automotive_setup/doctype/plant/plant.json:162
 msgid "Receiving Inspection"
 msgstr "受入検査"
 
@@ -32518,6 +32518,11 @@ msgstr "予約"
 #: erpnext/subcontracting/doctype/subcontracting_order/subcontracting_order.json:492
 msgid "Reserve Stock"
 msgstr "在庫を予約"
+
+#. Label of the reserve_warehouse (Link) field in DocType 'Plant'
+#: automotive_core/automotive_setup/doctype/plant/plant.json:174
+msgid "Reserve Storage"
+msgstr "ストック保管庫"
 
 #: erpnext/manufacturing/doctype/production_plan/production_plan.js:313
 msgid "Reserve for Raw Materials"
@@ -34778,7 +34783,7 @@ msgstr "この受注をキャンセルする前に、売上請求書{0}を削除
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:249
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:232
-#: automotive_core/automotive_setup/doctype/plant/plant.json:350
+#: automotive_core/automotive_setup/doctype/plant/plant.json:357
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:287
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:253
 #: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:194
@@ -35423,7 +35428,7 @@ msgid "Scope Restrictions"
 msgstr "範囲の制限"
 
 #. Label of the scrap_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:213
+#: automotive_core/automotive_setup/doctype/plant/plant.json:220
 msgid "Scrap"
 msgstr "廃棄"
 
@@ -37406,7 +37411,7 @@ msgid "Short biography for website and other publications."
 msgstr "ウェブサイトやその他の掲載物に使用する短い経歴です。"
 
 #. Description of the 'Plant Code' (Data) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:45
+#: automotive_core/automotive_setup/doctype/plant/plant.json:46
 msgid "Short immutable code, e.g. AICHI-VA."
 msgstr "変更できない短いコードです（例: AICHI-VA）。"
 
@@ -39689,7 +39694,7 @@ msgid "Supplier Address Details"
 msgstr "仕入先住所の詳細"
 
 #. Label of the consignment_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:219
+#: automotive_core/automotive_setup/doctype/plant/plant.json:226
 msgid "Supplier Consignment"
 msgstr "仕入先預託在庫"
 
@@ -40047,7 +40052,7 @@ msgstr "システム使用中"
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:141
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:220
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:126
-#: automotive_core/automotive_setup/doctype/plant/plant.json:251
+#: automotive_core/automotive_setup/doctype/plant/plant.json:258
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:161
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:180
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:136
@@ -41890,7 +41895,7 @@ msgstr "タイムシート"
 
 #. Label of the time_zone (Data) field in DocType 'Plant'
 #. Label of the time_zone (Data) field in DocType 'Shift Pattern'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:104
+#: automotive_core/automotive_setup/doctype/plant/plant.json:105
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:46
 msgid "Time Zone"
 msgstr "タイムゾーン"
@@ -43113,7 +43118,7 @@ msgstr "旅費交通費"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:243
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:226
-#: automotive_core/automotive_setup/doctype/plant/plant.json:344
+#: automotive_core/automotive_setup/doctype/plant/plant.json:351
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:281
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:247
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:183
@@ -44750,7 +44755,7 @@ msgid "Vehicle"
 msgstr "車両"
 
 #. Option for the 'Plant Type' (Select) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:75
+#: automotive_core/automotive_setup/doctype/plant/plant.json:76
 msgid "Vehicle Assembly"
 msgstr "車両組立"
 
@@ -45153,7 +45158,7 @@ msgstr "倉庫"
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:207
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:190
-#: automotive_core/automotive_setup/doctype/plant/plant.json:308
+#: automotive_core/automotive_setup/doctype/plant/plant.json:315
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:245
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:211
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:243
@@ -45250,7 +45255,7 @@ msgid "Warehouse {0} is not linked to any account, please mention the account in
 msgstr "倉庫{0}はどの勘定科目にもリンクされていません。倉庫レコードで勘定科目を指定するか、会社{1}で既定の棚卸資産勘定を設定してください。"
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:150
+#: automotive_core/automotive_setup/doctype/plant/plant.json:151
 msgid "Warehouses"
 msgstr "倉庫"
 
@@ -45709,7 +45714,7 @@ msgid "Withdrawn"
 msgstr "取り下げ済み"
 
 #. Label of the wip_warehouse (Link) field in DocType 'Plant'
-#: automotive_core/automotive_setup/doctype/plant/plant.json:179
+#: automotive_core/automotive_setup/doctype/plant/plant.json:186
 msgid "Work In Progress"
 msgstr "仕掛品"
 
@@ -49057,12 +49062,12 @@ msgstr "{0}：無効な値{1}を削除してください。"
 msgid "{0}: select the typed value {1} from the list or clear it"
 msgstr "{0}：入力した値{1}をリストから選択するか、クリアしてください。"
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:32
+#: automotive_core/automotive_setup/doctype/plant/plant.py:33
 #, python-brace-format
 msgid "{0}: warehouse {1} belongs to {2}, not {3}."
 msgstr "{0}: 倉庫{1}は{3}ではなく{2}に属しています。"
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:35
+#: automotive_core/automotive_setup/doctype/plant/plant.py:36
 #, python-brace-format
 msgid "{0}: warehouse {1} is assigned to plant {2}."
 msgstr "{0}: 倉庫{1}は工場{2}に割り当てられています。"

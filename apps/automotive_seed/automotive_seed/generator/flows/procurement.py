@@ -447,6 +447,29 @@ class Procurement:
 		ctx.count("Sales Order")
 
 	# -----------------------------------------------------------------------------------
+	def replenish_forward(self, day: dt.date) -> None:
+		"""After the morning receipts: the replenishment run raises transfer requests for parts
+		at their reorder level (the scheduled job, as the system), and each plant's warehouse
+		clerk picks them from reserve storage before the first shift draws on the store."""
+		from automotive_supply_chain.logistics.storage import (
+			open_transfer_requests,
+			pick_from_reserve,
+			raise_transfer_requests,
+		)
+
+		ctx = self.ctx
+		for plant in ("AICHI-VA", "KYUSHU-PT"):
+			with ctx.step(6, 30):
+				if raise_transfer_requests(plant):
+					ctx.count("Material Request")
+			clerk = self.sim.person("Warehouse Clerk", plant)
+			for request in open_transfer_requests(plant):
+				with ctx.step(6, 45), ctx.as_user(clerk):
+					if pick_from_reserve(request, plant):
+						ctx.count("Pick List")
+						ctx.count("Stock Entry")
+
+	# -----------------------------------------------------------------------------------
 	def calloffs(self, day: dt.date) -> None:
 		from automotive_supply_chain.supplier_collaboration.schedules import release_kanban_calloffs
 

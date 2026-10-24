@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"4e9189d01f\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Logistics</b></span>\", \"col\": 12}}, {\"id\": \"bbd41edaa9\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Stock Accuracy\", \"col\": 3}}, {\"id\": \"312ba2166f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Transport Exceptions\", \"col\": 3}}, {\"id\": \"7a2c55d7a8\", \"type\": \"card\", \"data\": {\"card_name\": \"Warehouse\", \"col\": 4}}, {\"id\": \"73755da871\", \"type\": \"card\", \"data\": {\"card_name\": \"Transport\", \"col\": 4}}, {\"id\": \"9076ab7cc2\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "content": "[{\"id\": \"4e9189d01f\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Logistics</b></span>\", \"col\": 12}}, {\"id\": \"bbd41edaa9\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Stock Accuracy\", \"col\": 3}}, {\"id\": \"312ba2166f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Transport Exceptions\", \"col\": 3}}, {\"id\": \"7a2c55d7a8\", \"type\": \"card\", \"data\": {\"card_name\": \"Warehouse\", \"col\": 4}}, {\"id\": \"911f7ae446\", \"type\": \"card\", \"data\": {\"card_name\": \"Storage\", \"col\": 4}}, {\"id\": \"73755da871\", \"type\": \"card\", \"data\": {\"card_name\": \"Transport\", \"col\": 4}}, {\"id\": \"9076ab7cc2\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
  "creation": "2026-10-24 10:07:52.243227",
  "custom_blocks": [],
  "docstatus": 0,
@@ -56,6 +56,44 @@
    "label": "Warehouse",
    "link_count": 0,
    "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Storage",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Putaway Rule",
+   "link_count": 0,
+   "link_to": "Putaway Rule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Material Request",
+   "link_count": 0,
+   "link_to": "Material Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Pick List",
+   "link_count": 0,
+   "link_to": "Pick List",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -147,7 +185,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-24 10:09:24.660117",
+ "modified": "2026-10-24 17:00:36.800711",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Logistics",

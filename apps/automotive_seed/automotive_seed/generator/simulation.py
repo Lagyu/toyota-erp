@@ -65,6 +65,7 @@ class Simulation:
 		na_working = working_day(day, "NA-PDC")
 		if jp_working:
 			self.procurement.receive(day)
+			self.procurement.replenish_forward(day)
 			if day.weekday() == 0:
 				self.procurement.weekly(day)
 			self.production.powertrains(day)

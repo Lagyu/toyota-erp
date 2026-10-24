@@ -76,6 +76,8 @@ DESK = [
 		groups=[
 			Group("Warehouse", [Link("Stock Entry", "Stock Entry"), Link("Cycle Count", "Cycle Count"),
 				Link("Stock Reconciliation", "Stock Reconciliation"), Link("Warehouse", "Warehouse")]),
+			Group("Storage", [Link("Putaway Rule", "Putaway Rule"), Link("Material Request", "Material Request"),
+				Link("Pick List", "Pick List")]),
 			Group("Transport", [Link("Transport Booking", "Transport Booking"), Link("Shipment Manifest", "Shipment Manifest"),
 				Link("Transport Exception", "Transport Exception"), Link("Delivery Note", "Delivery Note")]),
 			Group("Reports", [Link("Inventory Position", "Inventory Position", "Report"),
@@ -84,6 +86,8 @@ DESK = [
 		sidebar=[Link("Stock Entry", "Stock Entry", icon="arrow-left-right"), Link("Cycle Count", "Cycle Count", icon="list-ordered"),
 			Link("Shipment Manifest", "Shipment Manifest", icon="truck"),
 			Link("Transport Exception", "Transport Exception", icon="triangle-alert"),
+			Group("Storage", [Link("Pick List", "Pick List"), Link("Material Request", "Material Request"),
+				Link("Putaway Rule", "Putaway Rule")], icon="layers"),
 			Group("More", [Link("Transport Booking", "Transport Booking"), Link("Delivery Note", "Delivery Note"),
 				Link("Stock Reconciliation", "Stock Reconciliation"), Link("Warehouse", "Warehouse")], icon="list"),
 			Group("Reports", [Link("Inventory Position", "Inventory Position", "Report"),
