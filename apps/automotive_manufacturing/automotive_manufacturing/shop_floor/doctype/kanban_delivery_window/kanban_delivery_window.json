@@ -22,20 +22,20 @@
    "fieldname": "window_start",
    "fieldtype": "Time",
    "in_list_view": 1,
-   "label": "From",
+   "label": "Window Start",
    "reqd": 1
   },
   {
    "fieldname": "window_end",
    "fieldtype": "Time",
    "in_list_view": 1,
-   "label": "To",
+   "label": "Window End",
    "reqd": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-10-24 07:56:38.756383",
+ "modified": "2026-10-24 14:21:20.164426",
  "modified_by": "Administrator",
  "module": "Shop Floor",
  "name": "Kanban Delivery Window",

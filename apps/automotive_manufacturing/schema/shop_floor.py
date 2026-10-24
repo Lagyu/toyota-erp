@@ -76,8 +76,8 @@ DOCTYPES = [
 		fields=[
 			select("weekday", "Weekday", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
 				reqd=1, in_list_view=1),
-			time("window_start", "From", reqd=1, in_list_view=1),
-			time("window_end", "To", reqd=1, in_list_view=1),
+			time("window_start", "Window Start", reqd=1, in_list_view=1),
+			time("window_end", "Window End", reqd=1, in_list_view=1),
 		],
 	),
 	DocType(
@@ -111,7 +111,7 @@ DOCTYPES = [
 		fields=[
 			naming_series("KS-.YYYY.-"),
 			link("kanban_loop", "Loop", "Kanban Loop", reqd=1, read_only=1, in_list_view=1, in_standard_filter=1),
-			link("kanban_card", "Card", "Kanban Card", read_only=1),
+			link("kanban_card", "Kanban Card", "Kanban Card", read_only=1),
 			link("item_code", "Item", "Item", read_only=1, in_list_view=1),
 			float_("qty", "Qty", read_only=1),
 			link("plant", "Plant", "Plant", read_only=1, in_standard_filter=1),

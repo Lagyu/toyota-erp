@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Manufacturing VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 13:45+0919\n"
+"POT-Creation-Date: 2026-10-24 14:44+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.18.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #. Description of the 'VIN Prefix (WMI + VDS)' (Data) field in DocType 'Vehicle
 #. Model'
@@ -126,7 +126,7 @@ msgstr "買掛金担当者"
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
 msgid "Accepted"
-msgstr "受領済み"
+msgstr "受理"
 
 #: automotive_manufacturing/public/js/automotive_manufacturing.bundle.js:64
 msgid "Acknowledge"
@@ -221,11 +221,6 @@ msgstr "対象車両"
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:147
 msgid "Affected Work"
 msgstr "対象作業"
-
-#. Label of the after_json (Code) field in DocType 'Plant Schedule Change'
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:79
-msgid "After"
-msgstr "変更後"
 
 #. Option for the 'Rule Type' (Select) field in DocType 'Vehicle Option Rule'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:49
@@ -448,12 +443,6 @@ msgstr "経営幹部"
 msgid "Availability %"
 msgstr "時間稼働率（%）"
 
-#. Label of the available_units (Float) field in DocType 'Planning Run
-#. Capacity'
-#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:42
-msgid "Available"
-msgstr "利用可能"
-
 #. Label of the available_qty (Float) field in DocType 'Planning Run Shortage'
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:54
 msgid "Available + Scheduled"
@@ -463,6 +452,12 @@ msgstr "利用可能＋入庫予定"
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:72
 msgid "Available Minutes"
 msgstr "稼働可能時間（分）"
+
+#. Label of the available_units (Float) field in DocType 'Planning Run
+#. Capacity'
+#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:42
+msgid "Available Units"
+msgstr "利用可能台数"
 
 #. Label of the daily_demand (Float) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:157
@@ -531,11 +526,6 @@ msgstr "バッチ"
 #: automotive_manufacturing/traceability/report/vehicle_genealogy/vehicle_genealogy.py:21
 msgid "Batch / Lot"
 msgstr "バッチ"
-
-#. Label of the before_json (Code) field in DocType 'Plant Schedule Change'
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:72
-msgid "Before"
-msgstr "変更前"
 
 #. Label of the blanket_order (Link) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:122
@@ -677,7 +667,7 @@ msgstr "能力"
 #. Label of the capacity_units (Int) field in DocType 'Plant Schedule'
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:78
 msgid "Capacity (Units)"
-msgstr "能力（台）"
+msgstr "能力（台数）"
 
 #. Label of the capacity_conflicts (Int) field in DocType 'Planning Run'
 #: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:200
@@ -694,11 +684,6 @@ msgstr "能力負荷"
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:28
 msgid "Capacity shortages: the overloaded line (no item)"
 msgstr "能力による欠品の場合: 過負荷となっているライン（品目なし）"
-
-#. Label of the kanban_card (Link) field in DocType 'Kanban Signal'
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:57
-msgid "Card"
-msgstr "かんばんカード"
 
 #. Label of the card_id (Data) field in DocType 'Kanban Card'
 #: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:24
@@ -742,7 +727,7 @@ msgstr "原因"
 #: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json:21
 #: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:44
 msgid "Change"
-msgstr "変更種別"
+msgstr "変更"
 
 #. Label of a Card Break in the Product Engineering Workspace
 #: automotive_manufacturing/product_engineering/workspace/product_engineering/product_engineering.json:76
@@ -787,6 +772,11 @@ msgstr "変更内容"
 msgid "Check Line Capacity"
 msgstr "ライン能力をチェック"
 
+#. Label of the required (Check) field in DocType 'Vehicle Model Option Group'
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:27
+msgid "Choice Required"
+msgstr "選択必須"
+
 #: automotive_manufacturing/quality_control/dispositions.py:25
 msgid "Choose the destination warehouse."
 msgstr "移動先倉庫を選択してください。"
@@ -804,7 +794,7 @@ msgstr "クローズ"
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:115
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:94
 msgid "Closed"
-msgstr "クローズ済み"
+msgstr "クローズ"
 
 #. Label of the reason_code (Data) field in DocType 'Andon Reason Code'
 #: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:21
@@ -875,9 +865,7 @@ msgstr "構成部品シリアル番号"
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Vehicle
 #. Option Rule'
-#. Label of the check_item (Data) field in DocType 'Quality Hold Release Check'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:76
-#: automotive_manufacturing/quality_control/doctype/quality_hold_release_check/quality_hold_release_check.json:18
 msgid "Condition"
 msgstr "条件"
 
@@ -1088,7 +1076,7 @@ msgstr "ディーラーポータルユーザー"
 #: automotive_manufacturing/production_planning/doctype/planning_run_proposal/planning_run_proposal.json:106
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:76
 msgid "Decision"
-msgstr "判定"
+msgstr "判断"
 
 #. Description of a DocType
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:5
@@ -1097,7 +1085,7 @@ msgstr "不適合在庫に対する処置の判定です。提出すると、判
 
 #: automotive_manufacturing/product_engineering/report/bom_where_used/bom_where_used.py:22
 msgid "Default"
-msgstr "デフォルト"
+msgstr "既定"
 
 #. Option for the 'Inventory' (Select) field in DocType 'Vehicle Unit'
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
@@ -1105,7 +1093,7 @@ msgstr "デフォルト"
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
 #: automotive_manufacturing/traceability/recall.py:56
 msgid "Delivered"
-msgstr "納入済み"
+msgstr "納品済み"
 
 #: automotive_manufacturing/traceability/recall.py:41
 #, python-brace-format
@@ -1172,6 +1160,12 @@ msgstr "生産終了"
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
 msgid "Dispatched"
 msgstr "発送済み"
+
+#. Label of the display_order (Int) field in DocType 'Vehicle Model Option
+#. Group'
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:33
+msgid "Display Order"
+msgstr "表示順"
 
 #. Option for the 'Status' (Select) field in DocType 'Quality Hold'
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:127
@@ -1418,12 +1412,10 @@ msgstr "凍結"
 msgid "Friday"
 msgstr "金曜日"
 
-#. Label of the window_start (Time) field in DocType 'Kanban Delivery Window'
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.js:10
-#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:25
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:11
-msgid "From"
-msgstr "開始"
+msgid "From Date"
+msgstr "開始日"
 
 #. Label of the from_warehouse (Link) field in DocType 'Quality Disposition'
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:115
@@ -1473,7 +1465,7 @@ msgstr "構成履歴リンク"
 
 #: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.py:13
 msgid "Genealogy links are recorded automatically from stock entries."
-msgstr "構成履歴リンクは在庫エントリーから自動的に記録されます。"
+msgstr "構成履歴リンクは在庫移動から自動的に記録されます。"
 
 #: automotive_manufacturing/traceability/recall.py:29
 msgid "Give suspect batches, serials or a supplier."
@@ -1574,7 +1566,7 @@ msgstr "計画期間は1日以上400日以下で指定してください。"
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:259
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:337
 msgid "IT Operator"
-msgstr "ITオペレーター"
+msgstr "IT運用担当者"
 
 #. Option for the 'Replay Result' (Select) field in DocType 'Planning Run'
 #: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:171
@@ -1802,9 +1794,11 @@ msgid "Kanban"
 msgstr "かんばん"
 
 #. Name of a DocType
+#. Label of the kanban_card (Link) field in DocType 'Kanban Signal'
 #. Label of a Sidebar Item
 #. Label of a Link in the Shop Floor Workspace
 #: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:85
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:57
 #: automotive_manufacturing/shop_floor/sidebar/shop_floor/shop_floor.json:102
 #: automotive_manufacturing/shop_floor/workspace/shop_floor/shop_floor.json:112
 msgid "Kanban Card"
@@ -1901,13 +1895,6 @@ msgstr "ライフサイクル"
 msgid "Light Commercial"
 msgstr "小型商用車"
 
-#. Label of the production_line (Link) field in DocType 'Planning Run Capacity'
-#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:20
-#: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:21
-#: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.py:21
-msgid "Line"
-msgstr "ライン"
-
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.py:18
 msgid "Line / Work Order"
 msgstr "ライン / 作業指示"
@@ -1949,7 +1936,7 @@ msgstr "ライン停止"
 #. Label of a number card in the Shop Floor Workspace
 #: automotive_manufacturing/shop_floor/workspace/shop_floor/shop_floor.json:168
 msgid "Line Stop Hours"
-msgstr "ライン停止時間（時間）"
+msgstr "ライン停止時間"
 
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.py:21
 #, python-brace-format
@@ -2128,7 +2115,7 @@ msgstr "必要日"
 #. Label of the new_bom (Link) field in DocType 'ECO BOM Revision'
 #: automotive_manufacturing/product_engineering/doctype/eco_bom_revision/eco_bom_revision.json:26
 msgid "New BOM"
-msgstr "新BOM"
+msgstr "新規BOM"
 
 #. Label of the new_component (Link) field in DocType 'ECO Change'
 #: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json:44
@@ -2137,7 +2124,7 @@ msgstr "新しい構成部品"
 
 #: automotive_manufacturing/public/js/automotive_manufacturing.bundle.js:36
 msgid "New Version"
-msgstr "新バージョン作成"
+msgstr "新しいバージョン"
 
 #. Option for the 'Cause' (Select) field in DocType 'Planning Run Shortage'
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:75
@@ -2210,7 +2197,7 @@ msgstr "メモ"
 #: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:188
 #: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:161
 msgid "Notes"
-msgstr "備考"
+msgstr "メモ"
 
 #. Option for the 'Status' (Select) field in DocType 'Recall Campaign'
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:94
@@ -2286,7 +2273,7 @@ msgstr "再現可能な1回のMRP実行です。記録された入力、決定�
 msgid "One value per line."
 msgstr "1行に1つの値を入力してください。"
 
-#: automotive_manufacturing/quality_control/inspections.py:116
+#: automotive_manufacturing/quality_control/inspections.py:119
 #, python-brace-format
 msgid "Only a submitted, rejected inspection can be re-inspected ({0} is {1})."
 msgstr "再検査できるのは、提出済みで不合格となった検査のみです（{0} は {1}）。"
@@ -2375,12 +2362,6 @@ msgstr "オプションルール"
 msgid "Option groups {0} must match the template's variant attributes {1}."
 msgstr "オプショングループ {0} は、テンプレートのバリアント属性 {1} と一致している必要があります。"
 
-#. Label of the display_order (Int) field in DocType 'Vehicle Model Option
-#. Group'
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:33
-msgid "Order"
-msgstr "表示順"
-
 #. Option for the 'Status' (Select) field in DocType 'Kanban Signal'
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:114
 msgid "Ordered"
@@ -2389,7 +2370,7 @@ msgstr "発注済み"
 #. Label of a Card Break in the Production Planning Workspace
 #: automotive_manufacturing/production_planning/workspace/production_planning/production_planning.json:66
 msgid "Orders"
-msgstr "オーダー"
+msgstr "注文"
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Quality Hold'
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:134
@@ -2722,7 +2703,7 @@ msgstr "調達マネージャー"
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:269
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:347
 msgid "Product Engineer"
-msgstr "製品技術者"
+msgstr "製品エンジニア"
 
 #. Title of a Sidebar
 #. Name of a Workspace
@@ -2753,6 +2734,7 @@ msgid "Production Issue"
 msgstr "生産上の問題"
 
 #. Label of the production_line (Link) field in DocType 'Vehicle Model'
+#. Label of the production_line (Link) field in DocType 'Planning Run Capacity'
 #. Label of the production_line (Link) field in DocType 'Planning Run Shortage'
 #. Label of the production_line (Link) field in DocType 'Plant Schedule'
 #. Option for the 'Scope' (Select) field in DocType 'Quality Hold'
@@ -2762,14 +2744,17 @@ msgstr "生産上の問題"
 #. Label of the production_line (Link) field in DocType 'Shift Handover'
 #. Label of the production_line (Link) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:85
+#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:20
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:32
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:38
+#: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:21
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:53
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:111
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:66
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:72
 #: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:58
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:8
+#: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.py:21
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.js:8
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:102
 msgid "Production Line"
@@ -3100,7 +3085,7 @@ msgstr "品質保留をかける"
 msgid "Re-inspect after Rework"
 msgstr "手直し後の再検査"
 
-#: automotive_manufacturing/quality_control/inspections.py:134
+#: automotive_manufacturing/quality_control/inspections.py:135
 #, python-brace-format
 msgid "Re-inspection after rework of {0}"
 msgstr "{0} の手直し後の再検査"
@@ -3159,7 +3144,7 @@ msgstr "入荷済み"
 #. Label of the received_at (Datetime) field in DocType 'Kanban Signal'
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:164
 msgid "Received At"
-msgstr "入荷日時"
+msgstr "受信日時"
 
 #. Label of the recommended_cards (Int) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:169
@@ -3194,7 +3179,7 @@ msgstr "法規対応"
 #: automotive_manufacturing/production_planning/doctype/planning_run_proposal/planning_run_proposal.json:107
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:145
 msgid "Rejected"
-msgstr "却下"
+msgstr "却下済み"
 
 #: automotive_manufacturing/quality_control/inspections.py:60
 #, python-brace-format
@@ -3228,6 +3213,11 @@ msgstr "リリース / 発注期限"
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:120
 msgid "Release / Use As Is / Rework destination. Scrap uses the plant scrap warehouse."
 msgstr "リリース・特別採用・手直しの移動先です。廃棄の場合は工場の廃棄倉庫を使用します。"
+
+#. Label of the check_item (Data) field in DocType 'Quality Hold Release Check'
+#: automotive_manufacturing/quality_control/doctype/quality_hold_release_check/quality_hold_release_check.json:18
+msgid "Release Condition"
+msgstr "保留解除条件"
 
 #. Label of the release_checks (Table) field in DocType 'Quality Hold'
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:175
@@ -3367,14 +3357,15 @@ msgstr "取消要求"
 msgid "Requested By"
 msgstr "依頼者"
 
-#. Label of the required (Check) field in DocType 'Vehicle Model Option Group'
-#. Label of the required_units (Float) field in DocType 'Planning Run Capacity'
 #. Label of the required_qty (Float) field in DocType 'Planning Run Shortage'
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:27
-#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:35
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:47
-msgid "Required"
-msgstr "必要"
+msgid "Required Qty"
+msgstr "所要数量"
+
+#. Label of the required_units (Float) field in DocType 'Planning Run Capacity'
+#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:35
+msgid "Required Units"
+msgstr "所要台数"
 
 #. Option for the 'Rule Type' (Select) field in DocType 'Vehicle Option Rule'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:49
@@ -3461,48 +3452,48 @@ msgstr "手直し作業指示"
 #: automotive_manufacturing/product_engineering/change_control.py:172
 #, python-brace-format
 msgid "Row {0}: BOM {1} already uses {2} of {3}; enter the new quantity."
-msgstr "行 {0}: BOM {1} では既に {3} を {2} 使用しています。新しい数量を入力してください。"
+msgstr "行{0}：BOM {1} では既に {3} を {2} 使用しています。新しい数量を入力してください。"
 
 #: automotive_manufacturing/product_engineering/change_control.py:158
 #, python-brace-format
 msgid "Row {0}: BOM {1} is already superseded by {2}."
-msgstr "行 {0}: BOM {1} は既に {2} に置き換えられています。"
+msgstr "行{0}：BOM {1} は既に {2} に置き換えられています。"
 
 #: automotive_manufacturing/product_engineering/change_control.py:156
 #, python-brace-format
 msgid "Row {0}: BOM {1} is not an active released BOM."
-msgstr "行 {0}: BOM {1} は有効なリリース済みBOMではありません。"
+msgstr "行{0}：BOM {1} は有効なリリース済みBOMではありません。"
 
 #: automotive_manufacturing/product_engineering/change_control.py:166
 #, python-brace-format
 msgid "Row {0}: choose the component to add."
-msgstr "行 {0}: 追加する構成部品を選択してください。"
+msgstr "行{0}：追加する構成部品を選択してください。"
 
 #: automotive_manufacturing/product_engineering/change_control.py:164
 #, python-brace-format
 msgid "Row {0}: choose the new component."
-msgstr "行 {0}: 新しい構成部品を選択してください。"
+msgstr "行{0}：新しい構成部品を選択してください。"
 
 #: automotive_manufacturing/product_engineering/change_control.py:168
 #, python-brace-format
 msgid "Row {0}: quantity must be positive."
-msgstr "行 {0}: 数量は正の値にしてください。"
+msgstr "行{0}：数量は正の値にしてください。"
 
 #: automotive_manufacturing/quality_control/holds.py:149
 #, python-brace-format
 msgid "Row {0}: vehicle {1} is not quality-released ({2})."
-msgstr "行 {0}: 車両 {1} は品質リリースされていません（{2}）。"
+msgstr "行{0}：車両 {1} は品質リリースされていません（{2}）。"
 
 #: automotive_manufacturing/quality_control/holds.py:99
 #: automotive_manufacturing/quality_control/holds.py:144
 #, python-brace-format
 msgid "Row {0}: {1}"
-msgstr "行 {0}: {1}"
+msgstr "行{0}：{1}"
 
 #: automotive_manufacturing/product_engineering/change_control.py:162
 #, python-brace-format
 msgid "Row {0}: {1} is not in BOM {2}."
-msgstr "行 {0}: {1} はBOM {2} に含まれていません。"
+msgstr "行{0}：{1} はBOM {2} に含まれていません。"
 
 #. Label of the rule_code (Data) field in DocType 'Vehicle Option Rule'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:31
@@ -3616,7 +3607,7 @@ msgstr "生産順序計画の変更記録は削除できません。"
 #: automotive_manufacturing/production_planning/schedule.py:165
 #, python-brace-format
 msgid "Schedule {0} is {1}."
-msgstr "生産順序計画 {0} のステータスは {1} です。"
+msgstr "計画{0}のステータスは{1}です。"
 
 #. Label of the hold_scope (Select) field in DocType 'Quality Hold'
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:52
@@ -3664,6 +3655,16 @@ msgstr "順序番号"
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:104
 msgid "Sequence"
 msgstr "順序"
+
+#. Label of the after_json (Code) field in DocType 'Plant Schedule Change'
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:79
+msgid "Sequence After"
+msgstr "変更後の順序"
+
+#. Label of the before_json (Code) field in DocType 'Plant Schedule Change'
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:72
+msgid "Sequence Before"
+msgstr "変更前の順序"
 
 #. Option for the 'Scope' (Select) field in DocType 'Quality Hold'
 #. Label of the serial_no (Link) field in DocType 'Quality Hold'
@@ -3713,7 +3714,7 @@ msgstr "採番シリーズ"
 #. Label of a Sidebar Item
 #: automotive_manufacturing/production_planning/sidebar/production_planning/production_planning.json:79
 msgid "Setup"
-msgstr "設定"
+msgstr "セットアップ"
 
 #. Label of the shift_code (Data) field in DocType 'Plant Schedule Slot'
 #. Label of the shift_code (Data) field in DocType 'Shift Handover'
@@ -3817,7 +3818,7 @@ msgstr "スキップ"
 #. Label of the signal_source (Select) field in DocType 'Kanban Signal'
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:90
 msgid "Source"
-msgstr "発生元"
+msgstr "ソース"
 
 #. Label of the source_name (Dynamic Link) field in DocType 'Quality Hold'
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:151
@@ -3827,11 +3828,11 @@ msgstr "発生元ドキュメント"
 #. Label of the source_warehouse (Link) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:106
 msgid "Source Warehouse"
-msgstr "供給元倉庫"
+msgstr "移動元倉庫"
 
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.py:21
 msgid "Source and line-side warehouse must differ."
-msgstr "供給元倉庫とラインサイド倉庫には別の倉庫を指定してください。"
+msgstr "移動元倉庫とラインサイド倉庫には別の倉庫を指定してください。"
 
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:26
 msgid "Standard Material"
@@ -3891,7 +3892,7 @@ msgstr "自社在庫に残存"
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:153
 #: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:103
 msgid "Stock Entry"
-msgstr "在庫エントリー"
+msgstr "在庫移動"
 
 #. Label of the duration_minutes (Float) field in DocType 'Andon Event'
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:234
@@ -3963,7 +3964,7 @@ msgstr "仕入先変更"
 #: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:97
 #: automotive_manufacturing/traceability/report/vehicle_genealogy/vehicle_genealogy.py:25
 msgid "Supplier Lot"
-msgstr "仕入先バッチ"
+msgstr "仕入先ロット"
 
 #: automotive_manufacturing/quality_control/holds.py:128
 #, python-brace-format
@@ -3994,7 +3995,7 @@ msgstr "疑義シリアル番号"
 #. Option for the 'Status' (Select) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:89
 msgid "Suspended"
-msgstr "一時停止中"
+msgstr "停止中"
 
 #. Description of a DocType
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:5
@@ -4023,7 +4024,7 @@ msgstr "模擬的な構成部品リコールです。疑義のあるバッチ・
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:162
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:249
 msgid "System Manager"
-msgstr "システムマネージャー"
+msgstr "システム管理者"
 
 #. Label of the takt_time_seconds (Float) field in DocType 'Plant Schedule'
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:66
@@ -4080,12 +4081,10 @@ msgstr "木曜日"
 msgid "Title"
 msgstr "タイトル"
 
-#. Label of the window_end (Time) field in DocType 'Kanban Delivery Window'
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.js:14
-#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:32
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:15
-msgid "To"
-msgstr "終了"
+msgid "To Date"
+msgstr "終了日"
 
 #. Label of the to_warehouse (Link) field in DocType 'Quality Disposition'
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:123
@@ -4194,7 +4193,7 @@ msgstr "使用先"
 #: automotive_manufacturing/traceability/doctype/recall_affected_unit/recall_affected_unit.json:20
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:44
 msgid "VIN / Serial"
-msgstr "VIN / シリアル番号"
+msgstr "VIN（車台番号）／シリアル番号"
 
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.py:21
 #: automotive_manufacturing/traceability/report/vehicle_genealogy/vehicle_genealogy.js:8
@@ -4429,6 +4428,16 @@ msgstr "このバージョンの変更点"
 msgid "Why"
 msgstr "理由"
 
+#. Label of the window_end (Time) field in DocType 'Kanban Delivery Window'
+#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:32
+msgid "Window End"
+msgstr "納入時間帯（終了）"
+
+#. Label of the window_start (Time) field in DocType 'Kanban Delivery Window'
+#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:25
+msgid "Window Start"
+msgstr "納入時間帯（開始）"
+
 #. Label of the work_order (Link) field in DocType 'Plant Schedule Slot'
 #. Label of a Sidebar Item
 #. Label of a Link in the Production Planning Workspace
@@ -4483,7 +4492,7 @@ msgstr "この日付以降に開始予定の作業指示には、新しい改訂
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:53
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:105
 msgid "Workstation"
-msgstr "ワークステーション"
+msgstr "作業区"
 
 #. Description of the 'Recommended Cards' (Int) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:166

@@ -19,6 +19,9 @@ python3 scripts/dev/schema/generate.py --check || status=1
 step "OpenAPI contract matches the whitelisted methods"
 python3 scripts/dev/openapi.py --check || status=1
 
+step "translations: complete, placeholders and HTML tags kept"
+python3 scripts/dev/check_po.py --require-complete apps/*/*/locale/ja.po || status=1
+
 step "YAML / JSON syntax"
 python3 - <<'PY' || status=1
 import json, pathlib, sys

@@ -152,7 +152,7 @@ async function configure({ go, alert }) {
 	return h("div", {},
 		section(__("Configure a vehicle"), modelField, options, qtyField,
 			h("div", { class: "hp-actions" }, checkButton, addButton), result),
-		section(__("Order"), cartTable, orderForm));
+		section(__("New Order"), cartTable, orderForm));
 }
 
 // Orders -----------------------------------------------------------------------------------
@@ -165,10 +165,10 @@ async function orders({ go, name, alert }) {
 		rows: list,
 		onOpen: (r) => go("orders", { name: r.name }),
 		columns: [
-			{ label: __("Order"), field: "name" },
+			{ label: __("Order No."), field: "name" },
 			{ label: __("Your reference"), field: "dealer_reference" },
 			{ label: __("Type"), render: (r) => __(r.order_type) },
-			{ label: __("Requested"), render: (r) => fmtDate(r.requested_delivery_date) },
+			{ label: __("Requested Delivery"), render: (r) => fmtDate(r.requested_delivery_date) },
 			{ label: __("Promised"), render: (r) => fmtDate(r.promised_date) },
 			{ label: __("Total"), numeric: true, render: (r) => fmtMoney(r.total, r.currency) },
 			{ label: __("Status"), render: (r) => status(r.status) },
@@ -217,7 +217,7 @@ async function orderDetail(name, go, alert) {
 				caption: __("Ordered vehicles"),
 				rows: o.lines,
 				columns: [
-					{ label: __("Line"), numeric: true, field: "idx" },
+					{ label: __("Line No."), numeric: true, field: "idx" },
 					{ label: __("Model"), field: "model" },
 					{ label: __("Variant"), field: "variant" },
 					{ label: __("Quantity"), numeric: true, render: (r) => fmtNumber(r.qty, 0) },
@@ -279,7 +279,7 @@ async function deliveries({ go, alert, accept }) {
 			region: alert,
 			fields: [
 				h("p", {}, __("Vehicles: {0}", [(dn ? dn.vehicles : []).join(", ")])),
-				field({ label: __("Condition"), name: "condition", type: "select", required: true, value: "Accepted", options: [
+				field({ label: __("Delivery Condition"), name: "condition", type: "select", required: true, value: "Accepted", options: [
 					{ value: "Accepted", label: __("Accepted in good condition") },
 					{ value: "Accepted With Damage", label: __("Accepted with damage") },
 					{ value: "Rejected", label: __("Rejected") }] }),
@@ -357,7 +357,7 @@ async function support({ go, alert }) {
 			columns: [
 				{ label: __("Request"), field: "name" },
 				{ label: __("Subject"), field: "subject" },
-				{ label: __("Opened"), render: (r) => fmtDate(r.opening_date) },
+				{ label: __("Opened On"), render: (r) => fmtDate(r.opening_date) },
 				{ label: __("Priority"), render: (r) => __(r.priority || "") },
 				{ label: __("Status"), render: (r) => status(r.status) },
 			],

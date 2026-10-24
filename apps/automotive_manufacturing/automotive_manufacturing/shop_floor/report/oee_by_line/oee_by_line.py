@@ -18,7 +18,7 @@ def execute(filters=None):
 	to_date = getdate(filters.to_date or nowdate())
 	from_date = getdate(filters.from_date or add_days(to_date, -6))
 	columns = [
-		{"fieldname": "production_line", "label": _("Line"), "fieldtype": "Link", "options": "Production Line", "width": 130},
+		{"fieldname": "production_line", "label": _("Production Line"), "fieldtype": "Link", "options": "Production Line", "width": 130},
 		{"fieldname": "date", "label": _("Date"), "fieldtype": "Date", "width": 100},
 		{"fieldname": "available_minutes", "label": _("Planned Minutes"), "fieldtype": "Float", "width": 120},
 		{"fieldname": "stop_minutes", "label": _("Line-Stop Minutes"), "fieldtype": "Float", "width": 130},

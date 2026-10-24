@@ -75,8 +75,8 @@ DOCTYPES = [
 		child=True,
 		fields=[
 			link("attribute", "Attribute", "Item Attribute", reqd=1, in_list_view=1),
-			check("required", "Required", default="1", in_list_view=1),
-			int_("display_order", "Order", in_list_view=1),
+			check("required", "Choice Required", default="1", in_list_view=1),
+			int_("display_order", "Display Order", in_list_view=1),
 			data("label", "Label", in_list_view=1, translatable=1),
 		],
 	),

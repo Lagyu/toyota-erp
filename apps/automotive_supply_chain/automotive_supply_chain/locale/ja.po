@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Supply Chain VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 13:45+0919\n"
+"POT-Creation-Date: 2026-10-24 14:44+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.18.0\n"
+"Generated-By: Babel 2.17.0\n"
 
 #. Header text in the Dealer Operations Workspace
 #: automotive_supply_chain/dealer_operations/workspace/dealer_operations/dealer_operations.json:3
@@ -48,16 +48,16 @@ msgstr "<span class=\"h4\"><b>仕入先コラボレーション</b></span>"
 msgid "A"
 msgstr "A"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:29
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:40
 msgid "A contact email appears twice."
 msgstr "連絡先のメールアドレスが重複しています。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:30
+#: automotive_supply_chain/dealer_operations/orders.py:33
 #, python-brace-format
 msgid "A customer with tax id {0} already exists."
 msgstr "納税者番号 {0} の顧客はすでに存在します。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:269
+#: automotive_supply_chain/dealer_operations/orders.py:273
 msgid "A delivered line cannot change configuration."
 msgstr "納品済みの明細は仕様構成を変更できません。"
 
@@ -74,7 +74,7 @@ msgstr "仕入先のポータルに表示される仕入先向けのお知らせ
 msgid "A reason is required."
 msgstr "理由を入力してください。"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:81
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:93
 msgid "A rejected PPAP cannot be approved for supply."
 msgstr "却下された PPAP では供給を承認できません。"
 
@@ -87,7 +87,7 @@ msgstr "解決メモを入力してください。"
 msgid "A specific vehicle reserved (Stock Reservation Entry) for a dealer order line."
 msgstr "販売店注文明細に対して予約された特定の車両です（在庫予約エントリ）。"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:20
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:31
 #, python-brace-format
 msgid "A supplier with tax id {0} already exists."
 msgstr "納税者番号 {0} の仕入先はすでに存在します。"
@@ -96,7 +96,7 @@ msgstr "納税者番号 {0} の仕入先はすでに存在します。"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:180
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:256
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:240
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:251
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:259
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:211
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:209
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:217
@@ -114,7 +114,7 @@ msgstr "納税者番号 {0} の仕入先はすでに存在します。"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:253
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:265
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:188
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:262
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:270
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:216
 msgid "AP Clerk"
 msgstr "買掛金担当者"
@@ -154,7 +154,8 @@ msgid "Accept Variance"
 msgstr "差異を容認する"
 
 #. Option for the 'Status' (Select) field in DocType 'Dealer Order'
-#. Option for the 'Condition' (Select) field in DocType 'Delivery Acceptance'
+#. Option for the 'Delivery Condition' (Select) field in DocType 'Delivery
+#. Acceptance'
 #. Option for the 'Status' (Select) field in DocType 'Invoice Match Exception'
 #. Option for the 'Response' (Select) field in DocType 'Supplier Order
 #. Acknowledgement'
@@ -181,7 +182,8 @@ msgstr "受入数量"
 msgid "Accepted With Changes"
 msgstr "変更ありで受理"
 
-#. Option for the 'Condition' (Select) field in DocType 'Delivery Acceptance'
+#. Option for the 'Delivery Condition' (Select) field in DocType 'Delivery
+#. Acceptance'
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:62
 msgid "Accepted With Damage"
 msgstr "損傷ありで受理"
@@ -224,7 +226,7 @@ msgstr "注文請書"
 msgid "Active"
 msgstr "有効"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:140
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:152
 msgid "Add at least one quotation."
 msgstr "見積を1件以上追加してください。"
 
@@ -317,7 +319,7 @@ msgstr "引当の変更は「引当」と「解除」の操作でのみ行えま
 #. Acknowledgement'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:147
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:131
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:136
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:144
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:102
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:118
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:129
@@ -327,7 +329,7 @@ msgstr "引当の変更は「引当」と「解除」の操作でのみ行えま
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:167
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:138
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:150
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:147
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:155
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:107
 msgid "Amended From"
 msgstr "修正元"
@@ -351,7 +353,7 @@ msgstr "通知数 {0}、入荷数 {1}、不合格数 {2}。"
 msgid "Applied"
 msgstr "適用済み"
 
-#: automotive_supply_chain/dealer_operations/orders.py:303
+#: automotive_supply_chain/dealer_operations/orders.py:307
 #, python-brace-format
 msgid "Apply dealer order change {0}"
 msgstr "販売店注文変更 {0} の適用"
@@ -360,10 +362,10 @@ msgstr "販売店注文変更 {0} の適用"
 #. Option for the 'Status' (Select) field in DocType 'Approved Supplier List'
 #. Option for the 'PPAP' (Select) field in DocType 'Approved Supplier List'
 #. Option for the 'Status' (Select) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:110
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:118
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:81
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:105
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:99
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:107
 msgid "Approved"
 msgstr "承認済み"
 
@@ -395,11 +397,15 @@ msgstr "到着済み"
 msgid "As Of"
 msgstr "基準日"
 
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.js:7
+msgid "As On"
+msgstr "基準日"
+
 #. Name of a role
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:205
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:281
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:265
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:276
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:284
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:236
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:234
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:242
@@ -417,14 +423,14 @@ msgstr "基準日"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:278
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:290
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:213
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:287
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:295
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:241
 msgid "Auditor"
 msgstr "監査人"
 
 #. Label of the authorized_models (Table MultiSelect) field in DocType 'Dealer
 #. Registration'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:99
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:107
 msgid "Authorised Models"
 msgstr "取扱許可車種"
 
@@ -432,7 +438,7 @@ msgstr "取扱許可車種"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:125
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:201
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:185
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:196
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:204
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:156
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:154
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:162
@@ -449,7 +455,7 @@ msgstr "取扱許可車種"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:198
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:210
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:133
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:207
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:215
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:161
 msgid "Automotive Executive"
 msgstr "経営幹部"
@@ -478,7 +484,7 @@ msgstr "採用仕入先（最大配分）"
 msgid "Awarded Share %"
 msgstr "採用配分比率（%）"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:160
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:172
 #, python-brace-format
 msgid "Awarded shares must add up to 100% (now {0}%)."
 msgstr "採用配分比率の合計は100%にしてください（現在 {0}%）。"
@@ -508,6 +514,18 @@ msgstr "バッチ"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:83
 msgid "Best Value"
 msgstr "総合評価"
+
+#. Description of the 'Tax Category' (Link) field in DocType 'Dealer
+#. Registration'
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:81
+msgid "Blank: from Automotive Settings > Taxes (company and dealer country)."
+msgstr "空欄の場合は、自動車事業設定の「税金」タブ（会社と販売店の国）から設定されます。"
+
+#. Description of the 'Tax Category' (Link) field in DocType 'Supplier
+#. Onboarding'
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:76
+msgid "Blank: from Automotive Settings > Taxes (the supplied plants' company and the supplier's country)."
+msgstr "空欄の場合は、自動車事業設定の「税金」タブ（納入先工場の会社と仕入先の国）から設定されます。"
 
 #. Label of the blanket_order (Link) field in DocType 'Supplier Delivery
 #. Schedule'
@@ -542,10 +560,11 @@ msgstr "箱型トラック"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:170
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:246
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:230
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:241
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:249
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:201
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:199
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:207
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:37
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:175
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:175
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:259
@@ -560,7 +579,7 @@ msgstr "箱型トラック"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:174
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:186
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:107
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:183
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:191
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:143
 msgid "Buyer"
 msgstr "購買担当者"
@@ -570,6 +589,10 @@ msgstr "購買担当者"
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:49
 msgid "Buyer Company"
 msgstr "買手会社"
+
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:44
+msgid "Buyer Invoice"
+msgstr "買い手側の請求書"
 
 #: automotive_supply_chain/intercompany/report/intercompany_reconciliation/intercompany_reconciliation.py:29
 msgid "Buyer Payable"
@@ -599,7 +622,7 @@ msgstr "注文取消"
 msgid "Cancelled"
 msgstr "取消済み"
 
-#: automotive_supply_chain/dealer_operations/orders.py:266
+#: automotive_supply_chain/dealer_operations/orders.py:270
 #, python-brace-format
 msgid "Cannot go below the {0} already delivered."
 msgstr "納品済み数量 {0} を下回る数量には変更できません。"
@@ -645,15 +668,20 @@ msgstr "認証書"
 msgid "Certificate No"
 msgstr "認証書番号"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:24
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:35
 #, python-brace-format
 msgid "Certificate {0} ({1}) has expired."
 msgstr "認証書 {0}（{1}）の有効期限が切れています。"
 
+#. Label of the standard (Select) field in DocType 'Supplier Certification'
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:18
+msgid "Certification Standard"
+msgstr "認証規格"
+
 #. Label of the section_break_1 (Section Break) field in DocType 'Supplier
 #. Onboarding'
 #. Label of the certifications (Table) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:114
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:122
 msgid "Certifications"
 msgstr "認証"
 
@@ -703,6 +731,7 @@ msgstr "区分"
 #. Label of the company (Link) field in DocType 'Sourcing Decision'
 #. Label of the company (Link) field in DocType 'Supplier Delivery Schedule'
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:32
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.js:6
 #: automotive_supply_chain/intercompany/report/intercompany_reconciliation/intercompany_reconciliation.js:6
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:50
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:64
@@ -719,11 +748,6 @@ msgstr "区分"
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.js:6
 msgid "Company"
 msgstr "会社"
-
-#. Label of the condition (Select) field in DocType 'Delivery Acceptance'
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:61
-msgid "Condition"
-msgstr "状態"
 
 #. Label of the configuration (Link) field in DocType 'Dealer Order Item'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_item/dealer_order_item.json:29
@@ -790,8 +814,8 @@ msgstr "預託在庫 {0}（{1}）"
 
 #. Label of the contacts (Table) field in DocType 'Dealer Registration'
 #. Label of the contacts (Table) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:130
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:130
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:138
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:138
 msgid "Contacts"
 msgstr "連絡先"
 
@@ -799,8 +823,8 @@ msgstr "連絡先"
 #. Registration'
 #. Label of the section_break_2 (Section Break) field in DocType 'Supplier
 #. Onboarding'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:125
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:125
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:133
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:133
 msgid "Contacts (portal users)"
 msgstr "連絡先（ポータルユーザー）"
 
@@ -844,18 +868,18 @@ msgstr "棚卸済み"
 
 #. Label of the country (Link) field in DocType 'Dealer Registration'
 #. Label of the country (Link) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:69
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:64
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:70
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:65
 msgid "Country"
 msgstr "国"
 
 #. Label of the customer (Link) field in DocType 'Dealer Registration'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:117
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:125
 msgid "Created Dealer"
 msgstr "作成済み販売店"
 
 #. Label of the supplier (Link) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:106
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:114
 msgid "Created Supplier"
 msgstr "作成済み仕入先"
 
@@ -863,6 +887,7 @@ msgstr "作成済み仕入先"
 #. Label of the currency (Link) field in DocType 'Transfer Price Agreement'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:128
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:94
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:43
 msgid "Currency"
 msgstr "通貨"
 
@@ -910,6 +935,10 @@ msgstr "損傷"
 msgid "Date"
 msgstr "日付"
 
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:39
+msgid "Days In Transit"
+msgstr "輸送日数"
+
 #. Label of the dealer (Link) field in DocType 'Dealer Order'
 #. Label of the dealer (Link) field in DocType 'Dealer Order Change'
 #. Label of the dealer (Link) field in DocType 'Delivery Acceptance'
@@ -927,7 +956,7 @@ msgid "Dealer Authorised Model"
 msgstr "販売店取扱許可車種"
 
 #. Label of the dealer_code (Data) field in DocType 'Dealer Registration'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:49
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:50
 msgid "Dealer Code"
 msgstr "販売店コード"
 
@@ -935,7 +964,7 @@ msgstr "販売店コード"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:118
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:194
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:178
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:183
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:191
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:149
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:149
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:232
@@ -952,13 +981,13 @@ msgstr "販売店コード"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:268
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:280
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:203
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:277
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:285
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:231
 msgid "Dealer Liaison"
 msgstr "販売店窓口担当者"
 
 #. Label of the dealer_name (Data) field in DocType 'Dealer Registration'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:43
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:44
 msgid "Dealer Name"
 msgstr "販売店名"
 
@@ -997,8 +1026,8 @@ msgstr "販売店注文変更"
 msgid "Dealer Order Item"
 msgstr "販売店注文明細"
 
-#: automotive_supply_chain/dealer_operations/orders.py:198
-#: automotive_supply_chain/dealer_operations/orders.py:232
+#: automotive_supply_chain/dealer_operations/orders.py:202
+#: automotive_supply_chain/dealer_operations/orders.py:236
 #, python-brace-format
 msgid "Dealer Order {0} is {1}."
 msgstr "販売店注文 {0} のステータスは {1} です。"
@@ -1030,7 +1059,7 @@ msgstr "販売店参照番号"
 #. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Link in the Dealer Operations Workspace
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:150
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:158
 #: automotive_supply_chain/dealer_operations/sidebar/dealer_operations/dealer_operations.json:77
 #: automotive_supply_chain/dealer_operations/workspace/dealer_operations/dealer_operations.json:26
 msgid "Dealer Registration"
@@ -1046,22 +1075,22 @@ msgstr "販売店登録連絡先"
 msgid "Dealer application: on approval the dealer (Customer), credit limit, price list and portal users exist."
 msgstr "販売店の申請です。承認されると、販売店（顧客）、与信限度額、価格表、ポータルユーザーが作成されます。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:28
+#: automotive_supply_chain/dealer_operations/orders.py:31
 #, python-brace-format
 msgid "Dealer code {0} is already used."
 msgstr "販売店コード {0} はすでに使用されています。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:306
+#: automotive_supply_chain/dealer_operations/orders.py:310
 #, python-brace-format
 msgid "Dealer order change {0}: {1}"
 msgstr "販売店注文変更 {0}: {1}"
 
-#: automotive_supply_chain/dealer_operations/orders.py:144
+#: automotive_supply_chain/dealer_operations/orders.py:148
 #, python-brace-format
 msgid "Dealer reference {0} was already used ({1})."
 msgstr "販売店参照番号 {0} はすでに使用されています（{1}）。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:154
+#: automotive_supply_chain/dealer_operations/orders.py:158
 #, python-brace-format
 msgid "Dealer {0} has no price list."
 msgstr "販売店 {0} に価格表が設定されていません。"
@@ -1112,21 +1141,21 @@ msgstr "納入先"
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:60
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:112
 msgid "Delivered"
-msgstr "配達済み"
+msgstr "納品済み"
 
 #. Label of the delivered_at (Datetime) field in DocType 'Shipment Manifest'
 #: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:148
 msgid "Delivered At"
 msgstr "配達日時"
 
-#: automotive_supply_chain/dealer_operations/orders.py:275
+#: automotive_supply_chain/dealer_operations/orders.py:279
 msgid "Delivered orders cannot be cancelled; use a return instead."
 msgstr "納品済みの注文は取り消せません。代わりに返品を使用してください。"
 
 #. Label of the delivery_status (Select) field in DocType 'Shipment Manifest'
 #: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:105
 msgid "Delivery"
-msgstr "配達"
+msgstr "納品"
 
 #. Label of a Card Break in the Dealer Operations Workspace
 #: automotive_supply_chain/dealer_operations/workspace/dealer_operations/dealer_operations.json:104
@@ -1142,6 +1171,11 @@ msgstr "納品・請求"
 msgid "Delivery Acceptance"
 msgstr "納車受領"
 
+#. Label of the condition (Select) field in DocType 'Delivery Acceptance'
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:61
+msgid "Delivery Condition"
+msgstr "納車時の状態"
+
 #. Label of the delivery_date (Date) field in DocType 'Supplier Schedule Line'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_schedule_line/supplier_schedule_line.json:30
 msgid "Delivery Date"
@@ -1154,6 +1188,7 @@ msgstr "納期"
 #. Label of a Link in the Logistics Workspace
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:39
 #: automotive_supply_chain/dealer_operations/workspace/dealer_operations/dealer_operations.json:112
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:34
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:20
 #: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:102
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:104
@@ -1261,7 +1296,7 @@ msgstr "不適格"
 #. Label of the reference_doctype (Link) field in DocType 'Supplier Notice'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:58
 msgid "DocType"
-msgstr "DocType"
+msgstr "ドキュメントタイプ"
 
 #. Label of the reference_name (Dynamic Link) field in DocType 'Supplier
 #. Notice'
@@ -1272,7 +1307,7 @@ msgstr "ドキュメント"
 #. Option for the 'Exception' (Select) field in DocType 'Transport Exception'
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:61
 msgid "Documentation"
-msgstr "書類不備"
+msgstr "書類"
 
 #. Option for the 'Status' (Select) field in DocType 'Dealer Order'
 #. Option for the 'Status' (Select) field in DocType 'Dealer Order Change'
@@ -1285,12 +1320,12 @@ msgstr "書類不備"
 #. Option for the 'Status' (Select) field in DocType 'Supplier Onboarding'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:89
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:106
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:110
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:118
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:101
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:113
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:98
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:99
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:107
 msgid "Draft"
 msgstr "下書き"
 
@@ -1302,7 +1337,7 @@ msgstr "ドライバー"
 #. Label of the effect (Small Text) field in DocType 'Dealer Order Change'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:124
 msgid "Effect"
-msgstr "適用結果"
+msgstr "結果"
 
 #. Label of the effective_from (Date) field in DocType 'Sourcing Decision'
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:71
@@ -1326,7 +1361,7 @@ msgstr "メール"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:215
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:291
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:275
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:286
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:294
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:246
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:244
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:252
@@ -1343,7 +1378,7 @@ msgstr "メール"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:288
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:300
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:223
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:297
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:305
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:251
 msgid "Engineering Manager"
 msgstr "技術マネージャー"
@@ -1351,7 +1386,7 @@ msgstr "技術マネージャー"
 #. Label of the vehicle_type (Select) field in DocType 'Transport Booking'
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:72
 msgid "Equipment"
-msgstr "機材"
+msgstr "設備"
 
 #. Option for the 'Delivery' (Select) field in DocType 'Shipment Manifest'
 #. Option for the 'Status' (Select) field in DocType 'Shipment Manifest Item'
@@ -1427,13 +1462,13 @@ msgstr "固定価格"
 
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.js:11
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.js:10
-msgid "From"
-msgstr "開始"
+msgid "From Date"
+msgstr "開始日"
 
 #. Option for the 'Class' (Select) field in DocType 'Cycle Count'
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:68
 msgid "Full"
-msgstr "フル"
+msgstr "満杯"
 
 #. Option for the 'Type' (Select) field in DocType 'Supplier Notice'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:52
@@ -1441,9 +1476,18 @@ msgid "General"
 msgstr "一般"
 
 #: automotive_supply_chain/intercompany/transfer_pricing.py:82
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:77
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:89
 msgid "Give either an item or an item group."
 msgstr "品目または品目グループのいずれか一方を指定してください。"
+
+#. Name of a report
+#. Label of a Sidebar Item
+#. Label of a Link in the Intercompany Workspace
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.json:19
+#: automotive_supply_chain/intercompany/sidebar/intercompany/intercompany.json:63
+#: automotive_supply_chain/intercompany/workspace/intercompany/intercompany.json:54
+msgid "Goods In Transit"
+msgstr "輸送中在庫"
 
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.py:19
 msgid "Goods were already received against this ASN."
@@ -1459,7 +1503,7 @@ msgstr "総重量（kg）"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:130
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:206
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:190
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:191
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:199
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:161
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:159
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:155
@@ -1477,13 +1521,13 @@ msgstr "総重量（kg）"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:203
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:215
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:138
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:212
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:220
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:166
 msgid "Group Controller"
 msgstr "グループ経理責任者"
 
 #. Option for the 'Risk Rating' (Select) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:83
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:91
 msgid "High"
 msgstr "高"
 
@@ -1514,22 +1558,26 @@ msgstr "計画期間終了日"
 msgid "Horizon Start"
 msgstr "計画期間開始日"
 
-#. Option for the 'Standard' (Select) field in DocType 'Supplier Certification'
+#. Option for the 'Certification Standard' (Select) field in DocType 'Supplier
+#. Certification'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:19
 msgid "IATF 16949"
 msgstr "IATF 16949"
 
-#. Option for the 'Standard' (Select) field in DocType 'Supplier Certification'
+#. Option for the 'Certification Standard' (Select) field in DocType 'Supplier
+#. Certification'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:19
 msgid "ISO 14001"
 msgstr "ISO 14001"
 
-#. Option for the 'Standard' (Select) field in DocType 'Supplier Certification'
+#. Option for the 'Certification Standard' (Select) field in DocType 'Supplier
+#. Certification'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:19
 msgid "ISO 45001"
 msgstr "ISO 45001"
 
-#. Option for the 'Standard' (Select) field in DocType 'Supplier Certification'
+#. Option for the 'Certification Standard' (Select) field in DocType 'Supplier
+#. Certification'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:19
 msgid "ISO 9001"
 msgstr "ISO 9001"
@@ -1538,7 +1586,7 @@ msgstr "ISO 9001"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:200
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:276
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:260
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:271
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:279
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:231
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:229
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:237
@@ -1555,7 +1603,7 @@ msgstr "ISO 9001"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:273
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:285
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:208
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:282
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:290
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:236
 msgid "IT Operator"
 msgstr "IT運用担当者"
@@ -1583,7 +1631,7 @@ msgstr "在庫ゼロの行を含める"
 #. Title of a Sidebar
 #. Name of a Workspace
 #. Option for the 'Direction' (Select) field in DocType 'Transport Booking'
-#: automotive_supply_chain/intercompany/sidebar/intercompany/intercompany.json:65
+#: automotive_supply_chain/intercompany/sidebar/intercompany/intercompany.json:77
 #: automotive_supply_chain/intercompany/workspace/intercompany/intercompany.json:13
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:66
 msgid "Intercompany"
@@ -1657,6 +1705,10 @@ msgstr "請求単価"
 #: automotive_supply_chain/intercompany/report/intercompany_reconciliation/intercompany_reconciliation.py:26
 msgid "Invoiced by Seller"
 msgstr "売手請求額"
+
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:51
+msgid "Invoiced, not received"
+msgstr "請求済み・未入荷"
 
 #. Label of the item_code (Link) field in DocType 'Transfer Price Agreement'
 #. Label of the item_code (Link) field in DocType 'Consignment Agreement Item'
@@ -1748,7 +1800,7 @@ msgstr "リードタイムの重み（%）"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:150
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:226
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:210
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:221
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:229
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:181
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:179
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:187
@@ -1765,7 +1817,7 @@ msgstr "リードタイムの重み（%）"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:223
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:235
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:158
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:232
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:240
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:186
 msgid "Line Operator"
 msgstr "ライン作業者"
@@ -1775,17 +1827,17 @@ msgstr "ライン作業者"
 msgid "Line {0}: confirmed quantity must be between 0 and {1}."
 msgstr "明細 {0}: 確定数量は 0 以上 {1} 以下にしてください。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:323
+#: automotive_supply_chain/dealer_operations/orders.py:327
 #, python-brace-format
 msgid "Line {0}: delivery date {1} -> {2}."
 msgstr "明細 {0}: 納期 {1} → {2}。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:318
+#: automotive_supply_chain/dealer_operations/orders.py:322
 #, python-brace-format
 msgid "Line {0}: qty {1} -> {2}; {3} allocation(s) released."
 msgstr "明細 {0}: 数量 {1} → {2}。引当 {3} 件を解除しました。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:337
+#: automotive_supply_chain/dealer_operations/orders.py:341
 #, python-brace-format
 msgid "Line {0}: {1} -> {2}; {3} allocation(s) released."
 msgstr "明細 {0}: {1} → {2}。引当 {3} 件を解除しました。"
@@ -1848,7 +1900,7 @@ msgstr "物流"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:220
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:296
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:280
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:291
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:299
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:251
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:249
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:257
@@ -1865,7 +1917,7 @@ msgstr "物流"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:293
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:305
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:228
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:302
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:310
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:256
 msgid "Logistics Coordinator"
 msgstr "物流コーディネーター"
@@ -1876,7 +1928,7 @@ msgid "Loss"
 msgstr "紛失"
 
 #. Option for the 'Risk Rating' (Select) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:83
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:91
 msgid "Low"
 msgstr "低"
 
@@ -1919,7 +1971,7 @@ msgid "Maximum On Hand"
 msgstr "最大在庫数"
 
 #. Option for the 'Risk Rating' (Select) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:83
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:91
 msgid "Medium"
 msgstr "中"
 
@@ -1985,7 +2037,7 @@ msgstr "新しい納期"
 msgid "New Qty"
 msgstr "新しい数量"
 
-#: automotive_supply_chain/dealer_operations/orders.py:273
+#: automotive_supply_chain/dealer_operations/orders.py:277
 msgid "New configuration must be valid."
 msgstr "新しい仕様構成には有効なものを指定してください。"
 
@@ -2005,7 +2057,7 @@ msgstr "入荷なし"
 msgid "No blanket-order price for the withdrawn items."
 msgstr "払出品目の包括発注価格がありません。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:136
+#: automotive_supply_chain/dealer_operations/orders.py:140
 #, python-brace-format
 msgid "No dealer price for {0} in {1}."
 msgstr "価格表 {1} に {0} の販売店価格がありません。"
@@ -2066,7 +2118,7 @@ msgstr "納期遵守率（%）"
 msgid "Onboarding"
 msgstr "仕入先登録"
 
-#: automotive_supply_chain/dealer_operations/orders.py:258
+#: automotive_supply_chain/dealer_operations/orders.py:262
 #, python-brace-format
 msgid "Only accepted orders can be changed (status {0})."
 msgstr "変更できるのは受理済みの注文のみです（ステータス: {0}）。"
@@ -2078,7 +2130,7 @@ msgstr "変更できるのは受理済みの注文のみです（ステータス
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:147
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:106
 msgid "Open"
-msgstr "未解決"
+msgstr "オープン"
 
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.py:26
 msgid "Open Discrepancies"
@@ -2120,7 +2172,7 @@ msgstr "発注単価"
 msgid "Order Type"
 msgstr "注文種別"
 
-#: automotive_supply_chain/dealer_operations/orders.py:263
+#: automotive_supply_chain/dealer_operations/orders.py:267
 #, python-brace-format
 msgid "Order line {0} does not exist."
 msgstr "注文明細 {0} は存在しません。"
@@ -2149,7 +2201,8 @@ msgstr "発注"
 msgid "Orders"
 msgstr "注文"
 
-#. Option for the 'Standard' (Select) field in DocType 'Supplier Certification'
+#. Option for the 'Certification Standard' (Select) field in DocType 'Supplier
+#. Certification'
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:19
 msgid "Other"
 msgstr "その他"
@@ -2192,7 +2245,7 @@ msgstr "会社ペア／伝票"
 #. Option for the 'Delivery' (Select) field in DocType 'Shipment Manifest'
 #: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:107
 msgid "Partially Delivered"
-msgstr "一部配達済み"
+msgstr "一部納品済み"
 
 #. Option for the 'Status' (Select) field in DocType 'Advance Shipping Notice'
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
@@ -2200,7 +2253,7 @@ msgid "Partially Received"
 msgstr "一部入荷済み"
 
 #. Label of the partner_code (Data) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:51
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:52
 msgid "Partner Code"
 msgstr "パートナーコード"
 
@@ -2221,8 +2274,8 @@ msgstr "支払"
 
 #. Option for the 'Status' (Select) field in DocType 'Dealer Registration'
 #. Option for the 'Status' (Select) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:110
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:99
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:118
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:107
 msgid "Pending Approval"
 msgstr "承認待ち"
 
@@ -2275,7 +2328,7 @@ msgstr "工場"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:135
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:211
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:195
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:206
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:214
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:166
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:164
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:172
@@ -2292,7 +2345,7 @@ msgstr "工場"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:193
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:220
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:143
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:217
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:225
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:171
 msgid "Plant Director"
 msgstr "工場長"
@@ -2327,7 +2380,7 @@ msgid "Price"
 msgstr "価格"
 
 #. Label of the price_list (Link) field in DocType 'Dealer Registration'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:92
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:100
 msgid "Price List"
 msgstr "価格表"
 
@@ -2374,7 +2427,7 @@ msgstr "調達統制"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:175
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:251
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:235
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:246
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:254
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:206
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:204
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:212
@@ -2392,7 +2445,7 @@ msgstr "調達統制"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:185
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:197
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:118
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:194
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:202
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:154
 msgid "Procurement Manager"
 msgstr "調達マネージャー"
@@ -2401,7 +2454,7 @@ msgstr "調達マネージャー"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:210
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:286
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:270
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:281
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:289
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:241
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:239
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:247
@@ -2418,7 +2471,7 @@ msgstr "調達マネージャー"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:283
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:295
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:218
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:292
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:300
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:246
 msgid "Product Engineer"
 msgstr "製品エンジニア"
@@ -2433,7 +2486,7 @@ msgstr "生産材の品目グループ（承認済み仕入先リストを適用
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:140
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:216
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:200
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:211
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:219
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:171
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:169
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:177
@@ -2450,7 +2503,7 @@ msgstr "生産材の品目グループ（承認済み仕入先リストを適用
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:213
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:205
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:148
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:222
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:230
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:176
 msgid "Production Planner"
 msgstr "生産計画担当者"
@@ -2459,7 +2512,7 @@ msgstr "生産計画担当者"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:145
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:221
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:205
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:216
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:224
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:176
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:174
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:182
@@ -2476,12 +2529,12 @@ msgstr "生産計画担当者"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:218
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:230
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:153
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:227
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:235
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:181
 msgid "Production Supervisor"
 msgstr "生産監督者"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:26
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:37
 msgid "Production suppliers need an IATF 16949 or ISO 9001 certificate."
 msgstr "生産材の仕入先には IATF 16949 または ISO 9001 の認証書が必要です。"
 
@@ -2509,13 +2562,13 @@ msgid "Proof Of Dispatch"
 msgstr "出荷証明"
 
 #. Label of the proposed_items (Table) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:141
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:149
 msgid "Proposed Items"
 msgstr "提案品目"
 
 #. Label of the section_break_3 (Section Break) field in DocType 'Supplier
 #. Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:136
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:144
 msgid "Proposed Supply Scope"
 msgstr "提案供給範囲"
 
@@ -2621,6 +2674,7 @@ msgstr "発注から支払までのサイクル"
 #. Label of the qty (Float) field in DocType 'Shipment Manifest Item'
 #. Label of the qty (Float) field in DocType 'Supplier Schedule Line'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_item/dealer_order_item.json:46
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:40
 #: automotive_supply_chain/logistics/doctype/consignment_movement_item/consignment_movement_item.json:26
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:50
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.py:23
@@ -2643,7 +2697,7 @@ msgstr "品質アラート"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:160
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:236
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:220
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:231
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:239
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:191
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:189
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:197
@@ -2660,7 +2714,7 @@ msgstr "品質アラート"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:233
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:245
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:168
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:242
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:250
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:196
 msgid "Quality Inspector"
 msgstr "品質検査員"
@@ -2669,7 +2723,7 @@ msgstr "品質検査員"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:165
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:241
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:225
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:236
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:244
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:196
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:194
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:202
@@ -2686,7 +2740,7 @@ msgstr "品質検査員"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:238
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:250
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:127
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:202
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:210
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:201
 msgid "Quality Manager"
 msgstr "品質マネージャー"
@@ -2838,7 +2892,8 @@ msgstr "不合格率（PPM）"
 #. Option for the 'Status' (Select) field in DocType 'Dealer Order'
 #. Option for the 'Status' (Select) field in DocType 'Dealer Order Change'
 #. Option for the 'Status' (Select) field in DocType 'Dealer Registration'
-#. Option for the 'Condition' (Select) field in DocType 'Delivery Acceptance'
+#. Option for the 'Delivery Condition' (Select) field in DocType 'Delivery
+#. Acceptance'
 #. Option for the 'Status' (Select) field in DocType 'Invoice Match Exception'
 #. Option for the 'PPAP' (Select) field in DocType 'Approved Supplier List'
 #. Option for the 'Status' (Select) field in DocType 'Supplier Onboarding'
@@ -2846,19 +2901,19 @@ msgstr "不合格率（PPM）"
 #. Acknowledgement'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:89
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:106
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:110
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:118
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:62
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:147
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:105
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:99
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:107
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:58
 msgid "Rejected"
-msgstr "却下"
+msgstr "却下済み"
 
 #. Label of a number card in the Supplier Collaboration Workspace
 #: automotive_supply_chain/supplier_collaboration/workspace/supplier_collaboration/supplier_collaboration.json:198
 msgid "Rejected Material"
-msgstr "不合格品"
+msgstr "受入不合格"
 
 #. Label of the rejected_qty (Float) field in DocType 'Receipt Discrepancy'
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:96
@@ -2934,7 +2989,7 @@ msgstr "依頼済み"
 
 #. Label of the requested_credit_limit (Currency) field in DocType 'Dealer
 #. Registration'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:86
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:94
 msgid "Requested Credit Limit"
 msgstr "希望与信限度額"
 
@@ -2948,7 +3003,7 @@ msgstr "希望納期"
 msgid "Requested Delivery"
 msgstr "希望納期"
 
-#: automotive_supply_chain/dealer_operations/orders.py:32
+#: automotive_supply_chain/dealer_operations/orders.py:35
 msgid "Requested credit limit must be positive."
 msgstr "希望与信限度額には正の値を指定してください。"
 
@@ -2973,7 +3028,7 @@ msgstr "予約済み（在庫）"
 #: automotive_supply_chain/public/js/automotive_supply_chain.bundle.js:81
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:111
 msgid "Resolution"
-msgstr "解決方法"
+msgstr "対応内容"
 
 #. Label of the resolution_note (Small Text) field in DocType 'Invoice Match
 #. Exception'
@@ -3031,12 +3086,12 @@ msgid "Return To Supplier"
 msgstr "仕入先返品"
 
 #. Label of the risk_notes (Small Text) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:89
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:97
 msgid "Risk Notes"
 msgstr "リスクメモ"
 
 #. Label of the risk_rating (Select) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:82
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:90
 msgid "Risk Rating"
 msgstr "リスク評価"
 
@@ -3052,97 +3107,97 @@ msgstr "ロール"
 #: automotive_supply_chain/intercompany/transfer_pricing.py:59
 #, python-brace-format
 msgid "Row {0}: agreement {1} is in {2}, the order in {3}."
-msgstr "行 {0}: 契約 {1} の通貨は {2}、注文の通貨は {3} です。"
+msgstr "行{0}：契約 {1} の通貨は {2}、注文の通貨は {3} です。"
 
 #: automotive_supply_chain/logistics/consignment.py:90
 #, python-brace-format
 msgid "Row {0}: choose the warehouse the parts are withdrawn to."
-msgstr "行 {0}: 部品の払出先倉庫を選択してください。"
+msgstr "行{0}：部品の払出先倉庫を選択してください。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:164
+#: automotive_supply_chain/dealer_operations/orders.py:168
 #, python-brace-format
 msgid "Row {0}: configuration {1} is not a valid {2} configuration."
-msgstr "行 {0}: 仕様構成 {1} は {2} の有効な仕様構成ではありません。"
+msgstr "行{0}：仕様構成 {1} は {2} の有効な仕様構成ではありません。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:245
+#: automotive_supply_chain/dealer_operations/orders.py:249
 #, python-brace-format
 msgid "Row {0}: configuration {1} resolves to {2}, not {3}."
-msgstr "行 {0}: 仕様構成 {1} は {3} ではなく {2} に対応しています。"
+msgstr "行{0}：仕様構成 {1} は {3} ではなく {2} に対応しています。"
 
 #: automotive_supply_chain/intercompany/transfer_pricing.py:62
 #, python-brace-format
 msgid "Row {0}: intercompany rate {1} differs from transfer price {2} ({3})."
-msgstr "行 {0}: グループ会社間単価 {1} が移転価格 {2}（{3}）と異なります。"
+msgstr "行{0}：グループ会社間単価 {1} が移転価格 {2}（{3}）と異なります。"
 
 #: automotive_supply_chain/supplier_collaboration/shipments.py:37
 #, python-brace-format
 msgid "Row {0}: item differs from the order line ({1})."
-msgstr "行 {0}: 品目が発注明細の品目（{1}）と異なります。"
+msgstr "行{0}：品目が発注明細の品目（{1}）と異なります。"
 
 #: automotive_supply_chain/logistics/consignment.py:47
 #, python-brace-format
 msgid "Row {0}: minimum exceeds maximum."
-msgstr "行 {0}: 最小値が最大値を超えています。"
+msgstr "行{0}：最小値が最大値を超えています。"
 
 #: automotive_supply_chain/intercompany/transfer_pricing.py:55
 #, python-brace-format
 msgid "Row {0}: no transfer price agreement {1} -> {2} for {3}."
-msgstr "行 {0}: {3} について {1} → {2} の移転価格契約がありません。"
+msgstr "行{0}：{3} について {1} → {2} の移転価格契約がありません。"
 
 #: automotive_supply_chain/logistics/consignment.py:87
 #, python-brace-format
 msgid "Row {0}: only {1} of {2} on consignment."
-msgstr "行 {0}: {2} の預託在庫は {1} しかありません。"
+msgstr "行{0}：{2} の預託在庫は {1} しかありません。"
 
 #: automotive_supply_chain/supplier_collaboration/shipments.py:42
 #, python-brace-format
 msgid "Row {0}: shipping {1} would exceed the ordered {2} (already announced {3})."
-msgstr "行 {0}: 出荷数 {1} を加えると発注数 {2} を超えます（通知済み {3}）。"
+msgstr "行{0}：出荷数 {1} を加えると発注数 {2} を超えます（通知済み {3}）。"
 
 #: automotive_supply_chain/supplier_collaboration/shipments.py:27
 #, python-brace-format
 msgid "Row {0}: {1} is not a line of {2}."
-msgstr "行 {0}: {1} は {2} の明細ではありません。"
+msgstr "行{0}：{1} は {2} の明細ではありません。"
 
 #: automotive_supply_chain/logistics/consignment.py:92
 #, python-brace-format
 msgid "Row {0}: {1} is not a warehouse of {2}."
-msgstr "行 {0}: {1} は {2} の倉庫ではありません。"
+msgstr "行{0}：{1} は {2} の倉庫ではありません。"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:128
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:140
 #, python-brace-format
 msgid "Row {0}: {1} is not an approved source of {2} for plant {3}."
-msgstr "行 {0}: {1} は工場 {3} における {2} の承認済み調達先ではありません。"
+msgstr "行{0}：{1} は工場 {3} における {2} の承認済み調達先ではありません。"
 
 #: automotive_supply_chain/supplier_collaboration/shipments.py:31
 #, python-brace-format
 msgid "Row {0}: {1} is not an open order of {2}."
-msgstr "行 {0}: {1} は {2} の未完了の発注ではありません。"
+msgstr "行{0}：{1} は {2} の未完了の発注ではありません。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:160
+#: automotive_supply_chain/dealer_operations/orders.py:164
 #, python-brace-format
 msgid "Row {0}: {1} is not authorised for this dealer."
-msgstr "行 {0}: {1} はこの販売店の取扱許可車種ではありません。"
+msgstr "行{0}：{1} はこの販売店の取扱許可車種ではありません。"
 
 #: automotive_supply_chain/logistics/consignment.py:80
 #, python-brace-format
 msgid "Row {0}: {1} is not covered by {2}."
-msgstr "行 {0}: {1} は {2} の対象外です。"
+msgstr "行{0}：{1} は {2} の対象外です。"
 
 #: automotive_supply_chain/logistics/consignment.py:45
 #, python-brace-format
 msgid "Row {0}: {1} is not on blanket order {2}."
-msgstr "行 {0}: {1} は包括発注 {2} に含まれていません。"
+msgstr "行{0}：{1} は包括発注 {2} に含まれていません。"
 
 #: automotive_supply_chain/supplier_collaboration/shipments.py:34
 #, python-brace-format
 msgid "Row {0}: {1} is on hold; ship once the buyer releases it."
-msgstr "行 {0}: {1} は保留中です。発注元が保留を解除してから出荷してください。"
+msgstr "行{0}：{1} は保留中です。発注元が保留を解除してから出荷してください。"
 
 #: automotive_supply_chain/logistics/consignment.py:83
 #, python-brace-format
 msgid "Row {0}: {1} would exceed the agreed maximum of {2}."
-msgstr "行 {0}: {1} が合意済みの最大数 {2} を超えます。"
+msgstr "行{0}：{1} が合意済みの最大数 {2} を超えます。"
 
 #. Label of the rule_name (Data) field in DocType 'Allocation Rule'
 #. Label of the allocation_rule (Link) field in DocType 'Vehicle Allocation'
@@ -3157,7 +3212,7 @@ msgstr "ルール"
 #: automotive_supply_chain/dealer_operations/doctype/dealer_registration_contact/dealer_registration_contact.json:41
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding_contact/supplier_onboarding_contact.json:42
 msgid "Sales"
-msgstr "営業"
+msgstr "販売"
 
 #. Label of a Sidebar Item
 #. Label of a Link in the Dealer Operations Workspace
@@ -3170,7 +3225,7 @@ msgstr "売上請求書"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:108
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:184
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:168
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:173
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:181
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:139
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:143
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:227
@@ -3187,7 +3242,7 @@ msgstr "売上請求書"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:263
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:275
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:198
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:272
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:280
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:226
 msgid "Sales Manager"
 msgstr "営業マネージャー"
@@ -3218,7 +3273,7 @@ msgstr "買手が未計上の売上請求書"
 msgid "Sales order cancelled"
 msgstr "受注の取消"
 
-#: automotive_supply_chain/dealer_operations/orders.py:310
+#: automotive_supply_chain/dealer_operations/orders.py:314
 #, python-brace-format
 msgid "Sales order {0} cancelled; {1} vehicle allocation(s) released."
 msgstr "受注 {0} を取り消し、車両引当 {1} 件を解除しました。"
@@ -3236,7 +3291,7 @@ msgstr "計画明細"
 #: automotive_supply_chain/supplier_collaboration/schedules.py:200
 #, python-brace-format
 msgid "Schedule {0} is {1}."
-msgstr "計画 {0} のステータスは {1} です。"
+msgstr "計画{0}のステータスは{1}です。"
 
 #. Label of a Sidebar Item
 #: automotive_supply_chain/supplier_collaboration/sidebar/supplier_collaboration/supplier_collaboration.json:139
@@ -3257,6 +3312,10 @@ msgstr "海上"
 #: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:87
 msgid "Seal No"
 msgstr "シール番号"
+
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:36
+msgid "Seller"
+msgstr "売り手"
 
 #. Label of the seller_company (Link) field in DocType 'Transfer Price
 #. Agreement'
@@ -3280,7 +3339,7 @@ msgstr "{0} に対する売手側受注"
 #. Label of the company (Link) field in DocType 'Dealer Order'
 #. Label of the company (Link) field in DocType 'Dealer Registration'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:58
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:55
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:56
 msgid "Selling Company"
 msgstr "販売会社"
 
@@ -3316,7 +3375,7 @@ msgstr "シリアル番号"
 #. Acknowledgement'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:32
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:31
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:32
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:33
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:28
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:29
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:30
@@ -3332,10 +3391,10 @@ msgstr "シリアル番号"
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:31
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:33
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:24
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:34
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:35
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:29
 msgid "Series"
-msgstr "シリーズ"
+msgstr "採番シリーズ"
 
 #. Label of the share_percent (Percent) field in DocType 'Approved Supplier
 #. List'
@@ -3367,10 +3426,18 @@ msgstr "出荷日時"
 msgid "Shipped Items"
 msgstr "出荷品目"
 
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:38
+msgid "Shipped On"
+msgstr "出荷日"
+
 #. Label of the qty (Float) field in DocType 'ASN Item'
 #: automotive_supply_chain/supplier_collaboration/doctype/asn_item/asn_item.json:44
 msgid "Shipped Qty"
 msgstr "出荷数量"
+
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:51
+msgid "Shipped, not invoiced"
+msgstr "出荷済み・未請求"
 
 #. Option for the 'Type' (Select) field in DocType 'Receipt Discrepancy'
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:74
@@ -3423,11 +3490,6 @@ msgstr "調達先決定"
 msgid "Sourcing Quote"
 msgstr "調達見積"
 
-#. Label of the standard (Select) field in DocType 'Supplier Certification'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_certification/supplier_certification.json:18
-msgid "Standard"
-msgstr "規格"
-
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.py:26
 msgid "Standard Cost"
 msgstr "標準原価"
@@ -3449,8 +3511,9 @@ msgstr "標準原価"
 #. Label of the status (Select) field in DocType 'Supplier Onboarding'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:87
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:104
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:108
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:116
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:112
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:46
 #: automotive_supply_chain/intercompany/report/intercompany_reconciliation/intercompany_reconciliation.py:30
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:99
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:111
@@ -3462,7 +3525,7 @@ msgstr "標準原価"
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:80
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:105
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:96
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:97
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:105
 msgid "Status"
 msgstr "ステータス"
 
@@ -3602,7 +3665,7 @@ msgid "Supplier Delivery Schedule"
 msgstr "仕入先納入計画"
 
 #. Label of the supplier_group (Link) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:57
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:58
 msgid "Supplier Group"
 msgstr "仕入先グループ"
 
@@ -3612,7 +3675,7 @@ msgid "Supplier Lot"
 msgstr "仕入先ロット"
 
 #. Label of the supplier_name (Data) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:45
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:46
 msgid "Supplier Name"
 msgstr "仕入先名"
 
@@ -3633,7 +3696,7 @@ msgstr "仕入先納期遵守率"
 #. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Link in the Supplier Collaboration Workspace
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:161
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:169
 #: automotive_supply_chain/supplier_collaboration/sidebar/supplier_collaboration/supplier_collaboration.json:90
 #: automotive_supply_chain/supplier_collaboration/workspace/supplier_collaboration/supplier_collaboration.json:26
 msgid "Supplier Onboarding"
@@ -3757,7 +3820,7 @@ msgstr "停止中"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:97
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:173
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:157
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:162
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:170
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:128
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:137
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:144
@@ -3775,7 +3838,7 @@ msgstr "停止中"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:164
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:176
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:97
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:173
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:181
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:133
 msgid "System Manager"
 msgstr "システム管理者"
@@ -3786,10 +3849,17 @@ msgstr "システム管理者"
 msgid "Target Warehouse (withdrawal)"
 msgstr "払出先倉庫（払出時）"
 
+#. Label of the tax_category (Link) field in DocType 'Dealer Registration'
+#. Label of the tax_category (Link) field in DocType 'Supplier Onboarding'
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:84
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:79
+msgid "Tax Category"
+msgstr "税区分"
+
 #. Label of the tax_id (Data) field in DocType 'Dealer Registration'
 #. Label of the tax_id (Data) field in DocType 'Supplier Onboarding'
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:76
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:71
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:77
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:72
 msgid "Tax ID"
 msgstr "納税者番号"
 
@@ -3808,7 +3878,7 @@ msgstr "条件"
 #. Label of the territory (Link) field in DocType 'Allocation Rule'
 #. Label of the territory (Link) field in DocType 'Dealer Registration'
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:53
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:62
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:63
 msgid "Territory"
 msgstr "地域"
 
@@ -3849,8 +3919,8 @@ msgstr "仕入先請求書明細での3点照合の不一致です。解決さ�
 
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.js:15
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.js:14
-msgid "To"
-msgstr "終了"
+msgid "To Date"
+msgstr "終了日"
 
 #. Label of the tolerance_percent (Percent) field in DocType 'Cycle Count'
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:103
@@ -3916,7 +3986,7 @@ msgstr "輸送例外"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:185
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:261
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:245
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:256
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:264
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:216
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:214
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:222
@@ -3933,10 +4003,10 @@ msgstr "輸送例外"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:258
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:270
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:193
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:267
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:275
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:221
 msgid "Treasury Approver"
-msgstr "資金承認者"
+msgstr "財務承認者"
 
 #. Label of the truck_plate (Data) field in DocType 'Shipment Manifest'
 #: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:92
@@ -3949,7 +4019,7 @@ msgstr "車両番号"
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:73
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:51
 msgid "Type"
-msgstr "種類"
+msgstr "種別"
 
 #. Label of the unit_price (Currency) field in DocType 'Sourcing Quote'
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_quote/sourcing_quote.json:35
@@ -3981,7 +4051,7 @@ msgstr "有効開始日"
 msgid "Valid To"
 msgstr "有効終了日"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:79
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:91
 msgid "Valid To is before Valid From."
 msgstr "有効終了日が有効開始日より前になっています。"
 
@@ -3997,6 +4067,10 @@ msgstr "有効期限"
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.py:29
 msgid "Valuation Rate"
 msgstr "評価単価"
+
+#: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:41
+msgid "Value (Buyer Currency)"
+msgstr "金額（買い手の通貨）"
 
 #. Label of the variance_qty (Float) field in DocType 'Cycle Count Line'
 #: automotive_supply_chain/logistics/doctype/cycle_count_line/cycle_count_line.json:48
@@ -4095,7 +4169,7 @@ msgstr "倉庫"
 #: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:155
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:231
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:215
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:226
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:234
 #: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:186
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:184
 #: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:192
@@ -4112,12 +4186,12 @@ msgstr "倉庫"
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:228
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:240
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:163
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:237
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:245
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:191
 msgid "Warehouse Clerk"
 msgstr "倉庫担当者"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:146
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:158
 msgid "Weights must add up to 100%."
 msgstr "重みの合計は100%にしてください。"
 
@@ -4144,7 +4218,7 @@ msgstr "自組織に関する操作のみ実行できます。"
 msgid "none open"
 msgstr "未解決なし"
 
-#: automotive_supply_chain/supplier_collaboration/sourcing.py:86
+#: automotive_supply_chain/supplier_collaboration/sourcing.py:98
 #, python-brace-format
 msgid "{0} already has an active entry for this item/plant."
 msgstr "{0} には、この品目／工場の有効なエントリがすでにあります。"
@@ -4169,7 +4243,7 @@ msgstr "{0} 件の納入指示発注をリリースしました"
 msgid "{0} exceptions cannot be accepted; correct the invoice or receive the balance."
 msgstr "「{0}」の例外は容認できません。請求書を訂正するか、残数を入荷してください。"
 
-#: automotive_supply_chain/dealer_operations/orders.py:187
+#: automotive_supply_chain/dealer_operations/orders.py:191
 #, python-brace-format
 msgid "{0} has no finished-goods warehouse."
 msgstr "{0} には完成品倉庫がありません。"
@@ -4224,7 +4298,7 @@ msgstr "{0} のステータスは {1} です。"
 msgid "{0} on ASN {1} / {2}"
 msgstr "{0}（ASN {1} / {2}）"
 
-#: automotive_supply_chain/dealer_operations/orders.py:151
+#: automotive_supply_chain/dealer_operations/orders.py:155
 #, python-brace-format
 msgid "{0} orders from {1}."
 msgstr "{0} の注文先は {1} です。"

@@ -54,7 +54,7 @@
   {
    "fieldname": "kanban_card",
    "fieldtype": "Link",
-   "label": "Card",
+   "label": "Kanban Card",
    "options": "Kanban Card",
    "read_only": 1
   },
@@ -179,7 +179,7 @@
  ],
  "icon": "radio-tower",
  "links": [],
- "modified": "2026-10-24 07:56:38.756919",
+ "modified": "2026-10-24 14:44:01.923443",
  "modified_by": "Administrator",
  "module": "Shop Floor",
  "name": "Kanban Signal",

@@ -148,7 +148,7 @@ async function orders({ go, name, filter, alert }) {
 		rows: list,
 		onOpen: (r) => go("orders", { name: r.name }),
 		columns: [
-			{ label: __("Order"), field: "name" },
+			{ label: __("Purchase Order"), field: "name" },
 			{ label: __("Date"), render: (r) => fmtDate(r.transaction_date) },
 			{ label: __("Type"), render: (r) => __(r.automotive_release_type || "Standard") },
 			{ label: __("Total"), numeric: true, render: (r) => fmtMoney(r.grand_total, r.currency) },
@@ -243,7 +243,7 @@ async function schedules({ go, name, alert }) {
 						{ label: __("Delivery date"), render: (r) => fmtDate(r.delivery_date) },
 						{ label: __("Quantity"), numeric: true, render: (r) => fmtNumber(r.qty) },
 						{ label: __("Firm"), render: (r) => (r.firm ? __("Firm") : __("Forecast")) },
-						{ label: __("Order"), field: "purchase_order" },
+						{ label: __("Purchase Order"), field: "purchase_order" },
 					],
 				})));
 	}
@@ -311,7 +311,7 @@ async function asnForm(go, alert) {
 	});
 	const lineTable = h("div", { class: "hp-table-wrap", role: "region", "aria-label": __("Open order lines"), tabindex: "0" },
 		h("table", { class: "hp-table" }, h("caption", {}, __("Open order lines")),
-			h("thead", {}, h("tr", {}, [__("Ship"), __("Order"), __("Item"), __("Open"), __("Quantity"), __("Lot"), __("Serial numbers")]
+			h("thead", {}, h("tr", {}, [__("Ship"), __("Purchase Order"), __("Item"), __("Open"), __("Quantity"), __("Lot"), __("Serial numbers")]
 				.map((label) => h("th", { scope: "col" }, label)))),
 			h("tbody", {}, rows)));
 	return h("div", {}, back(go, "shipments", __("Back to shipments")), form({
@@ -390,7 +390,7 @@ async function asnDetail(name, go, alert) {
 				caption: __("Shipped lines"),
 				rows: asn.lines,
 				columns: [
-					{ label: __("Order"), field: "purchase_order" },
+					{ label: __("Purchase Order"), field: "purchase_order" },
 					{ label: __("Item"), field: "item_code" },
 					{ label: __("Shipped"), numeric: true, render: (r) => fmtNumber(r.qty) },
 					{ label: __("Received"), numeric: true, render: (r) => fmtNumber(r.received_qty) },

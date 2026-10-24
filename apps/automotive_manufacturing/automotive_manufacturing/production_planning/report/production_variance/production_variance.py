@@ -18,7 +18,7 @@ def execute(filters=None):
 	columns = [
 		{"fieldname": "work_order", "label": _("Work Order"), "fieldtype": "Link", "options": "Work Order", "width": 170},
 		{"fieldname": "production_item", "label": _("Item"), "fieldtype": "Link", "options": "Item", "width": 170},
-		{"fieldname": "production_line", "label": _("Line"), "fieldtype": "Link", "options": "Production Line",
+		{"fieldname": "production_line", "label": _("Production Line"), "fieldtype": "Link", "options": "Production Line",
 			"width": 110},
 		{"fieldname": "planned_qty", "label": _("Planned"), "fieldtype": "Float", "width": 80},
 		{"fieldname": "produced_qty", "label": _("Built"), "fieldtype": "Float", "width": 80},

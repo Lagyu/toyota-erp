@@ -69,21 +69,21 @@
   {
    "fieldname": "before_json",
    "fieldtype": "Code",
-   "label": "Before",
+   "label": "Sequence Before",
    "options": "JSON",
    "read_only": 1
   },
   {
    "fieldname": "after_json",
    "fieldtype": "Code",
-   "label": "After",
+   "label": "Sequence After",
    "options": "JSON",
    "read_only": 1
   }
  ],
  "icon": "history",
  "links": [],
- "modified": "2026-10-24 07:56:38.755733",
+ "modified": "2026-10-24 14:21:20.163670",
  "modified_by": "Administrator",
  "module": "Production Planning",
  "name": "Plant Schedule Change",

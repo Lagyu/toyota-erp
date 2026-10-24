@@ -8,10 +8,10 @@ frappe.query_reports["Purchase Price Variance"] = {
 		{ fieldname: "item_code", label: __("Item"), fieldtype: "Link", options: "Item" },
 		{
 			fieldname: "from_date",
-			label: __("From"),
+			label: __("From Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.add_days(frappe.datetime.get_today(), -29),
 		},
-		{ fieldname: "to_date", label: __("To"), fieldtype: "Date", default: frappe.datetime.get_today() },
+		{ fieldname: "to_date", label: __("To Date"), fieldtype: "Date", default: frappe.datetime.get_today() },
 	],
 };

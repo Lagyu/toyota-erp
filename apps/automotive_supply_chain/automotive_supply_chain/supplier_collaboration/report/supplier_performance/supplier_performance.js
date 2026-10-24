@@ -7,10 +7,10 @@ frappe.query_reports["Supplier Performance"] = {
 		{ fieldname: "supplier", label: __("Supplier"), fieldtype: "Link", options: "Supplier" },
 		{
 			fieldname: "from_date",
-			label: __("From"),
+			label: __("From Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.add_days(frappe.datetime.get_today(), -89),
 		},
-		{ fieldname: "to_date", label: __("To"), fieldtype: "Date", default: frappe.datetime.get_today() },
+		{ fieldname: "to_date", label: __("To Date"), fieldtype: "Date", default: frappe.datetime.get_today() },
 	],
 };

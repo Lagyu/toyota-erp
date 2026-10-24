@@ -58,7 +58,7 @@
    "fieldname": "condition",
    "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Condition",
+   "label": "Delivery Condition",
    "options": "Accepted\nAccepted With Damage\nRejected",
    "reqd": 1
   },
@@ -110,7 +110,7 @@
  "icon": "package-check",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 08:23:27.540178",
+ "modified": "2026-10-24 14:21:20.192666",
  "modified_by": "Administrator",
  "module": "Dealer Operations",
  "name": "Delivery Acceptance",

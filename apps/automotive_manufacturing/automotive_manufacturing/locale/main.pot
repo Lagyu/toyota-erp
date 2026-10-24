@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Manufacturing VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 13:45+0919\n"
-"PO-Revision-Date: 2026-10-24 13:45+0919\n"
+"POT-Creation-Date: 2026-10-24 14:44+0919\n"
+"PO-Revision-Date: 2026-10-24 14:44+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -218,11 +218,6 @@ msgstr ""
 #. Label of the section_break_1 (Section Break) field in DocType 'Andon Event'
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:147
 msgid "Affected Work"
-msgstr ""
-
-#. Label of the after_json (Code) field in DocType 'Plant Schedule Change'
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:79
-msgid "After"
 msgstr ""
 
 #. Option for the 'Rule Type' (Select) field in DocType 'Vehicle Option Rule'
@@ -446,12 +441,6 @@ msgstr ""
 msgid "Availability %"
 msgstr ""
 
-#. Label of the available_units (Float) field in DocType 'Planning Run
-#. Capacity'
-#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:42
-msgid "Available"
-msgstr ""
-
 #. Label of the available_qty (Float) field in DocType 'Planning Run Shortage'
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:54
 msgid "Available + Scheduled"
@@ -460,6 +449,12 @@ msgstr ""
 #. Label of the available_minutes (Float) field in DocType 'Plant Schedule'
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:72
 msgid "Available Minutes"
+msgstr ""
+
+#. Label of the available_units (Float) field in DocType 'Planning Run
+#. Capacity'
+#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:42
+msgid "Available Units"
 msgstr ""
 
 #. Label of the daily_demand (Float) field in DocType 'Kanban Loop'
@@ -528,11 +523,6 @@ msgstr ""
 
 #: automotive_manufacturing/traceability/report/vehicle_genealogy/vehicle_genealogy.py:21
 msgid "Batch / Lot"
-msgstr ""
-
-#. Label of the before_json (Code) field in DocType 'Plant Schedule Change'
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:72
-msgid "Before"
 msgstr ""
 
 #. Label of the blanket_order (Link) field in DocType 'Kanban Loop'
@@ -693,11 +683,6 @@ msgstr ""
 msgid "Capacity shortages: the overloaded line (no item)"
 msgstr ""
 
-#. Label of the kanban_card (Link) field in DocType 'Kanban Signal'
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:57
-msgid "Card"
-msgstr ""
-
 #. Label of the card_id (Data) field in DocType 'Kanban Card'
 #: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:24
 msgid "Card ID"
@@ -783,6 +768,11 @@ msgstr ""
 #. Set'
 #: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:177
 msgid "Check Line Capacity"
+msgstr ""
+
+#. Label of the required (Check) field in DocType 'Vehicle Model Option Group'
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:27
+msgid "Choice Required"
 msgstr ""
 
 #: automotive_manufacturing/quality_control/dispositions.py:25
@@ -873,9 +863,7 @@ msgstr ""
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Vehicle
 #. Option Rule'
-#. Label of the check_item (Data) field in DocType 'Quality Hold Release Check'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:76
-#: automotive_manufacturing/quality_control/doctype/quality_hold_release_check/quality_hold_release_check.json:18
 msgid "Condition"
 msgstr ""
 
@@ -1171,6 +1159,12 @@ msgstr ""
 msgid "Dispatched"
 msgstr ""
 
+#. Label of the display_order (Int) field in DocType 'Vehicle Model Option
+#. Group'
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:33
+msgid "Display Order"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Quality Hold'
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:127
 msgid "Dispositioned"
@@ -1416,11 +1410,9 @@ msgstr ""
 msgid "Friday"
 msgstr ""
 
-#. Label of the window_start (Time) field in DocType 'Kanban Delivery Window'
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.js:10
-#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:25
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:11
-msgid "From"
+msgid "From Date"
 msgstr ""
 
 #. Label of the from_warehouse (Link) field in DocType 'Quality Disposition'
@@ -1801,9 +1793,11 @@ msgid "Kanban"
 msgstr ""
 
 #. Name of a DocType
+#. Label of the kanban_card (Link) field in DocType 'Kanban Signal'
 #. Label of a Sidebar Item
 #. Label of a Link in the Shop Floor Workspace
 #: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:85
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:57
 #: automotive_manufacturing/shop_floor/sidebar/shop_floor/shop_floor.json:102
 #: automotive_manufacturing/shop_floor/workspace/shop_floor/shop_floor.json:112
 msgid "Kanban Card"
@@ -1898,13 +1892,6 @@ msgstr ""
 #. Option for the 'Product Family' (Select) field in DocType 'Vehicle Model'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:51
 msgid "Light Commercial"
-msgstr ""
-
-#. Label of the production_line (Link) field in DocType 'Planning Run Capacity'
-#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:20
-#: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:21
-#: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.py:21
-msgid "Line"
 msgstr ""
 
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.py:18
@@ -2288,7 +2275,7 @@ msgstr ""
 msgid "One value per line."
 msgstr ""
 
-#: automotive_manufacturing/quality_control/inspections.py:116
+#: automotive_manufacturing/quality_control/inspections.py:119
 #, python-brace-format
 msgid "Only a submitted, rejected inspection can be re-inspected ({0} is {1})."
 msgstr ""
@@ -2375,12 +2362,6 @@ msgstr ""
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.py:18
 #, python-brace-format
 msgid "Option groups {0} must match the template's variant attributes {1}."
-msgstr ""
-
-#. Label of the display_order (Int) field in DocType 'Vehicle Model Option
-#. Group'
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:33
-msgid "Order"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Kanban Signal'
@@ -2755,6 +2736,7 @@ msgid "Production Issue"
 msgstr ""
 
 #. Label of the production_line (Link) field in DocType 'Vehicle Model'
+#. Label of the production_line (Link) field in DocType 'Planning Run Capacity'
 #. Label of the production_line (Link) field in DocType 'Planning Run Shortage'
 #. Label of the production_line (Link) field in DocType 'Plant Schedule'
 #. Option for the 'Scope' (Select) field in DocType 'Quality Hold'
@@ -2764,14 +2746,17 @@ msgstr ""
 #. Label of the production_line (Link) field in DocType 'Shift Handover'
 #. Label of the production_line (Link) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:85
+#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:20
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:32
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:38
+#: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:21
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:53
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:111
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:66
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:72
 #: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:58
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:8
+#: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.py:21
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.js:8
 #: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:102
 msgid "Production Line"
@@ -3102,7 +3087,7 @@ msgstr ""
 msgid "Re-inspect after Rework"
 msgstr ""
 
-#: automotive_manufacturing/quality_control/inspections.py:134
+#: automotive_manufacturing/quality_control/inspections.py:135
 #, python-brace-format
 msgid "Re-inspection after rework of {0}"
 msgstr ""
@@ -3229,6 +3214,11 @@ msgstr ""
 #. Disposition'
 #: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:120
 msgid "Release / Use As Is / Rework destination. Scrap uses the plant scrap warehouse."
+msgstr ""
+
+#. Label of the check_item (Data) field in DocType 'Quality Hold Release Check'
+#: automotive_manufacturing/quality_control/doctype/quality_hold_release_check/quality_hold_release_check.json:18
+msgid "Release Condition"
 msgstr ""
 
 #. Label of the release_checks (Table) field in DocType 'Quality Hold'
@@ -3369,13 +3359,14 @@ msgstr ""
 msgid "Requested By"
 msgstr ""
 
-#. Label of the required (Check) field in DocType 'Vehicle Model Option Group'
-#. Label of the required_units (Float) field in DocType 'Planning Run Capacity'
 #. Label of the required_qty (Float) field in DocType 'Planning Run Shortage'
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:27
-#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:35
 #: automotive_manufacturing/production_planning/doctype/planning_run_shortage/planning_run_shortage.json:47
-msgid "Required"
+msgid "Required Qty"
+msgstr ""
+
+#. Label of the required_units (Float) field in DocType 'Planning Run Capacity'
+#: automotive_manufacturing/production_planning/doctype/planning_run_capacity/planning_run_capacity.json:35
+msgid "Required Units"
 msgstr ""
 
 #. Option for the 'Rule Type' (Select) field in DocType 'Vehicle Option Rule'
@@ -3665,6 +3656,16 @@ msgstr ""
 #. Label of the slots (Table) field in DocType 'Plant Schedule'
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:104
 msgid "Sequence"
+msgstr ""
+
+#. Label of the after_json (Code) field in DocType 'Plant Schedule Change'
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:79
+msgid "Sequence After"
+msgstr ""
+
+#. Label of the before_json (Code) field in DocType 'Plant Schedule Change'
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:72
+msgid "Sequence Before"
 msgstr ""
 
 #. Option for the 'Scope' (Select) field in DocType 'Quality Hold'
@@ -4083,11 +4084,9 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#. Label of the window_end (Time) field in DocType 'Kanban Delivery Window'
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.js:14
-#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:32
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:15
-msgid "To"
+msgid "To Date"
 msgstr ""
 
 #. Label of the to_warehouse (Link) field in DocType 'Quality Disposition'
@@ -4431,6 +4430,16 @@ msgstr ""
 #. Label of the reason (Select) field in DocType 'ECO BOM Revision'
 #: automotive_manufacturing/product_engineering/doctype/eco_bom_revision/eco_bom_revision.json:41
 msgid "Why"
+msgstr ""
+
+#. Label of the window_end (Time) field in DocType 'Kanban Delivery Window'
+#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:32
+msgid "Window End"
+msgstr ""
+
+#. Label of the window_start (Time) field in DocType 'Kanban Delivery Window'
+#: automotive_manufacturing/shop_floor/doctype/kanban_delivery_window/kanban_delivery_window.json:25
+msgid "Window Start"
 msgstr ""
 
 #. Label of the work_order (Link) field in DocType 'Plant Schedule Slot'

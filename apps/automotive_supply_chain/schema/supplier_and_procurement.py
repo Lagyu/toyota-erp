@@ -101,7 +101,7 @@ DOCTYPES = [
 		permissions=[*PURCHASING, perm(QUALITY_MANAGER, "r pe"), *READ_ALL],
 	),
 	DocType("Supplier Certification", SC, child=True, fields=[
-		select("standard", "Standard", ["IATF 16949", "ISO 9001", "ISO 14001", "ISO 45001", "Other"], reqd=1,
+		select("standard", "Certification Standard", ["IATF 16949", "ISO 9001", "ISO 14001", "ISO 45001", "Other"], reqd=1,
 			in_list_view=1),
 		data("certificate_no", "Certificate No", reqd=1, in_list_view=1),
 		date("valid_until", "Valid Until", reqd=1, in_list_view=1),

@@ -408,7 +408,7 @@ DOCTYPES = [
 			link("delivery_note", "Delivery Note", "Delivery Note", reqd=1, in_list_view=1),
 			link("dealer", "Dealer", "Customer", read_only=1, in_standard_filter=1),
 			datetime("accepted_at", "Accepted At", read_only=1),
-			select("condition", "Condition", ["Accepted", "Accepted With Damage", "Rejected"], reqd=1, in_list_view=1),
+			select("condition", "Delivery Condition", ["Accepted", "Accepted With Damage", "Rejected"], reqd=1, in_list_view=1),
 			column(),
 			link("shipment_manifest", "Manifest", "Shipment Manifest"),
 			link("transport_exception", "Transport Exception", "Transport Exception", read_only=1, allow_on_submit=1,

@@ -8,10 +8,10 @@ frappe.query_reports["OEE by Line"] = {
 		{ fieldname: "production_line", label: __("Production Line"), fieldtype: "Link", options: "Production Line" },
 		{
 			fieldname: "from_date",
-			label: __("From"),
+			label: __("From Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.add_days(frappe.datetime.get_today(), -6),
 		},
-		{ fieldname: "to_date", label: __("To"), fieldtype: "Date", default: frappe.datetime.get_today() },
+		{ fieldname: "to_date", label: __("To Date"), fieldtype: "Date", default: frappe.datetime.get_today() },
 	],
 };

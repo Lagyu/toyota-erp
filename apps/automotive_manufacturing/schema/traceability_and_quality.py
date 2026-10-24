@@ -199,7 +199,7 @@ DOCTYPES = [
 		"Quality Control",
 		child=True,
 		fields=[
-			data("check_item", "Condition", reqd=1, in_list_view=1),
+			data("check_item", "Release Condition", reqd=1, in_list_view=1),
 			check("done", "Done", in_list_view=1),
 			link("done_by", "Done By", "User", read_only=1, in_list_view=1),
 			datetime("done_at", "Done At", read_only=1),

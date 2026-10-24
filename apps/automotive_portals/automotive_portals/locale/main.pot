@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Portals VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 13:45+0919\n"
-"PO-Revision-Date: 2026-10-24 13:45+0919\n"
+"POT-Creation-Date: 2026-10-24 14:44+0919\n"
+"PO-Revision-Date: 2026-10-24 14:44+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -175,10 +175,6 @@ msgstr ""
 msgid "Choose…"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:282
-msgid "Condition"
-msgstr ""
-
 #: automotive_portals/public/js/portal/dealer.js:18
 msgid "Configure & Order"
 msgstr ""
@@ -236,6 +232,10 @@ msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:303
 msgid "Delivery"
+msgstr ""
+
+#: automotive_portals/public/js/portal/dealer.js:282
+msgid "Delivery Condition"
 msgstr ""
 
 #: automotive_portals/public/js/portal/supplier.js:20
@@ -375,7 +375,7 @@ msgid "Lead time (days)"
 msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:220
-msgid "Line"
+msgid "Line No."
 msgstr ""
 
 #: automotive_portals/public/js/portal/core.js:299
@@ -414,6 +414,10 @@ msgstr ""
 
 #: automotive_portals/public/js/portal/supplier.js:132
 msgid "Needed by"
+msgstr ""
+
+#: automotive_portals/public/js/portal/dealer.js:155
+msgid "New Order"
 msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:196
@@ -567,16 +571,11 @@ msgid "Open support requests"
 msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:360
-msgid "Opened"
+msgid "Opened On"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:155
 #: automotive_portals/public/js/portal/dealer.js:168
-#: automotive_portals/public/js/portal/supplier.js:151
-#: automotive_portals/public/js/portal/supplier.js:246
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:393
-msgid "Order"
+msgid "Order No."
 msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:192
@@ -675,6 +674,13 @@ msgstr ""
 #: automotive_portals/public/js/portal/supplier.js:169
 #, python-brace-format
 msgid "Promised date for {0}"
+msgstr ""
+
+#: automotive_portals/public/js/portal/supplier.js:151
+#: automotive_portals/public/js/portal/supplier.js:246
+#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:393
+msgid "Purchase Order"
 msgstr ""
 
 #: automotive_portals/public/js/portal/supplier.js:147
@@ -797,7 +803,7 @@ msgid "Request {0}"
 msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:171
-msgid "Requested"
+msgid "Requested Delivery"
 msgstr ""
 
 #: automotive_portals/public/js/portal/dealer.js:134

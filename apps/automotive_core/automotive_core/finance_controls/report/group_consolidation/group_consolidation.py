@@ -79,7 +79,7 @@ def execute(filters=None):
 	currency = filters.presentation_currency or "JPY"
 	companies = scope.companies(filters)
 	from_date = _period_start(filters, to_date, companies)
-	columns = [{"fieldname": "line", "label": _("Line"), "fieldtype": "Data", "width": 260}]
+	columns = [{"fieldname": "line", "label": _("Statement Line"), "fieldtype": "Data", "width": 260}]
 	for company in companies:
 		columns.append({"fieldname": scrub(company), "label": frappe.get_cached_value("Company", company, "abbr"),
 			"fieldtype": "Currency", "options": "currency", "width": 160})
