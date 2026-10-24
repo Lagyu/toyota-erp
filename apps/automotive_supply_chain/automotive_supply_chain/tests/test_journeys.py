@@ -467,10 +467,10 @@ class TestDealerJourney(JourneyTestCase):
 		"""The dealer's system sends the change (dealer_order_change, as the partner's service user)."""
 		from automotive_supply_chain.integrations import handlers
 
-		so = self._order("ASAHI-PO-1003")
+		so = self._order("ASAHI-PO-1005")
 		new_date = add_days(nowdate(), 45)
 		with as_user(self.portal):
-			doctype, name = handlers.dealer_order_change(None, None, {"dealer_reference": "ASAHI-PO-1003",
+			doctype, name = handlers.dealer_order_change(None, None, {"dealer_reference": "ASAHI-PO-1005",
 				"change_type": "Change Delivery Date", "new_delivery_date": new_date,
 				"reason": "The end customer moved the handover"})
 		self.assertEqual((doctype, frappe.db.get_value(doctype, name, "status")), ("Dealer Order Change", "Applied"))
