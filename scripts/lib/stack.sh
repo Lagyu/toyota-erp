@@ -82,8 +82,9 @@ stack_restore() {
 		"bench --site '$stack_site' restore '$stack_backups/restore-database.sql.gz' \
 		--with-public-files '$stack_backups/restore-public.tgz' --with-private-files '$stack_backups/restore-private.tgz' \
 		--db-root-password \"\$DB_ROOT\" --force | tail -3 && rm -f '$stack_backups'/restore-*"
-	# encrypted fields stay readable with the dataset's own key
-	if [[ -s $dir/encryption_key ]]; then
+	# encrypted fields stay readable with the dataset's own key; a dataset that never encrypted
+	# a field has none (an empty line), and an empty key would break every later encryption
+	if [[ -n $(tr -d '[:space:]' <"$dir/encryption_key" 2>/dev/null) ]]; then
 		"${stack_compose[@]}" exec -T backend python3 -c "$SET_SITE_CONFIG_PY" "$stack_site" encryption_key \
 			<"$dir/encryption_key"
 	fi

@@ -111,9 +111,10 @@ EOF
 			"bench --site '$site' restore /tmp/database.sql.gz --with-public-files /tmp/public.tgz \
 			--with-private-files /tmp/private.tgz --db-root-password \"\$DB_ROOT\" --force | tail -3 \
 			&& rm -f /tmp/database.sql.gz /tmp/public.tgz /tmp/private.tgz"
-		# the dataset's encrypted fields stay readable with its own key (Frappe creates one only
-		# when a field is first encrypted)
-		if [[ -s $cache/encryption_key ]]; then
+		# the dataset's encrypted fields stay readable with its own key. Frappe creates one only
+		# when a field is first encrypted: a dataset without one has an empty line, and setting
+		# an empty key would break every later encryption
+		if [[ -n $(tr -d '[:space:]' <"$cache/encryption_key" 2>/dev/null) ]]; then
 			"${compose[@]}" exec -T backend python3 -c "$SET_SITE_CONFIG_PY" "$site" encryption_key \
 				<"$cache/encryption_key"
 		fi
