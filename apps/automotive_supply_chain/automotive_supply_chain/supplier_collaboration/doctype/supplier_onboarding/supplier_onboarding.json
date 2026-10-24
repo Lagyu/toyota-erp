@@ -13,6 +13,7 @@
   "supplier_group",
   "country",
   "tax_id",
+  "tax_category",
   "column_break_1",
   "risk_rating",
   "risk_notes",
@@ -70,6 +71,13 @@
    "fieldtype": "Data",
    "label": "Tax ID",
    "reqd": 1
+  },
+  {
+   "description": "Blank: from Automotive Settings > Taxes (the supplied plants' company and the supplier's country).",
+   "fieldname": "tax_category",
+   "fieldtype": "Link",
+   "label": "Tax Category",
+   "options": "Tax Category"
   },
   {
    "fieldname": "column_break_1",
@@ -155,7 +163,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 08:23:27.541476",
+ "modified": "2026-10-24 14:09:04.366720",
  "modified_by": "Administrator",
  "module": "Supplier Collaboration",
  "name": "Supplier Onboarding",

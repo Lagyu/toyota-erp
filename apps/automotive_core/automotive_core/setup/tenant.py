@@ -1,6 +1,7 @@
 """Apply a tenant definition (setup/tenants/<tenant>.yaml): companies, fiscal years,
 calendars, departments, branches, warehouses, plants, shifts, workstations, lines,
-intercompany parties, segregation-of-duties rules and approval policies.
+tax categories, templates and rules, intercompany parties, segregation-of-duties rules and
+approval policies.
 
 Idempotent: every step looks up what exists and only creates or corrects what is
 missing, so it doubles as the drift check for a tenant (``apply(..., dry_run=True)``
@@ -20,6 +21,7 @@ import holidays as holiday_calendars
 import yaml
 from frappe.utils import getdate
 
+from automotive_core.finance_controls.taxes import default_tax_category
 from automotive_core.utils import hook_list
 
 TENANT_DIR = Path(__file__).parent / "tenants"
@@ -78,6 +80,7 @@ def apply(tenant: str = "hinode", dry_run: bool = False, environment: str | None
 	_shift_patterns(definition, log)
 	for plant in definition["plants"]:
 		_plant(plant, companies, definition, log)
+	_taxes(definition, companies, log)
 	_intercompany(definition, companies, log)
 	_sod_rules(definition, log)
 	_approval_policies(definition, log)
@@ -453,6 +456,64 @@ def _line(line: dict, plant: dict, company: str, abbr: str, line_side_group: str
 # -------------------------------------------------------------------------------------
 
 
+# -------------------------------------------------------------------------------------
+# Taxes (finance_controls/taxes.py)
+# -------------------------------------------------------------------------------------
+
+
+def _taxes(definition, companies, log: TenantLog) -> None:
+	taxes = definition.get("taxes") or {}
+	company_of = {c["abbr"]: c["name"] for c in companies}
+	for name in taxes.get("categories", []):
+		if not frappe.db.exists("Tax Category", name) and log.change(f"tax category {name}"):
+			frappe.get_doc({"doctype": "Tax Category", "title": name}).insert(ignore_permissions=True)
+	for template in taxes.get("templates", []):
+		# templates without rows: the document records why it carries no tax
+		doctype = f"{template['type']} Taxes and Charges Template"
+		for abbr in template["companies"]:
+			name = f"{template['title']} - {abbr}"
+			if not frappe.db.exists(doctype, name) and log.change(f"{doctype} {name}"):
+				frappe.get_doc({"doctype": doctype, "title": template["title"], "company": company_of[abbr]}).insert(
+					ignore_permissions=True)
+	for abbr, by_type in (taxes.get("rules") or {}).items():
+		for tax_type, by_category in by_type.items():
+			for category, title in by_category.items():
+				_tax_rule(company_of[abbr], tax_type, category or None, f"{title} - {abbr}", log)
+	wanted = [(r["party_type"], r.get("company_country"), r.get("party_country"), r["tax_category"])
+		for r in taxes.get("party_defaults", [])]
+	settings = frappe.get_single("Automotive Settings")
+	current = [(r.party_type, r.company_country or None, r.party_country or None, r.tax_category)
+		for r in settings.get("tax_category_defaults")]
+	if current != wanted and log.change(f"Automotive Settings: {len(wanted)} tax category defaults"):
+		settings.set("tax_category_defaults", [dict(zip(("party_type", "company_country", "party_country",
+			"tax_category"), row, strict=True)) for row in wanted])
+		settings.save(ignore_permissions=True)
+
+
+# a rule the tenant manages: company, tax type and category only (rules with other filters are the
+# operator's own)
+_RULE_FILTERS_NOT_SET = ("customer", "supplier", "customer_group", "supplier_group", "item", "item_group",
+	"billing_country", "shipping_country", "from_date", "to_date")
+
+
+def _tax_rule(company: str, tax_type: str, category: str | None, template: str, log: TenantLog) -> None:
+	field = "sales_tax_template" if tax_type == "Sales" else "purchase_tax_template"
+	filters = {"company": company, "tax_type": tax_type, "tax_category": category or ("is", "not set"),
+		**{f: ("is", "not set") for f in _RULE_FILTERS_NOT_SET}}
+	existing = frappe.get_all("Tax Rule", filters=filters, fields=["name", field], limit=1)
+	label = f"tax rule {company} {tax_type} {category or '(no category)'} -> {template}"
+	if existing and existing[0][field] == template:
+		return
+	if not log.change(label):
+		return
+	if existing:
+		frappe.db.set_value("Tax Rule", existing[0].name, field, template)
+		return
+	# no shopping cart here (the rule's default would also apply it there)
+	frappe.get_doc({"doctype": "Tax Rule", "tax_type": tax_type, "company": company, "tax_category": category,
+		"use_for_shopping_cart": 0, field: template}).insert(ignore_permissions=True)
+
+
 def _intercompany(definition, companies, log: TenantLog) -> None:
 	currency = {c["name"]: c["currency"] for c in companies}
 	for pair in definition.get("intercompany", []):
@@ -496,6 +557,8 @@ def _internal_party(doctype: str, represents: str, transacting_company: str, log
 	name_field = "customer_name" if doctype == "Customer" else "supplier_name"
 	flag = "is_internal_customer" if doctype == "Customer" else "is_internal_supplier"
 	existing = frappe.db.get_value(doctype, {flag: 1, "represents_company": represents}, "name")
+	tax_category = default_tax_category(doctype, transacting_company,
+		frappe.get_cached_value("Company", represents, "country"))
 	if existing:
 		doc = frappe.get_doc(doctype, existing)
 		drift = {}
@@ -522,6 +585,10 @@ def _internal_party(doctype: str, represents: str, transacting_company: str, log
 				f"{doctype} {existing}: allowed company {transacting_company}"):
 			doc.append("companies", {"company": transacting_company})
 			changed = True
+		if tax_category and doc.get("tax_category") != tax_category and log.change(
+				f"{doctype} {existing}: tax category {tax_category}"):
+			doc.tax_category = tax_category
+			changed = True
 		if changed:
 			doc.flags.accept_similar_name = True
 			doc.save(ignore_permissions=True)
@@ -536,6 +603,7 @@ def _internal_party(doctype: str, represents: str, transacting_company: str, log
 		"companies": [{"company": transacting_company}],
 		"default_price_list": price_list,
 		"accounts": [{"company": transacting_company, "account": party_account}] if party_account else [],
+		"tax_category": tax_category,
 	}
 	if billing_currency:
 		values["default_currency"] = billing_currency

@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt, getdate, nowdate
 
+from automotive_core.finance_controls.taxes import default_tax_category
 from automotive_core.governance import audit
 from automotive_core.utils import send_welcome_email
 
@@ -14,8 +15,18 @@ from automotive_core.utils import send_welcome_email
 # ---------------------------------------------------------------------------------------
 
 
+def onboarding_company(doc) -> str | None:
+	"""The company a new supplier is taxed against: that of the first plant it will supply."""
+	for row in doc.get("proposed_items") or []:
+		if row.plant:
+			return frappe.get_cached_value("Plant", row.plant, "company")
+	return frappe.db.get_single_value("Global Defaults", "default_company")
+
+
 def validate_onboarding(doc) -> None:
 	doc.partner_code = (doc.partner_code or "").strip().upper()
+	if not doc.tax_category:
+		doc.tax_category = default_tax_category("Supplier", onboarding_company(doc), doc.country)
 	if frappe.db.exists("Supplier", {"tax_id": doc.tax_id, "disabled": 0}):
 		frappe.throw(_("A supplier with tax id {0} already exists.").format(doc.tax_id))
 	today = getdate(nowdate())
@@ -41,6 +52,7 @@ def on_onboarding_submit(doc) -> None:
 			"supplier_group": doc.supplier_group,
 			"country": doc.country,
 			"tax_id": doc.tax_id,
+			"tax_category": doc.tax_category,
 			"automotive_partner_code": doc.partner_code,
 			"automotive_onboarding": doc.name,
 			"automotive_risk_rating": doc.risk_rating,

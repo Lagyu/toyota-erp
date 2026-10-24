@@ -137,4 +137,17 @@ DOCTYPES = [
 			*[perm(r, "r p") for r in INTERNAL if r != AUDITOR],
 		],
 	),
+	DocType(
+		"Tax Category Default",
+		"Finance Controls",
+		child=True,
+		fields=[
+			select("party_type", "Party Type", ["Customer", "Supplier"], reqd=1, in_list_view=1),
+			link("company_country", "Company Country", "Country", in_list_view=1,
+				description="Blank: companies in any country."),
+			link("party_country", "Party Country", "Country", in_list_view=1,
+				description="Blank: parties in any other country."),
+			link("tax_category", "Tax Category", "Tax Category", reqd=1, in_list_view=1),
+		],
+	),
 ]

@@ -32,7 +32,9 @@
   "clamd_port",
   "default_retention_days",
   "section_break_1",
-  "attachment_rules"
+  "attachment_rules",
+  "tab_break_4",
+  "tax_category_defaults"
  ],
  "fields": [
   {
@@ -189,12 +191,24 @@
    "fieldtype": "Table",
    "label": "Attachment Rules",
    "options": "Attachment Policy Rule"
+  },
+  {
+   "fieldname": "tab_break_4",
+   "fieldtype": "Tab Break",
+   "label": "Taxes"
+  },
+  {
+   "description": "Tax category for new dealers, suppliers and intercompany parties, from the company's and the party's country (the most specific row wins). The category picks each document's tax template through Tax Rules.",
+   "fieldname": "tax_category_defaults",
+   "fieldtype": "Table",
+   "label": "Tax Category Defaults",
+   "options": "Tax Category Default"
   }
  ],
  "icon": "settings",
  "issingle": 1,
  "links": [],
- "modified": "2026-10-24 07:18:49.073486",
+ "modified": "2026-10-24 14:09:04.330647",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Automotive Settings",

@@ -80,6 +80,11 @@ DOCTYPES = [
 				description="0 keeps attachments forever."),
 			section("Per-DocType Rules"),
 			table("attachment_rules", "Attachment Rules", "Attachment Policy Rule"),
+			tab("Taxes"),
+			table("tax_category_defaults", "Tax Category Defaults", "Tax Category Default",
+				description="Tax category for new dealers, suppliers and intercompany parties, from the company's "
+				"and the party's country (the most specific row wins). The category picks each document's tax "
+				"template through Tax Rules."),
 		],
 		permissions=[perm(SYSTEM, "rw t"), perm(IT_OPERATOR, "rw t"), perm(AUDITOR, "r")],
 	),

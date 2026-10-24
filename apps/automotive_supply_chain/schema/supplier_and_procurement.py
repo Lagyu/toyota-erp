@@ -81,6 +81,9 @@ DOCTYPES = [
 			link("supplier_group", "Supplier Group", "Supplier Group", reqd=1),
 			link("country", "Country", "Country", reqd=1),
 			data("tax_id", "Tax ID", reqd=1),
+			link("tax_category", "Tax Category", "Tax Category",
+				description="Blank: from Automotive Settings > Taxes (the supplied plants' company and the supplier's "
+				"country)."),
 			column(),
 			select("risk_rating", "Risk Rating", ["Low", "Medium", "High"], default="Medium", reqd=1),
 			small_text("risk_notes", "Risk Notes"),

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import frappe
 
+from automotive_core.finance_controls.taxes import default_tax_category
 from automotive_core.setup.tenant import approval_policy
 
 POLICIES = [
@@ -59,3 +60,25 @@ def apply(definition, log) -> None:
 		if log.change(f"approval policy {name}: exclude blanket call-offs"):
 			frappe.db.set_value("Approval Policy", name, {"category_field": "automotive_release_type",
 				"category_values": "Standard"})
+	_party_tax_categories(log)
+
+
+def _party_tax_categories(log) -> None:
+	"""Dealers and suppliers registered before the tenant had tax categories get the one
+	their registration would now default to (parties without a registration are left alone)."""
+	from automotive_supply_chain.supplier_collaboration.sourcing import onboarding_company
+
+	for customer, registration in frappe.get_all("Customer", filters={"tax_category": ("is", "not set"),
+			"automotive_dealer_registration": ("is", "set")}, fields=["name", "automotive_dealer_registration"],
+			as_list=True):
+		reg = frappe.db.get_value("Dealer Registration", registration, ["company", "country", "tax_category"],
+			as_dict=True)
+		category = reg and (reg.tax_category or default_tax_category("Customer", reg.company, reg.country))
+		if category and log.change(f"Customer {customer}: tax category {category}"):
+			frappe.db.set_value("Customer", customer, "tax_category", category)
+	for supplier, onboarding in frappe.get_all("Supplier", filters={"tax_category": ("is", "not set"),
+			"automotive_onboarding": ("is", "set")}, fields=["name", "automotive_onboarding"], as_list=True):
+		doc = frappe.get_doc("Supplier Onboarding", onboarding)
+		category = doc.tax_category or default_tax_category("Supplier", onboarding_company(doc), doc.country)
+		if category and log.change(f"Supplier {supplier}: tax category {category}"):
+			frappe.db.set_value("Supplier", supplier, "tax_category", category)

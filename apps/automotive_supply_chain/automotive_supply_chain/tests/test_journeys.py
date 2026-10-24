@@ -275,6 +275,10 @@ class TestIntercompanyJourney(JourneyTestCase):
 		pi.reload()
 		self.assertEqual(pi.automotive_match_status, "Matched")
 		pi.submit()
+		# a domestic supply: Kyushu charges consumption tax, Aichi books the same amount as input tax
+		self.assertEqual((si.taxes_and_charges, pi.taxes_and_charges), ("Japan Tax 10% - HPC", "Japan Tax 10% - HAMJ"))
+		self.assertEqual(flt(si.total_taxes_and_charges), 30_000)
+		self.assertEqual(flt(pi.total_taxes_and_charges), flt(si.total_taxes_and_charges))
 		result = reconciliation(KYUSHU, AICHI)
 		self.assertTrue(result["balanced"], result)
 		self.assertEqual(flt(frappe.db.get_value("Bin", {"item_code": inverter, "warehouse": catalog.PARTS_STORE},
@@ -394,6 +398,12 @@ class TestDealerJourney(JourneyTestCase):
 		si.insert(ignore_permissions=True)
 		si.submit()
 		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "invoice_status"), "Invoiced")
+		# a domestic dealer: 10 % consumption tax, booked as output tax
+		self.assertEqual(si.taxes_and_charges, "Japan Tax 10% - HAMJ")
+		self.assertEqual(flt(si.total_taxes_and_charges), round(flt(si.net_total) * 0.1))
+		output_tax = frappe.db.sql("""select sum(credit) - sum(debit) from `tabGL Entry` where voucher_no = %s
+			and account = 'CT 10%% - HAMJ' and is_cancelled = 0""", si.name)[0][0]
+		self.assertEqual(flt(output_tax), flt(si.total_taxes_and_charges))
 		pe = get_payment_entry("Sales Invoice", si.name)
 		pe.reference_no, pe.reference_date = "DEALER-REMIT-1", nowdate()
 		pe.insert(ignore_permissions=True)

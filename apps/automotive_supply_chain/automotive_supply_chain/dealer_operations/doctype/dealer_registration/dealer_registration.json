@@ -14,6 +14,7 @@
   "territory",
   "country",
   "tax_id",
+  "tax_category",
   "column_break_1",
   "requested_credit_limit",
   "price_list",
@@ -75,6 +76,13 @@
    "fieldtype": "Data",
    "label": "Tax ID",
    "reqd": 1
+  },
+  {
+   "description": "Blank: from Automotive Settings > Taxes (company and dealer country).",
+   "fieldname": "tax_category",
+   "fieldtype": "Link",
+   "label": "Tax Category",
+   "options": "Tax Category"
   },
   {
    "fieldname": "column_break_1",
@@ -144,7 +152,7 @@
  "icon": "store",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 08:23:27.537584",
+ "modified": "2026-10-24 14:09:04.364211",
  "modified_by": "Administrator",
  "module": "Dealer Operations",
  "name": "Dealer Registration",

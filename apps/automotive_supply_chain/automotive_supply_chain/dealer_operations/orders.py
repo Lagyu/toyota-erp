@@ -8,6 +8,7 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, cint, flt, getdate, nowdate
 
+from automotive_core.finance_controls.taxes import default_tax_category
 from automotive_core.governance import audit
 from automotive_core.integration_hub import outbox
 from automotive_core.utils import send_welcome_email
@@ -24,6 +25,8 @@ FROZEN_DAYS = 3
 
 def validate_registration(doc) -> None:
 	doc.dealer_code = (doc.dealer_code or "").strip().upper()
+	if not doc.tax_category:
+		doc.tax_category = default_tax_category("Customer", doc.company, doc.country)
 	if frappe.db.exists("Customer", {"automotive_partner_code": doc.dealer_code}):
 		frappe.throw(_("Dealer code {0} is already used.").format(doc.dealer_code))
 	if frappe.db.exists("Customer", {"tax_id": doc.tax_id, "disabled": 0}):
@@ -43,6 +46,7 @@ def on_registration_submit(doc) -> None:
 			frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
 		"territory": doc.territory,
 		"tax_id": doc.tax_id,
+		"tax_category": doc.tax_category,
 		"default_price_list": doc.price_list,
 		"default_currency": frappe.db.get_value("Price List", doc.price_list, "currency"),
 		"automotive_partner_code": doc.dealer_code,

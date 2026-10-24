@@ -256,6 +256,8 @@ DOCTYPES = [
 			link("territory", "Territory", "Territory", reqd=1),
 			link("country", "Country", "Country", reqd=1),
 			data("tax_id", "Tax ID", reqd=1),
+			link("tax_category", "Tax Category", "Tax Category",
+				description="Blank: from Automotive Settings > Taxes (company and dealer country)."),
 			column(),
 			currency("requested_credit_limit", "Requested Credit Limit", reqd=1),
 			link("price_list", "Price List", "Price List", reqd=1),

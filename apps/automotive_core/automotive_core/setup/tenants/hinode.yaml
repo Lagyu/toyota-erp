@@ -155,6 +155,36 @@ plants:
         stations: [D10 Arrival Inspection, D20 Accessory Fit, D30 Final PDI]
 
 # Intercompany relationships: seller company -> buyer company
+# Tax determination (finance_controls/taxes.py): a party's tax category picks the template of
+# each document through Tax Rules, per company; '' is the rule for parties without a category.
+# The "Japan Tax 10%" and "US ST 6%" templates are ERPNext's country defaults (consumption tax,
+# state sales tax). Exports are zero-rated, US dealers buy for resale, and imports carry no
+# tax on the supplier's invoice (import tax is settled at customs). The rates and rules are
+# configuration: validate jurisdiction-specific compliance separately.
+taxes:
+  categories: [Domestic Taxable, Export Zero-rated, Resale Exempt, Import]
+  templates:   # charge no tax; the document still records why
+    - {title: Export Zero-rated, type: Sales, companies: [HAMJ, HPC]}
+    - {title: Resale Exempt, type: Sales, companies: [HADNA]}
+    - {title: Import, type: Purchase, companies: [HAMJ, HPC, HADNA]}
+  rules:       # company -> tax type -> tax category -> template title
+    HAMJ: &japan
+      Sales: {Domestic Taxable: Japan Tax 10%, Export Zero-rated: Export Zero-rated, "": Japan Tax 10%}
+      Purchase: {Domestic Taxable: Japan Tax 10%, Import: Import, "": Japan Tax 10%}
+    HPC: *japan
+    HADNA:
+      Sales: {Domestic Taxable: US ST 6%, Resale Exempt: Resale Exempt, "": US ST 6%}
+      Purchase: {Domestic Taxable: US ST 6%, Import: Import}
+  party_defaults:   # new dealers, suppliers and intercompany parties (Automotive Settings > Taxes)
+    - {party_type: Customer, company_country: Japan, party_country: Japan, tax_category: Domestic Taxable}
+    - {party_type: Customer, company_country: Japan, tax_category: Export Zero-rated}
+    - {party_type: Customer, company_country: United States, party_country: United States, tax_category: Resale Exempt}
+    - {party_type: Supplier, company_country: Japan, party_country: Japan, tax_category: Domestic Taxable}
+    - {party_type: Supplier, company_country: Japan, tax_category: Import}
+    - {party_type: Supplier, company_country: United States, party_country: United States,
+       tax_category: Domestic Taxable}
+    - {party_type: Supplier, company_country: United States, tax_category: Import}
+
 intercompany:
   - {seller: Hinode Powertrain Components, buyer: Hinode Automotive Manufacturing Japan}
   - {seller: Hinode Automotive Manufacturing Japan, buyer: Hinode Automotive Distribution North America}
@@ -238,6 +268,10 @@ settings:
     # rate differences are governed by the three-way match tolerances (automotive_supply_chain)
     maintain_same_rate: 0
   Accounts Settings:
+    # documents created by code get their tax template's rows too (taxes above); ERPNext allows
+    # one automatic source only, and no item carries an Item Tax Template here
+    add_taxes_from_item_tax_template: 0
+    add_taxes_from_taxes_and_charges_template: 1
     # Hard ceiling on billing above the received value. Price variances beyond the
     # three-way-match tolerance (2%) already block the invoice until a procurement manager
     # accepts them (automotive_supply_chain); ERPNext refuses anything above this ceiling
