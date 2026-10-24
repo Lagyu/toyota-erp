@@ -239,6 +239,15 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the standard fields and the comment count). Found by a short run on the closing dataset.
 
 ### Operations
+- A real reboot and a power loss are rehearsed in CI: the rehearsal workflow's `reboot` job
+  installs the commit by the install runbook on a fresh Ubuntu 24.04 VM under KVM (Docker from
+  the Ubuntu archive, the production example's settings with ClamAV, monitoring and restic on
+  S3), reboots it, then resets it without a shutdown, and after each restart checks the runbook's
+  step 11: Docker started at boot, every service back, the site and its smoke test, the data
+  (a ToDo committed just before the reset included), scheduler, workers, cron, ClamAV,
+  monitoring and an off-host backup (`scripts/ci/reboot-check.sh`).
+- `install-docker-ubuntu.sh` waits for a fresh host's first-boot package jobs (apt-daily,
+  unattended upgrades) instead of failing on the package lock.
 - The production rehearsal observes a scheduled backup and restore drill: it brings the cron
   service's schedules forward to the next minutes, checks both jobs and the new off-host
   snapshot, and puts the schedules back.

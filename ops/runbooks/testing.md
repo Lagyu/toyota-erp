@@ -188,14 +188,14 @@ Other workflows, started by hand (`gh workflow run …`):
 
 | Workflow | What it proves |
 |---|---|
-| `rehearsal.yml` | the production install from the runbook, an upgrade from 25 commits earlier, a simulated reboot, the off-host backup with binary log shipping and a drill with point-in-time recovery, TLS headers and cookie flags, the socket-free cron service, the monitoring targets ([install-fresh-host.md](install-fresh-host.md)) |
+| `rehearsal.yml` | job `rehearsal`: the production install from the runbook, an upgrade from 25 commits earlier, uploads scanned by ClamAV, a simulated reboot (Docker daemon restart), the off-host backup with binary log shipping and a drill with point-in-time recovery, a backup and a drill started by the cron service's schedules, TLS headers and cookie flags, the socket-free cron service, the monitoring targets, the rollback ([install-fresh-host.md](install-fresh-host.md), [upgrade.md](upgrade.md)); job `acme`: `TLS_MODE=letsencrypt` against Pebble, Let's Encrypt's ACME test server; job `reboot`: the install on a fresh Ubuntu VM (Docker from the Ubuntu archive), then a real reboot and a power loss (a reset without shutdown) with the checks of [install-fresh-host.md](install-fresh-host.md#11-reboot-persistence) after each |
 | `dataset.yml` | the standard dataset, generated in chained 4-hour segments (up to 18; `resume_run` continues a run that stopped) and validated ([seed-reference-data.md](seed-reference-data.md)) |
 | `dataset-compare.yml` | two dataset runs of one profile compared document by document (their fingerprints): an uninterrupted run against one stopped in the middle of days ([seed-reference-data.md](seed-reference-data.md#pause-and-resume)) |
 | `perf.yml` | the load tests on that dataset ([ops/performance/README.md](../performance/README.md)) |
 
 ## Not covered by automated tests yet
 
-- **The TLS mode `letsencrypt`** (it needs a public DNS name); `files` is covered by the rehearsal.
+- **A certificate from the real Let's Encrypt** (it needs a public DNS name): the rehearsal's `acme` job uses Pebble.
 - **The high-availability option** ([high-availability.md](high-availability.md)): no rehearsal on several hosts.
 - **Restoring onto a different host**: the drill restores into a scratch site on the same stack.
 

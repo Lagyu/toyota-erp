@@ -1,8 +1,9 @@
 # Production rehearsal (GATE-6): on a fresh hosted runner, install a previous release by
 # the install runbook with TLS, monitoring and an S3 backup repository, upgrade it to this
 # commit with scripts/deploy/upgrade.sh, then check HTTPS, a simulated reboot, an off-host
-# backup, the restore drill and monitoring (scripts/ci/rehearsal.sh). The report is the
-# run's summary and the rehearsal artifact.
+# backup, the restore drill and monitoring (scripts/ci/rehearsal.sh). Beside it: the
+# Let's Encrypt mode against an ACME test server, and a real reboot and power loss of a VM
+# installed by the runbook. The reports are the run's summary and its artifacts.
 name: rehearsal
 
 on:
@@ -80,5 +81,33 @@ jobs:
         with:
           name: acme
           path: .local/acme/
+          include-hidden-files: true
+          retention-days: 90
+
+  # a real reboot, which a hosted runner cannot do to itself: this commit installed by the
+  # runbook in an Ubuntu VM under KVM, rebooted, then reset like a power loss, with the
+  # runbook's checks after each (scripts/ci/reboot-check.sh)
+  reboot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - name: Build this commit's image
+        run: ./scripts/image/build.sh | tee .local-image.txt
+      - name: Reboot and power loss of a VM
+        run: ./scripts/ci/reboot-check.sh "$(tail -1 .local-image.txt)"
+      - name: Report
+        if: always()
+        run: if [[ -f .local/reboot/report.md ]]; then cat .local/reboot/report.md >>"$GITHUB_STEP_SUMMARY"; fi
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: reboot
+          path: .local/reboot/
           include-hidden-files: true
           retention-days: 90

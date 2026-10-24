@@ -18,6 +18,8 @@
 # daemon configuration, /etc/hosts and /etc/hinode: never run it on a host that matters.
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
+# shellcheck source=scripts/lib/host-install.sh
+source "$(dirname "$0")/../lib/host-install.sh"
 export LOG_TAG=rehearsal
 load_env_file "$REPO_ROOT/infra/ci-tools.env"
 prev=$(cd "${1:?usage: rehearsal.sh PREVIOUS_CHECKOUT PREVIOUS_IMAGE IMAGE}" && pwd)
@@ -29,7 +31,6 @@ ENV=/etc/hinode/production.env
 SITE=erp.hinode.test
 SECRETS=/etc/hinode/secrets
 TLS=/etc/hinode/tls
-failures=0
 
 {
 	echo "# Production rehearsal"
@@ -40,9 +41,6 @@ failures=0
 	echo "| Step | Result | Seconds | Detail |"
 	echo "|---|---|---|---|"
 } >"$report"
-step() { step_name=$1; step_started=$SECONDS; log "== $step_name"; }
-pass() { echo "| $step_name | ok | $((SECONDS - step_started)) | ${1:-} |" >>"$report"; }
-fail() { echo "| $step_name | **FAILED** | $((SECONDS - step_started)) | ${1:-} |" >>"$report"; failures=$((failures + 1)); }
 fatal() { fail "$1"; finish; }
 finish() {
 	"$REPO_ROOT/scripts/deploy/compose.sh" "$ENV" logs --no-color >"$out/compose.log" 2>&1 || true
@@ -64,30 +62,6 @@ prev_compose_up() {
 	return "$status"
 }
 bench() { compose exec -T backend bench --site "$SITE" "$@"; }
-set_env() { # KEY=VALUE ...: replace or append lines of the environment file
-	python3 - "$ENV" "$@" <<'PY'
-import sys
-path, pairs = sys.argv[1], [a.split("=", 1) for a in sys.argv[2:]]
-lines = open(path).read().splitlines()
-for key, value in pairs:
-	line = f"{key}={value}"
-	at = [i for i, l in enumerate(lines) if l.startswith(f"{key}=")]
-	if at:
-		lines[at[0]] = line
-	else:
-		lines.append(line)
-open(path, "w").write("\n".join(lines) + "\n")
-PY
-}
-https() { curl -sS --cacert "$TLS/ca.pem" "$@"; }
-healthy() { # the site answers through the TLS proxy within the time limit
-	local _
-	for _ in $(seq 1 60); do
-		https -fo /dev/null "https://$SITE/api/method/automotive_core.ops.health.ready" 2>/dev/null && return 0
-		sleep 5
-	done
-	return 1
-}
 
 # 1. host -------------------------------------------------------------------------------
 step "Host preparation (install-docker-ubuntu.sh)"
@@ -101,21 +75,7 @@ else
 fi
 
 step "Secrets (runbook step 3)"
-sudo install -d -m 0755 /etc/hinode
-sudo install -d -m 0750 -g "$(id -gn)" "$SECRETS"
-for s in db_root_password admin_password metrics_token restic_password grafana_admin_password; do
-	sudo sh -c "umask 077; python3 -c 'import secrets; print(secrets.token_urlsafe(24))' > $SECRETS/$s"
-done
-sudo chown 1000:"$(id -gn)" "$SECRETS/db_root_password" && sudo chmod 0440 "$SECRETS/db_root_password"
-sudo chown 1000 "$SECRETS/restic_password" && sudo chmod 0400 "$SECRETS/restic_password"
-sudo chown "$(id -un)" "$SECRETS/admin_password" && sudo chmod 0400 "$SECRETS/admin_password"
-sudo chown 65534:"$(id -gn)" "$SECRETS/metrics_token" && sudo chmod 0440 "$SECRETS/metrics_token"
-sudo chown 472 "$SECRETS/grafana_admin_password" && sudo chmod 0400 "$SECRETS/grafana_admin_password"
-# the monitoring account's option file (its account is created after the first start)
-exporter_password=$(random_secret)
-printf '[client]\nuser=exporter\npassword=%s\nhost=db\nport=3306\n' "$exporter_password" \
-	| sudo tee "$SECRETS/mysqld_exporter.cnf" >/dev/null
-sudo chown 65534 "$SECRETS/mysqld_exporter.cnf" && sudo chmod 0400 "$SECRETS/mysqld_exporter.cnf"
+provision_secrets
 pass "$(sudo find "$SECRETS" -type f | wc -l) files, owners per runbook"
 
 step "Environment file and TLS certificate (steps 4-5)"
@@ -127,17 +87,7 @@ set_env "SITE_NAME=$SITE" "SITES_RULE=Host(\`$SITE\`)" "CUSTOM_IMAGE=${prev_imag
 	"RESTIC_AWS_ACCESS_KEY_ID=$s3_key" "RESTIC_AWS_SECRET_ACCESS_KEY=$s3_secret" \
 	GUNICORN_WORKERS=4 BACKEND_MEM_LIMIT=3g BACKEND_CPUS=3 WORKER_MEM_LIMIT=1536m DB_BUFFER_POOL=1536M DB_MEM_LIMIT=3g \
 	DB_CPUS=3 DB_MAX_CONNECTIONS=300
-sudo install -d -m 0750 -g "$(id -gn)" "$TLS"
-work=$(mktemp -d)
-openssl req -x509 -newkey rsa:2048 -nodes -days 365 -subj "/CN=Hinode Rehearsal CA" -keyout "$work/ca.key" \
-	-out "$work/ca.pem" 2>/dev/null
-openssl req -newkey rsa:2048 -nodes -subj "/CN=$SITE" -keyout "$work/privkey.pem" -out "$work/site.csr" 2>/dev/null
-openssl x509 -req -in "$work/site.csr" -CA "$work/ca.pem" -CAkey "$work/ca.key" -CAcreateserial -days 90 \
-	-extfile <(printf 'subjectAltName=DNS:%s\nextendedKeyUsage=serverAuth\n' "$SITE") -out "$work/fullchain.pem" 2>/dev/null
-sudo install -m 0644 "$work/fullchain.pem" "$work/ca.pem" "$TLS/"
-sudo install -m 0640 -g "$(id -gn)" "$work/privkey.pem" "$TLS/"
-shred -u "$work/ca.key" "$work/privkey.pem" 2>/dev/null || true
-grep -q " $SITE\$" /etc/hosts || echo "127.0.0.1 $SITE" | sudo tee -a /etc/hosts >/dev/null
+test_certificate
 pass "TLS_MODE=files, certificate for $SITE from a test CA; MONITORING=1; restic on S3"
 
 step "Preflight (step 6)"
@@ -155,17 +105,8 @@ if ! prev_compose_up --quiet-pull >"$out/first-start.log" 2>&1; then
 	fatal "compose up failed or did not finish within $COMPOSE_UP_TIMEOUT s (see first-start.log)"
 fi
 for _ in $(seq 1 60); do prev_compose exec -T db healthcheck.sh --connect >/dev/null 2>&1 && break; sleep 5; done
-# the S3 store on the stack's outbound network, as an off-host repository would be reached
-docker_cmd run -d --name rehearsal-s3 --restart unless-stopped --network hinode_egress --network-alias s3 \
-	"$VERSITYGW_IMAGE" --access "$s3_key" --secret "$s3_secret" --port :7070 posix /tmp >/dev/null
-# the bucket exists, as at a storage provider: restic then sees an empty repository at once,
-# instead of retrying a missing bucket for 15 minutes before initialising it
-docker_cmd exec rehearsal-s3 mkdir -p /tmp/hinode-erp-rehearsal
-# the monitoring account of mysqld_exporter.cnf (the statements arrive on stdin)
-prev_compose exec -T -e ROOT="$(<"$SECRETS/db_root_password")" db sh -c 'mariadb -uroot -p"$ROOT"' <<SQL
-CREATE USER IF NOT EXISTS 'exporter'@'%' IDENTIFIED BY '$exporter_password' WITH MAX_USER_CONNECTIONS 3;
-GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'%';
-SQL
+s3_store "$s3_key" "$s3_secret" hinode-erp-rehearsal
+monitoring_account "$prev/scripts/deploy/compose.sh"
 pass "$(prev_compose ps --format '{{.Service}}' | wc -l) services"
 
 step "Site and smoke test of the previous release (steps 8-9)"
@@ -441,22 +382,11 @@ else
 fi
 
 step "Monitoring targets"
-# a target scraped while its service was starting (after the reboot above) stays down until
-# its next scrape (30 s): wait up to two minutes for every target
-for _ in $(seq 1 12); do
-	targets=$(compose exec -T prometheus wget -qO- 'http://localhost:9090/api/v1/targets?state=active' 2>/dev/null || true)
-	summary=$(python3 -c 'import json,sys; t=json.load(sys.stdin)["data"]["activeTargets"]; print(sum(x["health"]=="up" for x in t), len(t), ",".join(sorted(x["labels"]["job"] for x in t if x["health"]!="up")))' \
-		<<<"$targets" 2>/dev/null || echo "0 0 unreadable")
-	read -r up total down <<<"$summary"
-	[[ $total -gt 0 && $up == "$total" ]] && break
-	sleep 10
-done
+monitoring_targets "$REPO_ROOT/scripts/deploy/compose.sh"
 if [[ $total -gt 0 && $up == "$total" ]]; then
 	pass "$up of $total targets up"
 else
-	why=$(python3 -c 'import json,sys; print("; ".join(x["labels"]["job"] + ": " + (x.get("lastError") or "?")[:160] for x in json.load(sys.stdin)["data"]["activeTargets"] if x["health"] != "up"))' \
-		<<<"$targets" 2>/dev/null || true)
-	fail "$up of $total up; down: ${why:-${down:-?}}"
+	fail "$up of $total up; down: $why"
 fi
 
 # 6. rollback ------------------------------------------------------------------------------

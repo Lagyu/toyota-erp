@@ -67,11 +67,23 @@ write_if_changed /etc/docker/daemon.json '{
 systemctl daemon-reload
 
 installed() { dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "ok installed"; }
+# A fresh host's first-boot package jobs (apt-daily, unattended-upgrades) hold the package
+# locks for minutes: wait for them, and let apt wait for a lock taken in between.
+wait_for_package_jobs() {
+	local _
+	for _ in $(seq 1 120); do
+		pgrep -f '(^|/)(apt|apt-get|dpkg)( |$)|apt\.systemd\.daily|/usr/bin/unattended-upgrade( |$)' >/dev/null || return 0
+		sleep 5
+	done
+	echo "package jobs still running after ten minutes; trying anyway"
+}
+apt_get() { apt-get -o DPkg::Lock::Timeout=600 "$@"; }
 if installed docker-ce || installed moby-engine; then
 	echo "keeping the installed Docker Engine ($(installed docker-ce && echo docker-ce || echo moby-engine))"
 elif ! installed docker.io; then
-	apt-get update -qq
-	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+	wait_for_package_jobs
+	apt_get update -qq
+	DEBIAN_FRONTEND=noninteractive apt_get install -y --no-install-recommends \
 		docker.io docker-compose-v2 docker-buildx
 	changed=1
 fi

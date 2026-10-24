@@ -395,7 +395,8 @@ Keep the output of both as installation evidence (brief §8.2 gate 6). No script
   - db, Redis, proxy, cron, ClamAV and the monitoring services: `unless-stopped`.
 - Queued background jobs survive in `redis-queue`, which uses an append-only file.
 
-Rehearse a reboot before go-live, then check:
+Rehearse a reboot before go-live, then check (CI does both, a reboot and a power loss, on a
+fresh VM installed by this runbook: the `reboot` job of `rehearsal.yml`, `scripts/ci/reboot-check.sh`):
 
 ```bash
 systemctl is-active docker                                                   # active
