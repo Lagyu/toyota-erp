@@ -194,11 +194,16 @@ def report_roles(doctype: str) -> set[str]:
 
 def align_report_roles() -> list[str]:
 	"""Workspaces and sidebars offer the reports a user's roles may open, but a report runs only
-	for roles that may report on its DocType: for anyone else its link answers "no permission"
-	(ERP-12.2, GATE-1). A report whose roles go beyond those (or that names none, so is open to
-	all) gets a Custom Role naming only the roles that can run it, which takes it off the others'
-	navigation. Re-applied on every migrate, so reports that upgrades add are aligned too.
-	Returns the reports changed."""
+	for those who may report on its DocType: for anyone else its link answers "no permission"
+	(ERP-12.2, GATE-1). Each report gets a Custom Role naming the roles that keep it: of the roles
+	it names (all, when it names none), those that can run it, plus, for every role profile that
+	could open it and holds a role that can run it, that role, so the profile keeps the report.
+	A report naming no roles of its own also gets them as its own rows: Frappe offers such a
+	report to everyone, Custom Role or not. Re-applied on every migrate, so reports that upgrades
+	add or re-sync are aligned too. Returns the reports changed."""
+	from automotive_core.setup.roles import ROLE_PROFILES
+
+	profiles = [set(roles) for roles in ROLE_PROFILES.values()]
 	changed = []
 	for report in frappe.get_all("Report", filters={"disabled": 0}, fields=["name", "ref_doctype"], order_by="name"):
 		if not report.ref_doctype or not frappe.db.exists("DocType", report.ref_doctype):
@@ -207,17 +212,35 @@ def align_report_roles() -> list[str]:
 		if "All" in able:
 			continue
 		custom = frappe.db.get_value("Custom Role", {"report": report.name}, "name")
-		current = set(frappe.get_all("Has Role", filters={"parenttype": "Custom Role" if custom else "Report",
-			"parent": custom or report.name}, pluck="role"))
+		own = set(frappe.get_all("Has Role", filters={"parenttype": "Report", "parent": report.name}, pluck="role"))
+		current = set(frappe.get_all("Has Role", filters={"parenttype": "Custom Role", "parent": custom},
+			pluck="role")) if custom else own
+		keep = (current & able) if current else set(able)
+		for mine in profiles:
+			if (not current or mine & current) and mine & able:
+				keep |= mine & able
+		# a profile that opens the report through a kept role keeps it through all its roles that
+		# can run it: the result is stable, so the next migrate changes nothing
+		grown = True
+		while grown:
+			grown = False
+			for mine in profiles:
+				if mine & keep and not (mine & able) <= keep:
+					keep |= mine & able
+					grown = True
 		# an empty Custom Role would not hide the report: Administrator keeps it
-		wanted = ((current & able) if current else able) or {"Administrator"}
-		if wanted == current:
-			continue
-		doc = frappe.get_doc("Custom Role", custom) if custom else frappe.new_doc("Custom Role")
-		doc.update({"report": report.name, "ref_doctype": report.ref_doctype})
-		doc.set("roles", [{"role": role} for role in sorted(wanted)])
-		doc.flags.ignore_permissions = True
-		doc.save()
-		changed.append(report.name)
+		wanted = keep or {"Administrator"}
+		if wanted != current:
+			doc = frappe.get_doc("Custom Role", custom) if custom else frappe.new_doc("Custom Role")
+			doc.update({"report": report.name, "ref_doctype": report.ref_doctype})
+			doc.set("roles", [{"role": role} for role in sorted(wanted)])
+			doc.flags.ignore_permissions = True
+			doc.save()
+			changed.append(report.name)
+		if not own:
+			for role in sorted(wanted):
+				frappe.get_doc({"doctype": "Has Role", "parent": report.name, "parenttype": "Report",
+					"parentfield": "roles", "role": role}).db_insert()
+			if report.name not in changed:
+				changed.append(report.name)
 	return changed
-

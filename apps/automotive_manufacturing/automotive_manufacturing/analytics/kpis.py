@@ -40,7 +40,8 @@ DEFINITIONS = [
 		"formula": "Sum of Andon line-stop durations (raised to restart) in period, in hours",
 		"source_doctypes": "Andon Event, Downtime Entry",
 		"authorization_filter": "Company and Plant User Permissions of the caller.",
-		"reconciliation_check": "Andon stop hours equal the Downtime Entries booked from those andons.",
+		"reconciliation_check": "Andon stop hours equal the Downtime Entries booked from those andons, and the KPI "
+		"equals the booked downtime plus the stops nobody booked.",
 	},
 	{
 		"kpi_code": "MFG-SHORTAGE",
@@ -89,7 +90,7 @@ DEFINITIONS = [
 		"x Quality (units released first time / units built)",
 		"source_doctypes": "Production Line, Shift Pattern, Andon Event, Vehicle Unit, Quality Inspection",
 		"authorization_filter": "Company and Plant User Permissions of the caller.",
-		"reconciliation_check": "Each factor stays within 0..100% and units built match Vehicle Units built in period.",
+		"reconciliation_check": "Each factor stays within 0..100% and the value is their product.",
 	},
 ]
 
@@ -155,8 +156,13 @@ def reconcile_line_stops(company, from_date, to_date, plant, result) -> tuple[bo
 	downtime_hours = flt(frappe.db.sql("select sum(downtime) from `tabDowntime Entry` where name in %s",
 		[tuple(booked) or ("",)])[0][0]) if booked else 0.0
 	andon_hours = sum(flt(s.duration_minutes) for s in stops if s.downtime_entry) / 60.0
-	ok = abs(downtime_hours - andon_hours) <= 0.02 * max(len(booked), 1)
-	return ok, f"andon {andon_hours:.2f} h vs downtime entries {downtime_hours:.2f} h ({len(booked)} booked of {len(stops)})"
+	unbooked_hours = sum(flt(s.duration_minutes) for s in stops if not s.downtime_entry) / 60.0
+	# the KPI from the downtime ledger: the hours booked from the stops, plus the stops nobody booked
+	tolerance = 0.02 * max(len(stops), 1)
+	ok = abs(downtime_hours - andon_hours) <= tolerance and abs(
+		flt(result.value) - (downtime_hours + unbooked_hours)) <= tolerance
+	return ok, (f"KPI {flt(result.value):.2f} h; andon {andon_hours:.2f} h vs downtime entries {downtime_hours:.2f} h "
+		f"({len(booked)} booked of {len(stops)}, {unbooked_hours:.2f} h unbooked)")
 
 
 def shortage_risk(company, from_date, to_date, plant=None) -> KpiResult:
@@ -203,7 +209,7 @@ def reconcile_wip(company, from_date, to_date, plant, result) -> tuple[bool, str
 	accounts = sorted({frappe.get_cached_value("Warehouse", w, "account") or frappe.get_cached_value("Company", company,
 		"default_inventory_account") for w in warehouses})
 	if not accounts:
-		return True, "no WIP warehouses"
+		return True, "no WIP warehouses: not applicable"
 	shared = frappe.get_all("Warehouse", filters={"account": ("in", accounts), "name": ("not in", warehouses or [""])},
 		pluck="name", limit=1)
 	if shared:
@@ -249,5 +255,10 @@ def oee(company, from_date, to_date, plant=None) -> KpiResult:
 
 def reconcile_oee(company, from_date, to_date, plant, result) -> tuple[bool, str]:
 	factors = [result.inputs.get(k, 0) for k in ("availability", "performance", "quality")]
-	ok = all(0 <= f <= 1.0000001 for f in factors)
-	return ok, "A={:.3f} P={:.3f} Q={:.3f} built={}".format(*factors, result.inputs.get("built"))
+	in_range = all(0 <= f <= 1.0000001 for f in factors)
+	# the value is the product of its factors (none without planned time)
+	expected = round(factors[0] * factors[1] * factors[2] * 100, 2) if flt(result.denominator) else None
+	consistent = expected == result.value if expected is None or result.value is None else abs(
+		expected - flt(result.value)) <= 0.01
+	ok = in_range and consistent
+	return ok, "OEE {} from A={:.3f} P={:.3f} Q={:.3f}, built={}".format(result.value, *factors, result.inputs.get("built"))

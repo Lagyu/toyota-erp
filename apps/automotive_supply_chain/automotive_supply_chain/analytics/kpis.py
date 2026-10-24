@@ -23,7 +23,8 @@ DEFINITIONS = [
 		"formula": "Sales order lines fully delivered on or before their promised/delivery date / lines due in period",
 		"source_doctypes": "Sales Order Item, Delivery Note Item",
 		"authorization_filter": "Company User Permission of the caller.",
-		"reconciliation_check": "Delivered quantity of due lines equals the Delivery Note quantity booked against them.",
+		"reconciliation_check": "Delivered quantity of due lines equals the Delivery Note quantity booked against them, "
+		"and the lines on time and in full, counted again from the Delivery Notes, equal the KPI's.",
 	},
 	{
 		"kpi_code": "SC-SUP-OTD",
@@ -71,7 +72,8 @@ DEFINITIONS = [
 		"formula": "Counted lines within tolerance / counted lines in posted cycle counts x 100",
 		"source_doctypes": "Cycle Count, Cycle Count Line, Stock Reconciliation",
 		"authorization_filter": "Company User Permission of the caller.",
-		"reconciliation_check": "Every count with variances has a submitted Stock Reconciliation.",
+		"reconciliation_check": "Every count with variances has a submitted Stock Reconciliation, and the count lines "
+		"within tolerance equal the KPI's numerator.",
 	},
 	{
 		"kpi_code": "SC-P2P",
@@ -87,7 +89,8 @@ DEFINITIONS = [
 		"formula": "Average days from purchase order date to the payment date of the invoice paid in period",
 		"source_doctypes": "Payment Entry Reference, Purchase Invoice Item, Purchase Order",
 		"authorization_filter": "Company User Permission of the caller.",
-		"reconciliation_check": "Invoices counted are fully paid (outstanding 0) by payments in period.",
+		"reconciliation_check": "Invoices counted are fully paid (outstanding 0) by payments in period, and the days "
+		"recomputed from the Payment Ledger equal the KPI's.",
 	},
 ]
 
@@ -117,7 +120,19 @@ def reconcile_otif(company, from_date, to_date, plant, result) -> tuple[bool, st
 		[tuple(names)])[0][0])
 	dn_qty = flt(frappe.db.sql("""select sum(dni.qty) from `tabDelivery Note Item` dni join `tabDelivery Note` dn
 		on dn.name = dni.parent where dn.docstatus = 1 and dni.so_detail in %s""", [tuple(names)])[0][0])
-	return abs(so_delivered - dn_qty) < 1e-6, f"SO delivered {so_delivered} vs DN qty {dn_qty}"
+	# the lines on time and in full, counted again from the delivery notes themselves (returns net
+	# out of the quantity, as they do on the order; the last delivery is the last outbound one)
+	rows = frappe.db.sql("""select soi.stock_qty, ifnull(so.automotive_promised_date, soi.delivery_date) due,
+			sum(case when dn.name is null then 0 else dni.stock_qty end) shipped,
+			max(case when dn.is_return = 0 then dn.posting_date end) last_delivery
+		from `tabSales Order Item` soi join `tabSales Order` so on so.name = soi.parent
+		left join `tabDelivery Note Item` dni on dni.so_detail = soi.name
+		left join `tabDelivery Note` dn on dn.name = dni.parent and dn.docstatus = 1
+		where soi.name in %s group by soi.name, soi.stock_qty, due""", [tuple(names)], as_dict=True)
+	good = sum(1 for r in rows if flt(r.shipped) >= flt(r.stock_qty) and r.last_delivery and r.last_delivery <= r.due)
+	counted = len([n for n in names if n])
+	ok = abs(so_delivered - dn_qty) < 1e-6 and good == int(flt(result.numerator)) and counted == int(flt(result.denominator))
+	return ok, f"SO delivered {so_delivered} vs DN qty {dn_qty}; on time in full {good} of {counted} by the delivery notes"
 
 
 def _receipt_lines(company, from_date, to_date):
@@ -171,7 +186,12 @@ def reconcile_stock_accuracy(company, from_date, to_date, plant, result) -> tupl
 	missing = frappe.db.sql("""select cc.name from `tabCycle Count` cc where cc.docstatus = 1 and cc.company = %s
 		and cc.count_date between %s and %s and cc.lines_within_tolerance < cc.lines_counted
 		and ifnull(cc.stock_reconciliation, '') = ''""", (company, from_date, to_date))
-	return not missing, f"{len(missing)} count(s) with variances but no stock reconciliation"
+	# the lines within tolerance, counted on the count lines rather than the counts' totals
+	within = flt(frappe.db.sql("""select count(*) from `tabCycle Count Line` ccl join `tabCycle Count` cc
+		on cc.name = ccl.parent where cc.docstatus = 1 and cc.company = %s and cc.count_date between %s and %s
+		and ccl.within_tolerance = 1""", (company, from_date, to_date))[0][0])
+	ok = not missing and int(within) == int(flt(result.numerator))
+	return ok, f"{len(missing)} count(s) with variances but no stock reconciliation; {int(within)} lines within tolerance"
 
 
 def p2p_cycle(company, from_date, to_date, plant=None) -> KpiResult:
@@ -191,4 +211,15 @@ def reconcile_p2p(company, from_date, to_date, plant, result) -> tuple[bool, str
 	names = result.inputs.get("invoices") or [""]
 	open_ = frappe.db.sql("select count(*) from `tabPurchase Invoice` where name in %s and outstanding_amount > 0",
 		[tuple(names)])[0][0]
-	return int(open_) == 0, f"{open_} counted invoice(s) still outstanding"
+	# the days again, with the payment dates from the payment ledger
+	rows = frappe.db.sql("""select ple.against_voucher_no invoice, max(ple.posting_date) paid,
+			(select min(po.transaction_date) from `tabPurchase Invoice Item` pii join `tabPurchase Order` po
+			 on po.name = pii.purchase_order where pii.parent = ple.against_voucher_no) ordered
+		from `tabPayment Ledger Entry` ple
+		where ple.against_voucher_type = 'Purchase Invoice' and ple.against_voucher_no in %s and ple.delinked = 0
+		and ple.voucher_type = 'Payment Entry' and ple.posting_date between %s and %s
+		group by ple.against_voucher_no""", [tuple(names), from_date, to_date], as_dict=True)
+	days = sum(date_diff(r.paid, r.ordered) for r in rows if r.paid and r.ordered)
+	counted = len([n for n in names if n])
+	ok = int(open_) == 0 and counted == int(flt(result.denominator)) and abs(days - flt(result.numerator)) < 1e-6
+	return ok, f"{open_} counted invoice(s) still outstanding; {days} days over {counted} invoice(s) by the payment ledger"
