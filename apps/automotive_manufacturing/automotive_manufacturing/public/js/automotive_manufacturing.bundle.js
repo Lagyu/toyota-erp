@@ -23,6 +23,23 @@ frappe.ui.form.on("Engineering Change Request", {
 	},
 });
 
+// Planners run MRP from an approved parameter set, and revise a set as a new version
+// (an approved set never changes).
+frappe.ui.form.on("Planning Parameter Set", {
+	refresh(frm) {
+		if (frm.doc.docstatus !== 1) return;
+		const m = "automotive_manufacturing.production_planning.";
+		frm.add_custom_button(__("Run Planning"), () =>
+			call(m + "planning_run.start", { company: frm.doc.company, plant: frm.doc.plant, parameter_set: frm.docname })
+				.then((run) => frappe.set_route("Form", "Planning Run", run))
+		);
+		frm.add_custom_button(__("New Version"), () =>
+			call(m + "doctype.planning_parameter_set.planning_parameter_set.new_version", { name: frm.docname })
+				.then((copy) => frappe.set_route("Form", "Planning Parameter Set", copy))
+		);
+	},
+});
+
 frappe.ui.form.on("Planning Run", {
 	refresh(frm) {
 		const m = "automotive_manufacturing.production_planning.planning_run.";

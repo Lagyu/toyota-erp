@@ -155,6 +155,8 @@ DOCTYPES = [
 		child=True,
 		fields=[
 			link("item_code", "Item", "Item", in_list_view=1, read_only=1),
+			link("production_line", "Production Line", "Production Line", in_list_view=1, read_only=1,
+				description="Capacity shortages: the overloaded line (no item)"),
 			date("need_date", "Need Date", in_list_view=1, read_only=1),
 			float_("required_qty", "Required", in_list_view=1, read_only=1),
 			float_("available_qty", "Available + Scheduled", in_list_view=1, read_only=1),

@@ -202,6 +202,9 @@ def release(name: str) -> dict:
 		pp.submit()
 		pp.make_work_order()
 		if purchase:
+			# approved purchase proposals reach purchasing as submitted requests, as on the
+			# purchase-only path; work orders stay planned until the sequence releases them
+			pp.submit_material_request = 1
 			pp.make_material_request()
 		run.production_plan = pp.name
 		created["Work Order"] = _post_process_work_orders(pp.name, run, plant)

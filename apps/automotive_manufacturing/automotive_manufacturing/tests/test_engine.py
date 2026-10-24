@@ -113,9 +113,11 @@ class TestMrp(unittest.TestCase):
 		snapshot = base_snapshot()
 		snapshot["demand"].append({"item_code": "CAR", "qty": 9, "date": "2026-04-07", "source": "SO-RUSH"})
 		out = mrp.plan(snapshot)
-		causes = {(s["item_code"], s["cause"]) for s in out["shortages"]}
+		causes = {(s["item_code"] or s["production_line"], s["cause"]) for s in out["shortages"]}
 		self.assertIn(("CAR", "Lead Time"), causes)
-		self.assertIn(("line:FA", "Capacity"), causes)  # 9 rush units released today > 8/day
+		self.assertIn(("FA", "Capacity"), causes)  # 9 rush units released today > 8/day
+		capacity = next(s for s in out["shortages"] if s["cause"] == "Capacity")
+		self.assertIsNone(capacity["item_code"])  # a line, not an item: the row must save as a Link
 		self.assertTrue(any(c["conflict"] for c in out["capacity"]))
 
 	def test_replay_is_identical(self):

@@ -240,10 +240,10 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 				"conflict": int(required > available + EPS),
 			})
 			if required > available + EPS:
-				shortages.append(_shortage(f"line:{line}", day, required, available, None, "Capacity",
-					"level the load to adjacent working days or add overtime"))
+				shortages.append(_shortage(None, day, required, available, None, "Capacity",
+					"level the load to adjacent working days or add overtime", production_line=line))
 	proposals.sort(key=lambda p: (p["bom_level"], p["item_code"], p["need_date"]))
-	shortages.sort(key=lambda s: (s["need_date"], s["item_code"], s["cause"]))
+	shortages.sort(key=lambda s: (s["need_date"], s["item_code"] or "", s["production_line"] or "", s["cause"]))
 	return {"proposals": proposals, "shortages": shortages, "capacity": capacity}
 
 
@@ -253,10 +253,11 @@ def _lead_time(item: dict[str, Any], params: dict[str, Any]) -> int:
 	return int(item.get("lead_time_days") or 0)
 
 
-def _shortage(item_code: str, day: dt.date, required: float, available: float, earliest, cause: str,
-		action: str) -> dict[str, Any]:
+def _shortage(item_code: str | None, day: dt.date, required: float, available: float, earliest, cause: str,
+		action: str, production_line: str | None = None) -> dict[str, Any]:
 	return {
 		"item_code": item_code,
+		"production_line": production_line,
 		"need_date": day.isoformat(),
 		"required_qty": _r(required),
 		"available_qty": _r(available),
