@@ -205,7 +205,7 @@ Edit at least these:
 | `RESTIC_REPOSITORY`, `RESTIC_AWS_ACCESS_KEY_ID`, `RESTIC_AWS_SECRET_ACCESS_KEY` | off-host S3-compatible repository. Only these two AWS variables reach the scheduler, so other restic backends would need their variables added to `compose.hinode.yaml` (not implemented). |
 | `BACKUP_SCHEDULE`, `RESTORE_DRILL_SCHEDULE` | Cron with **seconds first, in UTC** (`ops/backup/cron.py` evaluates them in UTC). Defaults: `0 30 17 * * *` = 02:30 JST daily; `0 30 19 * * 6` = Sunday 04:30 JST. |
 | `MONITORING` | `1` deploys Prometheus, Alertmanager, Grafana and exporters |
-| `CLAMAV` | not in the examples; **defaults to 1** (ClamAV deployed). Set `CLAMAV=0` to leave it out. |
+| `CLAMAV`, `VIRUS_SCAN_MODE` | `CLAMAV=1` (the default) deploys ClamAV, and `new-site.sh` then sets *Virus Scan Mode* to `VIRUS_SCAN_MODE` (`Required`, the default, or `Best Effort`) and the clamd host. `CLAMAV=0` leaves ClamAV out and the scanning settings as they are. |
 
 Optional tuning variables and their defaults are listed in the [appendix](#appendix-tuning-variables).
 
@@ -369,9 +369,9 @@ Keep the output of both as installation evidence (brief §8.2 gate 6). No script
   ./scripts/deploy/compose.sh "$ENV" exec -T scheduler bash /opt/hinode/ops/backup/restore-drill.sh
   ```
 
-- **ClamAV** (`CLAMAV=1`). The `clamav` container needs about 2 GB RAM and up to 5 minutes for its first signature download (health check `clamdcheck.sh`, start period 300 s). Scanning is **off in the application until you switch it on**; `new-site.sh` does not do it:
-  1. Desk → **Automotive Settings** → *Virus Scan Mode* = **Required**, *ClamAV (clamd) Host* = `clamav`, *Port* = `3310`. Save.
-  2. Upload a test attachment to any document. Its File record must show *Malware Scan* = **Clean** within a minute.
+- **ClamAV** (`CLAMAV=1`). The `clamav` container needs about 2 GB RAM and up to 5 minutes for its first signature download (health check `clamdcheck.sh`, start period 300 s). `new-site.sh` has set *Virus Scan Mode* (`VIRUS_SCAN_MODE`, Required by default) and the clamd host (`clamav:3310`) in Automotive Settings. Check it once clamd is up:
+  1. Upload a test attachment to any document. Its File record must show *Malware Scan* = **Clean** within a minute.
+  2. Files uploaded while clamd was still loading show `Scan Failed`; the hourly re-scan takes care of them.
 
   See [security-operations.md](security-operations.md#file-uploads-and-clamav).
 - **Monitoring** (`MONITORING=1`):

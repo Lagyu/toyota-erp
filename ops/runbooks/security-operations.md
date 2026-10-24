@@ -244,8 +244,8 @@ Policy lives in Desk → **Automotive Settings** (`apps/automotive_core/automoti
 |---|---|---|
 | Max Upload MB | 25 | size limit (nginx `CLIENT_MAX_BODY_SIZE` is also 25m) |
 | Allowed Extensions | `pdf,png,jpg,jpeg,csv,xlsx,txt,edi,json,xml` | extension allowlist |
-| Virus Scan Mode | **Disabled** | `Disabled`, `Best Effort` (scan, never block) or `Required` (unscanned or infected files cannot be read or downloaded) |
-| ClamAV (clamd) Host / Port | empty / 3310 | `clamav` / `3310` with `compose.clamav.yaml` |
+| Virus Scan Mode | **Disabled**; `new-site.sh` sets `VIRUS_SCAN_MODE` (default **Required**) when ClamAV runs (`CLAMAV=1`) | `Disabled`, `Best Effort` (scan, never block) or `Required` (unscanned or infected files cannot be read or downloaded) |
+| ClamAV (clamd) Host / Port | empty / 3310 | `clamav` / `3310`, set by `new-site.sh` with `compose.clamav.yaml` |
 | Default Retention Days | 0 | the period for attachments of DocTypes without their own rule; the system's own records keep theirs (`files/policy.py`, `KEPT_DOCTYPES`); 0 keeps them |
 | Per-DocType Rules (Attachment Policy Rule) | none | per DocType: allowed extensions, max size, retention days, *private only* (default on) |
 
@@ -267,16 +267,21 @@ After upload:
 
 With **Required**, users other than Administrator cannot read, print or download a file whose status is not `Clean`.
 
-**Enabling scanning on an existing site:**
+**Enabling scanning on an existing site:** set `CLAMAV=1` and `VIRUS_SCAN_MODE` in the environment file and run `./scripts/deploy/new-site.sh "$ENV"` again (it re-configures an existing site), or set the two fields in the desk.
 
-- Files uploaded before scanning was enabled stay `Not Scanned`, so they become unreadable under Required.
-- `Scan Failed` files (for example clamd was down) are not retried automatically.
-- Re-scan such files one at a time. A bulk re-scan is **not implemented**.
+**Files without a result** are scanned by an hourly job (`automotive_core.files.policy.rescan_pending`), oldest first, at most 200 a run:
 
-  ```bash
-  ./scripts/deploy/compose.sh "$ENV" exec -T backend bench --site "$SITE" execute \
-    automotive_core.files.policy.scan_file --kwargs "{'file_name': '<File record name>'}"
-  ```
+- files uploaded before scanning was enabled (`Not Scanned`, `Scanner Not Configured`), which are unreadable under Required until then;
+- files missed at upload because clamd was down (`Scan Failed`).
+
+The job does nothing while scanning is Disabled, no clamd host is set or clamd does not answer. To scan one file at once:
+
+```bash
+./scripts/deploy/compose.sh "$ENV" exec -T backend bench --site "$SITE" execute \
+  automotive_core.files.policy.scan_file --kwargs "{'file_name': '<File record name>'}"
+```
+
+The production rehearsal checks scanning end to end: an EICAR sample is reported `Infected`, audited and refused to its owner; a clean file reads.
 
 **ClamAV service** (`CLAMAV=1`, the default):
 
@@ -285,7 +290,7 @@ With **Required**, users other than Administrator cannot read, print or download
 - **Liveness:**
   - When a clamd host is set, the metrics endpoint pings clamd (`erp_clamav_up`).
   - `ErpVirusScannerDown` fires after 10 minutes without an answer.
-  - Uploads are not refused while clamd is down. New files end as `Scan Failed` and stay unreadable under Required until re-scanned.
+  - Uploads are not refused while clamd is down. New files end as `Scan Failed` and stay unreadable under Required until the hourly job re-scans them.
 
 **Retention:** daily, `automotive_core.files.policy.apply_retention` deletes attachments older than a rule's *Retention Days*, at most 1000 per rule per day. Each purge is audited (`file.retention_purge`).
 

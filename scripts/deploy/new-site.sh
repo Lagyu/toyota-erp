@@ -2,8 +2,9 @@
 # Create the environment's site on a running stack and configure it for its role.
 #   new-site.sh ENV_FILE
 # Installs ERPNext and the automotive apps (plus automotive_seed on reference images),
-# applies the Hinode tenant configuration, sets the metrics token and enables the
-# scheduler. Idempotent: an existing site is only re-configured.
+# applies the Hinode tenant configuration, sets the metrics token, configures upload
+# scanning when ClamAV runs (CLAMAV=1, VIRUS_SCAN_MODE) and enables the scheduler.
+# Idempotent: an existing site is only re-configured.
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 export LOG_TAG=new-site
@@ -42,6 +43,15 @@ bench --site "$site" set-config host_name "https://$site"
 steps=$(bench --site "$site" execute automotive_core.setup.tenant.apply --kwargs "{'tenant': 'hinode'}" | tail -1)
 log "tenant setup: $(python3 -c 'import json, sys; print(len(json.loads(sys.argv[1] or "[]")), "changes")' "$steps" \
 	2>/dev/null || echo "applied")"
+# upload scanning with the ClamAV service of compose.clamav.yaml (CLAMAV=1, the default):
+# VIRUS_SCAN_MODE Required (the default) or Best Effort; with CLAMAV=0 the settings stay as they are
+if [[ ${CLAMAV:-1} == 1 ]]; then
+	mode=${VIRUS_SCAN_MODE:-Required}
+	[[ $mode == Required || $mode == "Best Effort" ]] || die "VIRUS_SCAN_MODE must be Required or Best Effort"
+	bench --site "$site" execute frappe.db.set_single_value \
+		--args "['Automotive Settings', {'clamd_host': 'clamav', 'clamd_port': 3310, 'virus_scan_mode': '$mode'}]"
+	log "upload scanning: $mode, clamd at clamav:3310"
+fi
 bench --site "$site" enable-scheduler
 bench use "$site"
 log "site $site ready ($ENVIRONMENT)"

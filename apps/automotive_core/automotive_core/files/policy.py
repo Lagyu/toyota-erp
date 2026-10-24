@@ -139,6 +139,8 @@ def scan_file(file_name: str) -> str:
 		status = "Clean" if clean else "Infected"
 	except ClamdError as exc:
 		status, signature = "Scan Failed", str(exc)
+	except OSError as exc:  # the file's content is gone from the disk
+		status, signature = "Scan Failed", f"content unreadable: {exc}"
 	frappe.db.set_value("File", doc.name, {"automotive_scan_status": status, "automotive_scanned_at": now_datetime()},
 		update_modified=False)
 	if status != "Clean":
@@ -146,6 +148,33 @@ def scan_file(file_name: str) -> str:
 			{"signature": signature, "attached_to": [doc.attached_to_doctype, doc.attached_to_name]})
 	commit()
 	return status
+
+
+RESCAN_BATCH = 200
+PENDING = ("", "Not Scanned", "Scanner Not Configured", "Scan Failed")
+
+
+def rescan_pending(limit: int = RESCAN_BATCH) -> int:
+	"""Hourly: scan the files that have no result yet, least recently tried first and at most
+	``limit`` a run: those uploaded before scanning was enabled (Not Scanned, Scanner Not
+	Configured) and those missed at upload because clamd was down (Scan Failed). Nothing happens
+	while scanning is Disabled, no clamd host is set or clamd does not answer: a run with clamd
+	down would only record the same failures again. Returns the number of files scanned."""
+	from automotive_core.files.clamav import ping
+
+	settings = _settings()
+	if settings.virus_scan_mode == "Disabled" or not settings.clamd_host:
+		return 0
+	if not ping(settings.clamd_host, cint(settings.clamd_port) or 3310):
+		return 0
+	names = frappe.db.sql("""select name from `tabFile` where is_folder = 0 and ifnull(is_remote_file, 0) = 0
+		and ifnull(automotive_scan_status, '') in %(pending)s
+		and ifnull(attached_to_doctype, '') not in %(system)s
+		order by ifnull(automotive_scanned_at, '2000-01-01'), creation limit %(limit)s""",
+		{"pending": PENDING, "system": tuple(SYSTEM_ATTACHMENT_DOCTYPES) or ("",), "limit": cint(limit)}, pluck=True)
+	for name in names:
+		scan_file(name)
+	return len(names)
 
 
 def has_permission(doc, ptype=None, user=None, debug=False):

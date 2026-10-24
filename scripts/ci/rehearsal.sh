@@ -8,7 +8,8 @@
 #    stack, standing in for the off-host store), preflight, first start, site, smoke test.
 # 2. Records data, then upgrades to IMAGE with this tree's scripts/deploy/upgrade.sh
 #    (ops/runbooks/upgrade.md) and checks the data, the image and the schema after it.
-# 3. Checks HTTPS (redirect, security headers, cookie flags), simulates a reboot (the
+# 3. Checks HTTPS (redirect, security headers, cookie flags), upload scanning with ClamAV
+#    (an EICAR sample under Virus Scan Mode Required), simulates a reboot (the
 #    Docker daemon restarts every container under its restart policy) and checks again,
 #    takes an off-host backup, runs the restore drill and reads the monitoring targets.
 # 4. Rolls back to the previous release by ops/runbooks/upgrade.md: its tree and image, and the
@@ -111,9 +112,9 @@ sudo cp "$REPO_ROOT/infra/deploy/env/production.env.example" "$ENV"
 sudo chown "$(id -un)" "$ENV" && sudo chmod 600 "$ENV"
 s3_key=rehearsal$(random_secret | tr -dc 'a-z0-9' | cut -c1-8) s3_secret=$(random_secret)
 set_env "SITE_NAME=$SITE" "SITES_RULE=Host(\`$SITE\`)" "CUSTOM_IMAGE=${prev_image%:*}" "CUSTOM_TAG=${prev_image##*:}" \
-	PULL_POLICY=never CLAMAV=0 "RESTIC_REPOSITORY=s3:http://s3:7070/hinode-erp-rehearsal" \
+	PULL_POLICY=never CLAMAV=1 VIRUS_SCAN_MODE=Required "RESTIC_REPOSITORY=s3:http://s3:7070/hinode-erp-rehearsal" \
 	"RESTIC_AWS_ACCESS_KEY_ID=$s3_key" "RESTIC_AWS_SECRET_ACCESS_KEY=$s3_secret" \
-	GUNICORN_WORKERS=4 BACKEND_MEM_LIMIT=3g BACKEND_CPUS=3 WORKER_MEM_LIMIT=1536m DB_BUFFER_POOL=2G DB_MEM_LIMIT=4g \
+	GUNICORN_WORKERS=4 BACKEND_MEM_LIMIT=3g BACKEND_CPUS=3 WORKER_MEM_LIMIT=1536m DB_BUFFER_POOL=1536M DB_MEM_LIMIT=3g \
 	DB_CPUS=3 DB_MAX_CONNECTIONS=300
 sudo install -d -m 0750 -g "$(id -gn)" "$TLS"
 work=$(mktemp -d)
@@ -229,6 +230,57 @@ if [[ $redirect =~ ^30[178]\ https:// && ${#missing[@]} -eq 0 ]]; then
 	pass "HTTP $redirect; HSTS, CSP, nosniff, frame options, referrer policy; session cookie Secure, HttpOnly, SameSite"
 else
 	fail "redirect '$redirect'; missing: ${missing[*]:-none}"
+fi
+
+step "Uploads scanned by ClamAV (Virus Scan Mode Required)"
+# this release's new-site.sh applies the environment's scanning settings (CLAMAV=1,
+# VIRUS_SCAN_MODE) to the existing site; clamd loads its signatures for up to 5 minutes
+"$REPO_ROOT/scripts/deploy/new-site.sh" "$ENV" >"$out/scan.log" 2>&1 || true
+for _ in $(seq 1 60); do
+	pong=$(compose exec -T backend env/bin/python -c 'import socket
+s = socket.create_connection(("clamav", 3310), 3)
+s.sendall(b"zPING\0")
+print(s.recv(16).decode().strip("\0\n"))' 2>/dev/null || true)
+	[[ $pong == PONG ]] && break
+	sleep 10
+done
+# the cookie user's API key: uploads and downloads as a user other than Administrator
+keys=$(compose exec -T backend env/bin/python -c 'import os, sys
+import frappe
+from frappe.core.doctype.user.user import generate_keys
+os.chdir("sites")
+frappe.init(site=sys.argv[1], sites_path=".")
+frappe.connect()
+keys = generate_keys(sys.argv[2])
+frappe.db.commit()
+print("%s:%s" % (keys["api_key"], keys["api_secret"]))
+frappe.destroy()' "$SITE" "$cookie_user" 2>>"$out/scan.log" | tail -1)
+files=$(mktemp -d)
+# the EICAR test file, the harmless sample every scanner reports (written in two parts, so that a
+# scanner does not flag this script)
+printf '%s%s' 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR' '-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' >"$files/eicar.txt"
+printf 'Rehearsal: a clean upload\n' >"$files/clean.txt"
+upload() {
+	https -s -H "Authorization: token $keys" -F "file=@$1" -F is_private=1 "https://$SITE/api/method/upload_file" \
+		| python3 -c 'import json, sys; print(json.load(sys.stdin)["message"]["file_url"])' 2>/dev/null || true
+}
+status_of() { bench execute frappe.db.get_value --args "['File', {'file_url': '$1'}, 'automotive_scan_status']" | tail -1; }
+reads() { https -s -o /dev/null -w '%{http_code}' -H "Authorization: token $keys" "https://$SITE$1" || true; }
+eicar_url=$(upload "$files/eicar.txt")
+clean_url=$(upload "$files/clean.txt")
+for _ in $(seq 1 24); do  # the scan jobs run on the short queue
+	eicar_status=$(status_of "$eicar_url") clean_status=$(status_of "$clean_url")
+	[[ $eicar_status == Infected && $clean_status == Clean ]] && break
+	sleep 5
+done
+eicar_read=$(reads "$eicar_url") clean_read=$(reads "$clean_url")
+audited=$(bench execute frappe.db.exists --args "['Audit Event', {'event_type': 'file.scan_infected'}]" | tail -1)
+rm -rf "$files"
+if [[ $pong == PONG && $eicar_status == Infected && $clean_status == Clean && $eicar_read == 403 \
+		&& $clean_read == 200 && -n $audited ]]; then
+	pass "clamd answers; the EICAR upload is Infected, audited and refused to its owner (403); a clean one reads (200)"
+else
+	fail "clamd '${pong:-no answer}'; EICAR ${eicar_status:-?} (read $eicar_read), clean ${clean_status:-?} (read $clean_read), audit '${audited:-none}' (see scan.log)"
 fi
 
 step "The site's own HTTPS name from inside the application (PDF style fetches)"

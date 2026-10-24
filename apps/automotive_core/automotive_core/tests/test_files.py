@@ -89,6 +89,28 @@ class TestAttachmentPolicy(IntegrationTestCase):
 		with as_user(READER):
 			self.assertIsNone(policy.has_permission(doc, "read", READER))  # no objection: normal rules apply
 
+	def test_files_without_a_result_are_scanned_by_the_hourly_job(self):
+		from unittest import mock
+
+		from automotive_core.files import clamav
+
+		def status(doc):
+			return frappe.db.get_value("File", doc.name, "automotive_scan_status")
+
+		self._settings(virus_scan_mode="Required", clamd_host="")
+		waiting = self.attach("received-before-scanning.pdf", PDF)
+		self.assertEqual(status(waiting), "Scanner Not Configured")
+		self._settings(clamd_host="clamd.invalid")
+		with mock.patch.object(clamav, "ping", return_value=False):
+			self.assertEqual(policy.rescan_pending(), 0)  # clamd does not answer: no new failures recorded
+		self.assertEqual(status(waiting), "Scanner Not Configured")
+		with mock.patch.object(clamav, "ping", return_value=True), \
+				mock.patch.object(clamav, "scan_bytes", return_value=(True, None)):
+			self.assertGreaterEqual(policy.rescan_pending(), 1)
+		self.assertEqual(status(waiting), "Clean")
+		self._settings(virus_scan_mode="Disabled")
+		self.assertEqual(policy.rescan_pending(), 0)
+
 	def test_retention_by_rule_and_by_default(self):
 		note = frappe.get_doc({"doctype": "Note", "title": "retention", "public": 1}).insert(ignore_permissions=True)
 		old_todo = self.attach("old.pdf", PDF)
