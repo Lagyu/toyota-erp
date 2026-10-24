@@ -9,6 +9,7 @@ that reference images carry them; [`profiles/`](profiles/) here links to them.
 | [`small`](profiles/small.yaml) | CI and development dataset (end-to-end suite) | 2026-09-01, half a month | 6 vehicles/day, small catalogue |
 | [`standard`](profiles/standard.yaml) | acceptance dataset of requirement §5 | 2025-10-01, 12 months | 30 vehicles/day, ≥8,000 items, ≥12,000 work orders, ≥80,000 stock ledger events, 60 suppliers, 20 dealers, ≥120 internal / ≥80 partner users |
 | [`large`](profiles/large.yaml) | sizing and load tests | 2025-10-01, 12 months | twice the standard volumes |
+| [`closing`](profiles/closing.yaml) | the month-end and fiscal-year-end flows (revaluation, bank statements, Period Closing Vouchers) at small volumes | 2026-03-16, three weeks | the small profile's volumes |
 
 All profiles use seed `20261024`: the same seed and profile always produce the same
 documents in the same order. The generator works through the same documents and APIs as

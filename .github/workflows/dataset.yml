@@ -14,7 +14,7 @@ on:
       profile:
         description: Volume profile
         type: choice
-        options: [standard, small, large]
+        options: [standard, small, large, closing]
         default: standard
       minutes:
         description: Generation budget per segment (minutes)
