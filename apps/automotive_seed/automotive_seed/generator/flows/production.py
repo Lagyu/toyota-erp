@@ -384,12 +384,18 @@ class Production:
 	# -----------------------------------------------------------------------------------
 	# engineering changes
 	# -----------------------------------------------------------------------------------
+	# share of engineering changes whose quality sign-off waits two days (and so escalates)
+	ECO_LATE_SIGN_OFF = 0.35
+
 	def engineering(self, day: dt.date) -> None:
 		ctx = self.ctx
+		self.eco_sign_offs(day)
 		rng = ctx.rng("eco", day)
 		if rng.random() > float(ctx.v("ecos_per_month")) / 21.0:
 			return
-		modules = sorted(m for m in self.structure["modules"] if m.startswith(("FAST-KIT", "SEAT-", "DOOR-")))
+		pending = {p["module"] for p in self.s.get("eco_pending", {}).values()}
+		modules = sorted(m for m in self.structure["modules"] if m.startswith(("FAST-KIT", "SEAT-", "DOOR-"))
+			and m not in pending)
 		target_item = rng.choice(modules)
 		bom = frappe.db.get_value("BOM", {"item": target_item, "docstatus": 1, "is_active": 1,
 			"automotive_superseded_by": ("is", "not set")}, "name", order_by="creation desc")
@@ -421,9 +427,36 @@ class Production:
 				req = approvals.request_approval(eco.doctype, eco.name)
 			with ctx.as_user(self.sim.person("Engineering Manager", "AICHI-VA")):
 				approvals.decide(req["name"], "Approve")
-			with ctx.as_user(self.sim.person("Quality Manager", "AICHI-VA")):
-				approvals.decide(req["name"], "Approve")
-			with ctx.as_user(engineer):
-				eco.reload()
-				eco.submit()
+			if rng.random() < self.ECO_LATE_SIGN_OFF:
+				# quality signs off two days later; the request escalates in the meantime
+				self.s.setdefault("eco_pending", {})[eco.name] = {"request": req["name"], "engineer": engineer,
+					"module": target_item, "due": str(add_days(day, 2))}
+			else:
+				with ctx.as_user(self.sim.person("Quality Manager", "AICHI-VA")):
+					approvals.decide(req["name"], "Approve")
+				with ctx.as_user(engineer):
+					eco.reload()
+					eco.submit()
 		ctx.count("Engineering Change Order")
+
+	def eco_sign_offs(self, day: dt.date) -> None:
+		"""The quality sign-offs that waited: decided in the morning they are due, then the
+		engineer submits the change."""
+		ctx = self.ctx
+		for name, pending in sorted(self.s.get("eco_pending", {}).items()):
+			if getdate(pending["due"]) > day:
+				continue
+			with ctx.step(9, 0):
+				with ctx.as_user(self.sim.person("Quality Manager", "AICHI-VA")):
+					approvals.decide(pending["request"], "Approve")
+				with ctx.as_user(pending["engineer"]):
+					frappe.get_doc("Engineering Change Order", name).submit()
+			self.s["eco_pending"].pop(name)
+
+	def escalations(self, day: dt.date) -> None:
+		"""The hourly escalation job, once each working evening: approvals waiting past
+		their step's escalation time are escalated (automotive_core.governance.approvals)."""
+		ctx = self.ctx
+		with ctx.step(19, 0):
+			for _request in approvals.escalate_overdue():
+				ctx.count("Approval Escalation")

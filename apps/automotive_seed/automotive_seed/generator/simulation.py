@@ -83,6 +83,7 @@ class Simulation:
 				self.procurement.payment_run(day)
 			self.quality.daily(day)
 			self.production.engineering(day)
+			self.production.escalations(day)
 			self.production.plan_tomorrow(day)
 		if na_working:
 			self.sales.na_receiving(day)
