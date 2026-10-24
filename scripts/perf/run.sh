@@ -8,7 +8,8 @@
 # production. Results per phase in perf/results/raw/<timestamp>/<phase>/: Locust's stats
 # (JSON, CSV, HTML), the server's metrics before and after, the queue lengths sampled during
 # the phase, a digest of the database's slow query log (statements over 0.5 s, literals
-# masked), the database's and the files' size before and after, summary.txt and summary.json
+# masked), the database's and the files' size before and after, the titles of the errors the
+# site logged during the phase, summary.txt and summary.json
 # (perf/summary.py: p95 against the targets). Exit status: 0 when every phase met them.
 #
 # Runs where Docker may use most of the machine: the CI workflow .github/workflows/perf.yml
@@ -82,6 +83,13 @@ files_size() { # OUTPUT: du -sb of the private and public files
 	"${stack_compose[@]}" exec -T backend du -sb "sites/$stack_site/private/files" "sites/$stack_site/public/files" \
 		>"$1" 2>/dev/null || true
 }
+site_db() { # the site's database: the schema holding its Error Log
+	db_query "SELECT table_schema FROM information_schema.tables WHERE table_name = 'tabError Log' LIMIT 1"
+}
+errors_since() { # TIME OUTPUT: the titles (method) of the errors logged after TIME, with counts
+	db_query "SELECT COUNT(*), method FROM \`$(site_db)\`.\`tabError Log\` WHERE creation > '$1'
+		GROUP BY method ORDER BY 1 DESC LIMIT 25" >"$2" 2>/dev/null || true
+}
 slow_log() { # on PHASE | off
 	if [[ $1 == on ]]; then
 		db_query "SET GLOBAL slow_query_log = OFF; SET GLOBAL slow_query_log_file = '/var/lib/mysql/perf-slow-$2.log';
@@ -90,6 +98,21 @@ slow_log() { # on PHASE | off
 		db_query "SET GLOBAL slow_query_log = OFF" >/dev/null || true
 	fi
 }
+
+# the scheduler first catches up with the jobs overdue since the dataset's last simulated day:
+# the phases start once the queues are empty (or after 15 minutes)
+for _ in $(seq 1 30); do
+	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" scrape "$stack_url" "$stack_secrets/metrics_token" \
+		"$results/.queues.prom" >/dev/null 2>&1 || true
+	waiting=$(python3 -c 'import re, sys
+text = open(sys.argv[1]).read()
+print(int(sum(float(v) for v in re.findall(r"^erp_queue_jobs\{[^}]*\} (\S+)", text, re.M))))' \
+		"$results/.queues.prom" 2>/dev/null || echo 0)
+	[[ $waiting == 0 ]] && break
+	sleep 30
+done
+rm -f "$results/.queues.prom"
+log "queues after the scheduler's catch-up: ${waiting:-0} waiting jobs"
 
 status=0
 for phase in "$@"; do
@@ -114,6 +137,8 @@ PY
 		"$dir/metrics-before.prom" || true
 	db_snapshot "$dir/db-before.json"
 	files_size "$dir/files-before.txt"
+	errors_from=$(db_query "SELECT IFNULL(MAX(creation), '1970-01-01') FROM \`$(site_db)\`.\`tabError Log\`" \
+		2>/dev/null || echo 1970-01-01)
 	slow_log on "$name"
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" sample "$stack_url" "$stack_secrets/metrics_token" \
 		"$dir/queues.txt" 15 &
@@ -134,6 +159,7 @@ PY
 	rm -f "$dir/.slow.log"
 	db_snapshot "$dir/db-after.json"
 	files_size "$dir/files-after.txt"
+	errors_since "$errors_from" "$dir/errors.txt"
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" scrape "$stack_url" "$stack_secrets/metrics_token" \
 		"$dir/metrics-after.prom" || true
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" "$dir" || status=1

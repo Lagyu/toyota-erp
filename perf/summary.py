@@ -22,7 +22,7 @@ until it is stopped; slowlog digests a MariaDB slow query log into statements gr
 shape (literals masked), with their count and time. When RESULTS_DIR holds them, the report
 adds: throughput; the queue lengths sampled during the phase (queues.txt); the slow statements
 (slow-queries.json); the database and file storage before and after the phase (db-before.json,
-db-after.json, files-before.txt, files-after.txt).
+db-after.json, files-before.txt, files-after.txt); the errors the site logged (errors.txt).
 
 Groups follow the request names of the locustfile: read:* (GET), write:* (other methods),
 job:* (completion times of background jobs, no target). Client-side times include the
@@ -344,6 +344,19 @@ def queue_samples(results: Path) -> dict | None:
 	} or None
 
 
+def logged_errors(results: Path) -> list[dict] | None:
+	"""The Error Log titles the site recorded during the phase (errors.txt: count, title)."""
+	path = results / "errors.txt"
+	if not path.exists():
+		return None
+	rows = []
+	for line in path.read_text().splitlines():
+		count, _tab, title = line.partition("\t")
+		if count.strip().isdigit():
+			rows.append({"count": int(count), "title": title.strip()})
+	return rows
+
+
 def storage(results: Path) -> dict | None:
 	"""The site database (InnoDB's estimated rows; data and index bytes) and its files, before
 	and after the phase."""
@@ -397,7 +410,7 @@ def table(title: str, rows: dict[str, dict], extra: list[tuple[str, str]] | None
 		for _label, key in columns:
 			value = row.get(key)
 			if key == "fail_ratio":
-				cells.append(f"{value * 100:9.2f}")
+				cells.append(f"{'-':>9}" if value is None else f"{value * 100:9.2f}")
 			elif isinstance(value, float) and key != "fail_ratio":
 				cells.append(f"{value:9.3f}")
 			else:
@@ -451,6 +464,7 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 	rate = throughput(entries)
 	queues = queue_samples(results)
 	disk = storage(results)
+	errors = logged_errors(results)
 	slow_path = results / "slow-queries.json"
 	slow = json.loads(slow_path.read_text())["statements"] if slow_path.exists() else None
 
@@ -512,6 +526,10 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 			for r in slow[:10]
 		]
 		lines.append("")
+	if errors is not None:
+		lines += [f"Errors the site logged during the phase: {sum(e['count'] for e in errors)}"]
+		lines += [f"  {e['count']} x {e['title'][:150]}" for e in errors[:10]]
+		lines.append("")
 	if disk:
 		mib = 1024 * 1024
 		lines += [
@@ -550,6 +568,7 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 				"queues": queues,
 				"slow_statements": slow,
 				"storage": disk,
+				"logged_errors": errors,
 			},
 			indent=1,
 			sort_keys=True,
