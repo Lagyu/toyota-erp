@@ -58,6 +58,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The custom methods' OpenAPI contract is versioned (1.1.0): additions raise the minor
   version, breaking changes come as new paths with the old ones deprecated, and CI checks
   that the version follows each change of the contract (D-034).
+- A licence inventory comes with each image's SBOM (`scripts/ci/licences.py`; committed copy
+  `ops/security/licences.md`), and install-fresh-host.md lists in one table the external
+  accounts and credentials a deployment needs and what is missing until each is configured.
 - Upgrades put the site in maintenance mode before the pre-upgrade backup, so the backup is
   exactly the state being upgraded; a rollback restores it with `--no-replay` (the shipped
   binary logs after it hold the upgrade's own migration; upgrade.md said to replay them).

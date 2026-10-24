@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Software bill of materials and vulnerability scan of an application image.
-#   sbom.sh IMAGE   ->  .local/sbom/<tag>.spdx.json, .local/sbom/<tag>.trivy.json
+#   sbom.sh IMAGE   ->  .local/sbom/<tag>.spdx.json, .local/sbom/<tag>.trivy.json,
+#                       .local/sbom/<tag>.licences.md (scripts/ci/licences.py)
 # Fails on fixable CRITICAL vulnerabilities (HIGH are reported) unless
 # config/security/image-allowlist.txt accepts them with a finding of
 # ops/security/findings.md. SBOM_RELEASE=1 (release builds): every accepted finding also
@@ -15,6 +16,9 @@ tag=$(tr '/:@' '___' <<<"$image")
 docker_cmd run --rm -v /var/run/docker.sock:/var/run/docker.sock "$SYFT_IMAGE" \
 	"docker:$image" -o spdx-json >"$out/$tag.spdx.json"
 echo "SBOM: $out/$tag.spdx.json ($(python3 -c 'import json,sys; print(len(json.load(open(sys.argv[1]))["packages"]))' "$out/$tag.spdx.json") packages)"
+# the licence inventory beside it (ops/security/licences.md is the committed copy of a baseline)
+python3 "$REPO_ROOT/scripts/ci/licences.py" "$out/$tag.spdx.json" >"$out/$tag.licences.md"
+echo "licences: $out/$tag.licences.md ($(grep -m1 -A0 '^## Unknown' "$out/$tag.licences.md" | tr -d '#'))"
 docker_cmd run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$out:/out" "$TRIVY_IMAGE" image \
 	--quiet --scanners vuln --format json --output "/out/$tag.trivy.json" "$image"
 python3 - "$out/$tag.trivy.json" "$REPO_ROOT/config/security/image-allowlist.txt" \

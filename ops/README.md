@@ -51,7 +51,7 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 
 | Runbook | Use it for |
 |---|---|
-| [install-fresh-host.md](runbooks/install-fresh-host.md) | Host preparation (Docker, `erp.slice`), secrets and their ownership, environment file, TLS modes, preflight, first start, `new-site.sh`, smoke test, enabling backups/ClamAV/monitoring, reboot persistence |
+| [install-fresh-host.md](runbooks/install-fresh-host.md) | The external accounts and credentials a deployment needs, host preparation (Docker, `erp.slice`), secrets and their ownership, environment file, TLS modes, preflight, first start, `new-site.sh`, smoke test, enabling backups/ClamAV/monitoring, reboot persistence |
 | [high-availability.md](runbooks/high-availability.md) | The high-availability option: what fails over and how, what the operator provides, what has not been rehearsed |
 | [upgrade.md](runbooks/upgrade.md) | Building the image (`build.sh`, tags, `--reference`, `--push`), updating upstream pins, `upgrade.sh`, schema migrations and backfills, maintenance mode, rollback |
 | [backup-restore.md](runbooks/backup-restore.md) | What `backup.sh` does, schedules, off-host repository, the weekly restore drill and its evidence, `restore.sh`, disaster recovery, RPO/RTO status |
@@ -64,6 +64,7 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 | [integration-operations.md](runbooks/integration-operations.md) | Partners, HMAC signing, inbound endpoint and statuses, retries, Replay / Retry Delivery, reconciliation, file drop, Hinode EDI |
 | [seed-reference-data.md](runbooks/seed-reference-data.md) | Synthetic data on reference and staging sites only: profiles, running, resuming, validating, e2e fixtures |
 | [testing.md](runbooks/testing.md) | Lint, unit, integration, e2e (both modes), smoke, audit, SBOM; report locations; CI job mapping |
+| [security/](security/) | [findings.md](security/findings.md) (scans and reviews, owner decisions), [permission-matrix.md](security/permission-matrix.md) (desk rights per persona, checked by a test), [licences.md](security/licences.md) (licence inventory of the image) |
 | [troubleshooting.md](runbooks/troubleshooting.md) | Stack will not start, site not resolving, 502/503, migrations, stuck jobs, reposting backlog, failed planning runs, failing inbound messages, disk pressure, backup alerts, login problems |
 
 ## Scripts at a glance

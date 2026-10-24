@@ -234,6 +234,12 @@ dataset only when the generator changes.
 
 **Decision.** The custom apps are GPL-3.0-only, compatible with ERPNext (GPL-3.0) and
 Frappe (MIT). The owner may choose differently before a first release.
+**Inventory.** Each image's SBOM comes with a licence inventory (`scripts/ci/licences.py`,
+committed copy [ops/security/licences.md](ops/security/licences.md)): no network-copyleft
+(AGPL) component; strong copyleft is ERPNext, the custom apps and the Debian base system
+(source available from Debian, and to be offered with the image if it is given to anyone
+outside the organisation); the packages whose licence the SBOM does not identify, mostly X.Org
+libraries with unrecognised licence texts, are listed there for the owner's review.
 
 ## D-026 Container and browser tests run on hosted CI runners
 
