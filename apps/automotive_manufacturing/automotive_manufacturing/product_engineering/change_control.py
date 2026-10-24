@@ -80,9 +80,11 @@ def assess_impact(name: str) -> dict:
 	return result
 
 
-@frappe.whitelist(methods=["POST"])
-def make_eco(ecr: str) -> str:
-	request = frappe.get_doc("Engineering Change Request", ecr)
+@frappe.whitelist()
+def make_eco(source_name: str | None = None, ecr: str | None = None):
+	"""Mapper (Create > ECO on a submitted change request): an unsaved ECO with one quantity
+	change per affected BOM line, prefilled with today's quantity for the engineer to set."""
+	request = frappe.get_doc("Engineering Change Request", source_name or ecr)
 	request.check_permission("read")
 	if request.docstatus != 1 or request.status not in ("Under Review", "Approved"):
 		frappe.throw(_("Only submitted change requests can be converted."))
@@ -91,12 +93,17 @@ def make_eco(ecr: str) -> str:
 	eco.engineering_change_request = request.name
 	eco.vehicle_model = request.vehicle_model
 	eco.effective_date = add_days(nowdate(), 7)
+	eco.stock_disposition = "Use Existing Stock"
 	for row in request.affected_items:
-		if row.current_bom:
-			eco.append("changes", {"change_type": "Change Quantity", "target_bom": row.current_bom,
-				"component": row.item_code, "reason": row.proposed_change})
-	eco.insert()
-	return eco.name
+		if not row.current_bom:
+			continue
+		eco.company = eco.company or frappe.db.get_value("BOM", row.current_bom, "company")
+		eco.append("changes", {"change_type": "Change Quantity", "target_bom": row.current_bom,
+			"component": row.item_code, "reason": row.proposed_change,
+			"qty": frappe.db.get_value("BOM Item", {"parent": row.current_bom, "item_code": row.item_code}, "qty")})
+	if not eco.changes:
+		frappe.throw(_("Name the current BOM of at least one affected item first."))
+	return eco
 
 
 # ---------------------------------------------------------------------------------------
@@ -159,6 +166,11 @@ def validate_eco(doc) -> None:
 			frappe.throw(_("Row {0}: choose the component to add.").format(row.idx))
 		if row.change_type in ("Add Component", "Change Quantity") and flt(row.qty) <= 0:
 			frappe.throw(_("Row {0}: quantity must be positive.").format(row.idx))
+		if row.change_type == "Change Quantity":
+			current = frappe.db.get_value("BOM Item", {"parent": row.target_bom, "item_code": row.component}, "qty")
+			if abs(flt(current) - flt(row.qty)) < 1e-9:
+				frappe.throw(_("Row {0}: BOM {1} already uses {2} of {3}; enter the new quantity.").format(
+					row.idx, row.target_bom, flt(current), row.component))
 	if doc.is_new() and getdate(doc.effective_date) < getdate(nowdate()):
 		frappe.throw(_("An engineering change cannot take effect in the past."))
 
@@ -258,6 +270,8 @@ def implement(eco) -> None:
 		eco.db_set({"implementation_status": "Implemented", "implemented_at": now_datetime()})
 		for row in eco.revisions:
 			row.db_insert() if row.is_new() else row.db_update()
+		if eco.engineering_change_request:
+			frappe.db.set_value("Engineering Change Request", eco.engineering_change_request, "status", "Converted")
 	finally:
 		frappe.flags.automotive_eco_context = False
 

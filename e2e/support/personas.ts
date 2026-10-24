@@ -7,7 +7,7 @@ export type Persona =
 	| "administrator" | "executive" | "controller" | "buyer" | "procurement_manager" | "ap_clerk" | "treasury"
 	| "treasury_2" | "sales_manager" | "dealer_liaison" | "it_operator" | "auditor" | "plant_director" | "planner"
 	| "supervisor" | "operator" | "warehouse" | "inspector" | "quality_manager" | "engineer" | "engineering_manager"
-	| "logistics" | "na_warehouse" | "supplier" | "dealer";
+	| "logistics" | "na_warehouse" | "kyushu_logistics" | "supplier" | "dealer";
 
 export function credentials(): { password: string; users: Record<string, string> } {
 	const path = process.env.E2E_CREDENTIALS;

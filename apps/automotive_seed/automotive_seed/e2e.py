@@ -14,6 +14,7 @@ order, an EDI partner's signing credentials), through the dataset's own flows.
 
 from __future__ import annotations
 
+import contextlib
 import datetime as dt
 import json
 import os
@@ -47,6 +48,7 @@ PERSONAS = {
 	"engineering_manager": ("Engineering Manager", "AICHI-VA"),
 	"logistics": ("Logistics Coordinator", "AICHI-VA"),
 	"na_warehouse": ("Warehouse Clerk", "NA-PDC"),
+	"kyushu_logistics": ("Logistics Coordinator", "KYUSHU-PT"),
 }
 PLANT = "AICHI-VA"
 
@@ -125,6 +127,12 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	  supplier deliveries with incoming inspection);
 	- ``j09`` allocation from stock: a variant the dealer may order with a released vehicle
 	  free in stock and no order waiting for it;
+	- ``j04`` engineering change: a released module BOM with a whole-unit component, no change
+	  pending, and a work order already built on it (history that must stay pinned);
+	- ``j06`` invoice matching: a receipt nobody has invoiced yet, from a supplier whose bank
+	  account is verified (payments go only to verified accounts);
+	- ``j07`` intercompany supply: a powertrain Kyushu has in stock and an agreed transfer
+	  price to Aichi;
 	- ``j10`` partner messaging: an EDI supplier with an open, unannounced order line and a
 	  fresh inbound signing secret for its HTTPS channel (the test signs like the partner's
 	  system would).
@@ -142,11 +150,16 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	fixtures["j09"] = _from_stock(variants)
 	fixtures["j01"] = _build_to_order(variants, exclude={(fixtures["j09"] or {}).get("variant")})
 	fixtures["j10"] = _edi_supplier()
+	fixtures["j06"] = _receipt_to_invoice(company)
+	fixtures["j07"] = _intercompany_supply()
+	fixtures["j04"] = _engineering_change()
 	frappe.db.commit()
 	if output:
 		_write(output, json.dumps(fixtures, sort_keys=True, default=str))
 		staged = len((fixtures["j01"] or {}).get("staged") or [])
 		return (f"journeys: j01 {(fixtures['j01'] or {}).get('variant')} ({staged} components staged), "
+			f"j04 {(fixtures['j04'] or {}).get('bom')}, j06 {(fixtures['j06'] or {}).get('purchase_receipt')}, "
+			f"j07 {(fixtures['j07'] or {}).get('item_code')}, "
 			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}")
 	return fixtures
 
@@ -222,11 +235,32 @@ def _build_to_order(variants: list[dict], exclude: set) -> dict | None:
 		"staged": staged}
 
 
-def _stage(bom: str, line_side: str) -> list[dict]:
-	"""One unit of the BOM at the line side through the generator's own material flow, run
-	live: the simulated clock starts a quarter of an hour before now, so the staging posts
-	before anything the browser journeys post afterwards."""
-	from automotive_seed.generator.context import Clock, SeedContext, load_profile
+def _live_clock(start: dt.datetime):
+	from automotive_seed.generator.context import Clock
+
+	class LiveClock(Clock):
+		"""Strictly increasing by 10 ms per step and never jumping to an hour of the day: an
+		arrangement of hundreds of documents spans seconds, not simulated hours."""
+
+		def at(self, hour: int, minute: int = 0) -> dt.datetime:
+			return self.tick()
+
+		def tick(self, seconds: float = 30) -> dt.datetime:
+			self.now += dt.timedelta(milliseconds=10)
+			return self.now
+
+	clock = LiveClock(start.date())
+	clock.now = start
+	return clock
+
+
+@contextlib.contextmanager
+def _live():
+	"""The generator's simulation run live, for arrangement only: its people and flows, just
+	before the current time (a quarter of an hour back, but after every stock posting so
+	far), so arrangements land before anything the browser journeys post afterwards. All
+	or nothing: a failure rolls the session back."""
+	from automotive_seed.generator.context import SeedContext, load_profile
 	from automotive_seed.generator.inline_jobs import inline_background_jobs
 	from automotive_seed.generator.simulation import Simulation
 	from automotive_seed.runner import load_state, save_state
@@ -243,22 +277,17 @@ def _stage(bom: str, line_side: str) -> list[dict]:
 	ctx.cache["plant_of"] = state.get("plant_of") or {}
 	state.setdefault("sim", {}).setdefault("asn_due", {})
 	sim = Simulation(ctx, state)
+	latest = frappe.db.sql("select max(posting_datetime) from `tabStock Ledger Entry`")[0][0]
 	moment = now_datetime() - dt.timedelta(minutes=15)
-	ctx.clock = Clock(moment.date())
-	ctx.clock.now = moment
+	if latest and latest >= moment:
+		moment = latest + dt.timedelta(seconds=1)
+	ctx.clock = _live_clock(moment)
 	flags = ("automotive_bulk", "automotive_inline_integration", "mute_emails")
 	for flag in flags:
 		frappe.flags[flag] = True
-	staged = []
 	try:
 		with inline_background_jobs(), ctx.auto_tick(), ctx.frozen(moment):
-			for row in frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"],
-					order_by="idx asc"):
-				before = sim.production.actual(row.item_code, line_side)
-				sim.production.ensure(row.item_code, flt(row.stock_qty), line_side, PLANT)
-				moved = sim.production.actual(row.item_code, line_side) - before
-				if moved > 0:
-					staged.append({"item_code": row.item_code, "qty": moved})
+			yield sim, ctx
 	except Exception:
 		frappe.db.rollback()
 		raise
@@ -267,7 +296,41 @@ def _stage(bom: str, line_side: str) -> list[dict]:
 			frappe.flags[flag] = False
 	frappe.db.commit()
 	save_state(run.name, state)
+
+
+def _stage(bom: str, line_side: str) -> list[dict]:
+	"""One unit of the BOM at the line side, as the generator stages a day's builds."""
+	staged = []
+	with _live() as (sim, _ctx):
+		for row in frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"],
+				order_by="idx asc"):
+			before = sim.production.actual(row.item_code, line_side)
+			sim.production.ensure(row.item_code, flt(row.stock_qty), line_side, PLANT)
+			moved = sim.production.actual(row.item_code, line_side) - before
+			if moved > 0:
+				staged.append({"item_code": row.item_code, "qty": moved})
 	return staged
+
+
+def _build_powertrain(code: str) -> None:
+	"""Kyushu builds and inspects one powertrain, as on a production day (sub-assemblies and
+	material included)."""
+	from automotive_seed.generator.catalog import KYUSHU
+	from automotive_seed.generator.flows.common import fg_for, store_for
+
+	with _live() as (sim, ctx):
+		production = sim.production
+		planner = sim.person("Production Planner", "KYUSHU-PT")
+		supervisor = sim.person("Production Supervisor", "KYUSHU-PT")
+		if code.startswith("P180"):
+			production._engines(1, planner, supervisor)
+		else:
+			production._machined("GEARSET-240", 2 if code == "E240-D" else 1, planner, supervisor)
+			production._machined("HOUSING-240", 1, planner, supervisor)
+		wo = production.work_order(code, 1, KYUSHU, "KYUSHU-PT", production.structure["powertrains"][code]["line"],
+			store_for("KYUSHU-PT"), fg_for("KYUSHU-PT"), ctx.clock.tick(60), planner)
+		se = production.build(wo, 1, supervisor)
+		sim.quality.powertrain_inspection(code, se, sim.person("Quality Inspector", "KYUSHU-PT"))
 
 
 def _edi_supplier() -> dict | None:
@@ -296,4 +359,70 @@ def _edi_supplier() -> dict | None:
 		return {"partner": partner.name, "supplier": partner.party, "format": partner.message_format,
 			"secret": secret, "has_batch_no": frappe.get_cached_value("Item", line[0].item_code, "has_batch_no"),
 			**line[0]}
+	return None
+
+
+def _receipt_to_invoice(company: str) -> dict | None:
+	from automotive_seed.generator.flows.common import company_bank_account
+
+	rows = frappe.db.sql("""select pr.name, pr.supplier from `tabPurchase Receipt` pr
+		join `tabSupplier` s on s.name = pr.supplier
+		where pr.docstatus = 1 and pr.is_return = 0 and pr.per_billed = 0 and pr.company = %s
+		and s.is_internal_supplier = 0 and ifnull(pr.supplier_delivery_note, '') not like 'CSM-%%'
+		and exists (select 1 from `tabBank Account` ba where ba.party_type = 'Supplier' and ba.party = pr.supplier
+			and ba.automotive_verification_status = 'Verified')
+		order by pr.posting_date asc, pr.name asc limit 1""", company, as_dict=True)
+	if not rows:
+		return None
+	return {"purchase_receipt": rows[0].name, "supplier": rows[0].supplier, "company": company,
+		"paid_from": company_bank_account(company),
+		"bank_account": frappe.db.get_value("Bank Account", {"party_type": "Supplier", "party": rows[0].supplier,
+			"automotive_verification_status": "Verified"}, "name")}
+
+
+def _intercompany_supply() -> dict | None:
+	"""A powertrain Kyushu holds (built here when its finished store is empty, since the
+	dataset ships everything it builds) with an agreed transfer price to Aichi."""
+	from automotive_seed.generator.catalog import AICHI, KYUSHU
+	from automotive_seed.generator.flows.common import fg_for, store_for
+	from automotive_supply_chain.intercompany.transfer_pricing import agreed_price
+
+	seller_store = fg_for("KYUSHU-PT")
+
+	def in_stock() -> list[str]:
+		return frappe.db.sql_list("""select item_code from `tabSerial No` where warehouse = %s and status = 'Active'
+			group by item_code order by count(*) desc, item_code asc""", seller_store)
+
+	codes = in_stock()
+	if not codes:
+		priced = [c for c in ("P180-FWD", "P180-AWD", "E240-S", "E240-D") if frappe.db.exists("Item", c)
+			and agreed_price(KYUSHU, AICHI, c, nowdate())]
+		if not priced:
+			return None
+		_build_powertrain(priced[0])
+		codes = in_stock()
+	for item_code in codes:
+		price = agreed_price(KYUSHU, AICHI, item_code, nowdate())
+		if price:
+			return {"item_code": item_code, "rate": price[0], "seller": KYUSHU, "buyer": AICHI,
+				"supplier": frappe.db.get_value("Supplier", {"is_internal_supplier": 1, "represents_company": KYUSHU}),
+				"seller_warehouse": seller_store, "buyer_warehouse": store_for(PLANT)}
+	return None
+
+
+def _engineering_change() -> dict | None:
+	boms = frappe.db.sql("""select b.name, b.item from `tabBOM` b join `tabItem` i on i.name = b.item
+		where b.docstatus = 1 and b.is_active = 1 and ifnull(b.automotive_superseded_by, '') = ''
+		and i.item_group = 'Vehicle Modules'
+		and exists (select 1 from `tabWork Order` wo where wo.bom_no = b.name and wo.docstatus = 1)
+		and not exists (select 1 from `tabECO Change` c join `tabEngineering Change Order` e on e.name = c.parent
+			where c.target_bom = b.name and e.docstatus < 2)
+		order by b.item asc""", as_dict=True)
+	for bom in boms:
+		for line in frappe.get_all("BOM Item", filters={"parent": bom.name}, fields=["item_code", "qty", "stock_uom"],
+				order_by="idx asc"):
+			if frappe.get_cached_value("UOM", line.stock_uom, "must_be_whole_number"):
+				return {"item": bom.item, "bom": bom.name, "component": line.item_code, "qty": line.qty,
+					"new_qty": line.qty + 1, "work_order": frappe.db.get_value("Work Order",
+						{"bom_no": bom.name, "docstatus": 1}, "name", order_by="creation desc")}
 	return None

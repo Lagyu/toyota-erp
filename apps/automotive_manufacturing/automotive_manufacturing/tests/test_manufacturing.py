@@ -114,6 +114,31 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 			catalog.work_order(variant, 1, bom=rev_b, start_offset_days=0, submit=False, pinned=True)
 
 
+	def test_change_request_becomes_an_eco_the_engineer_completes(self):
+		cat = self.cat
+		bom = cat["vehicle_boms"][("Base", "FWD")]
+		current = frappe.db.get_value("BOM Item", {"parent": bom, "item_code": cat["wheel"]}, "qty")
+		with as_user(ENGINEER):
+			ecr = frappe.get_doc({"doctype": "Engineering Change Request", "title": "Spare wheel",
+				"change_reason": "Customer Request", "description": "Add a spare wheel",
+				"affected_items": [{"item_code": cat["wheel"], "current_bom": bom, "proposed_change": "one more"}]}).insert()
+			ecr.submit()
+			from automotive_manufacturing.product_engineering.change_control import make_eco
+
+			eco = make_eco(ecr.name)  # unsaved, prefilled with today's quantity
+			self.assertTrue(eco.is_new())
+			self.assertEqual((eco.company, eco.changes[0].qty), (AICHI, current))
+			with self.assertRaises(frappe.ValidationError):  # an unchanged quantity is not a change
+				eco.insert()
+			eco.changes[0].qty = current + 1
+			eco.insert()
+		approve(eco, ENGINEER, [ENG_MANAGER, QM1])
+		with as_user(ENG_MANAGER):
+			eco.reload()
+			eco.submit()
+		self.assertEqual(frappe.db.get_value("Engineering Change Request", ecr.name, "status"), "Converted")
+
+
 class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 	def test_vehicle_build_traceability_and_recall(self):
 		cat = self.cat

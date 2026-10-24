@@ -14,9 +14,10 @@ frappe.ui.form.on("Engineering Change Request", {
 		}
 		if (frm.doc.docstatus === 1 && ["Under Review", "Approved"].includes(frm.doc.status)) {
 			frm.add_custom_button(__("Create ECO"), () =>
-				call("automotive_manufacturing.product_engineering.change_control.make_eco", { ecr: frm.docname }).then((eco) =>
-					frappe.set_route("Form", "Engineering Change Order", eco)
-				)
+				frappe.model.open_mapped_doc({
+					method: "automotive_manufacturing.product_engineering.change_control.make_eco",
+					frm,
+				})
 			);
 		}
 	},

@@ -330,7 +330,8 @@ class Production:
 		factor = rng.choice((0.9, 1.1, 1.05))
 		uom = frappe.get_cached_value("Item", line.item_code, "stock_uom")
 		if frappe.get_cached_value("UOM", uom, "must_be_whole_number"):
-			new_qty = max(1, flt(line.qty) + (1 if factor > 1 else -1))  # whole parts: one more / one fewer
+			# whole parts: one more, or one fewer while at least one remains
+			new_qty = flt(line.qty) + 1 if factor > 1 or flt(line.qty) <= 1 else flt(line.qty) - 1
 		else:
 			new_qty = round(flt(line.qty) * factor, 3) or flt(line.qty)
 		change = {"change_type": "Change Quantity", "target_bom": bom, "component": line.item_code,
