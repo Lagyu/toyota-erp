@@ -100,6 +100,9 @@ EOF
 	key=$(cd "$REPO_ROOT" && git ls-files -s "$seed/generator" "$seed/profiles" "$seed/reference_data" \
 		"$seed/runner.py" apps/automotive_core/automotive_core/setup/tenants | sha256sum | cut -c1-12)
 	cache=$REPO_ROOT/.local/reference/small-$key
+	# paused in the site config, which a restore keeps: the dataset's own scheduler is on, and a
+	# tick between the restore and disable-scheduler below would queue every overdue job
+	bench scheduler pause >/dev/null
 	if [[ -f $cache/database.sql.gz ]]; then
 		log "restoring the small dataset ($key)"
 		# streamed through exec: docker cp cannot write into the container's tmpfs /tmp, and its

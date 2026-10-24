@@ -12,7 +12,11 @@ export default async function globalSetup(config: FullConfig) {
 		if (!user) continue;
 		const ctx = await request.newContext({ baseURL });
 		const res = await ctx.post("/api/method/login", { data: { usr: user, pwd: creds.password } });
-		if (!res.ok()) throw new Error(`login failed for ${persona} (${user}): ${res.status()}`);
+		if (!res.ok()) {
+			// the server's reason (wrong password, disabled user, locked account), never the password
+			const reason = (await res.text()).slice(0, 200);
+			throw new Error(`login failed for ${persona} (${user}): ${res.status()} ${reason}`);
+		}
 		await ctx.storageState({ path: statePath(persona) });
 		await ctx.dispose();
 	}
