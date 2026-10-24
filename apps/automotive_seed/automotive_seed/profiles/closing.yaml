@@ -1,6 +1,7 @@
 # Closing profile: the small volumes across a fiscal year end (same mechanics, three weeks from
-# 16 March): the month-end exchange-rate revaluation, bank statements and the year-end Period
-# Closing Vouchers of 31 March, which the small profile's first half of September never reaches.
+# 16 March): the month-end exchange-rate revaluation, bank statements and the year-end Stock
+# Closing Entries and Period Closing Vouchers of 31 March, which the small profile's first half
+# of September never reaches.
 profile: closing
 seed: 20261024
 start_date: "2026-03-16"

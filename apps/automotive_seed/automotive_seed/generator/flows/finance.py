@@ -1,6 +1,6 @@
 """Finance flows through ERPNext's own documents: the settlement bank's daily statements
 and their reconciliation, month-end foreign-currency revaluation and the fiscal year-end
-period closing voucher."""
+stock closing and period closing voucher."""
 
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ FISCAL_YEAR_ENDS = {(3, 31)}
 BANK = "Hinode Settlement Bank"
 BANK_PARTNER = "BANK-HSB"
 MONTHLY_FEE = {AICHI: 2_200, KYUSHU: 2_200, NA: 35}  # account maintenance, in the account currency
+PLANT_OF = {AICHI: "AICHI-VA", KYUSHU: "KYUSHU-PT", NA: "NA-PDC"}
 
 
 class Finance:
@@ -225,6 +226,24 @@ class Finance:
 								je.submit()
 				ctx.count("Exchange Rate Revaluation")
 
+	def close_stock(self, company: str, day: dt.date) -> None:
+		"""ERPNext closes the stock balances before the books: a Stock Closing Entry of the whole
+		company up to the year end, by its plant's director, once the day's queued reposts are
+		processed (its balance job, queued at submit, runs at once like every job of a run)."""
+		from automotive_seed.runner import _repost_pending
+
+		if frappe.db.exists("Stock Closing Entry", {"company": company, "to_date": day, "docstatus": 1}):
+			return
+		_repost_pending()
+		with self.ctx.as_user(self.sim.person("Plant Director", plant=PLANT_OF[company])):
+			entry = frappe.get_doc({"doctype": "Stock Closing Entry", "company": company, "to_date": day})
+			entry.insert()
+			entry.submit()
+		status = frappe.db.get_value("Stock Closing Entry", entry.name, "status")
+		if status != "Completed":
+			raise RuntimeError(f"Stock Closing Entry {entry.name} of {company} ended {status}")
+		self.ctx.count("Stock Closing Entry")
+
 	def close_year(self, day: dt.date) -> None:
 		ctx = self.ctx
 		for company in (AICHI, KYUSHU, NA):
@@ -245,6 +264,8 @@ class Finance:
 			) or frappe.db.get_value(
 				"Account", {"company": company, "root_type": "Equity", "is_group": 0}, "name"
 			)
+			with ctx.step(23, 0):
+				self.close_stock(company, day)
 			with ctx.step(23, 30):
 				with ctx.as_user(self.sim.person("Group Controller")):
 					pcv = frappe.get_doc(
