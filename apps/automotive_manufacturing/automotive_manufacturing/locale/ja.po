@@ -4739,3 +4739,33 @@ msgstr "{0} は {1} の代わりに消費されています（{2}）。取消で
 #, python-brace-format
 msgid "Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering change order and valid on {3}."
 msgstr "行 {0}: {1} が {2} の代わりに使えるのは、設計変更指示で承認され {3} に有効な代替品の場合だけです。"
+
+#. Option for the 'Change' (Select) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "Change Operation"
+msgstr "工程の変更"
+
+#. Label of the workstation (Link) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "New Workstation"
+msgstr "新しい作業区"
+
+#. Label of the time_in_mins (Float) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "New Operation Time (Mins)"
+msgstr "新しい工程時間（分）"
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: BOM {1} has no operation {2}."
+msgstr "行 {0}: BOM {1} に工程 {2} はありません。"
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: enter the operation's new workstation or time."
+msgstr "行 {0}: 工程の新しい作業区または時間を入力してください。"
+
+#. Label of the operation (Link) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "Operation"
+msgstr "工程"

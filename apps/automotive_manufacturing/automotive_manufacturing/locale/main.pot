@@ -4743,3 +4743,33 @@ msgstr ""
 #, python-brace-format
 msgid "Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering change order and valid on {3}."
 msgstr ""
+
+#. Option for the 'Change' (Select) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "Change Operation"
+msgstr ""
+
+#. Label of the workstation (Link) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "New Workstation"
+msgstr ""
+
+#. Label of the time_in_mins (Float) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "New Operation Time (Mins)"
+msgstr ""
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: BOM {1} has no operation {2}."
+msgstr ""
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: enter the operation's new workstation or time."
+msgstr ""
+
+#. Label of the operation (Link) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "Operation"
+msgstr ""

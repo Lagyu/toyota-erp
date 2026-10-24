@@ -32,7 +32,9 @@ bulk import cannot accept one: such rows are refused.
   audited DocTypes also write Audit Events to the hash chain
   ([monitoring.md](monitoring.md#audit-chain-verification)).
 - **Bills of materials** change through engineering change orders, not by editing a
-  submitted BOM.
+  submitted BOM. The operations (the routing) travel with the BOM revision: an ECO change
+  *Change Operation* releases a revision with the operation's new time or workstation, and
+  orders pinned to the old revision keep its routing.
 - **Substitutes** too: an ECO change *Approve Alternative* creates ERPNext's Item Alternative
   for a component, linked to the ECO and valid from its effective date. Production may consume
   an alternative only when an ECO approved it and it is valid on the posting date; an Item

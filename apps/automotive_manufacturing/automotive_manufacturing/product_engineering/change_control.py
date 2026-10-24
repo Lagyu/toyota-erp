@@ -201,6 +201,14 @@ def validate_eco(doc) -> None:
 			frappe.throw(_("Row {0}: choose the component to add.").format(row.idx))
 		if row.change_type in ("Add Component", "Change Quantity") and flt(row.qty) <= 0:
 			frappe.throw(_("Row {0}: quantity must be positive.").format(row.idx))
+		if row.change_type == "Change Operation":
+			current = frappe.db.get_value("BOM Operation", {"parent": row.target_bom, "operation": row.operation},
+				["workstation", "time_in_mins"], as_dict=True)
+			if not current:
+				frappe.throw(_("Row {0}: BOM {1} has no operation {2}.").format(row.idx, row.target_bom, row.operation))
+			if not ((row.workstation and row.workstation != current.workstation)
+					or (flt(row.time_in_mins) and abs(flt(row.time_in_mins) - flt(current.time_in_mins)) > 1e-9)):
+				frappe.throw(_("Row {0}: enter the operation's new workstation or time.").format(row.idx))
 		if row.change_type == "Approve Alternative" and (row.component not in components or not row.new_component
 				or row.new_component == row.component):
 			frappe.throw(_("Row {0}: an alternative needs a component of BOM {1} and a different item to take its place.")
@@ -235,6 +243,13 @@ def _apply_changes(new_bom, changes) -> None:
 					item.automotive_net_qty = flt(row.qty)
 					if flt(row.scrap_factor_percent):
 						item.automotive_scrap_factor_percent = flt(row.scrap_factor_percent)
+		elif row.change_type == "Change Operation":  # the routing is versioned with the BOM revision
+			for operation in new_bom.operations:
+				if operation.operation == row.operation:
+					if row.workstation:
+						operation.workstation = row.workstation
+					if flt(row.time_in_mins):
+						operation.time_in_mins = flt(row.time_in_mins)
 		elif row.change_type == "Add Component":
 			code = row.new_component or row.component
 			new_bom.append("items", {

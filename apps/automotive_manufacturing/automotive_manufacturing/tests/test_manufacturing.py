@@ -193,6 +193,37 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 		with self.assertRaises(EngineeringControlError):
 			validate_approved_alternatives(consumed(by_hand, effective))
 
+	def test_an_operation_change_releases_a_new_routing_revision(self):
+		"""ERP-02.1 routing versions: the operations travel with the BOM revision, so an ECO "Change
+		Operation" releases a revision with the new time or workstation while the old revision, and
+		the orders pinned to it, keep theirs."""
+		cat = self.cat
+		workstation = frappe.db.get_value("Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name")
+		if not frappe.db.exists("Operation", "TST Seat trimming"):
+			frappe.get_doc({"doctype": "Operation", "__newname": "TST Seat trimming", "workstation": workstation}).insert(
+				ignore_permissions=True)
+		old = frappe.get_doc({"doctype": "BOM", "item": cat["seat"], "company": AICHI, "quantity": 1, "is_default": 0,
+			"is_active": 1, "with_operations": 1, "items": [{"item_code": cat["foam"], "qty": 1.5}],
+			"operations": [{"operation": "TST Seat trimming", "workstation": workstation, "time_in_mins": 4}]})
+		old.insert(ignore_permissions=True)
+		old.submit()
+		change = {"change_type": "Change Operation", "target_bom": old.name, "operation": "TST Seat trimming"}
+		with as_user(ENGINEER), self.assertRaises(frappe.ValidationError):  # nothing would change
+			frappe.get_doc({"doctype": "Engineering Change Order", "title": "Trimming unchanged", "company": AICHI,
+				"effective_date": add_days(nowdate(), 1), "changes": [{**change, "time_in_mins": 4}]}).insert()
+		with as_user(ENGINEER):
+			eco = frappe.get_doc({"doctype": "Engineering Change Order", "title": "Slower trimming for the new cover",
+				"company": AICHI, "effective_date": add_days(nowdate(), 1), "changes": [{**change, "time_in_mins": 6}]}).insert()
+		approve(eco, ENGINEER, [ENG_MANAGER, QM1])
+		with as_user(ENG_MANAGER):
+			eco.reload()
+			eco.submit()
+		eco.reload()
+		new = frappe.get_doc("BOM", eco.revisions[0].new_bom)
+		self.assertEqual([(o.operation, flt(o.time_in_mins)) for o in new.operations], [("TST Seat trimming", 6)])
+		self.assertEqual(flt(frappe.db.get_value("BOM Operation", {"parent": old.name}, "time_in_mins")), 4)
+		self.assertEqual(frappe.db.get_value("BOM", old.name, "automotive_superseded_by"), new.name)
+
 	def test_impact_assessment_counts_open_requests_and_planning_proposals(self):
 		"""ERP-02.3: besides orders, stock and work in progress, a change request's impact names what
 		is requested and not yet ordered, and what the newest planning run proposes and has not
