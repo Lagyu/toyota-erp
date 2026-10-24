@@ -120,7 +120,44 @@ class TestAttachmentPolicy(IntegrationTestCase):
 		frappe.db.set_value("File", doc.name, "automotive_scan_status", "Clean")
 		doc.reload()
 		with as_user(READER):
-			self.assertIsNone(policy.has_permission(doc, "read", READER))  # no objection: normal rules apply
+			self.assertTrue(policy.has_permission(doc, "read", READER))  # no objection: normal rules apply
+
+	def test_a_user_attaches_a_file_while_scanning_is_required(self):
+		"""An upload goes through the user's own permissions: with scanning required, the new
+		unscanned file is still theirs to attach; only reading it waits for a clean scan."""
+		self._settings(virus_scan_mode="Required", clamd_host="")
+		with as_user(READER):
+			doc = frappe.get_doc(
+				{
+					"doctype": "File",
+					"file_name": "goods-receipt.pdf",
+					"content": PDF,
+					"is_private": 1,
+					"attached_to_doctype": "ToDo",
+					"attached_to_name": self.todo.name,
+				}
+			).insert()
+			self.assertEqual(
+				frappe.db.get_value("File", doc.name, "automotive_scan_status"), "Scanner Not Configured"
+			)
+			self.assertFalse(frappe.has_permission("File", "read", doc=doc.name, user=READER))
+		frappe.db.set_value("File", doc.name, "automotive_scan_status", "Clean")
+		with as_user(READER):
+			self.assertTrue(frappe.has_permission("File", "read", doc=doc.name, user=READER))
+		# with scanning off nothing is held back
+		self._settings(virus_scan_mode="Disabled")
+		with as_user(READER):
+			other = frappe.get_doc(
+				{
+					"doctype": "File",
+					"file_name": "packing-list.pdf",
+					"content": PDF,
+					"is_private": 1,
+					"attached_to_doctype": "ToDo",
+					"attached_to_name": self.todo.name,
+				}
+			).insert()
+			self.assertTrue(frappe.has_permission("File", "read", doc=other.name, user=READER))
 
 	def test_files_without_a_result_are_scanned_by_the_hourly_job(self):
 		from unittest import mock

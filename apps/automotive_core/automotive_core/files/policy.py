@@ -202,17 +202,17 @@ def rescan_pending(limit: int = RESCAN_BATCH) -> int:
 
 
 def has_permission(doc, ptype=None, user=None, debug=False):
-	"""Block reading unscanned/infected files when scanning is mandatory."""
+	"""Block reading unscanned/infected files when scanning is mandatory. A controller check can
+	only take a right away: Frappe reads any falsy answer (None included) as a refusal, so "no
+	objection" is True."""
 	if ptype not in (None, "read", "print", "download"):
-		return None
+		return True
 	if _settings().virus_scan_mode != "Required" or not _applies(doc):
-		return None
+		return True
 	user = user or frappe.session.user
 	if user == "Administrator":
-		return None
-	if (doc.get("automotive_scan_status") or "Not Scanned") != "Clean":
-		return False
-	return None
+		return True
+	return (doc.get("automotive_scan_status") or "Not Scanned") == "Clean"
 
 
 # the default period never purges the system's own attachments, nor master data's

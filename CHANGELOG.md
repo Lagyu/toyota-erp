@@ -206,6 +206,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   run them, and those apps' KPI definitions were missing until the next migration: the core
   setup (permissions, report roles, KPI catalogue) ran before their DocTypes and reports were
   installed. Each of those apps now runs it again when it is installed.
+- Users other than Administrator could not attach files: the attachment policy's permission
+  check answered "no objection" with None, which Frappe reads as a refusal, for every create,
+  write and read of a File. It now answers True and refuses only reading a file that is not yet
+  clean while scanning is required; a test attaches and reads files as a desk user. Found by the
+  production rehearsal's upload through ClamAV.
 
 ### Operations
 - Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5
