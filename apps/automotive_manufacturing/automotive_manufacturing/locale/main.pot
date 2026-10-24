@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Manufacturing VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 14:44+0919\n"
-"PO-Revision-Date: 2026-10-24 14:44+0919\n"
+"POT-Creation-Date: 2026-10-24 15:10+0919\n"
+"PO-Revision-Date: 2026-10-24 15:10+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -70,7 +70,7 @@ msgstr ""
 msgid "A quality stop needs a recorded containment before restart."
 msgstr ""
 
-#: automotive_manufacturing/quality_control/holds.py:222
+#: automotive_manufacturing/quality_control/holds.py:225
 msgid "A release note is required."
 msgstr ""
 
@@ -92,7 +92,7 @@ msgstr ""
 msgid "A validated set of option selections resolved to one buildable variant item."
 msgstr ""
 
-#: automotive_manufacturing/quality_control/holds.py:202
+#: automotive_manufacturing/quality_control/holds.py:205
 #, python-brace-format
 msgid "A {0} hold needs the {1}."
 msgstr ""
@@ -488,12 +488,12 @@ msgstr ""
 msgid "BOM Where Used"
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/bom_revisions.py:158
+#: automotive_manufacturing/product_engineering/bom_revisions.py:161
 #, python-brace-format
 msgid "BOM {0} (revision {1}) is not effective on {2}. Effective {3} to {4}."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/bom_revisions.py:155
+#: automotive_manufacturing/product_engineering/bom_revisions.py:158
 #, python-brace-format
 msgid "BOM {0} is {1}, not released for production."
 msgstr ""
@@ -1509,7 +1509,7 @@ msgstr ""
 msgid "High"
 msgstr ""
 
-#: automotive_manufacturing/quality_control/holds.py:220
+#: automotive_manufacturing/quality_control/holds.py:223
 #, python-brace-format
 msgid "Hold {0} is {1}."
 msgstr ""
@@ -1767,9 +1767,19 @@ msgstr ""
 msgid "Job Card {0}"
 msgstr ""
 
-#: automotive_manufacturing/mes/production.py:109
+#: automotive_manufacturing/mes/production.py:128
 #, python-brace-format
 msgid "Job Card {0} is already closed."
+msgstr ""
+
+#: automotive_manufacturing/mes/production.py:33
+#, python-brace-format
+msgid "Job Card {0} is already {1}."
+msgstr ""
+
+#: automotive_manufacturing/mes/production.py:36
+#, python-brace-format
+msgid "Job Card {0}: {1} unit(s) left to confirm, not {2}."
 msgstr ""
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Kanban Loop'
@@ -1835,11 +1845,6 @@ msgstr ""
 #: automotive_manufacturing/shop_floor/kanban.py:69
 #, python-brace-format
 msgid "Kanban loop {0} is suspended."
-msgstr ""
-
-#: automotive_manufacturing/shop_floor/kanban.py:262
-#, python-brace-format
-msgid "Kanban {0} overdue for {1}"
 msgstr ""
 
 #. Label of the label (Data) field in DocType 'Vehicle Model Option Group'
@@ -3235,7 +3240,7 @@ msgstr ""
 msgid "Release Note"
 msgstr ""
 
-#: automotive_manufacturing/quality_control/holds.py:227
+#: automotive_manufacturing/quality_control/holds.py:230
 #, python-brace-format
 msgid "Release conditions not met: {0}"
 msgstr ""
@@ -3585,7 +3590,7 @@ msgstr ""
 msgid "Saturday"
 msgstr ""
 
-#: automotive_manufacturing/mes/production.py:73
+#: automotive_manufacturing/mes/production.py:92
 #, python-brace-format
 msgid "Scanned components are not in the BOM of {0}: {1}"
 msgstr ""
@@ -4057,7 +4062,7 @@ msgstr ""
 msgid "The new order must contain every slot exactly once."
 msgstr ""
 
-#: automotive_manufacturing/quality_control/holds.py:224
+#: automotive_manufacturing/quality_control/holds.py:227
 msgid "The person who raised a hold cannot release it."
 msgstr ""
 
@@ -4183,7 +4188,7 @@ msgstr ""
 msgid "Use Plant Calendars"
 msgstr ""
 
-#: automotive_manufacturing/quality_control/holds.py:208
+#: automotive_manufacturing/quality_control/holds.py:211
 msgid "Use Release (or a Quality Disposition) to change a hold's status."
 msgstr ""
 
@@ -4470,17 +4475,17 @@ msgstr ""
 msgid "Work Order {0}"
 msgstr ""
 
-#: automotive_manufacturing/mes/production.py:32
+#: automotive_manufacturing/mes/production.py:51
 #, python-brace-format
 msgid "Work Order {0} is {1}."
 msgstr ""
 
-#: automotive_manufacturing/mes/production.py:34
+#: automotive_manufacturing/mes/production.py:53
 #, python-brace-format
 msgid "Work Order {0}: only {1} left to build."
 msgstr ""
 
-#: automotive_manufacturing/mes/production.py:49
+#: automotive_manufacturing/mes/production.py:68
 #, python-brace-format
 msgid "Work Order {0}: {1} serial number(s) needed, {2} available."
 msgstr ""
@@ -4608,7 +4613,7 @@ msgstr ""
 msgid "{0} units planned for a capacity of {1}."
 msgstr ""
 
-#: automotive_manufacturing/mes/production.py:69
+#: automotive_manufacturing/mes/production.py:88
 #, python-brace-format
 msgid "{0}: one batch per component row (got {1})."
 msgstr ""

@@ -25,6 +25,9 @@ from dsl import (
 from roles import *
 
 MODULE = "Governance"
+# notification events (automotive_core.governance.notifications.EVENTS)
+NOTIFICATION_EVENTS = ["approval.requested", "approval.decided", "kanban.overdue", "quality.hold_raised",
+	"integration.dead_letter"]
 APPROVERS = [
 	EXECUTIVE, CONTROLLER, PLANT_DIRECTOR, PROCUREMENT_MANAGER, TREASURY, QUALITY_MANAGER,
 	SALES_MANAGER, ENGINEERING_MANAGER, IT_OPERATOR, SUPERVISOR, PLANNER, BUYER, AP_CLERK,
@@ -315,5 +318,56 @@ DOCTYPES = [
 			dynamic_link("for_value", "Value", "allow", reqd=1, in_list_view=1),
 			check("is_default", "Default", in_list_view=1),
 		],
+	),
+	DocType(
+		"Notification Preference",
+		MODULE,
+		autoname="field:user",
+		title_field="user",
+		icon="bell",
+		description="How a person wants each kind of notification: in the desk, by e-mail, or both. Events "
+		"marked mandatory always reach the desk.",
+		fields=[
+			link("user", "User", "User", reqd=1, unique=1, in_list_view=1, set_only_once=1),
+			section("Events"),
+			table("events", "Events", "Notification Preference Event"),
+		],
+		permissions=[perm(SYSTEM, "rwcd"), perm(IT_OPERATOR, "rwcd"), perm(AUDITOR, "r p"),
+			*[perm(r, "rwc o") for r in INTERNAL if r not in (IT_OPERATOR, AUDITOR)]],
+	),
+	DocType(
+		"Notification Preference Event",
+		MODULE,
+		child=True,
+		fields=[
+			select("event", "Event", NOTIFICATION_EVENTS, reqd=1, in_list_view=1),
+			check("in_app", "In The Desk", default="1", in_list_view=1),
+			check("email", "By E-mail", default="1", in_list_view=1),
+		],
+	),
+	DocType(
+		"Notification Dispatch",
+		MODULE,
+		autoname="naming_series:",
+		title_field="subject",
+		icon="send",
+		description="One row per recipient and channel of every notification, with its delivery result.",
+		fields=[
+			naming_series("NDS-.YYYY.-"),
+			select("event", "Event", NOTIFICATION_EVENTS, reqd=1, read_only=1, in_list_view=1, in_standard_filter=1),
+			link("recipient", "Recipient", "User", reqd=1, read_only=1, in_list_view=1, in_standard_filter=1),
+			select("channel", "Channel", ["In-App", "Email"], reqd=1, read_only=1, in_list_view=1),
+			select("status", "Status", ["Delivered", "Queued", "Sent", "Failed", "Suppressed"], reqd=1, read_only=1,
+				in_list_view=1, in_standard_filter=1),
+			column(),
+			link("reference_doctype", "Reference DocType", "DocType", read_only=1),
+			dynamic_link("reference_name", "Reference", "reference_doctype", read_only=1),
+			data("subject", "Subject", read_only=1),
+			link("email_queue", "Email Queue", "Email Queue", read_only=1),
+			datetime("sent_at", "Sent At", read_only=1),
+			small_text("detail", "Detail", read_only=1,
+				description="Why it was suppressed, or the mail server's error."),
+		],
+		permissions=[perm(SYSTEM, "r pe"), perm(IT_OPERATOR, "r pe"), perm(AUDITOR, "r pe")],
 	),
 ]

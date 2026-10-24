@@ -1,0 +1,4 @@
+<p>{{ _("{0} asks for your approval of {1} {2}.").format(requester, _(doc.reference_doctype), doc.reference_name) }}</p>
+<p>{{ _("Step {0}: {1}").format(step_no, step_name) }}</p>
+<p><a href="{{ link }}">{{ _("Open the approval request") }}</a></p>
+{% include "automotive_core/templates/emails/automotive_footer.html" %}

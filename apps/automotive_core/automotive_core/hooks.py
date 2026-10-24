@@ -126,8 +126,11 @@ scheduler_events = {
 			"automotive_core.integration_hub.inbound.retry_due",
 			"automotive_core.integration_hub.partners.poll_file_drops",
 		],
-		# every 5 minutes: seal audit events into the hash chain
-		"*/5 * * * *": ["automotive_core.governance.audit.seal_pending"],
+		# every 5 minutes: seal audit events into the hash chain; record notification e-mail results
+		"*/5 * * * *": [
+			"automotive_core.governance.audit.seal_pending",
+			"automotive_core.governance.notifications.sync_email_results",
+		],
 	},
 	"hourly": [
 		"automotive_core.governance.delegation.refresh_statuses",

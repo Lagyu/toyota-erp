@@ -1,0 +1,3 @@
+<p>{{ _("Your approval request for {0} {1} is {2}.").format(_(doc.reference_doctype), doc.reference_name, _(doc.status)) }}</p>
+<p><a href="{{ link }}">{{ _("Open the approval request") }}</a></p>
+{% include "automotive_core/templates/emails/automotive_footer.html" %}

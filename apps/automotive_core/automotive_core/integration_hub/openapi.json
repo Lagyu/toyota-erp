@@ -1321,6 +1321,102 @@
     }
    }
   },
+  "/api/method/automotive_core.governance.notifications.set_my_preference": {
+   "post": {
+    "operationId": "automotive_core.governance.notifications.set_my_preference",
+    "summary": "The signed-in user's own channel choice for one event.",
+    "tags": [
+     "automotive_core.governance"
+    ],
+    "responses": {
+     "200": {
+      "description": "OK",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "object",
+         "properties": {
+          "message": {
+           "type": "object",
+           "properties": {
+            "event": {},
+            "in_app": {},
+            "email": {},
+            "at": {}
+           },
+           "required": [
+            "event",
+            "in_app",
+            "email",
+            "at"
+           ]
+          }
+         }
+        }
+       }
+      }
+     },
+     "403": {
+      "$ref": "#/components/responses/Forbidden"
+     },
+     "417": {
+      "$ref": "#/components/responses/ValidationError"
+     }
+    },
+    "parameters": [
+     {
+      "$ref": "#/components/parameters/CorrelationId"
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "event": {
+          "type": "string"
+         },
+         "in_app": {
+          "type": "integer",
+          "default": 1
+         },
+         "email": {
+          "type": "integer",
+          "default": 1
+         }
+        },
+        "required": [
+         "event"
+        ]
+       }
+      },
+      "application/x-www-form-urlencoded": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "event": {
+          "type": "string"
+         },
+         "in_app": {
+          "type": "integer",
+          "default": 1
+         },
+         "email": {
+          "type": "integer",
+          "default": 1
+         }
+        },
+        "required": [
+         "event"
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/method/automotive_core.governance.sod.report": {
    "get": {
     "operationId": "automotive_core.governance.sod.report.get",
@@ -5165,7 +5261,7 @@
   "/api/method/automotive_portals.api.dealer.dashboard": {
    "get": {
     "operationId": "automotive_portals.api.dealer.dashboard.get",
-    "summary": "dashboard",
+    "summary": "Counters for the overview, only those the caller's portal role may see.",
     "tags": [
      "automotive_portals.api"
     ],
@@ -5178,23 +5274,7 @@
          "type": "object",
          "properties": {
           "message": {
-           "type": "object",
-           "properties": {
-            "dealer": {},
-            "open_orders": {},
-            "allocated_vehicles": {},
-            "in_delivery": {},
-            "open_invoices": {},
-            "open_support_requests": {}
-           },
-           "required": [
-            "dealer",
-            "open_orders",
-            "allocated_vehicles",
-            "in_delivery",
-            "open_invoices",
-            "open_support_requests"
-           ]
+           "type": "object"
           }
          }
         }
@@ -5217,7 +5297,7 @@
    },
    "post": {
     "operationId": "automotive_portals.api.dealer.dashboard",
-    "summary": "dashboard",
+    "summary": "Counters for the overview, only those the caller's portal role may see.",
     "tags": [
      "automotive_portals.api"
     ],
@@ -5230,23 +5310,7 @@
          "type": "object",
          "properties": {
           "message": {
-           "type": "object",
-           "properties": {
-            "dealer": {},
-            "open_orders": {},
-            "allocated_vehicles": {},
-            "in_delivery": {},
-            "open_invoices": {},
-            "open_support_requests": {}
-           },
-           "required": [
-            "dealer",
-            "open_orders",
-            "allocated_vehicles",
-            "in_delivery",
-            "open_invoices",
-            "open_support_requests"
-           ]
+           "type": "object"
           }
          }
         }
@@ -7216,7 +7280,7 @@
   "/api/method/automotive_portals.api.supplier.dashboard": {
    "get": {
     "operationId": "automotive_portals.api.supplier.dashboard.get",
-    "summary": "dashboard",
+    "summary": "Counters for the overview, only those the caller's portal role may see.",
     "tags": [
      "automotive_portals.api"
     ],
@@ -7229,27 +7293,7 @@
          "type": "object",
          "properties": {
           "message": {
-           "type": "object",
-           "properties": {
-            "supplier": {},
-            "orders_awaiting_ack": {},
-            "open_orders": {},
-            "asns_in_transit": {},
-            "open_discrepancies": {},
-            "unread_notices": {},
-            "schedules_to_acknowledge": {},
-            "open_rfqs": {}
-           },
-           "required": [
-            "supplier",
-            "orders_awaiting_ack",
-            "open_orders",
-            "asns_in_transit",
-            "open_discrepancies",
-            "unread_notices",
-            "schedules_to_acknowledge",
-            "open_rfqs"
-           ]
+           "type": "object"
           }
          }
         }
@@ -7272,7 +7316,7 @@
    },
    "post": {
     "operationId": "automotive_portals.api.supplier.dashboard",
-    "summary": "dashboard",
+    "summary": "Counters for the overview, only those the caller's portal role may see.",
     "tags": [
      "automotive_portals.api"
     ],
@@ -7285,27 +7329,7 @@
          "type": "object",
          "properties": {
           "message": {
-           "type": "object",
-           "properties": {
-            "supplier": {},
-            "orders_awaiting_ack": {},
-            "open_orders": {},
-            "asns_in_transit": {},
-            "open_discrepancies": {},
-            "unread_notices": {},
-            "schedules_to_acknowledge": {},
-            "open_rfqs": {}
-           },
-           "required": [
-            "supplier",
-            "orders_awaiting_ack",
-            "open_orders",
-            "asns_in_transit",
-            "open_discrepancies",
-            "unread_notices",
-            "schedules_to_acknowledge",
-            "open_rfqs"
-           ]
+           "type": "object"
           }
          }
         }

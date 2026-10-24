@@ -1,0 +1,4 @@
+<p>{{ _("A quality hold ({0}) blocks {1} at {2}.").format(_(doc.hold_scope), doc.batch_no or doc.serial_no or doc.item, doc.plant) }}</p>
+<p>{{ _("Reason: {0}").format(doc.reason or "") }}</p>
+<p><a href="{{ link }}">{{ _("Open the quality hold") }}</a></p>
+{% include "automotive_core/templates/emails/automotive_footer.html" %}

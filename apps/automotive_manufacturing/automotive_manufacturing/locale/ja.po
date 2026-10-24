@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Manufacturing VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 14:44+0919\n"
+"POT-Creation-Date: 2026-10-24 15:10+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -72,7 +72,7 @@ msgstr "プル型の補充ループです。収容数が一定のかんばんカ
 msgid "A quality stop needs a recorded containment before restart."
 msgstr "品質による停止では、再稼働の前に封じ込めを記録する必要があります。"
 
-#: automotive_manufacturing/quality_control/holds.py:222
+#: automotive_manufacturing/quality_control/holds.py:225
 msgid "A release note is required."
 msgstr "解除メモの入力が必要です。"
 
@@ -94,7 +94,7 @@ msgstr "空になったかんばんカードから発行される補充要求で
 msgid "A validated set of option selections resolved to one buildable variant item."
 msgstr "検証済みのオプション選択の組み合わせです。生産可能な1つの仕様バリアント品目に対応付けられます。"
 
-#: automotive_manufacturing/quality_control/holds.py:202
+#: automotive_manufacturing/quality_control/holds.py:205
 #, python-brace-format
 msgid "A {0} hold needs the {1}."
 msgstr "{0} の保留には {1} が必要です。"
@@ -490,12 +490,12 @@ msgstr "BOMレベル"
 msgid "BOM Where Used"
 msgstr "BOM使用先"
 
-#: automotive_manufacturing/product_engineering/bom_revisions.py:158
+#: automotive_manufacturing/product_engineering/bom_revisions.py:161
 #, python-brace-format
 msgid "BOM {0} (revision {1}) is not effective on {2}. Effective {3} to {4}."
 msgstr "BOM {0}（改訂 {1}）は {2} には有効ではありません。有効期間は {3} から {4} までです。"
 
-#: automotive_manufacturing/product_engineering/bom_revisions.py:155
+#: automotive_manufacturing/product_engineering/bom_revisions.py:158
 #, python-brace-format
 msgid "BOM {0} is {1}, not released for production."
 msgstr "BOM {0} は {1} であり、生産用にリリースされていません。"
@@ -1511,7 +1511,7 @@ msgstr "引継ぎ事項"
 msgid "High"
 msgstr "高"
 
-#: automotive_manufacturing/quality_control/holds.py:220
+#: automotive_manufacturing/quality_control/holds.py:223
 #, python-brace-format
 msgid "Hold {0} is {1}."
 msgstr "保留 {0} のステータスは {1} です。"
@@ -1769,10 +1769,20 @@ msgstr "ジョブカード"
 msgid "Job Card {0}"
 msgstr "ジョブカード {0}"
 
-#: automotive_manufacturing/mes/production.py:109
+#: automotive_manufacturing/mes/production.py:128
 #, python-brace-format
 msgid "Job Card {0} is already closed."
 msgstr "ジョブカード {0} は既にクローズされています。"
+
+#: automotive_manufacturing/mes/production.py:33
+#, python-brace-format
+msgid "Job Card {0} is already {1}."
+msgstr "ジョブカード{0}はすでに{1}です。"
+
+#: automotive_manufacturing/mes/production.py:36
+#, python-brace-format
+msgid "Job Card {0}: {1} unit(s) left to confirm, not {2}."
+msgstr "ジョブカード{0}：確認できる残りは{1}単位です（{2}は指定できません）。"
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:181
@@ -1837,11 +1847,6 @@ msgstr "この項目を設定しない限り、かんばん品目はMRPではな
 #, python-brace-format
 msgid "Kanban loop {0} is suspended."
 msgstr "かんばんループ {0} は一時停止中です。"
-
-#: automotive_manufacturing/shop_floor/kanban.py:262
-#, python-brace-format
-msgid "Kanban {0} overdue for {1}"
-msgstr "{1} のかんばん {0} が期限超過"
 
 #. Label of the label (Data) field in DocType 'Vehicle Model Option Group'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model_option_group/vehicle_model_option_group.json:39
@@ -3233,7 +3238,7 @@ msgstr "保留解除"
 msgid "Release Note"
 msgstr "解除メモ"
 
-#: automotive_manufacturing/quality_control/holds.py:227
+#: automotive_manufacturing/quality_control/holds.py:230
 #, python-brace-format
 msgid "Release conditions not met: {0}"
 msgstr "解除条件が満たされていません: {0}"
@@ -3583,7 +3588,7 @@ msgstr "受注"
 msgid "Saturday"
 msgstr "土曜日"
 
-#: automotive_manufacturing/mes/production.py:73
+#: automotive_manufacturing/mes/production.py:92
 #, python-brace-format
 msgid "Scanned components are not in the BOM of {0}: {1}"
 msgstr "スキャンした構成部品が {0} のBOMに含まれていません: {1}"
@@ -4054,7 +4059,7 @@ msgstr "引継ぎ先監督者には別の人を指定してください。"
 msgid "The new order must contain every slot exactly once."
 msgstr "新しい順序には、すべてのスロットを1回ずつ含める必要があります。"
 
-#: automotive_manufacturing/quality_control/holds.py:224
+#: automotive_manufacturing/quality_control/holds.py:227
 msgid "The person who raised a hold cannot release it."
 msgstr "保留をかけた本人は、その保留を解除できません。"
 
@@ -4180,7 +4185,7 @@ msgstr "既存在庫を使用"
 msgid "Use Plant Calendars"
 msgstr "工場カレンダーを使用"
 
-#: automotive_manufacturing/quality_control/holds.py:208
+#: automotive_manufacturing/quality_control/holds.py:211
 msgid "Use Release (or a Quality Disposition) to change a hold's status."
 msgstr "保留のステータスは「保留解除」（または品質処置）で変更してください。"
 
@@ -4466,17 +4471,17 @@ msgstr "作業指示"
 msgid "Work Order {0}"
 msgstr "作業指示 {0}"
 
-#: automotive_manufacturing/mes/production.py:32
+#: automotive_manufacturing/mes/production.py:51
 #, python-brace-format
 msgid "Work Order {0} is {1}."
 msgstr "作業指示 {0} のステータスは {1} です。"
 
-#: automotive_manufacturing/mes/production.py:34
+#: automotive_manufacturing/mes/production.py:53
 #, python-brace-format
 msgid "Work Order {0}: only {1} left to build."
 msgstr "作業指示 {0}: 残りの生産数量は {1} のみです。"
 
-#: automotive_manufacturing/mes/production.py:49
+#: automotive_manufacturing/mes/production.py:68
 #, python-brace-format
 msgid "Work Order {0}: {1} serial number(s) needed, {2} available."
 msgstr "作業指示 {0}: シリアル番号が {1} 件必要ですが、利用可能なのは {2} 件です。"
@@ -4604,7 +4609,7 @@ msgstr "{0} ルールには条件が必要です。"
 msgid "{0} units planned for a capacity of {1}."
 msgstr "能力 {1} 台に対して {0} 台が計画されています。"
 
-#: automotive_manufacturing/mes/production.py:69
+#: automotive_manufacturing/mes/production.py:88
 #, python-brace-format
 msgid "{0}: one batch per component row (got {1})."
 msgstr "{0}: 構成部品の行ごとにバッチは1つにしてください（指定: {1}）。"

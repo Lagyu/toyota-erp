@@ -183,8 +183,11 @@ def deliver(name: str) -> str:
 	msg.save()
 	_update_partner_health(partner, outcome == "Delivered", result.error)
 	if msg.status == "Dead Letter":
+		from automotive_core.governance.notifications import dead_letter
+
 		audit.record("integration.outbound.dead_letter", msg.doctype, msg.name,
 			{"partner": partner.name, "event_type": msg.event_type, "error": result.error})
+		dead_letter(msg.doctype, msg.name)
 	log("integration.outbound." + outcome.lower().replace(" ", "_"), outbound=msg.name, partner=partner.name,
 		attempt=msg.attempts, status_code=result.status_code, duration_ms=duration_ms)
 	commit()

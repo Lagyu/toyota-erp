@@ -1,0 +1,4 @@
+<p>{{ _("Message {0} ({1}) for partner {2} failed {3} times and will not be retried automatically.").format(doc.message_id or doc.name, doc.message_type or doc.event_type, doc.partner, doc.attempts) }}</p>
+<p>{{ _("Last error: {0}").format(doc.last_error or "") }}</p>
+<p><a href="{{ link }}">{{ _("Open the message") }}</a></p>
+{% include "automotive_core/templates/emails/automotive_footer.html" %}

@@ -245,7 +245,7 @@ def scan_card(card_id: str) -> dict:
 
 
 def escalate_overdue() -> None:
-	from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
+	from automotive_core.governance.notifications import notify
 
 	now = now_datetime()
 	overdue = frappe.get_all("Kanban Signal", filters={"status": ("in", ("Open", "Ordered", "Shipped")),
@@ -256,8 +256,5 @@ def escalate_overdue() -> None:
 			"escalation_note": _("Overdue since {0}").format(row.due_by)})
 		supervisors = frappe.get_all("Plant Assignment", filters={"plant": row.plant, "status": "Active",
 			"assignment_role": ("in", ("Supervisor", "Logistics", "Warehouse"))}, pluck="user")
-		users = sorted({u for u in supervisors if u})
-		if users:
-			enqueue_create_notification(users, {"type": "Alert", "document_type": "Kanban Signal",
-				"document_name": row.name, "subject": _("Kanban {0} overdue for {1}").format(row.name, row.item_code)})
+		notify("kanban.overdue", sorted({u for u in supervisors if u}), "Kanban Signal", row.name)
 	commit()

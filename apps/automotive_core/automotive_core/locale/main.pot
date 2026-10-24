@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 14:44+0919\n"
-"PO-Revision-Date: 2026-10-24 14:44+0919\n"
+"POT-Creation-Date: 2026-10-24 15:10+0919\n"
+"PO-Revision-Date: 2026-10-24 15:10+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -629,6 +629,11 @@ msgstr ""
 msgid "A product or service you buy, sell or keep in stock."
 msgstr ""
 
+#: automotive_core/templates/emails/quality_hold_raised.html:1
+#, python-brace-format
+msgid "A quality hold ({0}) blocks {1} at {2}."
+msgstr ""
+
 #. Description of the 'Inspection Required before Delivery' (Check) field in
 #. DocType 'Item'
 #: erpnext/stock/doctype/item/item.json:813
@@ -775,6 +780,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:297
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:258
 #: automotive_core/governance/doctype/approval_request/approval_request.json:249
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:146
 msgid "AP Clerk"
 msgstr ""
 
@@ -3574,7 +3580,7 @@ msgstr ""
 msgid "Approval matrix for one DocType: which steps, roles and thresholds apply."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:515
+#: automotive_core/templates/emails/approval_requested.subject.html:1
 #, python-brace-format
 msgid "Approval needed: {0} {1} (step {2}: {3})"
 msgstr ""
@@ -4314,6 +4320,8 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:206
 #: automotive_core/governance/doctype/approval_request/approval_request.json:184
 #: automotive_core/governance/doctype/audit_event/audit_event.json:160
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:144
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:63
 #: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:99
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:216
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:127
@@ -4454,6 +4462,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:189
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:210
 #: automotive_core/governance/doctype/approval_request/approval_request.json:189
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:69
 msgid "Automotive Executive"
 msgstr ""
 
@@ -5669,6 +5678,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:288
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:254
 #: automotive_core/governance/doctype/approval_request/approval_request.json:244
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:132
 msgid "Buyer"
 msgstr ""
 
@@ -5724,6 +5734,11 @@ msgstr ""
 #: erpnext/accounts/doctype/pricing_rule/pricing_rule.py:260
 #, python-brace-format
 msgid "Buying must be checked, if Applicable For is selected as {0}"
+msgstr ""
+
+#. Label of the email (Check) field in DocType 'Notification Preference Event'
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:33
+msgid "By E-mail"
 msgstr ""
 
 #. Label of the bypass_restrict_ip_check_if_2fa_enabled (Check) field in
@@ -6502,9 +6517,8 @@ msgstr ""
 msgid "Changing the valuation method to Moving Average will affect new transactions. If backdated entries are added, earlier FIFO-based entries will be reposted, which may change closing balances."
 msgstr ""
 
-#. Label of the channel (Select) field in DocType 'Notification'
-#: frappe/email/doctype/notification/notification.json:75
-#: frappe/public/js/frappe/form/doctype_settings/tabs/notification.js:50
+#. Label of the channel (Select) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:59
 msgid "Channel"
 msgstr ""
 
@@ -9796,6 +9810,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:306
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:262
 #: automotive_core/governance/doctype/approval_request/approval_request.json:254
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:167
 #: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:242
 msgid "Dealer Liaison"
 msgstr ""
@@ -10587,10 +10602,12 @@ msgstr ""
 msgid "Deliver (Dropship)"
 msgstr ""
 
+#. Option for the 'Status' (Select) field in DocType 'Notification Dispatch'
 #. Option for the 'Outcome' (Select) field in DocType 'Integration Delivery
 #. Attempt'
 #. Option for the 'Status' (Select) field in DocType 'Integration Outbound
 #. Message'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:70
 #: automotive_core/integration_hub/doctype/integration_delivery_attempt/integration_delivery_attempt.json:49
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
 msgid "Delivered"
@@ -11003,6 +11020,11 @@ msgstr ""
 #: frappe/desk/doctype/desktop_settings/desktop_settings.json:25
 #: frappe/public/js/frappe/new_navigation_nudge.js:47
 msgid "Desktop Icons"
+msgstr ""
+
+#. Label of the detail (Small Text) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:115
+msgid "Detail"
 msgstr ""
 
 #. Label of the order_lost_reason (Small Text) field in DocType 'Opportunity'
@@ -12301,7 +12323,9 @@ msgstr ""
 msgid "Electronic Equipment"
 msgstr ""
 
+#. Option for the 'Channel' (Select) field in DocType 'Notification Dispatch'
 #. Label of the email (Data) field in DocType 'User Provisioning Request'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:60
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:63
 msgid "Email"
 msgstr ""
@@ -12344,6 +12368,11 @@ msgstr ""
 #: frappe/public/js/frappe/ui/toolbar/search_utils.js:328
 #: frappe/public/js/frappe/ui/toolbar/search_utils.js:329
 msgid "Email Inbox"
+msgstr ""
+
+#. Label of the email_queue (Link) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:101
+msgid "Email Queue"
 msgstr ""
 
 #: frappe/public/js/frappe/views/communication.js:1775
@@ -12754,6 +12783,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:252
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:238
 #: automotive_core/governance/doctype/approval_request/approval_request.json:224
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:181
 msgid "Engineering Manager"
 msgstr ""
 
@@ -12945,15 +12975,10 @@ msgstr ""
 msgid "Even if there are multiple Pricing Rules with highest priority, then following internal priorities are applied:"
 msgstr ""
 
-#. Label of a Sidebar Item
-#. Option for the 'Type' (Select) field in DocType 'Communication'
-#. Name of a DocType
-#. Option for the 'Event Category' (Select) field in DocType 'Event'
-#: frappe/build/sidebar/build/build.json:375
-#: frappe/core/doctype/communication/communication.json:80
-#: frappe/desk/doctype/event/event.json:80
-#: frappe/desk/doctype/event/event.json:371
-#: frappe/public/js/frappe/form/doctype_settings/tabs/notification.js:46
+#. Label of the event (Select) field in DocType 'Notification Dispatch'
+#. Label of the event (Select) field in DocType 'Notification Preference Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:40
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:17
 msgid "Event"
 msgstr ""
 
@@ -12975,7 +13000,10 @@ msgstr ""
 msgid "Event Type"
 msgstr ""
 
-#: frappe/public/js/frappe/ui/notifications/notifications.js:156
+#. Label of the section_break_1 (Section Break) field in DocType 'Notification
+#. Preference'
+#. Label of the events (Table) field in DocType 'Notification Preference'
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:28
 msgid "Events"
 msgstr ""
 
@@ -13616,6 +13644,7 @@ msgstr ""
 
 #. Option for the 'Reconciliation' (Select) field in DocType 'KPI Snapshot'
 #. Option for the 'Status' (Select) field in DocType 'Period Close Task'
+#. Option for the 'Status' (Select) field in DocType 'Notification Dispatch'
 #. Option for the 'Status' (Select) field in DocType 'Idempotency Record'
 #. Option for the 'Status' (Select) field in DocType 'Integration Inbound
 #. Message'
@@ -13623,6 +13652,7 @@ msgstr ""
 #. Message'
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:117
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:70
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:66
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
@@ -15658,6 +15688,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:198
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:199
 #: automotive_core/governance/doctype/approval_request/approval_request.json:194
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:76
 #: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:92
 msgid "Group Controller"
 msgstr ""
@@ -16117,6 +16148,11 @@ msgstr ""
 msgid "How Pricing Rule is applied?"
 msgstr ""
 
+#. Description of a DocType
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:5
+msgid "How a person wants each kind of notification: in the desk, by e-mail, or both. Events marked mandatory always reach the desk."
+msgstr ""
+
 #: erpnext/public/js/setup_wizard.js:66
 msgid "How big is the team?"
 msgstr ""
@@ -16217,6 +16253,8 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:192
 #: automotive_core/governance/doctype/approval_request/approval_request.json:229
 #: automotive_core/governance/doctype/audit_event/audit_event.json:165
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:138
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:57
 #: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:85
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:200
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:120
@@ -16862,6 +16900,11 @@ msgstr ""
 msgid "In Stock"
 msgstr ""
 
+#. Label of the in_app (Check) field in DocType 'Notification Preference Event'
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:26
+msgid "In The Desk"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Delivery Trip'
 #. Option for the 'Transfer Status' (Select) field in DocType 'Material
 #. Request'
@@ -16969,6 +17012,11 @@ msgstr ""
 #: frappe/public/js/frappe/form/save.js:249
 #, python-brace-format
 msgid "In {0}, {1} is required in {2} rows."
+msgstr ""
+
+#. Option for the 'Channel' (Select) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:60
+msgid "In-App"
 msgstr ""
 
 #. Label of the off_status_image (Attach Image) field in DocType 'Workstation'
@@ -17602,6 +17650,11 @@ msgstr ""
 #: automotive_core/integration_hub/sidebar/integration_hub/integration_hub.json:27
 #: automotive_core/integration_hub/workspace/integration_hub/integration_hub.json:26
 msgid "Integration Partner"
+msgstr ""
+
+#: automotive_core/templates/emails/integration_dead_letter.subject.html:1
+#, python-brace-format
+msgid "Integration message {0} for {1} is dead-lettered"
 msgstr ""
 
 #: automotive_core/integration_hub/inbound.py:73
@@ -19806,6 +19859,16 @@ msgstr ""
 msgid "Kanban View"
 msgstr ""
 
+#: automotive_core/templates/emails/kanban_overdue.html:1
+#, python-brace-format
+msgid "Kanban signal {0} for {1} at {2} was due by {3} and is now escalated (level {4})."
+msgstr ""
+
+#: automotive_core/templates/emails/kanban_overdue.subject.html:1
+#, python-brace-format
+msgid "Kanban {0} overdue for {1}"
+msgstr ""
+
 #: frappe/public/js/frappe/legacy_gravatar_cleanup.js:40
 msgid "Keep Gravatar URLs"
 msgstr ""
@@ -20174,6 +20237,11 @@ msgstr ""
 msgid "Last carbon check date cannot be a future date"
 msgstr ""
 
+#: automotive_core/templates/emails/integration_dead_letter.html:2
+#, python-brace-format
+msgid "Last error: {0}"
+msgstr ""
+
 #: frappe/core/doctype/data_import/data_import.js:2866
 msgid "Last modified by"
 msgstr ""
@@ -20458,6 +20526,7 @@ msgstr ""
 #: automotive_core/automotive_setup/doctype/plant/plant.json:296
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:232
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:197
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:104
 msgid "Line Operator"
 msgstr ""
 
@@ -20892,6 +20961,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:342
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:278
 #: automotive_core/governance/doctype/approval_request/approval_request.json:274
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:188
 msgid "Logistics Coordinator"
 msgstr ""
 
@@ -22166,6 +22236,11 @@ msgstr ""
 #: automotive_core/integration_hub/inbound.py:139
 #, python-brace-format
 msgid "Message id already used with a different payload (inbound {0})."
+msgstr ""
+
+#: automotive_core/templates/emails/integration_dead_letter.html:1
+#, python-brace-format
+msgid "Message {0} ({1}) for partner {2} failed {3} times and will not be retried automatically."
 msgstr ""
 
 #. Label of a Card Break in the Integration Hub Workspace
@@ -23688,6 +23763,10 @@ msgstr ""
 msgid "No documents found."
 msgstr ""
 
+#: automotive_core/governance/notifications.py:130
+msgid "No e-mail address, or the address unsubscribed"
+msgstr ""
+
 #: frappe/public/js/frappe/form/grid.js:1322
 msgid "No editable fields available for bulk edit."
 msgstr ""
@@ -24347,11 +24426,26 @@ msgstr ""
 msgid "Notification"
 msgstr ""
 
+#. Name of a DocType
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:124
+msgid "Notification Dispatch"
+msgstr ""
+
 #. Label of a Sidebar Item
 #. Name of a DocType
 #: frappe/build/sidebar/build/build.json:450
 #: frappe/desk/doctype/notification_log/notification_log.json:193
 msgid "Notification Log"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:42
+msgid "Notification Preference"
+msgstr ""
+
+#. Name of a DocType
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:41
+msgid "Notification Preference Event"
 msgstr ""
 
 #. Label of a Sidebar Item
@@ -24612,6 +24706,11 @@ msgstr ""
 msgid "One per line; empty = any."
 msgstr ""
 
+#. Description of a DocType
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:5
+msgid "One row per recipient and channel of every notification, with its delivery result."
+msgstr ""
+
 #. Description of the 'Default Advance Account' (Link) field in DocType
 #. 'Payment Reconciliation'
 #. 'Process Payment Reconciliation'
@@ -24676,11 +24775,11 @@ msgstr ""
 msgid "Only draft documents can be sent for approval."
 msgstr ""
 
-#: automotive_core/integration_hub/outbox.py:211
+#: automotive_core/integration_hub/outbox.py:214
 msgid "Only failed or dead-lettered messages can be retried."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:297
+#: automotive_core/integration_hub/inbound.py:301
 msgid "Only failed, rejected or dead-lettered messages can be replayed."
 msgstr ""
 
@@ -24875,8 +24974,25 @@ msgctxt "Description of a list view shortcut"
 msgid "Open list item"
 msgstr ""
 
+#: automotive_core/templates/emails/kanban_overdue.html:2
+msgid "Open the Kanban signal"
+msgstr ""
+
 #: frappe/public/js/frappe/ui/sidebar/dock.js:152
 msgid "Open the app dock"
+msgstr ""
+
+#: automotive_core/templates/emails/approval_decided.html:2
+#: automotive_core/templates/emails/approval_requested.html:3
+msgid "Open the approval request"
+msgstr ""
+
+#: automotive_core/templates/emails/integration_dead_letter.html:3
+msgid "Open the message"
+msgstr ""
+
+#: automotive_core/templates/emails/quality_hold_raised.html:3
+msgid "Open the quality hold"
 msgstr ""
 
 #. Description of the 'Use Kanban v2 (New Experience)' (Check) field in DocType
@@ -27241,6 +27357,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:207
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:218
 #: automotive_core/governance/doctype/approval_request/approval_request.json:199
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:83
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:209
 msgid "Plant Director"
 msgstr ""
@@ -29247,6 +29364,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:216
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:222
 #: automotive_core/governance/doctype/approval_request/approval_request.json:204
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:139
 #: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:238
 msgid "Procurement Manager"
 msgstr ""
@@ -29329,6 +29447,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:315
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:266
 #: automotive_core/governance/doctype/approval_request/approval_request.json:259
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:174
 msgid "Product Engineer"
 msgstr ""
 
@@ -29474,6 +29593,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:279
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:250
 #: automotive_core/governance/doctype/approval_request/approval_request.json:239
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:90
 msgid "Production Planner"
 msgstr ""
 
@@ -29487,6 +29607,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:270
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:246
 #: automotive_core/governance/doctype/approval_request/approval_request.json:234
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:97
 msgid "Production Supervisor"
 msgstr ""
 
@@ -30353,6 +30474,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:324
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:270
 #: automotive_core/governance/doctype/approval_request/approval_request.json:264
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:118
 msgid "Quality Inspector"
 msgstr ""
 
@@ -30370,7 +30492,13 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:234
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:230
 #: automotive_core/governance/doctype/approval_request/approval_request.json:214
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:125
 msgid "Quality Manager"
+msgstr ""
+
+#: automotive_core/templates/emails/quality_hold_raised.subject.html:1
+#, python-brace-format
+msgid "Quality hold {0}: {1}"
 msgstr ""
 
 #: erpnext/buying/doctype/purchase_order/purchase_order.js:831
@@ -30587,6 +30715,11 @@ msgstr ""
 #: frappe/core/doctype/report/report.json:101
 #: frappe/public/js/frappe/views/reports/query_report.js:17
 msgid "Query Report"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:70
+msgid "Queued"
 msgstr ""
 
 #: erpnext/accounts/doctype/journal_entry/journal_entry.js:635
@@ -31049,6 +31182,11 @@ msgstr ""
 msgid "Reason for hold:"
 msgstr ""
 
+#: automotive_core/templates/emails/quality_hold_raised.html:2
+#, python-brace-format
+msgid "Reason: {0}"
+msgstr ""
+
 #: frappe/public/js/frappe/views/reports/query_report.js:1013
 msgid "Rebuild"
 msgstr ""
@@ -31166,6 +31304,11 @@ msgstr ""
 
 #: frappe/core/doctype/data_import/data_import.js:3120
 msgid "Recent activity"
+msgstr ""
+
+#. Label of the recipient (Link) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:50
+msgid "Recipient"
 msgstr ""
 
 #. Label of the recipient_section (Section Break) field in DocType
@@ -31327,25 +31470,9 @@ msgstr ""
 msgid "Redo last action"
 msgstr ""
 
-#. Label of the linked_with (Section Break) field in DocType 'Address'
-#. Label of the contact_details (Section Break) field in DocType 'Contact'
-#. Label of the reference_section (Section Break) field in DocType 'Activity
-#. Log'
-#. Label of the reference_section (Section Break) field in DocType
-#. 'Communication'
-#. Label of the reference (Dynamic Link) field in DocType 'Permission Log'
-#. Label of the section_break_6 (Section Break) field in DocType 'ToDo'
-#. Label of the reference_section (Section Break) field in DocType 'Integration
-#. Request'
-#: frappe/contacts/doctype/address/address.json:155
-#: frappe/contacts/doctype/contact/contact.json:138
-#: frappe/core/doctype/activity_log/activity_log.json:88
-#: frappe/core/doctype/communication/communication.json:232
-#: frappe/core/doctype/permission_log/permission_log.json:112
-#: frappe/core/doctype/user_type/user_type_dashboard.py:5
-#: frappe/desk/doctype/todo/todo.json:95 frappe/desk/report/todo/todo.py:42
-#: frappe/integrations/doctype/integration_request/integration_request.json:118
-#: frappe/public/js/frappe/views/interaction.js:54
+#. Label of the reference_name (Dynamic Link) field in DocType 'Notification
+#. Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:88
 msgid "Reference"
 msgstr ""
 
@@ -31358,13 +31485,9 @@ msgstr ""
 msgid "Reference Date for Early Payment Discount"
 msgstr ""
 
-#. Label of the reference_doctype (Link) field in DocType 'Error Log'
-#. Label of the ref_doctype (Link) field in DocType 'Submission Queue'
-#. Label of the reference_doctype (Link) field in DocType 'Email Template'
-#: frappe/core/doctype/error_log/error_log.json:53
-#: frappe/core/doctype/submission_queue/submission_queue.json:33
-#: frappe/email/doctype/email_template/email_template.json:31
-#: frappe/public/js/frappe/data_import/data_import_dialog.js:17
+#. Label of the reference_doctype (Link) field in DocType 'Notification
+#. Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:81
 msgid "Reference DocType"
 msgstr ""
 
@@ -34624,6 +34747,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:243
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:234
 #: automotive_core/governance/doctype/approval_request/approval_request.json:219
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:160
 msgid "Sales Manager"
 msgstr ""
 
@@ -36125,21 +36249,15 @@ msgstr ""
 msgid "Sending"
 msgstr ""
 
-#. Option for the 'Delivery Status' (Select) field in DocType 'Communication'
-#. Option for the 'Sent or Received' (Select) field in DocType 'Communication'
-#. Option for the 'Status' (Select) field in DocType 'Email Queue'
-#. Option for the 'Status' (Select) field in DocType 'Email Queue Recipient'
-#: frappe/core/doctype/communication/communication.json:127
-#: frappe/core/doctype/communication/communication.json:183
-#: frappe/email/doctype/email_queue/email_queue.json:64
-#: frappe/email/doctype/email_queue_recipient/email_queue_recipient.json:25
-#: frappe/templates/includes/login/login.js:95
-#: frappe/templates/includes/login/login.js:351
+#. Option for the 'Status' (Select) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:70
 msgid "Sent"
 msgstr ""
 
+#. Label of the sent_at (Datetime) field in DocType 'Notification Dispatch'
 #. Label of the delivered_at (Datetime) field in DocType 'Integration Outbound
 #. Message'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:108
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:122
 msgid "Sent At"
 msgstr ""
@@ -36489,6 +36607,7 @@ msgstr ""
 #. Label of the naming_series (Select) field in DocType 'Approval Decision'
 #. Label of the naming_series (Select) field in DocType 'Approval Delegation'
 #. Label of the naming_series (Select) field in DocType 'Approval Request'
+#. Label of the naming_series (Select) field in DocType 'Notification Dispatch'
 #. Label of the naming_series (Select) field in DocType 'User Provisioning
 #. Request'
 #. Label of the naming_series (Select) field in DocType 'Integration Inbound
@@ -36502,6 +36621,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:31
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:32
 #: automotive_core/governance/doctype/approval_request/approval_request.json:35
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:28
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:36
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:37
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:35
@@ -38203,6 +38323,7 @@ msgstr ""
 #. Label of the status (Select) field in DocType 'Approval Delegation'
 #. Label of the status (Select) field in DocType 'Approval Request'
 #. Label of the status (Select) field in DocType 'Approval Request Step'
+#. Label of the status (Select) field in DocType 'Notification Dispatch'
 #. Label of the status (Select) field in DocType 'User Provisioning Request'
 #. Label of the status (Select) field in DocType 'Idempotency Record'
 #. Label of the status (Select) field in DocType 'Integration Inbound Message'
@@ -38214,6 +38335,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:89
 #: automotive_core/governance/doctype/approval_request/approval_request.json:87
 #: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:53
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:69
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:114
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:65
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:97
@@ -38272,6 +38394,11 @@ msgstr ""
 #: frappe/public/js/frappe/ui/slides.js:350
 #, python-brace-format
 msgid "Step {0} of {1}"
+msgstr ""
+
+#: automotive_core/templates/emails/approval_requested.html:2
+#, python-brace-format
+msgid "Step {0}: {1}"
 msgstr ""
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Approval
@@ -39158,27 +39285,8 @@ msgstr ""
 msgid "Subdivision"
 msgstr ""
 
-#. Label of the subject (Data) field in DocType 'Auto Repeat'
-#. Label of the subject (Small Text) field in DocType 'Activity Log'
-#. Label of the subject (Text) field in DocType 'Comment'
-#. Label of the subject (Small Text) field in DocType 'Communication'
-#. Label of the subject (Small Text) field in DocType 'Event'
-#. Label of the subject (Text) field in DocType 'Notification Log'
-#. Label of the subject (Data) field in DocType 'Email Template'
-#. Label of the subject (Data) field in DocType 'Notification'
-#: frappe/automation/doctype/auto_repeat/auto_repeat.json:151
-#: frappe/core/doctype/activity_log/activity_log.json:38
-#: frappe/core/doctype/comment/comment.json:41
-#: frappe/core/doctype/communication/communication.json:65
-#: frappe/desk/doctype/event/event.json:73
-#: frappe/desk/doctype/notification_log/notification_log.json:174
-#: frappe/email/doctype/email_template/email_template.json:25
-#: frappe/email/doctype/notification/notification.js:214
-#: frappe/email/doctype/notification/notification.json:104
-#: frappe/public/js/frappe/form/doctype_settings/tabs/notification.js:127
-#: frappe/public/js/frappe/views/communication.js:200
-#: frappe/public/js/frappe/views/communication.js:573
-#: frappe/public/js/frappe/views/inbox/inbox_view.js:63
+#. Label of the subject (Data) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:95
 msgid "Subject"
 msgstr ""
 
@@ -39798,6 +39906,11 @@ msgstr ""
 msgid "Supported Variables:"
 msgstr ""
 
+#. Option for the 'Status' (Select) field in DocType 'Notification Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:70
+msgid "Suppressed"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Driver'
 #. Option for the 'Status' (Select) field in DocType 'Employee'
 #: erpnext/setup/doctype/driver/driver.json:50
@@ -39878,6 +39991,8 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:184
 #: automotive_core/governance/doctype/approval_request/approval_request.json:178
 #: automotive_core/governance/doctype/audit_event/audit_event.json:154
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:132
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:50
 #: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:77
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:189
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:114
@@ -42939,6 +43054,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:225
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:226
 #: automotive_core/governance/doctype/approval_request/approval_request.json:209
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:153
 msgid "Treasury Approver"
 msgstr ""
 
@@ -43015,6 +43131,10 @@ msgstr ""
 #. Label of the tuesday (Check) field in DocType 'Shift Pattern'
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:69
 msgid "Tuesday"
+msgstr ""
+
+#: automotive_core/governance/notifications.py:113
+msgid "Turned off in the recipient's notification preferences"
 msgstr ""
 
 #. Label of the two_factor_auth (Check) field in DocType 'Role'
@@ -43467,6 +43587,12 @@ msgstr ""
 #: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:19
 #, python-brace-format
 msgid "Unknown inbound message types: {0}"
+msgstr ""
+
+#: automotive_core/governance/notifications.py:102
+#: automotive_core/governance/notifications.py:170
+#, python-brace-format
+msgid "Unknown notification event {0}"
 msgstr ""
 
 #: automotive_core/integration_hub/inbound.py:170
@@ -44017,10 +44143,12 @@ msgstr ""
 #. Label of the user (Link) field in DocType 'Partner User Access'
 #. Label of the user (Link) field in DocType 'Plant Assignment'
 #. Label of a Link in the Automotive Setup Workspace
+#. Label of the user (Link) field in DocType 'Notification Preference'
 #. Label of the user (Link) field in DocType 'Idempotency Record'
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:38
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:59
 #: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:104
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:19
 #: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:14
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:53
 msgid "User"
@@ -44966,6 +45094,7 @@ msgstr ""
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:333
 #: automotive_core/governance/doctype/approval_policy/approval_policy.json:274
 #: automotive_core/governance/doctype/approval_request/approval_request.json:269
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:111
 msgid "Warehouse Clerk"
 msgstr ""
 
@@ -45445,6 +45574,12 @@ msgstr ""
 #: frappe/public/js/frappe/views/workspace/workspace.js:869
 #: frappe/public/js/frappe/views/workspace/workspace.js:1168
 msgid "Who can see this workspace"
+msgstr ""
+
+#. Description of the 'Detail' (Small Text) field in DocType 'Notification
+#. Dispatch'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:112
+msgid "Why it was suppressed, or the mail server's error."
 msgstr ""
 
 #. Option for the 'Marital Status' (Select) field in DocType 'Employee'
@@ -46452,6 +46587,15 @@ msgstr ""
 msgid "You need write permission on {0} {1} to rename"
 msgstr ""
 
+#: automotive_core/templates/emails/approval_decided.html:3
+#: automotive_core/templates/emails/approval_requested.html:4
+#: automotive_core/templates/emails/automotive_footer.html:2
+#: automotive_core/templates/emails/integration_dead_letter.html:4
+#: automotive_core/templates/emails/kanban_overdue.html:3
+#: automotive_core/templates/emails/quality_hold_raised.html:4
+msgid "You receive this because of your role in Hinode Automotive Group. Choose how you are notified in your notification preferences."
+msgstr ""
+
 #: frappe/public/js/frappe/form/footer/version_timeline_content_builder.js:313
 #, python-brace-format
 msgid "You removed 1 row from {0}"
@@ -46527,6 +46671,11 @@ msgstr ""
 
 #: frappe/public/js/frappe/list/bulk_operations.js:142
 msgid "Your PDF is ready for download"
+msgstr ""
+
+#: automotive_core/templates/emails/approval_decided.html:1
+#, python-brace-format
+msgid "Your approval request for {0} {1} is {2}."
 msgstr ""
 
 #: frappe/core/doctype/file/file.js:98
@@ -46609,6 +46758,22 @@ msgstr ""
 
 #: frappe/public/js/frappe/ui/sidebar/dock_manager.js:290
 msgid "app ships this off"
+msgstr ""
+
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "approval.decided"
+msgstr ""
+
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "approval.requested"
 msgstr ""
 
 #: erpnext/manufacturing/doctype/bom/bom.js:1078
@@ -46810,6 +46975,14 @@ msgstr ""
 msgid "hub"
 msgstr ""
 
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "integration.dead_letter"
+msgstr ""
+
 #. Option for the 'Message Type' (Select) field in DocType 'Integration Inbound
 #. Message'
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:69
@@ -46837,6 +47010,14 @@ msgstr ""
 
 #: frappe/public/js/frappe/utils/pretty_date.js:48
 msgid "just now"
+msgstr ""
+
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "kanban.overdue"
 msgstr ""
 
 #: frappe/desk/desktop.py:267 frappe/desk/query_report.py:401
@@ -47000,6 +47181,14 @@ msgstr ""
 #: frappe/desk/doctype/custom_workspace/custom_workspace.json:87
 #: frappe/desk/doctype/workspace/workspace.json:226
 msgid "purple"
+msgstr ""
+
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "quality.hold_raised"
 msgstr ""
 
 #: frappe/public/js/frappe/widgets/widget_dialog.js:101
@@ -47519,6 +47708,11 @@ msgstr ""
 #: frappe/public/js/frappe/form/sidebar/form_sidebar_users.js:72
 #, python-brace-format
 msgid "{0} are currently {1}"
+msgstr ""
+
+#: automotive_core/templates/emails/approval_requested.html:1
+#, python-brace-format
+msgid "{0} asks for your approval of {1} {2}."
 msgstr ""
 
 #: frappe/desk/doctype/todo/todo.py:48 frappe/desk/form/activity.py:355
@@ -48726,7 +48920,7 @@ msgstr ""
 msgid "{0} {1}: Submitted Record cannot be deleted. You must {2} Cancel {3} it first."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:520
+#: automotive_core/templates/emails/approval_decided.subject.html:1
 #, python-brace-format
 msgid "{0} {1}: approval {2}"
 msgstr ""

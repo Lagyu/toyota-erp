@@ -508,17 +508,20 @@ def get_status(doctype: str, name: str) -> dict:
 
 
 def _notify_step(req) -> None:
+	from automotive_core.governance.notifications import notify
+
 	step = _current_step(req)
 	if not step:
 		return
 	users = [step.approver_user] if step.approver_user else _users_with_role(step.approver_role, req.company)
-	_notify(users, req, _("Approval needed: {0} {1} (step {2}: {3})").format(
-		_(req.reference_doctype), req.reference_name, step.step_no, step.step_name))
+	notify("approval.requested", users, "Approval Request", req.name, step_no=step.step_no, step_name=step.step_name,
+		requester=frappe.utils.get_fullname(req.requested_by))
 
 
 def _notify_requester(req) -> None:
-	_notify([req.requested_by], req, _("{0} {1}: approval {2}").format(
-		_(req.reference_doctype), req.reference_name, _(req.status).lower()))
+	from automotive_core.governance.notifications import notify
+
+	notify("approval.decided", [req.requested_by], "Approval Request", req.name)
 
 
 def _users_with_role(role: str, company: str | None) -> list[str]:
@@ -527,23 +530,6 @@ def _users_with_role(role: str, company: str | None) -> list[str]:
 	)
 	enabled = set(frappe.get_all("User", filters={"name": ("in", users), "enabled": 1}, pluck="name")) if users else set()
 	return sorted(u for u in enabled if u not in ("Administrator", "Guest"))[:50]
-
-
-def _notify(users: list[str], req, subject: str) -> None:
-	if frappe.flags.in_import or frappe.flags.automotive_bulk or not users:
-		return
-	from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
-
-	enqueue_create_notification(
-		users,
-		{
-			"type": "Alert",
-			"document_type": "Approval Request",
-			"document_name": req.name,
-			"subject": subject,
-			"from_user": frappe.session.user,
-		},
-	)
 
 
 def is_delegation_valid_on(delegation, on_date: str | None = None) -> bool:

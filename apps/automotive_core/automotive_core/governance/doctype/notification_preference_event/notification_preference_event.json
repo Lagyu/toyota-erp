@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "creation": "2026-10-24 15:07:15.927816",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "event",
+  "in_app",
+  "email"
+ ],
+ "fields": [
+  {
+   "fieldname": "event",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Event",
+   "options": "approval.requested\napproval.decided\nkanban.overdue\nquality.hold_raised\nintegration.dead_letter",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "in_app",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "In The Desk"
+  },
+  {
+   "default": "1",
+   "fieldname": "email",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "By E-mail"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-24 15:07:15.927816",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "Notification Preference Event",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

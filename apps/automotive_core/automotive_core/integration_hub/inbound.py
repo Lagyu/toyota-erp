@@ -259,6 +259,10 @@ def _finish(msg, status: str, error: str | None = None) -> str:
 	if status in ("Dead Letter", "Rejected"):
 		audit.record(f"integration.inbound.{status.lower().replace(' ', '_')}", msg.doctype, msg.name,
 			{"partner": msg.partner, "message_id": msg.message_id, "error": msg.last_error})
+	if status == "Dead Letter":
+		from automotive_core.governance.notifications import dead_letter
+
+		dead_letter(msg.doctype, msg.name)
 	log("integration.inbound." + status.lower().replace(" ", "_"), inbound=msg.name, partner=msg.partner,
 		message_id=msg.message_id, attempts=msg.attempts, error=msg.last_error)
 	commit()

@@ -19,8 +19,10 @@ def after_migrate() -> None:
 	settings.ensure_defaults()
 	db_guards.apply()
 	from automotive_core.analytics import catalog
+	from automotive_core.governance import notifications
 
 	catalog.sync()
+	notifications.ensure_templates()
 	frappe.clear_cache()
 
 

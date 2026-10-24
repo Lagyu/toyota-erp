@@ -194,6 +194,9 @@ def on_hold_insert(doc) -> None:
 	audit.record("quality.hold_raised", doc.doctype, doc.name,
 		{"scope": doc.hold_scope, "item": doc.item, "batch": doc.batch_no, "serial": doc.serial_no,
 		 "work_order": doc.work_order, "reason": doc.reason}, company=doc.company)
+	from automotive_core.governance.notifications import notify, users_with_role
+
+	notify("quality.hold_raised", users_with_role("Quality Manager", doc.plant), doc.doctype, doc.name)
 
 
 def validate_hold(doc) -> None:
