@@ -7,7 +7,7 @@ app_license = "GPL-3.0-only"
 
 required_apps = ["frappe", "erpnext", "automotive_core"]
 
-after_install = "automotive_manufacturing.setup.install.after_migrate"
+after_install = "automotive_manufacturing.setup.install.after_install"
 after_migrate = "automotive_manufacturing.setup.install.after_migrate"
 
 app_include_js = ["automotive_manufacturing.bundle.js"]

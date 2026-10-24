@@ -202,6 +202,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The month-end exchange-rate revaluation of foreign-currency balances failed: no company had
   an unrealized exchange gain/loss account. The tenant setup creates one beside the realised
   Exchange Gain/Loss account, and a patch adds it to existing sites.
+- On a new site the manufacturing and supply-chain reports were offered to roles that cannot
+  run them, and those apps' KPI definitions were missing until the next migration: the core
+  setup (permissions, report roles, KPI catalogue) ran before their DocTypes and reports were
+  installed. Each of those apps now runs it again when it is installed.
 
 ### Operations
 - Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5
