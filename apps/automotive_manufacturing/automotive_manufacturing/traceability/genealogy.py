@@ -125,7 +125,7 @@ def backfill(limit: int | None = None) -> int:
 	names = frappe.db.sql_list(
 		"""select se.name from `tabStock Entry` se where se.docstatus = 1 and se.purpose in ('Manufacture', 'Repack')
 		and not exists (select 1 from `tabGenealogy Link` gl where gl.stock_entry = se.name)
-		order by se.posting_date, se.posting_time, se.creation""" + (f" limit {int(limit)}" if limit else ""))
+		order by se.posting_date, se.posting_time, se.creation limit %(limit)s""", {"limit": int(limit or 10**9)})
 	for name in names:
 		on_stock_entry_submit(frappe.get_doc("Stock Entry", name))
 	return len(names)
