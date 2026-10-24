@@ -23,6 +23,8 @@ if ! "${compose[@]}" exec -T backend test -f "sites/$site/site_config.json"; the
 		"bench new-site '$site' --mariadb-user-host-login-scope='%' --db-root-password \"\$DB_ROOT\" \
 		--admin-password \"\$ADMIN\" --install-app erpnext"
 fi
+# an encryption key from the start (lib/common.sh: two processes creating one at once lose data)
+"${compose[@]}" exec -T backend env/bin/python -c "$ENSURE_ENCRYPTION_KEY_PY" "$site"
 installed=$(bench --site "$site" list-apps)
 for app in automotive_core automotive_manufacturing automotive_supply_chain automotive_portals; do
 	grep -qw "$app" <<<"$installed" || bench --site "$site" install-app "$app"

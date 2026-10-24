@@ -7,7 +7,8 @@
 The client sends ``Idempotency-Key``. The first call inserts an In Progress record
 (unique scope key) *in the same transaction* as its business effect and stores the
 response; a concurrent duplicate blocks on the unique index until the first commits
-and then replays the stored response. Reusing a key for a different request is a 422.
+and then replays the stored response, read in a new transaction (its own snapshot
+predates the first's commit). Reusing a key for a different request is a 422.
 Records expire after 7 days (integration_hub.maintenance.prune).
 """
 
@@ -75,9 +76,16 @@ def idempotent(endpoint: str, required: bool = True):
 			try:
 				frappe.db.savepoint("idempotency")
 				record.insert()
-			except frappe.DuplicateEntryError:
-				frappe.db.rollback(save_point="idempotency")
-				return _replay(_load(scope), request_hash)
+			except (frappe.DuplicateEntryError, frappe.UniqueValidationError):
+				# the scope key is a unique field, not the name: Frappe reports UniqueValidationError.
+				# This insert waited for the first request to commit; nothing is written yet, so
+				# start over in a new transaction, whose snapshot sees the first one's record.
+				frappe.db.rollback()
+				frappe.clear_messages()  # the duplicate entry message is not this request's answer
+				existing = _load(scope)
+				if not existing:
+					raise IdempotencyInProgressError(_("A request with this Idempotency-Key is still being processed."))
+				return _replay(existing, request_hash)
 			result = fn(*args, **kwargs)
 			record.db_set({"status": "Completed", "response": json.dumps(result, default=str), "http_status": 200},
 				update_modified=False)

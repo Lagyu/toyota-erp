@@ -72,6 +72,26 @@ update_password("Administrator", sys.stdin.read().strip())
 frappe.db.commit()
 frappe.destroy()'
 
+# Python for a frappe container (the bench's env/bin/python, working directory: the bench)
+# that gives the site an encryption key if it has none. Frappe creates one only at the first
+# encrypted field, and two processes doing that at once (a worker still holding the site
+# config of a minute ago, say) each write their own: values encrypted with the first no
+# longer decrypt. The key is never printed.
+#   compose exec -T backend env/bin/python -c "$ENSURE_ENCRYPTION_KEY_PY" SITE
+# shellcheck disable=SC2034
+ENSURE_ENCRYPTION_KEY_PY='import json, os, sys
+from cryptography.fernet import Fernet
+path = os.path.join("sites", sys.argv[1], "site_config.json")
+with open(path) as handle:
+	config = json.load(handle)
+if not config.get("encryption_key"):
+	config["encryption_key"] = Fernet.generate_key().decode()
+	tmp = path + ".tmp"
+	with open(os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), "w") as handle:
+		json.dump(config, handle, indent=1, sort_keys=True)
+	os.replace(tmp, path)
+	print("encryption key created")'
+
 # Python for a frappe container (working directory: the bench) that sets one
 # site_config.json key to the value on its stdin. Unlike bench set-config, the value never
 # appears on a command line, and one that starts with "-" (token_urlsafe gives those) is

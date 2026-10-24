@@ -12,6 +12,7 @@ Run against a reference stack whose personas and journey fixtures are prepared
 
 from __future__ import annotations
 
+import datetime
 import json
 import os
 import unittest
@@ -111,6 +112,7 @@ class TestConcurrency(unittest.TestCase):
 		expense = value("Account", {"company": company, "root_type": "Expense", "account_type": "", "is_group": 0}, "name")
 		cost_center = value("Company", {"name": company}, "cost_center")
 		draft = {"doctype": "Journal Entry", "company": company, "user_remark": "[concurrency]",
+			"posting_date": datetime.date.today().isoformat(),
 			"accounts": [{"account": expense, "debit_in_account_currency": 10, "cost_center": cost_center},
 				{"account": cash, "credit_in_account_currency": 10, "cost_center": cost_center}]}
 		status, saved = admin.request("POST", "/api/method/frappe.client.insert",
