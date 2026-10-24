@@ -78,6 +78,9 @@ automotive_kpi_definitions = ["automotive_core.analytics.kpis.DEFINITIONS"]
 
 boot_session = "automotive_core.boot.boot_session"
 
+# File: unreadable PDF content is refused like any mismatch (automotive_core.files.policy)
+override_doctype_class = {"File": "automotive_core.files.policy.AutomotiveFile"}
+
 doc_events = {
 	"*": {
 		"before_submit": "automotive_core.governance.approvals.enforce_on_submit",

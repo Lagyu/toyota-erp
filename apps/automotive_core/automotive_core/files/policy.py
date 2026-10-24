@@ -7,6 +7,7 @@ from __future__ import annotations
 import filetype
 import frappe
 from frappe import _
+from frappe.core.doctype.file.file import File
 from frappe.utils import add_days, cint, now_datetime, nowdate
 
 from automotive_core.governance import audit
@@ -45,6 +46,21 @@ SNIFFED = {
 
 class AttachmentRejectedError(frappe.ValidationError):
 	pass
+
+
+class AutomotiveFile(File):
+	"""Frappe's File, refusing unreadable content cleanly: Frappe parses an uploaded PDF
+	(looking for JavaScript) before any validation, and a file that only claims to be a PDF
+	made the parser fail with a server error instead of a refusal."""
+
+	def before_insert(self):
+		try:
+			super().before_insert()
+		except Exception as exc:
+			if type(exc).__module__.split(".")[0] != "pypdf":
+				raise
+			raise AttachmentRejectedError(_("The file content does not match its .{0} extension.").format(
+				_extension(self.file_name or self.file_url) or "?")) from exc
 
 
 def _settings():

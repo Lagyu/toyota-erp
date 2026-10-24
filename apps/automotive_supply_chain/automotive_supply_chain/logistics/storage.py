@@ -86,11 +86,11 @@ def putaway_applies(receipt) -> bool:
 
 def _open_requests(forward: str) -> dict[str, float]:
 	"""Quantity still to transfer into the forward store, per item, on submitted requests."""
-	return dict(frappe.db.sql("""select mri.item_code, sum(mri.stock_qty - ifnull(mri.transferred_qty, 0))
+	return dict(frappe.db.sql("""select mri.item_code, sum(mri.stock_qty - ifnull(mri.ordered_qty, 0))
 		from `tabMaterial Request Item` mri join `tabMaterial Request` mr on mr.name = mri.parent
 		where mr.docstatus = 1 and mr.material_request_type = 'Material Transfer'
 		and mr.status not in ('Stopped', 'Cancelled', 'Transferred') and mri.warehouse = %s
-		and mri.stock_qty > ifnull(mri.transferred_qty, 0) group by mri.item_code""", forward))
+		and mri.stock_qty > ifnull(mri.ordered_qty, 0) group by mri.item_code""", forward))
 
 
 def raise_transfer_requests(plant: str) -> str | None:
@@ -155,7 +155,7 @@ def open_transfer_requests(plant: str) -> list[str]:
 		join `tabMaterial Request Item` mri on mri.parent = mr.name
 		where mr.docstatus = 1 and mr.material_request_type = 'Material Transfer' and mr.company = %s
 		and mr.status not in ('Stopped', 'Cancelled', 'Transferred') and mri.warehouse = %s
-		and mri.stock_qty > ifnull(mri.transferred_qty, 0)
+		and mri.stock_qty > ifnull(mri.ordered_qty, 0)
 		order by mr.transaction_date, mr.name""", (doc.company, doc.raw_material_warehouse))
 
 
