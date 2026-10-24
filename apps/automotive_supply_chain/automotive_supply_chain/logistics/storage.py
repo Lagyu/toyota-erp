@@ -73,14 +73,15 @@ def putaway_applies(receipt) -> bool:
 	"""Put-away for a receipt into a plant's forward store whose parts have put-away rules.
 	ERPNext applies the rules to every line of a document, so a receipt that also delivers
 	elsewhere (line side, say) is left as it is."""
-	warehouses = {row.warehouse for row in receipt.items}
+	rows = receipt.get("items") or []  # a document or a plain dict
+	warehouses = {row.warehouse for row in rows}
 	if len(warehouses) != 1:
 		return False
 	forward = warehouses.pop()
 	if not frappe.db.exists("Plant", {"raw_material_warehouse": forward, "reserve_warehouse": ("is", "set")}):
 		return False
 	return bool(frappe.db.exists("Putaway Rule", {"company": receipt.company, "disable": 0,
-		"item_code": ("in", sorted({row.item_code for row in receipt.items}))}))
+		"item_code": ("in", sorted({row.item_code for row in rows}))}))
 
 
 def _open_requests(forward: str) -> dict[str, float]:

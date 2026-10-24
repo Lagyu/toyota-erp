@@ -65,7 +65,8 @@ class TestAttachmentPolicy(IntegrationTestCase):
 			"attached_to_doctype": doctype, "attached_to_name": docname or self.todo.name}).insert(ignore_permissions=True)
 
 	def test_types_sizes_content_and_privacy(self):
-		self.assertTrue(self.attach("delivery-note.pdf", PDF).automotive_sha256)
+		accepted = self.attach("delivery-note.pdf", PDF)
+		self.assertTrue(frappe.db.get_value("File", accepted.name, "automotive_sha256"))  # recorded after insert
 		with self.assertRaises(AttachmentRejectedError):  # not an allowed type
 			self.attach("tool.exe", b"MZ\x90\x00")
 		with self.assertRaises(AttachmentRejectedError):  # an executable named as a PDF
