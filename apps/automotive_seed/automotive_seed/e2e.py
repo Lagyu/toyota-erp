@@ -206,7 +206,10 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	  price to Aichi;
 	- ``j10`` partner messaging: an EDI supplier with an open, unannounced order line and a
 	  fresh inbound signing secret for its HTTPS channel (the test signs like the partner's
-	  system would).
+	  system would);
+	- ``j02`` pull replenishment: a blanket order covering today for every supplier Kanban
+	  loop, the call-offs' terms (a dataset whose period ended weeks before the run has
+	  expired ones: the buyer renews them).
 
 	Writes the JSON to ``output`` (mode 0600: it holds the partner secret) and returns a
 	summary; without ``output`` returns the fixtures."""
@@ -224,6 +227,7 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	fixtures["j09"] = _from_stock(variants)
 	fixtures["j01"] = _build_to_order(variants, exclude={(fixtures["j09"] or {}).get("variant")})
 	fixtures["j10"] = _edi_supplier()
+	fixtures["j02"] = _current_blanket_orders()
 	fixtures["j06"] = _receipt_to_invoice(company)
 	fixtures["j07"] = _intercompany_supply()
 	fixtures["j04"] = _engineering_change()
@@ -237,7 +241,8 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 			f"journeys: j01 {(fixtures['j01'] or {}).get('variant')} ({staged} components staged), "
 			f"j04 {(fixtures['j04'] or {}).get('bom')}, j05 {(fixtures['j05'] or {}).get('batch_no')}, j06 {(fixtures['j06'] or {}).get('purchase_receipt')}, "
 			f"j07 {(fixtures['j07'] or {}).get('item_code')}, j08 {(fixtures['j08'] or {}).get('vin')}, "
-			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}"
+			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}, "
+			f"j02 {len(fixtures['j02']['renewed'])} blanket order(s) renewed"
 		)
 	return fixtures
 
@@ -499,6 +504,49 @@ def _edi_supplier() -> dict | None:
 			**line[0],
 		}
 	return None
+
+
+def _current_blanket_orders() -> dict:
+	"""Kanban call-offs are released against the supplier's blanket order valid today (the
+	same rule as the call-off itself). Each expired or used-up one a supplier loop relies on is
+	renewed by the buyer who agreed it, for the next three months, with its items, quantities
+	and rates."""
+	from frappe.utils import add_days, getdate
+
+	from automotive_supply_chain.supplier_collaboration.schedules import _blanket_order_for
+
+	today = getdate(nowdate())
+	stale: set[str] = set()
+	for loop in frappe.get_all(
+		"Kanban Loop",
+		filters={"status": "Active", "supply_type": "Supplier", "blanket_order": ("is", "set")},
+		fields=["supplier", "item_code", "plant", "blanket_order"],
+	):
+		company = frappe.get_cached_value("Plant", loop.plant, "company")
+		if not _blanket_order_for(loop.supplier, company, loop.item_code, today):
+			stale.add(loop.blanket_order)
+	renewed, caller = [], frappe.session.user
+	for name in sorted(stale):
+		old = frappe.get_doc("Blanket Order", name)
+		frappe.set_user(old.owner)  # the buyer who agreed the first one
+		try:
+			new = frappe.get_doc(
+				{
+					"doctype": "Blanket Order",
+					"blanket_order_type": "Purchasing",
+					"supplier": old.supplier,
+					"company": old.company,
+					"from_date": add_days(today, -1),
+					"to_date": add_days(today, 90),
+					"items": [{"item_code": i.item_code, "qty": i.qty, "rate": i.rate} for i in old.items],
+				}
+			)
+			new.insert()
+			new.submit()
+		finally:
+			frappe.set_user(caller)
+		renewed.append({"previous": name, "blanket_order": new.name, "supplier": old.supplier})
+	return {"renewed": renewed}
 
 
 def _receipt_to_invoice(company: str) -> dict | None:

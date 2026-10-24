@@ -10,7 +10,8 @@
 #   reboot-guest.sh before          data to find again: a ToDo, a private file, an off-host backup
 #   reboot-guest.sh mark            a ToDo committed just before the power loss
 #   reboot-guest.sh after LABEL     step 11's checks after LABEL (the reboot, the power loss)
-# Each phase appends its report rows to ~/reboot/rows.md and keeps its logs in ~/reboot/;
+# Each phase writes its report rows to its own file, ~/reboot/rows-PHASE[-LABEL].md (a file
+# appended to before the power loss can lose its last lines), and keeps its logs in ~/reboot/;
 # exit status 1 when one of its steps failed.
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
@@ -20,7 +21,6 @@ export LOG_TAG=reboot-guest
 load_env_file "$REPO_ROOT/infra/ci-tools.env"
 out=$HOME/reboot
 mkdir -p "$out"
-report=$out/rows.md
 state=$out/state.env  # what the later phases look for (KEY=VALUE lines, the last one wins)
 ENV=/etc/hinode/production.env
 SITE=erp.hinode.test
@@ -159,9 +159,15 @@ phase_after() {
 
 	step "$label: Docker started at boot"
 	boot=$(cat /proc/sys/kernel/random/boot_id)
+	# after an unclean stop the engine takes longer to start (containerd recovers its state)
+	for _ in $(seq 1 60); do
+		[[ $(systemctl is-active docker.service) == active ]] && break
+		sleep 5
+	done
 	if [[ $boot != "$BOOT_ID" && $(systemctl is-active docker.service) == active \
 			&& $(systemctl show docker.service -p Slice --value) == erp.slice ]]; then
-		pass "a new boot at $booted; docker.service active in erp.slice"
+		pass "a new boot at $booted; docker.service active in erp.slice since $(date -u -d \
+			"$(systemctl show docker.service -p ActiveEnterTimestamp --value)" +%H:%M:%SZ)"
 	else
 		fail "boot ${boot:0:8} (before: ${BOOT_ID:0:8}); docker.service $(systemctl is-active docker.service), slice $(systemctl show docker.service -p Slice --value)"
 	fi
@@ -237,6 +243,10 @@ phase_after() {
 
 phase=${1:?usage: reboot-guest.sh host|install IMAGE|before|mark|after LABEL}
 shift
+# rows-after-power-loss.md for "after 'Power loss'" (reboot-check.sh reads it by that name)
+report=$out/rows-$phase.md
+if [[ $phase == after ]]; then report=$out/rows-after-$(tr 'A-Z ' 'a-z-' <<<"${1:-}" | tr -dc 'a-z0-9-').md; fi
+: >"$report"
 case $phase in
 	host | install | before | mark | after) "phase_$phase" "$@" ;;
 	*) die "unknown phase $phase" ;;

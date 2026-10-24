@@ -55,15 +55,19 @@ wait_boot() { # until the guest answers over SSH from a boot other than $boot (t
 	done
 	return 1
 }
-rows_seen=0
 phase() { # PHASE [ARGS...] of reboot-guest.sh: its report rows join this report
-	local status=0 rows
+	local status=0 rows file
 	guest "cd /srv/toyota-erp && bash scripts/ci/reboot-guest.sh $(printf '%q ' "$@")" >>"$out/guest.log" 2>&1 || status=$?
-	rows=$(guest 'cat ~/reboot/rows.md 2>/dev/null' | tail -n +$((rows_seen + 1)) || true)
+	# the phase's own rows file, named by reboot-guest.sh after the phase (and the label of "after")
+	file=rows-$1.md
+	if [[ $1 == after ]]; then file=rows-after-$(tr 'A-Z ' 'a-z-' <<<"${2:-}" | tr -dc 'a-z0-9-').md; fi
+	rows=$(guest "cat ~/reboot/$file" 2>/dev/null || true)
 	if [[ -n $rows ]]; then
 		printf '%s\n' "$rows" >>"$report"
-		rows_seen=$((rows_seen + $(wc -l <<<"$rows")))
 		failures=$((failures + $(grep -c '\*\*FAILED\*\*' <<<"$rows" || true)))
+	else
+		echo "| Guest phase: $* | **FAILED** | 0 | no report rows (exit status $status; see guest.log) |" >>"$report"
+		failures=$((failures + 1))
 	fi
 	return "$status"
 }

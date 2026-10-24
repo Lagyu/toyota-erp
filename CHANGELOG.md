@@ -247,14 +247,17 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 ### Operations
 - The journeys can run on a deployment closer to a live one: `journeys.yml` restores a
   dataset.yml export (the standard dataset) on a reference stack with the scheduler on and runs
-  the browser and API suites there (`e2e.sh IMAGE --dataset DIR --scheduler`).
+  the browser and API suites there (`e2e.sh IMAGE --dataset DIR --scheduler`). The journeys'
+  preparation renews the supplier Kanban loops' blanket orders that a dataset generated weeks
+  before the run has let expire (J-02 calls off against them).
 - A real reboot and a power loss are rehearsed in CI: the rehearsal workflow's `reboot` job
   installs the commit by the install runbook on a fresh Ubuntu 24.04 VM under KVM (Docker from
   the Ubuntu archive, the production example's settings with ClamAV, monitoring and restic on
   S3), reboots it, then resets it without a shutdown, and after each restart checks the runbook's
   step 11: Docker started at boot, every service back, the site and its smoke test, the data
   (a ToDo committed just before the reset included), scheduler, workers, cron, ClamAV,
-  monitoring and an off-host backup (`scripts/ci/reboot-check.sh`).
+  monitoring and an off-host backup (`scripts/ci/reboot-check.sh`). After the power loss it
+  waits for Docker, which takes longer to start after an unclean stop.
 - `install-docker-ubuntu.sh` waits for a fresh host's first-boot package jobs (apt-daily,
   unattended upgrades) instead of failing on the package lock.
 - The production rehearsal observes a scheduled backup and restore drill: it brings the cron
