@@ -47,11 +47,11 @@ def supplier(name: str, group: str = "Production Material", partner_code: str | 
 	return name
 
 
-def portal_user(email: str, party_type: str, party: str) -> str:
+def portal_user(email: str, party_type: str, party: str, role: str = "Administrator") -> str:
 	make_user(email, [], user_type="Website User")
 	if not frappe.db.exists("Partner User Access", {"user": email, "status": "Active"}):
 		frappe.get_doc({"doctype": "Partner User Access", "user": email, "party_type": party_type,
-			"supplier" if party_type == "Supplier" else "customer": party, "partner_role": "Administrator",
+			"supplier" if party_type == "Supplier" else "customer": party, "partner_role": role,
 			"from_date": nowdate()}).insert(ignore_permissions=True)
 	return email
 

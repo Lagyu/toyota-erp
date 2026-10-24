@@ -5,7 +5,8 @@
 {% block style %}{{ include_style("portal.bundle.css") }}{% endblock %}
 
 {% block page_content %}
-<main id="hinode-portal" data-portal="supplier" data-party-name="{{ party_name | e }}">
+<main id="hinode-portal" data-portal="supplier" data-party-name="{{ party_name | e }}"
+	data-capabilities="{{ capabilities | e }}">
 	<noscript>{{ _("This portal needs JavaScript.") }}</noscript>
 	<p class="hp-loading">{{ _("Loading…") }}</p>
 </main>

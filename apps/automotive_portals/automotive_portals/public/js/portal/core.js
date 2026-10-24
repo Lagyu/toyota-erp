@@ -250,15 +250,18 @@ export function form({ legend, fields, submitLabel, onSubmit, region }) {
 	return el;
 }
 
+// counters the server left out (not for the user's portal role) are not shown
 export function counters(items) {
-	return h("ul", { class: "hp-counters" }, items.map((item) =>
+	return h("ul", { class: "hp-counters" }, items.filter((item) => item.value !== undefined).map((item) =>
 		h("li", {}, h("button", { type: "button", class: "hp-counter", onclick: item.onClick },
 			h("span", { class: "hp-counter-value" }, fmtNumber(item.value, 0)),
 			h("span", { class: "hp-counter-label" }, item.label)))));
 }
 
 // Tabs following the WAI-ARIA tabs pattern (arrow keys move between tabs).
-export function shell(root, { title, party, tabs }) {
+export function shell(root, { title, party, tabs: all, can }) {
+	// a tab that needs a capability the portal role lacks is left out (the server refuses it anyway)
+	const tabs = all.filter((tab) => !tab.needs || !can || can.has(tab.needs));
 	const alertRegion = h("div", { class: "hp-alert", role: "alert", tabindex: "-1" });
 	const panel = h("section", { class: "hp-panel", role: "tabpanel", tabindex: "0" });
 	const buttons = tabs.map((tab, index) =>

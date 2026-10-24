@@ -9,24 +9,29 @@ import {
 const M = "automotive_portals.api.dealer.";
 const cart = [];
 
-export function mountDealer(root, { party }) {
+let can = new Set();
+
+export function mountDealer(root, { party, can: allowed }) {
+	can = allowed || new Set();
 	shell(root, {
 		title: __("Dealer Portal"),
 		party,
+		can,
 		tabs: [
 			{ key: "overview", label: __("Overview"), render: overview },
-			{ key: "configure", label: __("Configure & Order"), render: configure },
-			{ key: "orders", label: __("Orders"), render: orders },
-			{ key: "inventory", label: __("Allocated Vehicles"), render: inventory },
-			{ key: "deliveries", label: __("Deliveries"), render: deliveries },
-			{ key: "invoices", label: __("Invoices"), render: invoices },
-			{ key: "support", label: __("Support"), render: support },
+			{ key: "configure", label: __("Configure & Order"), render: configure, needs: "order" },
+			{ key: "orders", label: __("Orders"), render: orders, needs: "orders" },
+			{ key: "inventory", label: __("Allocated Vehicles"), render: inventory, needs: "inventory" },
+			{ key: "deliveries", label: __("Deliveries"), render: deliveries, needs: "deliveries" },
+			{ key: "invoices", label: __("Invoices"), render: invoices, needs: "invoices" },
+			{ key: "support", label: __("Support"), render: support, needs: "support" },
 		],
 	});
 }
 
 async function overview({ go }) {
-	const [d, balance] = await Promise.all([api.get(`${M}dashboard`), api.get(`${M}outstanding_balance`)]);
+	const [d, balance] = await Promise.all([api.get(`${M}dashboard`),
+		can.has("invoices") ? api.get(`${M}outstanding_balance`) : Promise.resolve(null)]);
 	return h("div", {},
 		counters([
 			{ label: __("Open orders"), value: d.open_orders, onClick: () => go("orders") },
@@ -35,7 +40,7 @@ async function overview({ go }) {
 			{ label: __("Open invoices"), value: d.open_invoices, onClick: () => go("invoices") },
 			{ label: __("Open support requests"), value: d.open_support_requests, onClick: () => go("support") },
 		]),
-		section(__("Outstanding balance"), Object.keys(balance).length
+		balance && section(__("Outstanding balance"), Object.keys(balance).length
 			? h("ul", {}, Object.entries(balance).map(([currency, amount]) => h("li", {}, fmtMoney(amount, currency))))
 			: h("p", { class: "hp-empty" }, __("Nothing outstanding."))));
 }
@@ -180,7 +185,7 @@ async function orders({ go, name, alert }) {
 async function orderDetail(name, go, alert) {
 	const o = await api.get(`${M}order`, { name });
 	const changeable = o.status === "Accepted";
-	const changeForm = changeable ? form({
+	const changeForm = changeable && can.has("order") ? form({
 		legend: __("Request a change"),
 		submitLabel: __("Send change request"),
 		region: alert,
@@ -271,7 +276,7 @@ async function inventory() {
 
 async function deliveries({ go, alert, accept }) {
 	const list = await api.get(`${M}deliveries`);
-	if (accept) {
+	if (accept && can.has("accept_delivery")) {
 		const dn = list.find((d) => d.name === accept);
 		return h("div", {}, back(go, "deliveries", __("Back to deliveries")), form({
 			legend: __("Accept delivery {0}", [accept]),
@@ -305,7 +310,7 @@ async function deliveries({ go, alert, accept }) {
 			{ label: __("Vehicles"), render: (r) => r.vehicles.join(", ") },
 			{ label: __("Transport"), render: (r) => status(r.delivery_status) },
 			{ label: __("Your acceptance"), render: (r) => (r.automotive_acceptance_status && r.automotive_acceptance_status !== "Pending"
-				? status(r.automotive_acceptance_status)
+				|| !can.has("accept_delivery") ? status(r.automotive_acceptance_status || "Pending")
 				: h("button", { type: "button", class: "hp-button hp-primary", onclick: () => go("deliveries", { accept: r.name }) },
 					__("Record acceptance"))) },
 		],
@@ -332,9 +337,10 @@ async function invoices() {
 }
 
 async function support({ go, alert }) {
-	const [list, vehicles] = await Promise.all([api.get(`${M}support_requests`), api.get(`${M}inventory`)]);
+	const [list, vehicles] = await Promise.all([api.get(`${M}support_requests`),
+		can.has("inventory") ? api.get(`${M}inventory`) : Promise.resolve([])]);
 	return h("div", {},
-		form({
+		can.has("raise_support") && form({
 			legend: __("New support request"),
 			submitLabel: __("Send request"),
 			region: alert,

@@ -15,13 +15,14 @@ from frappe.utils import flt, now_datetime
 
 from automotive_core.governance import elevation
 from automotive_core.integration_hub.idempotency import idempotent
-from automotive_supply_chain.partners import require_party
+from automotive_supply_chain.partners import capabilities, require_capability, require_party
 
 PAGE = 50
 
 
-def _supplier() -> str:
-	return require_party("Supplier")
+def _supplier(capability: str | None = None) -> str:
+	"""The caller's own supplier (and, with ``capability``, that their portal role allows it)."""
+	return require_capability("Supplier", capability) if capability else require_party("Supplier")
 
 
 def _owned(doctype: str, name: str, supplier: str, field: str = "supplier"):
@@ -32,26 +33,31 @@ def _owned(doctype: str, name: str, supplier: str, field: str = "supplier"):
 
 @frappe.whitelist()
 def dashboard() -> dict[str, Any]:
+	"""Counters for the overview, only those the caller's portal role may see."""
 	supplier = _supplier()
-	return {
-		"supplier": supplier,
-		"orders_awaiting_ack": frappe.db.count("Purchase Order", {"supplier": supplier, "docstatus": 1,
-			"automotive_ack_status": "Awaiting"}),
-		"open_orders": frappe.db.count("Purchase Order", {"supplier": supplier, "docstatus": 1,
-			"status": ("not in", ("Completed", "Closed"))}),
-		"asns_in_transit": frappe.db.count("Advance Shipping Notice", {"supplier": supplier,
-			"status": ("in", ("In Transit", "Arrived"))}),
-		"open_discrepancies": frappe.db.count("Receipt Discrepancy", {"supplier": supplier, "status": "Open"}),
-		"unread_notices": frappe.db.count("Supplier Notice", {"supplier": supplier, "read_at": ("is", "not set")}),
-		"schedules_to_acknowledge": frappe.db.count("Supplier Delivery Schedule", {"supplier": supplier,
-			"status": "Published"}),
-		"open_rfqs": len(_rfqs(supplier, only_open=True)),
+	allowed = capabilities("Supplier")
+	counters = {
+		"orders_awaiting_ack": ("orders", lambda: frappe.db.count("Purchase Order", {"supplier": supplier,
+			"docstatus": 1, "automotive_ack_status": "Awaiting"})),
+		"open_orders": ("orders", lambda: frappe.db.count("Purchase Order", {"supplier": supplier, "docstatus": 1,
+			"status": ("not in", ("Completed", "Closed"))})),
+		"asns_in_transit": ("shipments", lambda: frappe.db.count("Advance Shipping Notice", {"supplier": supplier,
+			"status": ("in", ("In Transit", "Arrived"))})),
+		"open_discrepancies": ("receipts", lambda: frappe.db.count("Receipt Discrepancy", {"supplier": supplier,
+			"status": "Open"})),
+		"unread_notices": ("notices", lambda: frappe.db.count("Supplier Notice", {"supplier": supplier,
+			"read_at": ("is", "not set")})),
+		"schedules_to_acknowledge": ("schedules", lambda: frappe.db.count("Supplier Delivery Schedule",
+			{"supplier": supplier, "status": "Published"})),
+		"open_rfqs": ("quote", lambda: len(_rfqs(supplier, only_open=True))),
 	}
+	return {"supplier": supplier, "capabilities": allowed,
+		**{key: count() for key, (capability, count) in counters.items() if capability in allowed}}
 
 
 @frappe.whitelist()
 def orders(status: str | None = None, page: int = 0) -> list[dict]:
-	supplier = _supplier()
+	supplier = _supplier("orders")
 	filters: dict[str, Any] = {"supplier": supplier, "docstatus": 1}
 	if status == "awaiting":
 		filters["automotive_ack_status"] = "Awaiting"
@@ -63,7 +69,7 @@ def orders(status: str | None = None, page: int = 0) -> list[dict]:
 
 @frappe.whitelist()
 def order(name: str) -> dict:
-	supplier = _supplier()
+	supplier = _supplier("orders")
 	po = _owned("Purchase Order", name, supplier)
 	if po.docstatus != 1:
 		raise frappe.PermissionError(_("Not found."))
@@ -84,7 +90,7 @@ def acknowledge(purchase_order: str, response: str, lines: list | str | None = N
 		supplier_reference: str | None = None) -> dict:
 	import json
 
-	supplier = _supplier()
+	supplier = _supplier("acknowledge")
 	_owned("Purchase Order", purchase_order, supplier)
 	rows = json.loads(lines) if isinstance(lines, str) else (lines or [])
 	doc = frappe.get_doc({"doctype": "Supplier Order Acknowledgement", "purchase_order": purchase_order,
@@ -102,7 +108,7 @@ def create_asn(supplier_asn_no: str, ship_date: str, expected_arrival: str, line
 		carrier: str | None = None, tracking_no: str | None = None, packages: int | None = None) -> dict:
 	import json
 
-	supplier = _supplier()
+	supplier = _supplier("ship")
 	rows = json.loads(lines) if isinstance(lines, str) else lines
 	for row in rows:
 		_owned("Purchase Order", row["purchase_order"], supplier)
@@ -119,7 +125,7 @@ def create_asn(supplier_asn_no: str, ship_date: str, expected_arrival: str, line
 @frappe.whitelist()
 def open_lines() -> list[dict]:
 	"""Order lines the supplier can still announce on an ASN (ordered minus already announced)."""
-	supplier = _supplier()
+	supplier = _supplier("shipments")
 	rows = frappe.db.sql("""select poi.parent purchase_order, poi.name po_item, poi.item_code, poi.item_name, poi.qty,
 			poi.uom, poi.schedule_date, ifnull(poi.automotive_promised_date, poi.schedule_date) promised_date,
 			i.has_batch_no, i.has_serial_no,
@@ -139,7 +145,7 @@ def open_lines() -> list[dict]:
 
 @frappe.whitelist()
 def asn(name: str) -> dict:
-	doc = _owned("Advance Shipping Notice", name, _supplier())
+	doc = _owned("Advance Shipping Notice", name, _supplier("shipments"))
 	return {"name": doc.name, "supplier_asn_no": doc.supplier_asn_no, "status": doc.status,
 		"ship_date": str(doc.ship_date), "expected_arrival": str(doc.expected_arrival), "carrier": doc.carrier,
 		"tracking_no": doc.tracking_no, "packages": doc.packages,
@@ -150,21 +156,21 @@ def asn(name: str) -> dict:
 
 @frappe.whitelist()
 def asns(page: int = 0) -> list[dict]:
-	return frappe.get_all("Advance Shipping Notice", filters={"supplier": _supplier(), "docstatus": ("<", 2)},
+	return frappe.get_all("Advance Shipping Notice", filters={"supplier": _supplier("shipments"), "docstatus": ("<", 2)},
 		fields=["name", "supplier_asn_no", "ship_date", "expected_arrival", "status", "carrier", "tracking_no"],
 		order_by="ship_date desc", limit_start=int(page) * PAGE, limit_page_length=PAGE, ignore_permissions=True)
 
 
 @frappe.whitelist()
 def schedules() -> list[dict]:
-	return frappe.get_all("Supplier Delivery Schedule", filters={"supplier": _supplier(), "docstatus": 1},
+	return frappe.get_all("Supplier Delivery Schedule", filters={"supplier": _supplier("schedules"), "docstatus": 1},
 		fields=["name", "plant", "schedule_version", "horizon_start", "horizon_end", "status", "published_at"],
 		order_by="published_at desc", limit_page_length=PAGE, ignore_permissions=True)
 
 
 @frappe.whitelist()
 def schedule(name: str) -> dict:
-	doc = _owned("Supplier Delivery Schedule", name, _supplier())
+	doc = _owned("Supplier Delivery Schedule", name, _supplier("schedules"))
 	return {"name": doc.name, "version": doc.schedule_version, "status": doc.status, "plant": doc.plant,
 		"lines": [{"item_code": ln.item_code, "delivery_date": str(ln.delivery_date), "qty": ln.qty, "firm": ln.firm,
 			"purchase_order": ln.purchase_order} for ln in doc.lines]}
@@ -174,27 +180,27 @@ def schedule(name: str) -> dict:
 def acknowledge_schedule(name: str) -> str:
 	from automotive_supply_chain.supplier_collaboration.schedules import acknowledge_schedule as ack
 
-	_owned("Supplier Delivery Schedule", name, _supplier())
+	_owned("Supplier Delivery Schedule", name, _supplier("confirm_schedule"))
 	return ack(name)
 
 
 @frappe.whitelist()
 def discrepancies() -> list[dict]:
-	return frappe.get_all("Receipt Discrepancy", filters={"supplier": _supplier()}, fields=["name", "item_code",
+	return frappe.get_all("Receipt Discrepancy", filters={"supplier": _supplier("receipts")}, fields=["name", "item_code",
 		"discrepancy_type", "expected_qty", "received_qty", "rejected_qty", "status", "resolution", "creation"],
 		order_by="creation desc", limit_page_length=PAGE, ignore_permissions=True)
 
 
 @frappe.whitelist()
 def notices() -> list[dict]:
-	return frappe.get_all("Supplier Notice", filters={"supplier": _supplier()}, fields=["name", "subject",
+	return frappe.get_all("Supplier Notice", filters={"supplier": _supplier("notices")}, fields=["name", "subject",
 		"notice_type", "message", "read_at", "creation"], order_by="creation desc", limit_page_length=PAGE,
 		ignore_permissions=True)
 
 
 @frappe.whitelist(methods=["POST"])
 def mark_notice_read(name: str) -> None:
-	doc = _owned("Supplier Notice", name, _supplier())
+	doc = _owned("Supplier Notice", name, _supplier("notices"))
 	if not doc.read_at:
 		frappe.db.set_value("Supplier Notice", name, "read_at", now_datetime())
 
@@ -202,7 +208,7 @@ def mark_notice_read(name: str) -> None:
 @frappe.whitelist()
 def remittances(page: int = 0) -> list[dict]:
 	"""Payments made to the supplier and the invoices they settled (remittance advice)."""
-	supplier = _supplier()
+	supplier = _supplier("payments")
 	payments = frappe.get_all("Payment Entry", filters={"party_type": "Supplier", "party": supplier, "docstatus": 1,
 		"payment_type": "Pay"}, fields=["name", "posting_date", "paid_amount", "paid_from_account_currency",
 		"reference_no", "reference_date"], order_by="posting_date desc", limit_start=int(page) * PAGE,
@@ -217,7 +223,7 @@ def remittances(page: int = 0) -> list[dict]:
 
 @frappe.whitelist()
 def invoices_status() -> list[dict]:
-	return frappe.get_all("Purchase Invoice", filters={"supplier": _supplier(), "docstatus": ("<", 2)},
+	return frappe.get_all("Purchase Invoice", filters={"supplier": _supplier("payments"), "docstatus": ("<", 2)},
 		fields=["name", "bill_no", "bill_date", "grand_total", "outstanding_amount", "status",
 			"automotive_match_status", "due_date"], order_by="bill_date desc", limit_page_length=PAGE,
 		ignore_permissions=True)
@@ -241,7 +247,7 @@ def _rfqs(supplier: str, only_open: bool = False) -> list[dict]:
 
 @frappe.whitelist()
 def rfqs() -> list[dict]:
-	return _rfqs(_supplier())
+	return _rfqs(_supplier("quote"))
 
 
 def _invited(rfq_name: str, supplier: str):
@@ -255,7 +261,7 @@ def _invited(rfq_name: str, supplier: str):
 
 @frappe.whitelist()
 def rfq(name: str) -> dict:
-	supplier = _supplier()
+	supplier = _supplier("quote")
 	doc = _invited(name, supplier)
 	quotes = frappe.get_all("Supplier Quotation Item", filters={"request_for_quotation": doc.name,
 		"docstatus": ("<", 2)}, fields=["parent"], distinct=True, pluck="parent", ignore_permissions=True)
@@ -283,7 +289,7 @@ def submit_quotation(rfq_name: str, lines: list | str, valid_till: str, lead_tim
 		validate_existing_supplier_quotation,
 	)
 
-	supplier = _supplier()
+	supplier = _supplier("quote")
 	doc = _invited(rfq_name, supplier)
 	validate_existing_supplier_quotation(supplier, doc.name)
 	rows = json.loads(lines) if isinstance(lines, str) else lines
@@ -315,7 +321,7 @@ def submit_quotation(rfq_name: str, lines: list | str, valid_till: str, lead_tim
 
 @frappe.whitelist()
 def quotations() -> list[dict]:
-	return frappe.get_all("Supplier Quotation", filters={"supplier": _supplier(), "docstatus": ("<", 2)},
+	return frappe.get_all("Supplier Quotation", filters={"supplier": _supplier("quote"), "docstatus": ("<", 2)},
 		fields=["name", "transaction_date", "valid_till", "grand_total", "currency", "status"],
 		order_by="transaction_date desc", limit_page_length=PAGE, ignore_permissions=True)
 
@@ -323,7 +329,7 @@ def quotations() -> list[dict]:
 @frappe.whitelist()
 def receipts(page: int = 0) -> list[dict]:
 	"""Goods receipts against the supplier's deliveries (accepted / rejected quantities)."""
-	supplier = _supplier()
+	supplier = _supplier("receipts")
 	rows = frappe.get_all("Purchase Receipt", filters={"supplier": supplier, "docstatus": 1, "is_return": 0},
 		fields=["name", "posting_date", "supplier_delivery_note", "automotive_asn", "status"],
 		order_by="posting_date desc", limit_start=int(page) * PAGE, limit_page_length=PAGE, ignore_permissions=True)
@@ -336,7 +342,7 @@ def receipts(page: int = 0) -> list[dict]:
 @frappe.whitelist()
 def shipment_documents(asn: str) -> list[dict]:
 	"""Files attached to one of the supplier's ASNs (packing lists, certificates)."""
-	_owned("Advance Shipping Notice", asn, _supplier())
+	_owned("Advance Shipping Notice", asn, _supplier("shipments"))
 	return frappe.get_all("File", filters={"attached_to_doctype": "Advance Shipping Notice", "attached_to_name": asn},
 		fields=["name", "file_name", "file_url", "file_size", "creation"], order_by="creation asc",
 		ignore_permissions=True)

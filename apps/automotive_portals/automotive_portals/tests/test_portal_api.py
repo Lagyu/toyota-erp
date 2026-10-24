@@ -247,3 +247,43 @@ class TestDealerPortal(PortalTestCase):
 			self.assertEqual(context.party, self.dealer)
 			with self.assertRaises(frappe.PermissionError):
 				supplier_portal.get_context(frappe._dict())
+
+
+class TestPortalRoles(PortalTestCase):
+	"""ERP-10.4: a partner user's portal role decides which portal functions they may use."""
+
+	def test_supplier_roles(self):
+		supplier = h.supplier("Role Test Supplier")
+		logistics = h.portal_user("logistics@role-supplier.example", "Supplier", supplier, role="Logistics")
+		finance = h.portal_user("finance@role-supplier.example", "Supplier", supplier, role="Finance")
+		with as_user(logistics):
+			self.assertEqual(supplier_api.asns(), [])
+			self.assertNotIn("open_rfqs", supplier_api.dashboard())
+			with self.assertRaises(frappe.PermissionError):
+				supplier_api.remittances()
+			with self.assertRaises(frappe.PermissionError):
+				supplier_api.acknowledge("PO-NONE", "Accepted", idempotency_key="role-ack-1")
+		with as_user(finance):
+			self.assertEqual(supplier_api.remittances(), [])
+			with self.assertRaises(frappe.PermissionError):
+				supplier_api.create_asn("ASN-ROLE-1", nowdate(), nowdate(), [], idempotency_key="role-asn-1")
+			self.assertEqual(supplier_api.dashboard()["capabilities"], ["notices", "payments"])
+
+	def test_dealer_roles(self):
+		dealer = frappe.get_doc({"doctype": "Customer", "customer_name": "Role Test Dealer",
+			"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+			"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True).name
+		viewer = h.portal_user("viewer@role-dealer.example", "Customer", dealer, role="Viewer")
+		finance = h.portal_user("finance@role-dealer.example", "Customer", dealer, role="Finance")
+		with as_user(viewer):
+			self.assertEqual(dealer_api.orders(), [])
+			with self.assertRaises(frappe.PermissionError):
+				dealer_api.place_order("ROLE-1", add_days(nowdate(), 30), [], idempotency_key="role-order-1")
+			with self.assertRaises(frappe.PermissionError):
+				dealer_api.invoices()
+			self.assertNotIn("open_invoices", dealer_api.dashboard())
+		with as_user(finance):
+			self.assertEqual(dealer_api.invoices(), [])
+			with self.assertRaises(frappe.PermissionError):
+				dealer_api.deliveries()
+

@@ -15,7 +15,7 @@ from urllib.parse import quote
 import frappe
 from frappe import _
 
-from automotive_supply_chain.partners import party_of_user
+from automotive_supply_chain.partners import capabilities, party_of_user
 
 PARTY_NAME_FIELD = {"Supplier": "supplier_name", "Customer": "customer_name"}
 BUNDLE = Path(__file__).parent / "public" / "js" / "portal"
@@ -35,6 +35,7 @@ def portal_context(context, party_type: str, title: str) -> None:
 	context.title = title
 	context.party = mine[1]
 	context.party_name = frappe.db.get_value(party_type, mine[1], PARTY_NAME_FIELD[party_type]) or mine[1]
+	context.capabilities = frappe.as_json(capabilities(party_type), indent=None)
 	context.translated_messages = script_json(_messages(frappe.local.lang))
 
 

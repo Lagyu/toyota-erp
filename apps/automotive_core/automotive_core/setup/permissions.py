@@ -70,6 +70,8 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Bank Account", "Treasury Approver", READ),
 	("Bank", "Treasury Approver", READ),
 	("Bank Account", "AP Clerk", WRITE),
+	# AP matches invoices against the orders (ERPNext's Accounts User reads receipts, not orders)
+	("Purchase Order", "AP Clerk", READ),
 	# AP books import costs (freight, duty) into the received goods' valuation
 	("Landed Cost Voucher", "AP Clerk", SUBMIT),
 	# Procurement: blanket (scheduling) agreements are negotiated by buyers and approved by

@@ -9,19 +9,23 @@ import {
 
 const M = "automotive_portals.api.supplier.";
 
-export function mountSupplier(root, { party }) {
+let can = new Set();
+
+export function mountSupplier(root, { party, can: allowed }) {
+	can = allowed || new Set();
 	shell(root, {
 		title: __("Supplier Portal"),
 		party,
+		can,
 		tabs: [
 			{ key: "overview", label: __("Overview"), render: overview },
-			{ key: "rfqs", label: __("RFQs & Quotations"), render: rfqs },
-			{ key: "orders", label: __("Orders"), render: orders },
-			{ key: "schedules", label: __("Delivery Schedules"), render: schedules },
-			{ key: "shipments", label: __("Shipments (ASN)"), render: shipments },
-			{ key: "receipts", label: __("Receipts & Discrepancies"), render: receipts },
-			{ key: "payments", label: __("Invoices & Remittances"), render: payments },
-			{ key: "notices", label: __("Notices"), render: notices },
+			{ key: "rfqs", label: __("RFQs & Quotations"), render: rfqs, needs: "quote" },
+			{ key: "orders", label: __("Orders"), render: orders, needs: "orders" },
+			{ key: "schedules", label: __("Delivery Schedules"), render: schedules, needs: "schedules" },
+			{ key: "shipments", label: __("Shipments (ASN)"), render: shipments, needs: "shipments" },
+			{ key: "receipts", label: __("Receipts & Discrepancies"), render: receipts, needs: "receipts" },
+			{ key: "payments", label: __("Invoices & Remittances"), render: payments, needs: "payments" },
+			{ key: "notices", label: __("Notices"), render: notices, needs: "notices" },
 		],
 	});
 }
@@ -169,7 +173,7 @@ async function orderDetail(name, go, alert) {
 		date: field({ label: __("Promised date for {0}", [line.item_code]), name: `date-${line.row}`, type: "date",
 			value: line.promised_date || line.schedule_date }),
 	}));
-	const ackForm = awaiting ? form({
+	const ackForm = awaiting && can.has("acknowledge") ? form({
 		legend: __("Acknowledge this order"),
 		submitLabel: __("Send acknowledgement"),
 		region: alert,
@@ -220,7 +224,7 @@ async function orderDetail(name, go, alert) {
 async function schedules({ go, name, alert }) {
 	if (name) {
 		const s = await api.get(`${M}schedule`, { name });
-		const ack = s.status === "Published"
+		const ack = s.status === "Published" && can.has("confirm_schedule")
 			? h("button", { type: "button", class: "hp-button hp-primary", onclick: async (e) => {
 				e.target.disabled = true;
 				try {
@@ -267,11 +271,11 @@ async function schedules({ go, name, alert }) {
 
 async function shipments({ go, name, create, alert }) {
 	if (name) return asnDetail(name, go, alert);
-	if (create) return asnForm(go, alert);
+	if (create && can.has("ship")) return asnForm(go, alert);
 	const list = await api.get(`${M}asns`);
 	return h("div", {},
-		h("button", { type: "button", class: "hp-button hp-primary", onclick: () => go("shipments", { create: true }) },
-			__("Announce a shipment")),
+		can.has("ship") && h("button", { type: "button", class: "hp-button hp-primary",
+			onclick: () => go("shipments", { create: true }) }, __("Announce a shipment")),
 		table({
 			caption: __("Advance shipping notices"),
 			rows: list,

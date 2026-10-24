@@ -244,8 +244,13 @@ def dealers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[st
 						"tax_id": f"{region}-D{8_000_000 + i:08d}",
 						"requested_credit_limit": 400_000_000 if region == "JP" else 3_000_000, "price_list": price_list,
 						"authorized_models": [{"vehicle_model": m} for m in ("H1", "H2", "H3")],
+						# the dealer principal administers the portal account; larger dealers add a
+						# logistics contact who receives the vehicles (portal roles, ERP-10.4)
 						"contacts": [{"first_name": first, "last_name": last,
-							"email": f"orders@{code.lower()}.dealer.example", "partner_role": "Sales"}]})
+							"email": f"orders@{code.lower()}.dealer.example", "partner_role": "Administrator"},
+							*([{"first_name": f2, "last_name": l2, "email": f"yard@{code.lower()}.dealer.example",
+								"partner_role": "Logistics"} for f2, l2 in [names.person(rng, region)]]
+								if rng.random() < float(ctx.profile["partners"]["second_portal_user_share"]) else [])]})
 					doc.insert()
 					req = approvals.request_approval(doc.doctype, doc.name)
 				with ctx.as_user(sales_mgr):
