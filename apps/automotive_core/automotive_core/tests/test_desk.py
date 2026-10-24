@@ -30,6 +30,27 @@ class TestDesk(IntegrationTestCase):
 			frappe.get_doc({"doctype": "User Permission", "user": cls.aichi_user, "allow": "Company",
 				"for_value": AICHI, "apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
 
+	def test_every_report_a_persona_is_offered_runs_for_them(self):
+		"""ERP-12.2, GATE-1: workspaces and sidebars offer the reports a user's roles may open; each
+		of them must also run, which needs the right to report on its DocType (setup/permissions.py,
+		align_report_roles)."""
+		from frappe.desk.desk_views import DeskViews
+
+		from automotive_core.setup.permissions import align_report_roles
+		from automotive_core.setup.roles import ROLE_PROFILES
+
+		align_report_roles()
+		self.assertEqual(align_report_roles(), [])  # already aligned: nothing changes
+		for profile, roles in ROLE_PROFILES.items():
+			if profile.endswith("Portal User"):
+				continue
+			user = make_user(f"reports.{profile.lower().replace(' ', '-')}@hinode.example", roles)
+			with as_user(user):
+				offered = DeskViews.get_allowed_reports(user=user)
+				dead = sorted(name for name, row in offered.items()
+					if row.get("ref_doctype") and not frappe.has_permission(row["ref_doctype"], "report"))
+			self.assertEqual(dead, [], profile)
+
 	def test_workspaces_render(self):
 		from frappe.desk.desktop import get_desktop_page
 

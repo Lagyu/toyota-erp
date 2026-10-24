@@ -16,6 +16,7 @@ def after_migrate() -> None:
 	roles.ensure_role_profiles()
 	custom_fields.apply()
 	permissions.apply()
+	permissions.align_report_roles()
 	settings.ensure_defaults()
 	db_guards.apply()
 	from automotive_core.analytics import catalog

@@ -183,3 +183,41 @@ def apply() -> None:
 	for doctype, role, ptypes in PERMLEVEL_1:
 		_grant(doctype, role, ptypes, permlevel=1)
 	frappe.clear_cache()
+
+
+def report_roles(doctype: str) -> set[str]:
+	"""Roles that may run reports on ``doctype`` (the "report" right at level 0), read as Frappe
+	reads them: from its Custom DocPerms when it has any, else from its DocPerms."""
+	table = "Custom DocPerm" if frappe.db.exists("Custom DocPerm", {"parent": doctype}) else "DocPerm"
+	return set(frappe.get_all(table, filters={"parent": doctype, "permlevel": 0, "report": 1}, pluck="role"))
+
+
+def align_report_roles() -> list[str]:
+	"""Workspaces and sidebars offer the reports a user's roles may open, but a report runs only
+	for roles that may report on its DocType: for anyone else its link answers "no permission"
+	(ERP-12.2, GATE-1). A report whose roles go beyond those (or that names none, so is open to
+	all) gets a Custom Role naming only the roles that can run it, which takes it off the others'
+	navigation. Re-applied on every migrate, so reports that upgrades add are aligned too.
+	Returns the reports changed."""
+	changed = []
+	for report in frappe.get_all("Report", filters={"disabled": 0}, fields=["name", "ref_doctype"], order_by="name"):
+		if not report.ref_doctype or not frappe.db.exists("DocType", report.ref_doctype):
+			continue
+		able = report_roles(report.ref_doctype)
+		if "All" in able:
+			continue
+		custom = frappe.db.get_value("Custom Role", {"report": report.name}, "name")
+		current = set(frappe.get_all("Has Role", filters={"parenttype": "Custom Role" if custom else "Report",
+			"parent": custom or report.name}, pluck="role"))
+		# an empty Custom Role would not hide the report: Administrator keeps it
+		wanted = ((current & able) if current else able) or {"Administrator"}
+		if wanted == current:
+			continue
+		doc = frappe.get_doc("Custom Role", custom) if custom else frappe.new_doc("Custom Role")
+		doc.update({"report": report.name, "ref_doctype": report.ref_doctype})
+		doc.set("roles", [{"role": role} for role in sorted(wanted)])
+		doc.flags.ignore_permissions = True
+		doc.save()
+		changed.append(report.name)
+	return changed
+

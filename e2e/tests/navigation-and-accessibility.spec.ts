@@ -32,11 +32,19 @@ function collect(node: unknown, from: string, out: Map<string, Target>, seen = n
 	}
 }
 
-async function opens(page: Page, target: Target): Promise<string | null> {
+/** Whether the target opens for the signed-in user, by the call the desk makes to open it: a
+ * list's count, a single DocType's form, a report's script, a page. */
+async function opens(page: Page, target: Target, singles: Set<string>): Promise<string | null> {
 	try {
-		if (target.type === "DocType") await call(page, "frappe.desk.reportview.get_count", { doctype: target.to });
-		else if (target.type === "Report") await call(page, "frappe.desk.query_report.get_script", { report_name: target.to });
-		else await call(page, "frappe.desk.desk_page.get", { name: target.to });
+		if (target.type === "DocType" && singles.has(target.to)) {
+			await call(page, "frappe.desk.form.load.getdoc", { doctype: target.to, name: target.to });
+		} else if (target.type === "DocType") {
+			await call(page, "frappe.desk.reportview.get_count", { doctype: target.to });
+		} else if (target.type === "Report") {
+			await call(page, "frappe.desk.query_report.get_script", { report_name: target.to });
+		} else {
+			await call(page, "frappe.desk.desk_page.getpage", { name: target.to });
+		}
 		return null;
 	} catch (e) {
 		return `${target.type} ${target.to} (from ${target.from}): ${String((e as Error).message).slice(0, 160)}`;
@@ -49,7 +57,8 @@ for (const persona of DESK_PERSONAS) {
 		await openDesk(page);
 		const boot = await page.evaluate(() => {
 			const b = (window as any).frappe.boot;
-			return { sidebars: b.module_sidebars || {}, workspaces: (b.allowed_workspaces || []).map((w: any) => w.name) };
+			return { sidebars: b.module_sidebars || {}, workspaces: (b.allowed_workspaces || []).map((w: any) => w.name),
+				singles: (b.single_types || []) as string[] };
 		});
 		const targets = new Map<string, Target>();
 		collect(boot.sidebars, "sidebar", targets);
@@ -59,7 +68,8 @@ for (const persona of DESK_PERSONAS) {
 			collect(desk, `workspace ${name}`, targets);
 		}
 		expect(targets.size, `${persona} has navigation`).toBeGreaterThan(0);
-		const dead = (await Promise.all([...targets.values()].map((t) => opens(page, t)))).filter(Boolean);
+		const singles = new Set(boot.singles);
+		const dead = (await Promise.all([...targets.values()].map((t) => opens(page, t, singles)))).filter(Boolean);
 		expect(dead, `dead links for ${persona}`).toEqual([]);
 		await context.close();
 	});
