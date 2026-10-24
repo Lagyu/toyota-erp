@@ -49,12 +49,12 @@ Service User requirements of the message handlers:
 - `asn`, `po_acknowledgement` and `inventory_adjustment`: a **supplier portal user**, that is a Website User with active Partner User Access to the partner's Supplier. Otherwise the message is Rejected with "service user is not a Supplier portal user".
 - `dealer_order` and `dealer_order_change`: a **dealer portal user** (Customer).
 - `production_event`: a user with read access to the reported Work Order. Its plant User Permissions limit which orders it may report.
+- `shipment_status` and `supplier_invoice`: any enabled user. The partner's own *Party* (Party Type Supplier) decides what it may report or invoice; a service user that is a portal user must belong to that party. What these messages cause is posted as a recorded system step on the partner's behalf.
 
 Inbound message types:
 
 - Accepted by the envelope: `dealer_order`, `dealer_order_change`, `asn`, `po_acknowledgement`, `production_event`, `inventory_adjustment`, `supplier_invoice`, `shipment_status`, `bank_statement`.
-- With a registered handler: `asn`, `po_acknowledgement`, `dealer_order`, `dealer_order_change`, `production_event` and `inventory_adjustment`.
-- `supplier_invoice` and `shipment_status` have **no handler yet**. Messages of those types are Rejected ("no handler registered for …"), so do not allow them for a partner. `bank_statement` comes from a bank partner: see [Bank statements](#bank-statements).
+- Each has a handler. `bank_statement` comes from a bank partner: see [Bank statements](#bank-statements); `shipment_status` from a carrier and `supplier_invoice` from a supplier: see [Carriers and supplier invoices](#carriers-and-supplier-invoices).
 
 What the `inventory_adjustment` handler does:
 
@@ -283,6 +283,39 @@ Decoding fails with a clear reason in each of these cases:
 - an unexpected segment.
 
 Inbound EDI failures answer 417. In file drop they go to `rejected/` with the reason.
+
+## Carriers and supplier invoices
+
+**`shipment_status`** from a carrier (partner type Carrier, Party = the carrier's Supplier
+record, the one named on its Shipment Manifests):
+
+```json
+{"manifest": "MNF-2026-00042", "status": "delivered", "at": "2026-10-25T09:15:00+09:00",
+ "received_by": "Ken Asahi"}
+```
+
+| `status` | Effect |
+|---|---|
+| `in_transit` | confirms the dispatch; `carrier_reference` is stored on the Transport Booking |
+| `exception` | a Transport Exception, Open, of `exception_type` Delay, Damage, Loss, Wrong Destination or Documentation (default Delay), with `serial_no` and `description` |
+| `delivered` | the proof of delivery: the manifest and its vehicles Delivered, the booking Delivered, as the warehouse's *Record Delivery* does |
+
+A manifest the partner does not carry, or not yet dispatched, is Rejected. A delivery
+reported again is answered with the manifest; nothing is posted twice.
+
+**`supplier_invoice`** from a supplier's invoicing system (Party = the Supplier):
+
+```json
+{"invoice_no": "HM-INV-7781", "invoice_date": "2026-10-25", "purchase_receipt": "MAT-PRE-2026-00209",
+ "lines": [{"item_code": "WHEEL-17", "qty": 10, "rate": 126}]}
+```
+
+- It becomes a **draft** Purchase Invoice made from the receipt, with the supplier's invoice
+  number and date and its quantities and prices. The three-way match checks it as it checks
+  an invoice typed in (Invoice Match Exceptions), and the AP clerk reviews and submits it.
+- Refused: a receipt of another supplier, not submitted or a return, an item not on the
+  receipt (or invoiced already), an item listed twice.
+- Resent with the same invoice number, it is answered with the same draft.
 
 ## Bank statements
 

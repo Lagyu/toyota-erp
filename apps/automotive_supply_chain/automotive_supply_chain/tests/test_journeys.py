@@ -169,6 +169,50 @@ class TestDeliverySchedule(JourneyTestCase):
 class TestInvoiceMatchAndPayment(JourneyTestCase):
 	"""J-06: supplier invoice -> PO/receipt match -> exception -> correction -> dual approval -> settlement."""
 
+	def test_a_supplier_invoice_by_message_becomes_a_draft_the_match_checks(self):
+		from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_receipt
+
+		from automotive_supply_chain.integrations import handlers
+
+		wheel = self.cat["wheel"]
+		supplier = h.supplier("Hoshi Metalworks")
+		with as_user(h.BUYER):
+			po = frappe.get_doc({"doctype": "Purchase Order", "supplier": supplier, "company": AICHI,
+				"transaction_date": nowdate(), "schedule_date": add_days(nowdate(), 5), "items": [{
+					"item_code": wheel, "qty": 10, "rate": 120, "warehouse": catalog.PARTS_STORE,
+					"schedule_date": add_days(nowdate(), 5)}]}).insert()
+		approve(po, h.BUYER, [h.PROC_MGR])
+		with as_user(h.BUYER):
+			po.reload()
+			po.submit()
+		pr = frappe.get_doc(make_purchase_receipt(po.name))
+		pr.insert(ignore_permissions=True)
+		pr.submit()
+		partner = frappe.get_doc({"doctype": "Integration Partner", "partner_code": "HOSHI-INV",
+			"partner_name": "Hoshi invoicing", "partner_type": "Supplier", "party_type": "Supplier", "party": supplier,
+			"adapter": "Local File Drop", "allowed_message_types": "supplier_invoice",
+			"service_user": h.AP_CLERK}).insert(ignore_permissions=True)
+		invoice = {"invoice_no": "HM-INV-7781", "invoice_date": nowdate(), "purchase_receipt": pr.name,
+			"lines": [{"item_code": wheel, "qty": 10, "rate": 126}]}
+		doctype, name = handlers.supplier_invoice(None, partner, invoice)
+		pi = frappe.get_doc(doctype, name)
+		self.assertEqual((pi.docstatus, pi.supplier, pi.bill_no), (0, supplier, "HM-INV-7781"))
+		self.assertEqual([(r.item_code, flt(r.qty), flt(r.rate)) for r in pi.items], [(wheel, 10, 126)])
+		# checked like an invoice typed in: the price is above the order's
+		self.assertEqual(pi.automotive_match_status, "Exceptions Open")
+		self.assertEqual(set(frappe.get_all("Invoice Match Exception", filters={"purchase_invoice": pi.name},
+			pluck="exception_type")), {"Price Variance"})
+		self.assertEqual(handlers.supplier_invoice(None, partner, invoice), (doctype, name))  # resent
+		with self.assertRaises(handlers.InboundRejected):  # an item the receipt does not hold
+			handlers.supplier_invoice(None, partner, {**invoice, "invoice_no": "HM-INV-7782",
+				"lines": [{"item_code": self.cat["seat"], "qty": 1, "rate": 10}]})
+		other = frappe.get_doc({"doctype": "Integration Partner", "partner_code": "OTHER-INV",
+			"partner_name": "Another supplier's invoicing", "partner_type": "Supplier", "party_type": "Supplier",
+			"party": h.supplier("Kaze Seating"), "adapter": "Local File Drop",
+			"allowed_message_types": "supplier_invoice", "service_user": h.AP_CLERK}).insert(ignore_permissions=True)
+		with self.assertRaises(handlers.InboundRejected):  # another supplier's receipt
+			handlers.supplier_invoice(None, other, {**invoice, "invoice_no": "KZ-1"})
+
 	def test_three_way_match_and_dual_approved_payment(self):
 		from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_receipt
 		from erpnext.stock.doctype.purchase_receipt.purchase_receipt import make_purchase_invoice
@@ -517,6 +561,61 @@ class TestDealerJourney(JourneyTestCase):
 		value_after = flt(frappe.db.get_value("Bin", {"item_code": self.variant, "warehouse": catalog.FG}, "stock_value"))
 		self.assertAlmostEqual(value_before, value_after, places=2)
 		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "allocation.released", "reference_name": allocation}))
+
+	def test_the_carrier_reports_its_shipment_by_message(self):
+		"""shipment_status from the carrier's system: confirmation, an exception, the delivery."""
+		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
+
+		from automotive_supply_chain.dealer_operations.allocation import allocate
+		from automotive_supply_chain.integrations import handlers
+
+		so = self._order("ASAHI-PO-1006")
+		self._released_vehicle()
+		allocate(AICHI)
+		vin = frappe.db.get_value("Vehicle Allocation", {"sales_order": so, "status": "Allocated"}, "vehicle_unit")
+		dn = make_delivery_note(so)
+		for item in dn.items:
+			item.use_serial_batch_fields = 1
+			item.serial_no = vin
+		dn.insert(ignore_permissions=True)
+		dn.submit()
+		carrier = h.supplier("Fujin Transport", group="Carriers")
+		with as_user(h.LOGISTICS):
+			booking = frappe.get_doc({"doctype": "Transport Booking", "carrier": carrier, "company": AICHI,
+				"plant": catalog.PLANT, "direction": "Outbound", "vehicle_type": "Car Carrier",
+				"pickup_window_start": f"{nowdate()} 09:00:00", "pickup_window_end": f"{nowdate()} 12:00:00",
+				"delivery_window_end": f"{add_days(nowdate(), 1)} 18:00:00", "destination": "Asahi Motors Nagoya"}).insert()
+			manifest = frappe.get_doc({"doctype": "Shipment Manifest", "company": AICHI, "plant": catalog.PLANT,
+				"transport_booking": booking.name, "carrier": carrier, "departure": f"{nowdate()} 10:00:00",
+				"items": [{"delivery_note": dn.name}]}).insert()
+			manifest.submit()
+
+		def partner(code: str, party: str):
+			return frappe.get_doc({"doctype": "Integration Partner", "partner_code": code, "partner_name": code,
+				"partner_type": "Carrier", "party_type": "Supplier", "party": party, "adapter": "Local File Drop",
+				"allowed_message_types": "shipment_status", "service_user": h.LOGISTICS}).insert(ignore_permissions=True)
+
+		fujin = partner("FUJIN-EDI", carrier)
+		at = f"{nowdate()}T11:30:00+09:00"
+		self.assertEqual(handlers.shipment_status(None, fujin, {"manifest": manifest.name, "status": "in_transit",
+			"at": at, "carrier_reference": "FJN-55120"}), ("Shipment Manifest", manifest.name))
+		self.assertEqual(frappe.db.get_value("Transport Booking", booking.name, "carrier_reference"), "FJN-55120")
+		doctype, exception = handlers.shipment_status(None, fujin, {"manifest": manifest.name, "status": "exception",
+			"at": at, "exception_type": "Damage", "serial_no": vin, "description": "Scratch on the left door"})
+		self.assertEqual(frappe.db.get_value(doctype, exception, ["exception_type", "status", "carrier"]),
+			("Damage", "Open", carrier))
+		handlers.shipment_status(None, fujin, {"manifest": manifest.name, "status": "delivered",
+			"at": f"{add_days(nowdate(), 1)}T09:15:00+09:00", "received_by": "Ken Asahi"})
+		delivered = frappe.db.get_value("Shipment Manifest", manifest.name, ["delivery_status", "received_by_name"],
+			as_dict=True)
+		self.assertEqual((delivered.delivery_status, delivered.received_by_name), ("Delivered", "Ken Asahi"))
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "shipment_status"), "Delivered")
+		# reported twice: the same answer, nothing posted again
+		self.assertEqual(handlers.shipment_status(None, fujin, {"manifest": manifest.name, "status": "delivered",
+			"at": at}), ("Shipment Manifest", manifest.name))
+		other = partner("RAIJIN-EDI", h.supplier("Raijin Logistics", group="Carriers"))
+		with self.assertRaises(handlers.InboundRejected):  # another carrier's shipment
+			handlers.shipment_status(None, other, {"manifest": manifest.name, "status": "delivered", "at": at})
 
 	def test_inbound_order_change_applies_to_the_accepted_order(self):
 		"""The dealer's system sends the change (dealer_order_change, as the partner's service user)."""

@@ -176,7 +176,7 @@ See [integration-operations.md](integration-operations.md) for statuses and acti
 | **409** | Message id reused with a different payload: the partner must use a new id |
 | **417** | Envelope or EDI invalid; the response says why |
 | **429** | More than *Inbound Rate Limit Per Minute* requests |
-| Status **Rejected** | No handler for the type (`supplier_invoice`, `shipment_status`); payload invalid for the handler's model; service user not a portal user of the partner; wrong partner or reference; a bank statement that does not add up or names another bank's account ([integration-operations.md](integration-operations.md#bank-statements)) |
+| Status **Rejected** | Payload invalid for the handler's model; a carrier reporting a manifest it does not carry, or a supplier invoicing another supplier's receipt; service user not a portal user of the partner; wrong partner or reference; a bank statement that does not add up or names another bank's account ([integration-operations.md](integration-operations.md#bank-statements)) |
 | Status **Failed** / **Dead Letter** | The handler raised an error. It is retried with backoff and dead-lettered after *Inbound Max Attempts* (6). Fix the cause, then **Replay**. |
 | File-drop file in `rejected/` | Read the `<file>.error.txt` next to it |
 

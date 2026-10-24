@@ -62,6 +62,12 @@ def on_manifest_submit(doc) -> None:
 @frappe.whitelist(methods=["POST"])
 def record_delivery(name: str, received_by: str, delivered_at: str | None = None, exception: str | None = None) -> str:
 	frappe.only_for(("Logistics Coordinator", "Warehouse Clerk", "System Manager"))
+	return deliver(name, received_by, delivered_at, exception)
+
+
+def deliver(name: str, received_by: str, delivered_at=None, exception: str | None = None) -> str:
+	"""Proof of delivery of a manifest in transit: by the warehouse (record_delivery) or by the
+	carrier's own system (the shipment_status inbound message)."""
 	doc = frappe.get_doc("Shipment Manifest", name)
 	if doc.docstatus != 1 or doc.delivery_status != "In Transit":
 		frappe.throw(_("Manifest {0} is {1}.").format(name, doc.delivery_status))

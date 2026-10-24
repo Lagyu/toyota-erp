@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Supply Chain VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:05+0919\n"
-"PO-Revision-Date: 2026-10-24 17:05+0919\n"
+"POT-Creation-Date: 2026-10-24 21:15+0919\n"
+"PO-Revision-Date: 2026-10-24 21:15+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -1691,7 +1691,7 @@ msgstr ""
 msgid "Inventory Position"
 msgstr ""
 
-#: automotive_supply_chain/integrations/handlers.py:215
+#: automotive_supply_chain/integrations/handlers.py:263
 #, python-brace-format
 msgid "Inventory report {0} from {1}"
 msgstr ""
@@ -1722,6 +1722,11 @@ msgstr ""
 
 #: automotive_supply_chain/procurement_controls/three_way_match.py:99
 msgid "Invoice corrected"
+msgstr ""
+
+#: automotive_supply_chain/integrations/handlers.py:332
+#, python-brace-format
+msgid "Invoice {0} from supplier {1}"
 msgstr ""
 
 #. Label of the invoiced_qty (Float) field in DocType 'Invoice Match Exception'
@@ -1981,7 +1986,7 @@ msgstr ""
 msgid "Manifest"
 msgstr ""
 
-#: automotive_supply_chain/logistics/operations.py:67
+#: automotive_supply_chain/logistics/operations.py:73
 #, python-brace-format
 msgid "Manifest {0} is {1}."
 msgstr ""
@@ -2408,7 +2413,7 @@ msgstr ""
 msgid "Plant Director"
 msgstr ""
 
-#: automotive_supply_chain/logistics/storage.py:37
+#: automotive_supply_chain/logistics/storage.py:39
 #, python-brace-format
 msgid "Plant {0} needs a raw material store and reserve storage."
 msgstr ""
@@ -3499,6 +3504,11 @@ msgstr ""
 msgid "Shipment Manifest Item"
 msgstr ""
 
+#: automotive_supply_chain/integrations/handlers.py:292
+#, python-brace-format
+msgid "Shipment status from carrier {0}"
+msgstr ""
+
 #. Label of the ship_date (Datetime) field in DocType 'Advance Shipping Notice'
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:82
 #: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:56
@@ -3671,7 +3681,7 @@ msgstr ""
 msgid "Stock Value"
 msgstr ""
 
-#: automotive_supply_chain/logistics/operations.py:148
+#: automotive_supply_chain/logistics/operations.py:154
 #, python-brace-format
 msgid "Stock reconciliation for count {0}"
 msgstr ""
@@ -3984,7 +3994,7 @@ msgstr ""
 msgid "Territory"
 msgstr ""
 
-#: automotive_supply_chain/logistics/operations.py:97
+#: automotive_supply_chain/logistics/operations.py:103
 msgid "The count is already posted."
 msgstr ""
 
@@ -3996,7 +4006,7 @@ msgstr ""
 msgid "The person who entered the invoice cannot resolve its exceptions."
 msgstr ""
 
-#: automotive_supply_chain/logistics/storage.py:46
+#: automotive_supply_chain/logistics/storage.py:48
 msgid "The reorder level must be below the forward capacity, and the reorder quantity positive."
 msgstr ""
 

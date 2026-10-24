@@ -3,19 +3,22 @@
 Handlers run as the partner's service user (a portal user of that supplier/dealer),
 so party scoping and validations are identical to portal submissions. Each handler
 also deduplicates on the partner's own business reference (ASN number, dealer
-reference) in addition to the message id, so exactly-once holds even if a partner
-resends the same business document under a new message id.
+reference, invoice number) in addition to the message id, so exactly-once holds even if a
+partner resends the same business document under a new message id. Carriers and the
+suppliers' invoicing systems need no portal: their party is the Integration Partner's own,
+and what they cause is posted as a recorded system step.
 """
 
 from __future__ import annotations
 
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 
 import frappe
 from frappe import _
 from frappe.utils import flt
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
+from automotive_core.governance.elevation import on_behalf_of
 from automotive_core.integration_hub.inbound import InboundRejected
 from automotive_supply_chain.partners import party_of_user
 
@@ -80,6 +83,30 @@ class DealerOrderChangeMessage(Strict):
 	reason: str
 
 
+class ShipmentStatusMessage(Strict):
+	manifest: str
+	status: str = Field(pattern="^(in_transit|delivered|exception)$")
+	at: datetime
+	received_by: str | None = Field(default=None, max_length=140)
+	exception_type: str = Field(default="Delay", pattern="^(Delay|Damage|Loss|Wrong Destination|Documentation)$")
+	serial_no: str | None = Field(default=None, max_length=140)
+	description: str | None = Field(default=None, max_length=2000)
+	carrier_reference: str | None = Field(default=None, max_length=140)
+
+
+class SupplierInvoiceLine(Strict):
+	item_code: str
+	qty: float = Field(gt=0)
+	rate: float = Field(ge=0)
+
+
+class SupplierInvoiceMessage(Strict):
+	invoice_no: str = Field(min_length=1, max_length=140)
+	invoice_date: date
+	purchase_receipt: str
+	lines: list[SupplierInvoiceLine] = Field(min_length=1)
+
+
 class InventoryCountLine(Strict):
 	item_code: str
 	counted_qty: float = Field(ge=0)
@@ -105,6 +132,27 @@ def _party(expected: str) -> str:
 	if not mine or mine[0] != expected:
 		raise InboundRejected(f"service user is not a {expected} portal user")
 	return mine[1]
+
+
+def _partner_party(partner, expected: str) -> str:
+	"""The party set on the Integration Partner (IT's configuration); a service user that is a
+	portal user must belong to the same one."""
+	if partner.party_type != expected or not partner.party:
+		raise InboundRejected(f"partner {partner.name} has no {expected} party")
+	mine = party_of_user()
+	if mine and mine != (expected, partner.party):
+		raise InboundRejected(f"service user does not belong to {partner.party}")
+	return partner.party
+
+
+def _local(moment: datetime) -> datetime:
+	"""A partner's timestamp in the system time zone, as Frappe stores datetimes."""
+	from frappe.utils import convert_utc_to_system_timezone
+
+	if moment.tzinfo is None:
+		return moment
+	utc = moment.astimezone(UTC).replace(tzinfo=None)
+	return convert_utc_to_system_timezone(utc).replace(tzinfo=None)
 
 
 def asn(message, partner, data):
@@ -224,3 +272,83 @@ def inventory_adjustment(message, partner, data):
 			"supplier": supplier, "partner_reference": reference, "lines": lines})
 		doc.insert()
 	return doc.doctype, doc.name
+
+
+def shipment_status(message, partner, data):
+	"""A carrier's report on a shipment it carries (ERP-06.4, ERP-11.4). ``delivered`` is the
+	proof of delivery the warehouse would otherwise record; ``exception`` (delay, damage, loss,
+	wrong destination, papers) opens a Transport Exception for logistics; ``in_transit``
+	confirms the dispatch and may carry the carrier's own reference. A delivery reported twice
+	is answered with the manifest again."""
+	from automotive_supply_chain.logistics.operations import deliver
+
+	msg = _parse(ShipmentStatusMessage, data)
+	carrier = _partner_party(partner, "Supplier")
+	manifest = frappe.db.get_value("Shipment Manifest", msg.manifest, ["name", "carrier", "docstatus",
+		"delivery_status", "transport_booking", "company"], as_dict=True)
+	if not manifest or manifest.carrier != carrier or manifest.docstatus != 1:
+		raise InboundRejected(f"no dispatched manifest {msg.manifest} carried by {carrier}")
+	at = _local(msg.at)
+	with on_behalf_of(_("Shipment status from carrier {0}").format(carrier), "Shipment Manifest", manifest.name):
+		if msg.status == "exception":
+			exception = frappe.get_doc({"doctype": "Transport Exception", "shipment_manifest": manifest.name,
+				"transport_booking": manifest.transport_booking, "carrier": carrier, "exception_type": msg.exception_type,
+				"reported_at": at, "serial_no": msg.serial_no, "status": "Open",
+				"description": msg.description or msg.exception_type})
+			exception.insert(ignore_permissions=True)
+			return exception.doctype, exception.name
+		if manifest.delivery_status in ("Delivered", "Partially Delivered", "Exception"):
+			return "Shipment Manifest", manifest.name  # reported already
+		if msg.status == "delivered":
+			deliver(manifest.name, msg.received_by or carrier, at)
+		elif msg.carrier_reference and manifest.transport_booking:
+			frappe.db.set_value("Transport Booking", manifest.transport_booking, "carrier_reference",
+				msg.carrier_reference)
+	return "Shipment Manifest", manifest.name
+
+
+def supplier_invoice(message, partner, data):
+	"""A supplier's invoice for one of its receipts (ERP-05, ERP-09.2): a draft Purchase Invoice
+	made from the receipt with the supplier's quantities and prices. The three-way match checks
+	it against the order and the receipt as for one typed in, and the AP clerk reviews and
+	submits it. Resent with the same invoice number, it is answered with the same draft."""
+	from erpnext.stock.doctype.purchase_receipt.purchase_receipt import make_purchase_invoice
+
+	msg = _parse(SupplierInvoiceMessage, data)
+	supplier = _partner_party(partner, "Supplier")
+	existing = frappe.db.get_value("Purchase Invoice", {"supplier": supplier, "bill_no": msg.invoice_no,
+		"docstatus": ("<", 2)}, "name")
+	if existing:
+		return "Purchase Invoice", existing
+	receipt = frappe.db.get_value("Purchase Receipt", msg.purchase_receipt, ["supplier", "docstatus", "is_return"],
+		as_dict=True)
+	if not receipt or receipt.supplier != supplier or receipt.docstatus != 1 or receipt.is_return:
+		raise InboundRejected(f"no receipt {msg.purchase_receipt} of {supplier} to invoice")
+	lines = {}
+	for line in msg.lines:
+		if line.item_code in lines:
+			raise InboundRejected(f"item {line.item_code} is invoiced twice")
+		lines[line.item_code] = line
+	with on_behalf_of(_("Invoice {0} from supplier {1}").format(msg.invoice_no, supplier), "Purchase Receipt",
+			msg.purchase_receipt):
+		invoice = frappe.get_doc(make_purchase_invoice(msg.purchase_receipt))
+		unknown = sorted(set(lines) - {row.item_code for row in invoice.items})
+		if unknown:
+			raise InboundRejected(f"not on receipt {msg.purchase_receipt} (or invoiced already): {', '.join(unknown)}")
+		rows: dict[str, list] = {}
+		for row in invoice.items:
+			if row.item_code in lines:
+				rows.setdefault(row.item_code, []).append(row)
+		# an item received on several lines (put-away into forward and reserve storage, say):
+		# the invoiced quantity fills them in order, any excess on the last for the match to see
+		for item_code, item_rows in rows.items():
+			left = lines[item_code].qty
+			for n, row in enumerate(item_rows):
+				share = left if n == len(item_rows) - 1 else min(left, flt(row.qty))
+				row.qty, row.rate = share, lines[item_code].rate
+				left -= share
+		invoice.set("items", [row for row in invoice.items if row.item_code in lines and flt(row.qty) > 0])
+		invoice.bill_no, invoice.bill_date = msg.invoice_no, msg.invoice_date
+		invoice.insert()
+	return invoice.doctype, invoice.name
+

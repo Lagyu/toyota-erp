@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Supply Chain VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:05+0919\n"
+"POT-Creation-Date: 2026-10-24 21:15+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -1690,7 +1690,7 @@ msgstr "社内棚卸"
 msgid "Inventory Position"
 msgstr "在庫状況"
 
-#: automotive_supply_chain/integrations/handlers.py:215
+#: automotive_supply_chain/integrations/handlers.py:263
 #, python-brace-format
 msgid "Inventory report {0} from {1}"
 msgstr "{1} からの在庫報告 {0}"
@@ -1722,6 +1722,11 @@ msgstr "請求単価"
 #: automotive_supply_chain/procurement_controls/three_way_match.py:99
 msgid "Invoice corrected"
 msgstr "請求書訂正済み"
+
+#: automotive_supply_chain/integrations/handlers.py:332
+#, python-brace-format
+msgid "Invoice {0} from supplier {1}"
+msgstr "サプライヤー {1} からの請求書 {0}"
 
 #. Label of the invoiced_qty (Float) field in DocType 'Invoice Match Exception'
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:108
@@ -1977,7 +1982,7 @@ msgstr "最低価格"
 msgid "Manifest"
 msgstr "積荷目録"
 
-#: automotive_supply_chain/logistics/operations.py:67
+#: automotive_supply_chain/logistics/operations.py:73
 #, python-brace-format
 msgid "Manifest {0} is {1}."
 msgstr "積荷目録 {0} のステータスは {1} です。"
@@ -2404,7 +2409,7 @@ msgstr "工場"
 msgid "Plant Director"
 msgstr "工場長"
 
-#: automotive_supply_chain/logistics/storage.py:37
+#: automotive_supply_chain/logistics/storage.py:39
 #, python-brace-format
 msgid "Plant {0} needs a raw material store and reserve storage."
 msgstr "工場 {0} には原材料倉庫とストック保管庫が必要です。"
@@ -3493,6 +3498,11 @@ msgstr "出荷積荷目録"
 msgid "Shipment Manifest Item"
 msgstr "出荷積荷目録明細"
 
+#: automotive_supply_chain/integrations/handlers.py:292
+#, python-brace-format
+msgid "Shipment status from carrier {0}"
+msgstr "運送会社 {0} からの輸送状況"
+
 #. Label of the ship_date (Datetime) field in DocType 'Advance Shipping Notice'
 #: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:82
 #: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:56
@@ -3665,7 +3675,7 @@ msgstr "在庫予約"
 msgid "Stock Value"
 msgstr "在庫金額"
 
-#: automotive_supply_chain/logistics/operations.py:148
+#: automotive_supply_chain/logistics/operations.py:154
 #, python-brace-format
 msgid "Stock reconciliation for count {0}"
 msgstr "棚卸 {0} の在庫調整"
@@ -3978,7 +3988,7 @@ msgstr "条件"
 msgid "Territory"
 msgstr "地域"
 
-#: automotive_supply_chain/logistics/operations.py:97
+#: automotive_supply_chain/logistics/operations.py:103
 msgid "The count is already posted."
 msgstr "この棚卸はすでに転記されています。"
 
@@ -3990,7 +4000,7 @@ msgstr "この注文は受理済みです。販売店注文変更で取り消し
 msgid "The person who entered the invoice cannot resolve its exceptions."
 msgstr "請求書を入力した担当者は、その請求書の例外を解決できません。"
 
-#: automotive_supply_chain/logistics/storage.py:46
+#: automotive_supply_chain/logistics/storage.py:48
 msgid "The reorder level must be below the forward capacity, and the reorder quantity positive."
 msgstr "再発注点は原材料倉庫の容量より小さく、再発注数量は正の値にしてください。"
 
