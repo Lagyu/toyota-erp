@@ -12,6 +12,7 @@
   "partner_type",
   "party_type",
   "party",
+  "bank",
   "column_break_1",
   "adapter",
   "message_format",
@@ -69,6 +70,15 @@
    "fieldtype": "Dynamic Link",
    "label": "Party",
    "options": "party_type"
+  },
+  {
+   "depends_on": "eval:doc.partner_type=='Bank'",
+   "description": "Statements are accepted only for company accounts held at this bank.",
+   "fieldname": "bank",
+   "fieldtype": "Link",
+   "label": "Bank",
+   "mandatory_depends_on": "eval:doc.partner_type=='Bank'",
+   "options": "Bank"
   },
   {
    "fieldname": "column_break_1",
@@ -193,7 +203,7 @@
  ],
  "icon": "plug",
  "links": [],
- "modified": "2026-10-24 07:38:12.258218",
+ "modified": "2026-10-24 14:31:41.563586",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Integration Partner",

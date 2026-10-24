@@ -70,6 +70,8 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Bank Account", "Treasury Approver", READ),
 	("Bank", "Treasury Approver", READ),
 	("Bank Account", "AP Clerk", WRITE),
+	# AP books import costs (freight, duty) into the received goods' valuation
+	("Landed Cost Voucher", "AP Clerk", SUBMIT),
 	# Procurement: blanket (scheduling) agreements are negotiated by buyers and approved by
 	# procurement managers; ERPNext itself grants purchase roles only "select" on them.
 	("Blanket Order", "Buyer", SUBMIT),
@@ -123,6 +125,7 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 			"Item",
 			"Warehouse",
 			"Stock Reconciliation",
+			"Landed Cost Voucher",
 			"Non Conformance",
 			"Blanket Order",
 			"Stock Reservation Entry",

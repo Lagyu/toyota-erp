@@ -3759,7 +3759,7 @@
   "/api/method/automotive_manufacturing.quality_control.inspections.make_reinspection": {
    "post": {
     "operationId": "automotive_manufacturing.quality_control.inspections.make_reinspection",
-    "summary": "Re-inspect a unit/lot after rework: a new inspection of the same document row as the rejected one (ERPNext allows one inspection per row unless the row is named explicitly). Returns the draft inspection; the inspector submits it.",
+    "summary": "Re-inspect a unit/lot after rework: a new inspection of the same document row as the rejected one (ERPNext allows one inspection per row unless the row is named explicitly). With an inspection plan the status comes from the readings (given here, or entered on the draft before submitting); without on",
     "tags": [
      "automotive_manufacturing.quality_control"
     ],
@@ -3814,6 +3814,19 @@
             "type": "null"
            }
           ]
+         },
+         "readings": {
+          "oneOf": [
+           {
+            "type": "array",
+            "items": {
+             "type": "object"
+            }
+           },
+           {
+            "type": "null"
+           }
+          ]
          }
         },
         "required": [
@@ -3836,6 +3849,19 @@
           "oneOf": [
            {
             "type": "string"
+           },
+           {
+            "type": "null"
+           }
+          ]
+         },
+         "readings": {
+          "oneOf": [
+           {
+            "type": "array",
+            "items": {
+             "type": "object"
+            }
            },
            {
             "type": "null"

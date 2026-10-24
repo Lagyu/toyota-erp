@@ -54,9 +54,21 @@
    "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Goods In Transit",
+   "link_to": "Goods In Transit",
+   "link_type": "Report",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-10-24 10:07:52.243995",
+ "modified": "2026-10-24 14:27:18.051099",
  "modified_by": "Administrator",
  "module": "Intercompany",
  "name": "Intercompany",

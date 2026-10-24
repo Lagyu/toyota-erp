@@ -49,3 +49,5 @@ volume:
   dealer_payment_days: 30
   supplier_payment_weekday: 4  # Friday payment run
   ocean_transit_days: 21
+  ocean_freight_per_vehicle: 1150  # USD, the importer's landed cost per vehicle
+  import_duty_rate: 0.025      # US duty on passenger cars, of the declared (transfer) value

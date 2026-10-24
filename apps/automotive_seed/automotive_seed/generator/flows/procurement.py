@@ -21,6 +21,12 @@ from automotive_seed.generator.context import working_day
 from automotive_seed.generator.flows.common import company_bank_account, store_for
 from automotive_seed.generator.supply import primary_supplier
 
+# the importer's landed costs on vehicle shipments: supplier, supplier group, service item, item name
+IMPORT_SERVICES = (
+	("Pacific Crossing Lines Inc.", "Carriers", "SVC-OCEAN-FREIGHT", "Ocean freight (vehicle shipment)"),
+	("Harbor Customs Brokerage LLC", "Services", "SVC-IMPORT-DUTY", "Import duty and customs clearance"),
+)
+
 PLANT_OF_COMPANY = {AICHI: "AICHI-VA", KYUSHU: "KYUSHU-PT", NA: "NA-PDC"}
 
 
@@ -225,6 +231,79 @@ class Procurement:
 			self.s.setdefault("to_invoice", {})[pr.name] = str(add_days(day, 2))
 			if buyer_company == NA:
 				self.s.setdefault("pdi", []).append(pr.name)
+				self.import_costs(day, pr.name)
+
+	def _import_services(self) -> dict[str, str]:
+		"""Service item -> supplier for the importer's landed costs (created on first use, with
+		the verified bank account the payment run needs)."""
+		from automotive_core.finance_controls import bank_accounts as controls
+
+		ctx = self.ctx
+		expense = frappe.get_cached_value("Company", NA, "expenses_included_in_valuation")
+		out = {}
+		for supplier, group, item, item_name in IMPORT_SERVICES:
+			if not frappe.db.exists("Item", item):
+				frappe.get_doc({"doctype": "Item", "item_code": item, "item_name": item_name, "item_group": "Services",
+					"stock_uom": "Nos", "is_stock_item": 0, "is_purchase_item": 1, "is_sales_item": 0,
+					"item_defaults": [{"company": NA, "expense_account": expense}]}).insert(ignore_permissions=True)
+				ctx.count("Item")
+			if not frappe.db.exists("Supplier", supplier):
+				doc = frappe.get_doc({"doctype": "Supplier", "supplier_name": supplier, "country": "United States",
+					"supplier_group": group if frappe.db.exists("Supplier Group", group) else "Carriers",
+					"default_currency": "USD", "allow_purchase_invoice_creation_without_purchase_order": 1,
+					"allow_purchase_invoice_creation_without_purchase_receipt": 1})
+				doc.flags.accept_similar_name = True
+				doc.insert(ignore_permissions=True)
+				ctx.count("Supplier")
+				with ctx.as_user(self.sim.person("AP Clerk")):
+					account = frappe.get_doc({"doctype": "Bank Account", "account_name": f"{supplier} settlement",
+						"bank": "Hinode Settlement Bank", "party_type": "Supplier", "party": supplier,
+						"bank_account_no": f"{9_200_000_000 + len(out)}"}).insert()
+				with ctx.as_user(self.sim.person("Treasury Approver")):
+					controls.verify(account.name, "Confirmed by call-back to registered phone number")
+				ctx.count("Bank Account")
+			out[item] = supplier
+		return out
+
+	def import_costs(self, day: dt.date, receipt: str) -> None:
+		"""Ocean freight and customs duty on a vehicle shipment into North America: a buyer orders
+		each from the forwarder and the customs broker (purchase orders, approved like any other),
+		AP books their invoices against the orders, then a Landed Cost Voucher adds both to the
+		received vehicles' valuation."""
+		from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_invoice
+
+		ctx = self.ctx
+		suppliers = self._import_services()
+		pr = frappe.get_doc("Purchase Receipt", receipt)
+		vehicles = sum(int(flt(row.qty)) for row in pr.items)
+		charges = (("SVC-OCEAN-FREIGHT", vehicles, float(ctx.v("ocean_freight_per_vehicle", 1150))),
+			("SVC-IMPORT-DUTY", 1, round(flt(pr.base_net_total) * float(ctx.v("import_duty_rate", 0.025)), 2)))
+		buyer, clerk = self.sim.person("Buyer"), self.sim.person("AP Clerk")
+		invoices = []
+		with ctx.step(11, 0):
+			for item, qty, rate in charges:
+				po = self.purchase_order(suppliers[item], NA, [{"item_code": item, "qty": qty, "rate": rate,
+					"schedule_date": day}], "NA-PDC", buyer, extra={"currency": "USD"})
+				with ctx.as_user(clerk):
+					pi = make_purchase_invoice(po)
+					pi.bill_no, pi.bill_date = f"{item[4:]}-{pr.name}", day
+					pi.insert()
+					pi.submit()
+				invoices.append(pi)
+				ctx.count("Purchase Invoice")
+			expense = frappe.get_cached_value("Company", NA, "expenses_included_in_valuation")
+			with ctx.as_user(clerk):
+				lcv = frappe.get_doc({"doctype": "Landed Cost Voucher", "company": NA, "posting_date": day,
+					"distribute_charges_based_on": "Amount",
+					"purchase_receipts": [{"receipt_document_type": "Purchase Receipt", "receipt_document": pr.name,
+						"supplier": pr.supplier, "posting_date": pr.posting_date, "grand_total": pr.base_grand_total}],
+					"taxes": [{"description": f"{invoice.items[0].item_name} ({invoice.name})", "expense_account": expense,
+						"amount": invoice.base_total} for invoice in invoices],
+					"vendor_invoices": [{"vendor_invoice": invoice.name, "amount": invoice.base_total}
+						for invoice in invoices]})
+				lcv.insert()
+				lcv.submit()
+			ctx.count("Landed Cost Voucher")
 
 	def returns(self, day: dt.date) -> None:
 		"""Rejected incoming lots: nonconformance -> Return to Supplier disposition (approved)."""

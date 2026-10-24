@@ -119,7 +119,7 @@
   {
    "fieldname": "delivered_at",
    "fieldtype": "Datetime",
-   "label": "Delivered At",
+   "label": "Sent At",
    "read_only": 1
   },
   {
@@ -167,7 +167,7 @@
  ],
  "icon": "send",
  "links": [],
- "modified": "2026-10-24 07:18:49.081438",
+ "modified": "2026-10-24 14:44:01.907675",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Integration Outbound Message",

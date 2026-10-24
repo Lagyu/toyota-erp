@@ -69,7 +69,9 @@ automotive_plant_scoped_doctypes = [
 ]
 
 # Inbound message handlers by message type; other apps register theirs.
-automotive_inbound_handlers = {}
+automotive_inbound_handlers = {
+	"bank_statement": "automotive_core.finance_controls.bank_statements.bank_statement",
+}
 
 # KPI catalogue entries (ERP-12); each app lists the KPIs it computes.
 automotive_kpi_definitions = ["automotive_core.analytics.kpis.DEFINITIONS"]

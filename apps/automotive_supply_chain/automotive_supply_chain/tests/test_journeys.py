@@ -257,6 +257,10 @@ class TestIntercompanyJourney(JourneyTestCase):
 		dn = make_delivery_note(so.name)
 		dn.insert(ignore_permissions=True)
 		dn.submit()
+		from automotive_supply_chain.intercompany.report.goods_in_transit.goods_in_transit import in_transit
+
+		shipped = {r.delivery_note: r for r in in_transit(nowdate())}
+		self.assertEqual((shipped[dn.name].buyer, flt(shipped[dn.name].value)), (AICHI, 300_000))
 		receiver = "receiving.aichi.sc@hinode.example"
 		make_user(receiver, ["Warehouse Clerk", "Stock User"])
 		frappe.get_doc({"doctype": "User Permission", "user": receiver, "allow": "Company", "for_value": AICHI,
@@ -267,6 +271,7 @@ class TestIntercompanyJourney(JourneyTestCase):
 			pr = frappe.get_doc("Purchase Receipt", create_buyer_receipt(dn.name, catalog.PARTS_STORE))
 			pr.submit()
 		self.assertEqual((pr.owner, pr.company), (receiver, AICHI))
+		self.assertNotIn(dn.name, [r.delivery_note for r in in_transit(nowdate())])  # received: no longer in transit
 		si = make_sales_invoice(dn.name)
 		si.insert(ignore_permissions=True)
 		si.submit()

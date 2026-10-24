@@ -34,7 +34,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Reports",
-   "link_count": 1,
+   "link_count": 2,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -47,9 +47,19 @@
    "link_type": "Report",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Goods In Transit",
+   "link_count": 0,
+   "link_to": "Goods In Transit",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-10-24 10:09:24.660801",
+ "modified": "2026-10-24 14:27:18.050705",
  "modified_by": "Administrator",
  "module": "Intercompany",
  "name": "Intercompany",

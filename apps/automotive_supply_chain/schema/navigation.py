@@ -27,6 +27,7 @@ DESK = [
 	ScriptReport("Inventory Position", "Logistics", "Bin",
 		[WAREHOUSE, LOGISTICS, PLANNER, PLANT_DIRECTOR, CONTROLLER, AUDITOR, SYSTEM]),
 	ScriptReport("Intercompany Reconciliation", "Intercompany", "Sales Invoice", [CONTROLLER, AUDITOR, SYSTEM]),
+	ScriptReport("Goods In Transit", "Intercompany", "Delivery Note", [CONTROLLER, LOGISTICS, AUDITOR, SYSTEM]),
 	Workspace(
 		"Supplier Collaboration", "Supplier Collaboration", "handshake", [*PURCHASING, SYSTEM], sequence=34,
 		number_cards=["Supplier On-Time Delivery", "Rejected Material", "Open Receipt Discrepancies"],
@@ -111,9 +112,11 @@ DESK = [
 		"Intercompany", "Intercompany", "arrow-left-right", [CONTROLLER, AUDITOR, SYSTEM], sequence=41,
 		groups=[
 			Group("Agreements", [Link("Transfer Price Agreement", "Transfer Price Agreement")]),
-			Group("Reports", [Link("Intercompany Reconciliation", "Intercompany Reconciliation", "Report")]),
+			Group("Reports", [Link("Intercompany Reconciliation", "Intercompany Reconciliation", "Report"),
+				Link("Goods In Transit", "Goods In Transit", "Report")]),
 		],
 		sidebar=[Link("Transfer Price Agreement", "Transfer Price Agreement", icon="file-signature"),
-			Group("Reports", [Link("Intercompany Reconciliation", "Intercompany Reconciliation", "Report")], icon="sheet")],
+			Group("Reports", [Link("Intercompany Reconciliation", "Intercompany Reconciliation", "Report"),
+				Link("Goods In Transit", "Goods In Transit", "Report")], icon="sheet")],
 	),
 ]
