@@ -33,6 +33,11 @@ bulk import cannot accept one: such rows are refused.
   ([monitoring.md](monitoring.md#audit-chain-verification)).
 - **Bills of materials** change through engineering change orders, not by editing a
   submitted BOM.
+- **Substitutes** too: an ECO change *Approve Alternative* creates ERPNext's Item Alternative
+  for a component, linked to the ECO and valid from its effective date. Production may consume
+  an alternative only when an ECO approved it and it is valid on the posting date; an Item
+  Alternative entered by hand is refused at consumption. Cancelling the ECO removes it, unless
+  it has been consumed.
 
 ## Bulk import
 

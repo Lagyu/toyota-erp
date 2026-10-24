@@ -244,8 +244,8 @@ DOCTYPES = [
 		MODULE,
 		child=True,
 		fields=[
-			select("change_type", "Change", ["Add Component", "Remove Component", "Replace Component", "Change Quantity"],
-				reqd=1, in_list_view=1),
+			select("change_type", "Change", ["Add Component", "Remove Component", "Replace Component", "Change Quantity",
+				"Approve Alternative"], reqd=1, in_list_view=1),
 			link("target_bom", "BOM", "BOM", reqd=1, in_list_view=1),
 			link("component", "Component", "Item", in_list_view=1),
 			link("new_component", "New Component", "Item", in_list_view=1),

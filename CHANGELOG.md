@@ -85,6 +85,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   every delivery result.
 
 ### Manufacturing (`automotive_manufacturing`)
+- Approved substitutions: an ECO change *Approve Alternative* creates the Item Alternative,
+  linked to the ECO and valid from its effective date, and production consumes an alternative
+  only when an ECO approved it and it is valid on the posting date (ENT-11, ERP-02.1).
 - Planning honours a BOM's process loss (ERPNext's *Process Loss %*) as the yield: it starts
   enough units for the good ones it needs, and explodes components and loads the line from
   the units started (ENT-11).

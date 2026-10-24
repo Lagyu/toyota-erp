@@ -4723,3 +4723,23 @@ msgstr ""
 #: automotive_manufacturing/production_planning/workspace/production_planning/production_planning.json
 msgid "Weekly Production Plan"
 msgstr ""
+
+#. Option for the 'Change' (Select) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "Approve Alternative"
+msgstr ""
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: an alternative needs a component of BOM {1} and a different item to take its place."
+msgstr ""
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "{0} was consumed in place of {1} ({2}); issue a new ECO instead of cancelling."
+msgstr ""
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering change order and valid on {3}."
+msgstr ""

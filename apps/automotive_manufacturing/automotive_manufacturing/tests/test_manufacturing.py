@@ -144,6 +144,55 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 			eco.submit()
 		self.assertEqual(frappe.db.get_value("Engineering Change Request", ecr.name, "status"), "Converted")
 
+	def test_an_alternative_is_consumed_only_as_an_eco_approved_one_in_its_validity(self):
+		"""ENT-11, ERP-02.1: substitution is an engineering decision. An ECO's "Approve Alternative"
+		creates ERPNext's Item Alternative, linked to the ECO and valid from its effective date; a
+		component consumed in production in place of the BOM's must be such an approved alternative,
+		valid on the posting date. One entered by hand is not usable."""
+		from automotive_manufacturing.product_engineering.bom_revisions import EngineeringControlError
+		from automotive_manufacturing.product_engineering.change_control import validate_approved_alternatives
+
+		cat = self.cat
+		wheel = cat["wheel"]
+		[bom] = frappe.db.sql("""select b.name from `tabBOM` b join `tabBOM Item` bi on bi.parent = b.name
+			where bi.item_code = %s and b.docstatus = 1 and b.is_active = 1 and ifnull(b.automotive_superseded_by, '') = ''
+			order by b.name limit 1""", wheel, pluck=True)
+
+		def wheel_like(code):
+			return catalog._item(code, "Raw Material", has_batch_no=1, create_new_batch=1,
+				batch_number_series=f"{code}-.#####")
+
+		second_source = wheel_like(f"TWHA-{frappe.generate_hash(length=5).upper()}")
+
+		def consumed(item, on):
+			return frappe.get_doc({"doctype": "Stock Entry", "purpose": "Manufacture", "company": AICHI, "posting_date": on,
+				"items": [{"item_code": item, "original_item": wheel, "qty": 4, "s_warehouse": catalog.LINE_SIDE}]})
+
+		with self.assertRaises(EngineeringControlError):  # nothing approved yet
+			validate_approved_alternatives(consumed(second_source, nowdate()))
+		effective = add_days(nowdate(), 2)
+		with as_user(ENGINEER):
+			eco = frappe.get_doc({"doctype": "Engineering Change Order", "title": "Second-source wheel", "company": AICHI,
+				"effective_date": effective, "changes": [{"change_type": "Approve Alternative", "target_bom": bom,
+				"component": wheel, "new_component": second_source}]}).insert()
+		approve(eco, ENGINEER, [ENG_MANAGER, QM1])
+		with as_user(ENG_MANAGER):
+			eco.reload()
+			eco.submit()
+		approved = frappe.db.get_value("Item Alternative", {"item_code": wheel, "alternative_item_code": second_source},
+			["automotive_eco", "automotive_valid_from"], as_dict=True)
+		self.assertEqual((approved.automotive_eco, getdate(approved.automotive_valid_from)), (eco.name, getdate(effective)))
+		eco.reload()
+		self.assertEqual((eco.implementation_status, len(eco.revisions)), ("Implemented", 0))  # no BOM revision
+		with self.assertRaises(EngineeringControlError):  # before the change takes effect
+			validate_approved_alternatives(consumed(second_source, nowdate()))
+		validate_approved_alternatives(consumed(second_source, effective))
+		by_hand = wheel_like(f"TWHB-{frappe.generate_hash(length=5).upper()}")
+		frappe.get_doc({"doctype": "Item Alternative", "item_code": wheel, "alternative_item_code": by_hand}).insert(
+			ignore_permissions=True)
+		with self.assertRaises(EngineeringControlError):
+			validate_approved_alternatives(consumed(by_hand, effective))
+
 	def test_impact_assessment_counts_open_requests_and_planning_proposals(self):
 		"""ERP-02.3: besides orders, stock and work in progress, a change request's impact names what
 		is requested and not yet ordered, and what the newest planning run proposes and has not

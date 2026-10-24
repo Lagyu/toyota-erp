@@ -51,7 +51,10 @@ doc_events = {
 		"on_cancel": "automotive_manufacturing.traceability.vehicle_units.on_work_order_cancel",
 	},
 	"Stock Entry": {
-		"validate": "automotive_manufacturing.quality_control.holds.validate_stock_entry",
+		"validate": [
+			"automotive_manufacturing.quality_control.holds.validate_stock_entry",
+			"automotive_manufacturing.product_engineering.change_control.validate_approved_alternatives",
+		],
 		"on_submit": [
 			"automotive_manufacturing.traceability.genealogy.on_stock_entry_submit",
 			"automotive_manufacturing.traceability.vehicle_units.on_stock_entry_submit",

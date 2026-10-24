@@ -201,6 +201,10 @@ def validate_eco(doc) -> None:
 			frappe.throw(_("Row {0}: choose the component to add.").format(row.idx))
 		if row.change_type in ("Add Component", "Change Quantity") and flt(row.qty) <= 0:
 			frappe.throw(_("Row {0}: quantity must be positive.").format(row.idx))
+		if row.change_type == "Approve Alternative" and (row.component not in components or not row.new_component
+				or row.new_component == row.component):
+			frappe.throw(_("Row {0}: an alternative needs a component of BOM {1} and a different item to take its place.")
+				.format(row.idx, row.target_bom))
 		if row.change_type == "Change Quantity":
 			current = frappe.db.get_value("BOM Item", {"parent": row.target_bom, "item_code": row.component}, "qty")
 			if abs(flt(current) - flt(row.qty)) < 1e-9:
@@ -281,7 +285,10 @@ def implement(eco) -> None:
 	try:
 		by_bom: dict[str, list] = defaultdict(list)
 		for row in eco.changes:
-			by_bom[row.target_bom].append(row)
+			if row.change_type == "Approve Alternative":
+				_approve_alternative(eco, row)
+			else:
+				by_bom[row.target_bom].append(row)
 		replaced: dict[str, str] = {}
 		for bom_name in sorted(by_bom):
 			replaced[bom_name] = _release_revision(bom_name, eco, by_bom[bom_name], "Direct Change")
@@ -311,12 +318,67 @@ def implement(eco) -> None:
 		frappe.flags.automotive_eco_context = False
 
 
+def _approve_alternative(eco, row) -> None:
+	"""An approved substitution: ERPNext's Item Alternative for the component, linked to the ECO and
+	valid from its effective date (consumption checks both: validate_approved_alternatives)."""
+	frappe.db.set_value("Item", row.component, "allow_alternative_item", 1)
+	name = frappe.db.get_value("Item Alternative", {"item_code": row.component, "alternative_item_code": row.new_component})
+	alternative = frappe.get_doc("Item Alternative", name) if name else frappe.new_doc("Item Alternative")
+	alternative.update({"item_code": row.component, "alternative_item_code": row.new_component,
+		"automotive_eco": eco.name, "automotive_valid_from": eco.effective_date, "automotive_valid_to": None})
+	alternative.flags.ignore_permissions = True
+	alternative.save()
+
+
+def _consumed_as_alternative(component: str, alternative: str) -> str | None:
+	return frappe.db.sql("""select sed.parent from `tabStock Entry Detail` sed join `tabStock Entry` se on se.name = sed.parent
+		where se.docstatus = 1 and sed.original_item = %s and sed.item_code = %s limit 1""", (component, alternative))
+
+
+def validate_approved_alternatives(doc, method=None) -> None:
+	"""Stock Entry: a component consumed in production in place of the BOM's (``original_item``) must
+	be an alternative approved by an engineering change order and valid on the posting date
+	(ENT-11, ERP-02.1). ERPNext itself checks that the pair is an Item Alternative and that the
+	work order allows alternatives."""
+	from automotive_manufacturing.product_engineering.bom_revisions import EngineeringControlError
+
+	if doc.purpose not in ("Manufacture", "Material Transfer for Manufacture", "Material Consumption for Manufacture"):
+		return
+	day = getdate(doc.posting_date or nowdate())
+	for row in doc.items:
+		if not row.original_item or row.original_item == row.item_code:
+			continue
+		fields = ["automotive_eco", "automotive_valid_from", "automotive_valid_to"]
+		alternative = frappe.db.get_value("Item Alternative", {"item_code": row.original_item,
+			"alternative_item_code": row.item_code}, fields, as_dict=True) or frappe.db.get_value("Item Alternative",
+			{"item_code": row.item_code, "alternative_item_code": row.original_item, "two_way": 1}, fields, as_dict=True)
+		approved = bool(alternative and alternative.automotive_eco
+			and frappe.db.get_value("Engineering Change Order", alternative.automotive_eco, "docstatus") == 1)
+		valid = bool(alternative) and (not alternative.automotive_valid_from
+			or getdate(alternative.automotive_valid_from) <= day) and (not alternative.automotive_valid_to
+			or day <= getdate(alternative.automotive_valid_to))
+		if not (approved and valid):
+			frappe.throw(_("Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering "
+				"change order and valid on {3}.").format(row.idx, row.item_code, row.original_item, day),
+				EngineeringControlError)
+
+
 def revert(eco) -> None:
-	"""ECO cancellation: allowed only while no Work Order used any new revision."""
+	"""ECO cancellation: allowed only while no Work Order used any new revision and no production
+	consumed an alternative it approved."""
 	new_boms = [r.new_bom for r in eco.revisions]
 	used = frappe.get_all("Work Order", filters={"bom_no": ("in", new_boms or [""]), "docstatus": 1}, pluck="name", limit=1)
 	if used:
 		frappe.throw(_("Revision used by Work Order {0}; issue a new ECO instead of cancelling.").format(used[0]))
+	alternatives = [r for r in eco.changes if r.change_type == "Approve Alternative"]
+	for row in alternatives:
+		consumed = _consumed_as_alternative(row.component, row.new_component)
+		if consumed:
+			frappe.throw(_("{0} was consumed in place of {1} ({2}); issue a new ECO instead of cancelling.").format(
+				row.new_component, row.component, consumed[0][0]))
+	for row in alternatives:
+		frappe.db.delete("Item Alternative", {"item_code": row.component, "alternative_item_code": row.new_component,
+			"automotive_eco": eco.name})
 	frappe.flags.automotive_eco_context = True
 	try:
 		for row in reversed(eco.revisions):

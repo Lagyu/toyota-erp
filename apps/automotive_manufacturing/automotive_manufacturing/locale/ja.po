@@ -4719,3 +4719,23 @@ msgstr "週数"
 #: automotive_manufacturing/production_planning/workspace/production_planning/production_planning.json
 msgid "Weekly Production Plan"
 msgstr "週次生産計画"
+
+#. Option for the 'Change' (Select) field in DocType 'ECO Change'
+#: automotive_manufacturing/product_engineering/doctype/eco_change/eco_change.json
+msgid "Approve Alternative"
+msgstr "代替品の承認"
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: an alternative needs a component of BOM {1} and a different item to take its place."
+msgstr "行 {0}: 代替品には、BOM {1} の構成品目と、それに代わる別の品目が必要です。"
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "{0} was consumed in place of {1} ({2}); issue a new ECO instead of cancelling."
+msgstr "{0} は {1} の代わりに消費されています（{2}）。取消ではなく新しいECOを発行してください。"
+
+#: automotive_manufacturing/product_engineering/change_control.py
+#, python-brace-format
+msgid "Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering change order and valid on {3}."
+msgstr "行 {0}: {1} が {2} の代わりに使えるのは、設計変更指示で承認され {3} に有効な代替品の場合だけです。"
