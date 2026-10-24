@@ -1,0 +1,3 @@
+# Commits that only reformat the code (git blame --ignore-revs-file, honoured by GitHub)
+# ruff format of the Python code
+d73ef14f2e9d365ae3c66be7830d909c643d2541
