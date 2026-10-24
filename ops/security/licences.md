@@ -1,6 +1,6 @@
-# Licence inventory: toyota-erp/erp 0.1.0-b58ab382e5b8
+# Licence inventory: toyota-erp/erp 0.1.0-dcdabf973b4c
 
-652 packages from the image's SPDX SBOM of 2026-10-24T12:10:21Z (`scripts/ci/sbom.sh`), classified by `scripts/ci/licences.py`. Classes: permissive; weak copyleft (LGPL, MPL, EPL: obligations on the component itself); strong copyleft (GPL: on works distributed with it); network copyleft (AGPL and similar: also towards users of a network service); unknown (no licence recorded, or one not classified). The owner's licence decisions are DECISIONS.md D-025.
+652 packages from the image's SPDX SBOM of 2026-10-24T19:39:29Z (`scripts/ci/sbom.sh`), classified by `scripts/ci/licences.py`. Classes: permissive; weak copyleft (LGPL, MPL, EPL: obligations on the component itself); strong copyleft (GPL: on works distributed with it); network copyleft (AGPL and similar: also towards users of a network service); unknown (no licence recorded, or one not classified). The owner's licence decisions are DECISIONS.md D-025.
 
 | Ecosystem | Network copyleft | Strong copyleft | Weak copyleft | Unknown | Permissive | Total |
 |---|---|---|---|---|---|---|
@@ -198,7 +198,7 @@ None.
 | deb | x11-common | 1:7.7+24+deb13u1 | LicenseRef-GPL |
 | npm | banking | 0.0.0 | GPL-3.0-only (curated) |
 | npm | erpnext | UNKNOWN | GPL-3.0-only |
-| other | toyota-erp/erp | 0.1.0-b58ab382e5b8 | GPL-3.0-only (curated) |
+| other | toyota-erp/erp | 0.1.0-dcdabf973b4c | GPL-3.0-only (curated) |
 | pypi | automotive-core | 0.1.0 | GPL-3.0-only (curated) |
 | pypi | automotive-manufacturing | 0.1.0 | GPL-3.0-only (curated) |
 | pypi | automotive-portals | 0.1.0 | GPL-3.0-only (curated) |

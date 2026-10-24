@@ -109,24 +109,28 @@ green on the small dataset, local reference stack); a green run on hosted CI is 
 
 Exit gate: all acceptance gates and operational runbooks verified. **Open.**
 
-- [~] Datasets: `small` generated and validated in CI; `standard` generated on hosted runners
-      in chained segments (`dataset.yml`, D-027): first run in progress; `large` defined.
+- [~] Datasets: `small` generated and validated in CI, and `closing` (the small volumes across
+      the fiscal year end) validated; `standard` generated on hosted runners in chained,
+      resumable segments (`dataset.yml`, D-027, up to 18): the run on the current generator in
+      progress (the first ones stopped at the first month-end and the year end); `large` defined.
 - [x] Immutable image (runtime without the asset toolchain or package installers),
       production compose (TLS proxy, private networks, limits, health), encrypted off-host
       backups with verified restore drills, monitoring and alerting.
 - [x] Latency alerting: request-duration histogram and the `ErpReadLatencyHigh` / `ErpWriteLatencyHigh` alerts.
 - [~] Load tests: scenarios, runner and workflow ready (`perf/`, `perf.yml`); results await the
       standard dataset; slow-query/index review after them.
-- [~] Production rehearsal on a fresh runner (`rehearsal.yml`): install by the runbook with
+- [x] Production rehearsal on a fresh runner (`rehearsal.yml`): install by the runbook with
       TLS, monitoring, ClamAV and S3 backups, upgrade from a previous release, HTTPS checks,
       upload scanning, structured logs, simulated reboot, backup and point-in-time restore drill,
-      rollback to the previous release.
+      rollback to the previous release: all 18 steps pass (the reboot is a Docker daemon restart).
 - [~] Security: lint, dependency audit and image scan with reviewed allowlists, SBOM and licence
       inventory, findings log, configuration review, permission matrix checked by tests, scoped
       actions (C-10) kept by a lint check; owner decisions on the accepted findings open (C-03,
-      V-02, V-03c/d/g, V-05); C-02 fixed, C-08 mitigated.
-- [~] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, operations runbooks,
-      performance procedure; traceability matrix to refresh with the hosted CI results.
+      V-02, V-03c/d/g, V-05); C-02 fixed, C-08 mitigated; the account expiry (C-11) and the
+      scan gate of private file downloads (C-12) fixed after the hosted runs found them.
+- [x] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, operations runbooks,
+      performance procedure; the traceability matrix with the hosted runs' results
+      (REQUIREMENTS_TRACEABILITY.md; the standard dataset and load test results follow).
 
 ## Working notes
 

@@ -22,7 +22,7 @@ How to reproduce:
 
 | | |
 |---|---|
-| Image | `toyota-erp/erp:0.1.0-f37d75af8bcf` (production), CI run 40089255123 (artifact `image-evidence`) |
+| Image | `toyota-erp/erp:0.1.0-dcdabf973b4c` (production), CI run 40123954672 (artifact `image-evidence`) |
 | Tools | Syft 1.33.0 (SBOM, SPDX JSON); Trivy 0.67.2 (vulnerabilities only) |
 | Base | Debian 13.7 (frappe/base:version-16) |
 
@@ -42,9 +42,9 @@ runtime image, and Debian's published fixes are applied at every build.
 
 | ID | Finding | Severity | Status | Action / rationale | Owner decision |
 |---|---|---|---|---|---|
-| V-01 | Debian packages with published fixes (libbrotli1) | High | Fixed | The runtime stage runs `apt-get upgrade` (`infra/image/Containerfile`), so each build takes Debian's security fixes; the f37d75a scan has no Debian finding with a published fix. | |
+| V-01 | Debian packages with published fixes (libbrotli1) | High | Fixed | The runtime stage runs `apt-get upgrade` (`infra/image/Containerfile`), so each build takes Debian's security fixes; the dcdabf9 scan has no Debian finding with a published fix. | |
 | V-02 | Debian packages without a fix (41 packages, 9 critical and 183 high: curl, libxml2, libsystemd0, gnupg, libx11, …) | Critical/High | Accepted (owner) | No fixed version exists. Rebuild and rescan weekly (`sbom.sh`), and on Debian security advisories. | |
-| V-03a | `uv` 0.11.33 in the runtime image | Critical | Fixed | Removed from the runtime stage; it is only needed to build the bench. Not in the f37d75a image. | |
+| V-03a | `uv` 0.11.33 in the runtime image | Critical | Fixed | Removed from the runtime stage; it is only needed to build the bench. Not in the dcdabf9 image. | |
 | V-03b | `urllib3` 2.7.0 | High | Fixed | Installed: 2.8.0 in the bench and in the system Python (`infra/image/constraints.txt`). Trivy still lists urllib3 2.7.0, msgpack 1.1.2, setuptools 70.3.0 and a second Pillow 12.3.0 without a file path: no installed copy at those versions was found; recheck with the next base image. | |
 | V-03c | `Pillow` 12.3.0 (28 CVEs, fixed in 13.0) | Critical | Accepted (owner) | Frappe pins `Pillow~=12.3.0`. Mitigations: uploads are limited by type and size per DocType, ClamAV scanning is available, and attachments are private by default (`files/policy.py`). Upgrade with the Frappe patch release that moves the pin. | |
 | V-03d | `pypdf` 6.19.0 | High | Accepted (owner) | Frappe pins `pypdf==6.19.0`. It only parses PDFs produced or uploaded inside the system (print, attachments). | |
@@ -73,6 +73,6 @@ runtime image, and Debian's published fixes are applied at every build.
 
 ## Next scan
 
-Rebuild the image from the current tree (`scripts/image/build.sh --reference`) and run
-`scripts/ci/sbom.sh` on it. Close V-01, V-03a and V-03b against that scan, and add the new
-image's counts above.
+Every CI run scans its image (`scripts/ci/sbom.sh`, artifact `image-evidence`). Record a new scan
+above when the counts change or a finding's status does; the counts of the dcdabf9 image are
+those of the f37d75a image, the first scan after V-01, V-03a and V-03b were fixed.
