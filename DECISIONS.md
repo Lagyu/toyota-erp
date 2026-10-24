@@ -259,7 +259,11 @@ dataset workflow chains segments: each restores the previous export, generates f
 budget, stops at the end of a simulated day through the Seed Run's stop request (the runner
 resumes from the last committed day) and exports again; the last one validates.
 **Consequences.** The standard dataset is an artifact of a recorded run, with its counts
-and validation, and the performance tests load it from there.
+and validation, and the performance tests load it from there. On a 4-vCPU hosted runner the
+first standard run simulated about a month in its first 4-hour segment (the catalogue and
+master data included): the workflow chains up to 18 segments, and a run that stopped is
+continued by a new dispatch with `resume_run` (its first segment starts from that run's last
+export) instead of starting again.
 
 ## D-028 Forward and reserve storage, replenished on on-hand stock
 

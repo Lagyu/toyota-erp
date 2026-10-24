@@ -4,6 +4,8 @@
 # simulated day; the one that finishes validates the inventory and accounting invariants.
 # The final export stays as the artifact dataset-<profile> (database, files, encryption key,
 # status.json with counts and validation) for the performance tests.
+# A run that stopped (a failed segment, a cancelled run) is continued by a new dispatch with
+# resume_run: its first segment starts from that run's last export.
 name: dataset
 
 on:
@@ -18,9 +20,14 @@ on:
         description: Generation budget per segment (minutes)
         type: number
         default: 240
+      resume_run:
+        description: Run ID of an earlier dataset run whose last export to continue (empty = a new dataset)
+        type: string
+        default: ""
 
 permissions:
   contents: read
+  actions: read  # resume_run: another run's export
 
 concurrency:
   group: dataset-${{ inputs.profile }}
@@ -64,6 +71,7 @@ jobs:
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
+      resume_run: ${{ inputs.resume_run }}
   s02:
     needs: [image, s01]
     if: needs.s01.outputs.done != 'true'
@@ -163,10 +171,64 @@ jobs:
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
       image: ${{ needs.image.outputs.image }}
+  s13:
+    needs: [image, s12]
+    if: needs.s12.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 13
+      profile: ${{ inputs.profile }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
+      image: ${{ needs.image.outputs.image }}
+  s14:
+    needs: [image, s13]
+    if: needs.s13.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 14
+      profile: ${{ inputs.profile }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
+      image: ${{ needs.image.outputs.image }}
+  s15:
+    needs: [image, s14]
+    if: needs.s14.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 15
+      profile: ${{ inputs.profile }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
+      image: ${{ needs.image.outputs.image }}
+  s16:
+    needs: [image, s15]
+    if: needs.s15.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 16
+      profile: ${{ inputs.profile }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
+      image: ${{ needs.image.outputs.image }}
+  s17:
+    needs: [image, s16]
+    if: needs.s16.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 17
+      profile: ${{ inputs.profile }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
+      image: ${{ needs.image.outputs.image }}
+  s18:
+    needs: [image, s17]
+    if: needs.s17.outputs.done != 'true'
+    uses: ./.github/workflows/dataset-segment.yml
+    with:
+      index: 18
+      profile: ${{ inputs.profile }}
+      minutes: ${{ fromJSON(inputs.minutes) }}
+      image: ${{ needs.image.outputs.image }}
 
   # green only when a segment finished the run and its validation passed
   result:
-    needs: [s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11, s12]
+    needs: [s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11, s12, s13, s14, s15, s16, s17, s18]
     if: always()
     runs-on: ubuntu-24.04
     steps:

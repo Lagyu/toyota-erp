@@ -35,7 +35,8 @@ form submissions at most 4 s, no unbounded growth of failed jobs), TST-9 and GAT
 ## How to run
 
 ```bash
-gh workflow run dataset.yml -f profile=standard     # once per dataset change (several hours)
+gh workflow run dataset.yml -f profile=standard     # once per dataset change (up to 18 segments of 4 h)
+gh workflow run dataset.yml -f profile=standard -f resume_run=<run id>   # continue a run that stopped
 gh workflow run perf.yml -f profile=standard        # latest successful dataset run
 gh workflow run perf.yml -f dataset_run=<run id> -f phases="steady:50:20m"
 ```

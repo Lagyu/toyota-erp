@@ -10,6 +10,8 @@ on:
       profile: { type: string, required: true }
       minutes: { type: number, required: true }
       image: { type: string, required: true }
+      # the first segment continues this run's export instead of starting a new dataset
+      resume_run: { type: string, required: false, default: "" }
     outputs:
       done:
         description: "true once the run reached validation (no further segment needed)"
@@ -17,6 +19,7 @@ on:
 
 permissions:
   contents: read
+  actions: read  # another run's export (resume_run)
 
 jobs:
   segment:
@@ -38,6 +41,14 @@ jobs:
         if: inputs.index > 1
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with: { name: "dataset-${{ inputs.profile }}", path: .local/dataset-in }
+      - name: Export of the run to resume
+        if: inputs.index == 1 && inputs.resume_run != ''
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}"
+          path: .local/dataset-in
+          run-id: ${{ inputs.resume_run }}
+          github-token: ${{ github.token }}
       - name: Generate
         id: run
         env:
@@ -45,9 +56,10 @@ jobs:
           PROFILE: ${{ inputs.profile }}
           MINUTES: ${{ inputs.minutes }}
           INDEX: ${{ inputs.index }}
+          RESUME: ${{ inputs.resume_run }}
         run: |
           previous=()
-          if ((INDEX > 1)); then previous=(.local/dataset-in); fi
+          if ((INDEX > 1)) || [[ -n $RESUME ]]; then previous=(.local/dataset-in); fi
           rc=0
           ./scripts/ci/dataset.sh "$IMAGE" "$PROFILE" "$MINUTES" .local/dataset-out "${previous[@]}" || rc=$?
           python3 scripts/ci/dataset_summary.py .local/dataset-out/status.json "$INDEX" >>"$GITHUB_STEP_SUMMARY" || true
