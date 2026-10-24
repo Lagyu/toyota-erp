@@ -5,7 +5,9 @@ cumulative histogram kept in Redis, shared by all web workers of the site, by ki
 desk, portal) and verb (read = GET/HEAD, write = everything else). The metrics endpoint
 exposes it as ``erp_http_request_duration_seconds``; Prometheus derives p95 per kind and
 the alert rules compare it with the brief's targets (reads ≤ 2 s, form submissions ≤ 4 s).
-Counters only grow; a cache flush looks like a counter reset, which ``rate()`` handles.
+Responses are also counted by kind and status class (``erp_http_responses_total``), for the
+server error rate alert. Counters only grow; a cache flush looks like a counter reset, which
+``rate()`` handles.
 """
 
 from __future__ import annotations
@@ -20,6 +22,9 @@ KINDS = ("api", "desk", "portal")
 VERBS = ("read", "write")
 NAME = "erp_http_request_duration_seconds"
 HELP = "Server time of HTTP requests by kind and verb"
+CLASSES = ("2xx", "3xx", "4xx", "5xx")
+RESPONSES = "erp_http_responses_total"
+RESPONSES_HELP = "HTTP responses by kind and status class"
 _PREFIX = "automotive:http_duration"
 _SKIP = ("/assets/", "/files/", "/private/files/", "/socket.io", "/api/method/automotive_core.ops.health.")
 
@@ -40,13 +45,18 @@ def after_request(response=None, request=None) -> None:
 	path = request.path or ""
 	if path.startswith(_SKIP):
 		return
-	observe(time.perf_counter() - started, path, request.method or "GET")
+	observe(time.perf_counter() - started, path, request.method or "GET", getattr(response, "status_code", None))
 
 
-def observe(duration: float, path: str, method: str) -> None:
+def _status_key(kind: str, status_class: str) -> str:
+	return frappe.cache.make_key(f"{_PREFIX}:status:{kind}:{status_class}")
+
+
+def observe(duration: float, path: str, method: str, status: int | None = None) -> None:
 	kind = "api" if path.startswith("/api/") else "desk" if path.startswith(("/desk", "/app")) else "portal"
 	verb = "read" if method.upper() in ("GET", "HEAD") else "write"
 	base = _base(kind, verb)
+	status_class = f"{int(status) // 100}xx" if status else None
 	# timing must never break a request: a cache hiccup only loses this observation
 	with contextlib.suppress(Exception):
 		pipe = frappe.cache.pipeline()
@@ -55,6 +65,8 @@ def observe(duration: float, path: str, method: str) -> None:
 				pipe.incr(f"{base}:le:{le:g}")
 		pipe.incr(f"{base}:count")
 		pipe.incrbyfloat(f"{base}:sum", duration)
+		if status_class in CLASSES:
+			pipe.incr(_status_key(kind, status_class))
 		pipe.execute()
 
 
@@ -73,4 +85,9 @@ def metrics() -> list[tuple]:
 			out.append((f"{NAME}_bucket", HELP, {**labels, "le": "+Inf"}, values[-2], "histogram"))
 			out.append((f"{NAME}_sum", HELP, dict(labels), values[-1], "histogram"))
 			out.append((f"{NAME}_count", HELP, dict(labels), values[-2], "histogram"))
+	for kind in KINDS:
+		counts = frappe.cache.mget([_status_key(kind, c) for c in CLASSES])
+		for status_class, value in zip(CLASSES, counts, strict=True):
+			value = float(value.decode() if isinstance(value, bytes) else value) if value is not None else 0.0
+			out.append((RESPONSES, RESPONSES_HELP, {"kind": kind, "class": status_class}, value, "counter"))
 	return out

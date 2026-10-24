@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Install Docker Engine, Compose v2 and Buildx from the Ubuntu archive and run
 # the engine, containerd and every container inside one resource-capped systemd
-# slice (erp.slice).
+# slice (erp.slice). An engine already installed from Docker's repository
+# (docker-ce) or Microsoft's (moby-engine) is kept: the archive's packages conflict
+# with it.
 #
 # The slice is what keeps an ERP stack from starving co-located services: the
 # kernel enforces MemoryMax on everything Docker starts (containers, BuildKit
@@ -64,7 +66,10 @@ write_if_changed /etc/docker/daemon.json '{
 
 systemctl daemon-reload
 
-if ! dpkg-query -W -f='${Status}' docker.io 2>/dev/null | grep -q "ok installed"; then
+installed() { dpkg-query -W -f='${Status}' "$1" 2>/dev/null | grep -q "ok installed"; }
+if installed docker-ce || installed moby-engine; then
+	echo "keeping the installed Docker Engine ($(installed docker-ce && echo docker-ce || echo moby-engine))"
+elif ! installed docker.io; then
 	apt-get update -qq
 	DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
 		docker.io docker-compose-v2 docker-buildx

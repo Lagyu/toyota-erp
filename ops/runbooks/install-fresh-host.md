@@ -24,7 +24,7 @@ Sources:
 
 ## Prerequisites
 
-- **An Ubuntu host** whose archive ships `docker.io`, `docker-compose-v2` and `docker-buildx`. The install script uses the Ubuntu archive, not Docker's repository.
+- **An Ubuntu host** whose archive ships `docker.io`, `docker-compose-v2` and `docker-buildx`. The install script uses the Ubuntu archive; a Docker Engine already installed from Docker's repository (`docker-ce`, with its Compose and Buildx plugins) is kept and only configured.
 - **Sizing.**
   - Reference sizing in the brief: 16 vCPU, 64 GB RAM, SSD/NVMe.
   - The memory limits of the production example add up to roughly 30 GB with monitoring and ClamAV: backend 6g, two workers 2g each, MariaDB 12g, Redis 1.5g, ClamAV 2g, monitoring about 2.3g, small services.

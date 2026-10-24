@@ -44,6 +44,14 @@ groups:
         labels: { severity: warning }
         annotations:
           summary: "p95 server time of {{ $labels.kind }} submissions above 4 s for 15 minutes"
+      - alert: ErpServerErrorRateHigh
+        expr: >-
+          sum(rate(erp_http_responses_total{class="5xx"}[10m])) / sum(rate(erp_http_responses_total[10m])) > 0.02
+          and sum(rate(erp_http_responses_total[10m])) > 0.1
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "More than 2 % of responses are server errors (5xx) for 10 minutes"
 
   - name: erp-assurance
     rules:

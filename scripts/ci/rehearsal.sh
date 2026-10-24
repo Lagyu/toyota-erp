@@ -77,6 +77,7 @@ healthy() { # the site answers through the TLS proxy within the time limit
 
 # 1. host -------------------------------------------------------------------------------
 step "Host preparation (install-docker-ubuntu.sh)"
+sudo cat /etc/docker/daemon.json 2>/dev/null | tee "$out/daemon.json.before" >/dev/null || true
 if ERP_SLICE_MEMORY_HIGH=infinity ERP_SLICE_MEMORY_MAX=infinity DOCKER_START_AT_BOOT=yes \
 		"$REPO_ROOT/scripts/host/install-docker-ubuntu.sh" >"$out/host.log" 2>&1 \
 		&& [[ $(systemctl is-enabled docker.service) == enabled ]]; then

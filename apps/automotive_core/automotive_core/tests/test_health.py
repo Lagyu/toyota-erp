@@ -58,10 +58,12 @@ class TestHealth(IntegrationTestCase):
 		from automotive_core.observability import timing
 
 		def samples():
-			return {(m[0], m[2].get("le"), m[2]["kind"], m[2]["verb"]): m[3] for m in timing.metrics()}
+			return {(m[0], m[2].get("le") or m[2].get("class"), m[2]["kind"], m[2].get("verb")): m[3]
+				for m in timing.metrics()}
 
 		before = samples()
-		timing.observe(0.3, "/api/method/automotive_portals.api.dealer.place_order", "POST")
+		timing.observe(0.3, "/api/method/automotive_portals.api.dealer.place_order", "POST", 201)
+		timing.observe(0.1, "/api/method/automotive_portals.api.dealer.orders", "GET", 503)
 		after = samples()
 		name = "erp_http_request_duration_seconds"
 		delta = {key: after[key] - before[key] for key in after}
@@ -70,7 +72,11 @@ class TestHealth(IntegrationTestCase):
 		self.assertEqual(delta[(f"{name}_bucket", "+Inf", "api", "write")], 1)
 		self.assertEqual(delta[(f"{name}_count", None, "api", "write")], 1)
 		self.assertAlmostEqual(delta[(f"{name}_sum", None, "api", "write")], 0.3, places=6)
-		self.assertEqual(delta[(f"{name}_count", None, "api", "read")], 0)
+		self.assertEqual(delta[(f"{name}_count", None, "api", "read")], 1)
+		# responses by status class, for the server error rate alert
+		self.assertEqual(delta[("erp_http_responses_total", "2xx", "api", None)], 1)
+		self.assertEqual(delta[("erp_http_responses_total", "5xx", "api", None)], 1)
+		self.assertEqual(delta[("erp_http_responses_total", "4xx", "api", None)], 0)
 		frappe.local.conf["automotive_metrics_token"] = "s3cret-token"
 		self._request_with({"Authorization": "Bearer s3cret-token"})
 		health.metrics()
