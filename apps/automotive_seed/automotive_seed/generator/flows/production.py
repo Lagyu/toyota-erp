@@ -425,7 +425,7 @@ class Production:
 					continue
 				units = math.ceil(short / batch) * batch
 				info = self.structure["powertrains"][code]
-				if code.startswith("P180"):
+				if info.get("engine"):  # the hybrid and petrol powertrains of the P180 line
 					self._engines(units, planner, supervisor)
 				else:
 					self._machined("GEARSET-240", units * (2 if code == "E240-D" else 1), planner, supervisor)

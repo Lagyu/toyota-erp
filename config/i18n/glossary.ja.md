@@ -46,6 +46,7 @@ runs the same commands on the host from the bootstrapped bench's sources):
 | Vehicle / Vehicle Unit / VIN | 車両 / 車両個体 / VIN（車台番号） |
 | Vehicle Model / Variant / Configuration | 車種 / 仕様バリアント / 仕様構成 |
 | Option / Trim / Drivetrain / Body Color | オプション / グレード / 駆動方式 / ボディカラー |
+| Package (optional equipment) / Hybrid / Petrol | パッケージ（オプション装備） / ハイブリッド / ガソリン |
 | Powertrain / Engine / Sub-assembly | パワートレイン / エンジン / サブアセンブリ |
 | Kanban / Kanban Loop / Card / Signal | かんばん / かんばんループ / かんばんカード / かんばん信号 |
 | Call-off | 納入指示 |

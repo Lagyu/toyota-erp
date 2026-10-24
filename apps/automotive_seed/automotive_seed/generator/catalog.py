@@ -46,8 +46,17 @@ ATTRIBUTES = {
 	"Market": [("JP", "JP"), ("US", "US")],
 	"Trim": [("Standard", "S"), ("Premium", "P"), ("Luxury", "L")],
 	"Drivetrain": [("FWD", "F"), ("AWD", "A")],
+	"Powertrain": [("Hybrid", "HY"), ("Petrol", "PT")],
+	"Package": [("Base", "B"), ("Tech", "T")],
 	"Body Style": [("Cargo", "C"), ("Crew", "W")],
 }
+# The powertrain assembly a variant takes: by Powertrain where the model offers the choice,
+# then by Drivetrain (see powertrain_of). Optional equipment comes with the Tech package.
+HYBRID_OR_PETROL = {
+	"Hybrid": {"FWD": "P180-FWD", "AWD": "P180-AWD"},
+	"Petrol": {"FWD": "G180-FWD", "AWD": "G180-AWD"},
+}
+TECH_PACKAGE = [("ADAS-KIT", 1), ("AUDIO-PREM", 1)]
 MODELS = [
 	{
 		"code": "H1",
@@ -55,8 +64,8 @@ MODELS = [
 		"family": "Passenger Car",
 		"line": "AICHI-FA1",
 		"vin": "JX9H1HC0",
-		"attrs": ["Market", "Trim", "Drivetrain", "Body Color"],
-		"powertrain": {"FWD": "P180-FWD", "AWD": "P180-AWD"},
+		"attrs": ["Market", "Trim", "Drivetrain", "Powertrain", "Package", "Body Color"],
+		"powertrain": HYBRID_OR_PETROL,
 		"price": 2_980_000,
 		"battery": None,
 	},
@@ -66,7 +75,7 @@ MODELS = [
 		"family": "Crossover",
 		"line": "AICHI-FA1",
 		"vin": "JX9H2EC0",
-		"attrs": ["Market", "Trim", "Drivetrain", "Body Color"],
+		"attrs": ["Market", "Trim", "Drivetrain", "Package", "Body Color"],
 		"powertrain": {"FWD": "E240-S", "AWD": "E240-D"},
 		"price": 4_480_000,
 		"battery": "HVBATT-H2",
@@ -77,8 +86,8 @@ MODELS = [
 		"family": "Light Commercial",
 		"line": "AICHI-FA2",
 		"vin": "JX9H3LV0",
-		"attrs": ["Market", "Body Style", "Drivetrain", "Body Color"],
-		"powertrain": {"FWD": "P180-FWD", "AWD": "P180-AWD"},
+		"attrs": ["Market", "Body Style", "Drivetrain", "Powertrain", "Body Color"],
+		"powertrain": HYBRID_OR_PETROL,
 		"price": 3_280_000,
 		"battery": None,
 	},
@@ -342,6 +351,61 @@ COMMON = [
 		"battery",
 		21,
 		True,
+	),
+	(
+		"TRANSAXLE-AT",
+		"Automatic transaxle",
+		"Powertrain Components",
+		"Nos",
+		"serial",
+		132_000,
+		"machining",
+		14,
+		True,
+	),
+	(
+		"AWD-DRIVELINE",
+		"Propeller shaft and rear differential (AWD)",
+		"Powertrain Components",
+		"Nos",
+		"serial",
+		64_000,
+		"forgings",
+		14,
+		True,
+	),
+	(
+		"FUEL-SYS-G180",
+		"G180 fuel system kit",
+		"Powertrain Components",
+		"Nos",
+		"batch",
+		21_000,
+		"machining",
+		9,
+		False,
+	),
+	(
+		"ADAS-KIT",
+		"Camera and radar sensor kit",
+		"Electrical & Electronics",
+		"Nos",
+		"batch",
+		86_000,
+		"electronics",
+		9,
+		True,
+	),
+	(
+		"AUDIO-PREM",
+		"Premium audio system",
+		"Electrical & Electronics",
+		"Nos",
+		"batch",
+		42_000,
+		"electronics",
+		9,
+		False,
 	),
 ]
 MODULE_PARTS = {  # modules built at Aichi from purchased parts; code template -> lines
@@ -624,6 +688,11 @@ _P180_POWERTRAIN = (
 	"KYU-P180",
 	[("P20", "Hybrid transaxle fit", 8), ("P30", "Inverter fit", 6), ("P40", "Hot test", 10)],
 )
+# the petrol powertrain on the same line's stations: a conventional transaxle, no inverter
+_G180_POWERTRAIN = (
+	"KYU-P180",
+	[("P20", "Transaxle fit", 7), ("P30", "Fuel system fit", 5), ("P40", "Hot test", 10)],
+)
 _E240_DRIVE = (
 	"KYU-E240",
 	[
@@ -641,6 +710,8 @@ ROUTINGS = {
 	"ENG-P180": ("KYU-P180", [("P10", "Engine dress", 12)]),
 	"P180-FWD": _P180_POWERTRAIN,
 	"P180-AWD": _P180_POWERTRAIN,
+	"G180-FWD": _G180_POWERTRAIN,
+	"G180-AWD": _G180_POWERTRAIN,
 	"E240-S": _E240_DRIVE,
 	"E240-D": _E240_DRIVE,
 }
@@ -838,6 +909,8 @@ def build(ctx: SeedContext) -> dict:
 		"INVERTER-",
 		"HVBATT-P",
 		"REAR-EMOTOR",
+		"AWD-DRIVELINE",
+		"FUEL-SYS",
 		"STATOR",
 		"ROTOR",
 		"FLUID-OIL",
@@ -1046,7 +1119,31 @@ def _powertrains(ctx, structure, kyushu) -> None:
 		)
 		structure["powertrains"][code] = {
 			"line": "KYU-P180",
+			"engine": True,
 			"bom": _bom(ctx, code, KYUSHU, [("ENG-P180", 1), *common, *extra]),
+		}
+	# the petrol powertrain: the same engine with a conventional automatic transaxle
+	petrol = [("TRANSAXLE-AT", 1), ("FUEL-SYS-G180", 1), ("FLUID-OIL", 3.5)]
+	for code, name, extra in (
+		("G180-FWD", "G180 petrol powertrain FWD", []),
+		("G180-AWD", "G180 petrol powertrain AWD", [("AWD-DRIVELINE", 1)]),
+	):
+		_item(
+			ctx,
+			code,
+			name,
+			"Powertrain Assemblies",
+			"Nos",
+			"serial",
+			0,
+			fg,
+			serial_no_series=f"{code.replace('-', '')}-.######",
+			quality_inspection_template="Final - Powertrain",
+		)
+		structure["powertrains"][code] = {
+			"line": "KYU-P180",
+			"engine": True,
+			"bom": _bom(ctx, code, KYUSHU, [("ENG-P180", 1), *petrol, *extra]),
 		}
 	for code, name, motors in (
 		("E240-S", "E240 electric drive single motor", 1),
@@ -1169,7 +1266,7 @@ def _variant_lines(model, sel, colors) -> list[tuple[str, float]]:
 		(f"DOOR-{m}-{trim[:2].upper()}", 1),
 		(f"IP-{m}-{hand}", 1),
 		(f"HARN-{m}", 1),
-		(model["powertrain"][sel["Drivetrain"]], 1),
+		(powertrain_of(model, sel), 1),
 		(f"TIRE-{m}", 4),
 		(f"WHEEL-{m}", 4),
 		(f"GLASS-{m}", 1),
@@ -1187,7 +1284,18 @@ def _variant_lines(model, sel, colors) -> list[tuple[str, float]]:
 	]
 	if model["battery"]:
 		lines.append((model["battery"], 1))
+	if sel.get("Package") == "Tech":
+		lines += TECH_PACKAGE
 	return lines
+
+
+def powertrain_of(model: dict, sel: dict) -> str:
+	"""The powertrain assembly of a configuration: by its Powertrain where the model offers
+	the choice, then by its Drivetrain."""
+	choices = model["powertrain"]
+	if "Powertrain" in sel:
+		choices = choices[sel["Powertrain"]]
+	return choices[sel["Drivetrain"]]
 
 
 def _vehicles(ctx, structure, aichi, wh, colors) -> None:
@@ -1268,6 +1376,10 @@ def _allowed(model, sel) -> bool:
 		return False
 	if model["code"] == "H3" and sel["Body Color"] not in {c for c, _ in COLORS[:6]}:
 		return False
+	if sel.get("Powertrain") == "Petrol" and sel["Market"] == "US":
+		return False
+	if sel.get("Package") == "Tech" and sel.get("Trim") == "Standard":
+		return False
 	return True
 
 
@@ -1284,6 +1396,30 @@ def _option_rules(model, colors) -> None:
 				"then_attribute": "Trim",
 				"then_values": "Standard",
 				"message": "AWD is offered on Premium and Luxury trims",
+			}
+		)
+	if "Powertrain" in model["attrs"]:
+		rules.append(
+			{
+				"rule_code": f"{m}-US-HYBRID",
+				"rule_type": "Excludes",
+				"if_attribute": "Market",
+				"if_values": "US",
+				"then_attribute": "Powertrain",
+				"then_values": "Petrol",
+				"message": "North American models are offered as hybrids",
+			}
+		)
+	if "Package" in model["attrs"]:
+		rules.append(
+			{
+				"rule_code": f"{m}-TECH-TRIM",
+				"rule_type": "Excludes",
+				"if_attribute": "Package",
+				"if_values": "Tech",
+				"then_attribute": "Trim",
+				"then_values": "Standard",
+				"message": "The Tech package comes with the Premium and Luxury trims",
 			}
 		)
 	if m == "H3":
@@ -1314,6 +1450,8 @@ def price_lists(ctx, structure) -> None:
 			sel.get("Trim") or sel.get("Body Style"), 0
 		)
 		price += 220_000 if sel["Drivetrain"] == "AWD" else 0
+		price -= 260_000 if sel.get("Powertrain") == "Petrol" else 0
+		price += 180_000 if sel.get("Package") == "Tech" else 0
 		price += 55_000 if sel["Body Color"].startswith(("R53", "B64", "E86")) else 0
 		for price_list, rate in (
 			("Dealer Price JP", price),
