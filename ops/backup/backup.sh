@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Nightly backup of the site into the off-host restic repository (runs in the scheduler
-# container, scheduled by ofelia; also called by scripts/deploy/upgrade.sh).
+# or cron container, on the schedule of ops/backup/cron.py; also called by scripts/deploy/upgrade.sh).
 #
 #   1. bench backup --with-files (database dump, public + private files, site config)
 #   2. restic backup (client-side AES-256 encryption; the key never leaves this host)

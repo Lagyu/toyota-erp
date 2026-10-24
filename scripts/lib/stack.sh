@@ -46,7 +46,10 @@ ADMIN_PASSWORD_FILE=$stack_secrets/admin_password
 METRICS_TOKEN_FILE=$stack_secrets/metrics_token
 RESTIC_PASSWORD_FILE=$stack_secrets/restic_password
 RESTIC_REPOSITORY=/home/frappe/frappe-bench/sites/.restic-$name
+BACKUP_SCHEDULE=0 0 0 1 1 *
+RESTORE_DRILL_SCHEDULE=0 0 0 1 1 *
 EOF
+	# (above) the scheduled backup and drill would compete with the generator or the load: once a year
 	printf '%s\n' "$@" >>"$stack_env"
 	stack_compose=("$REPO_ROOT/scripts/deploy/compose.sh" "$stack_env")
 	stack_backups=/home/frappe/frappe-bench/sites/$stack_site/private/backups

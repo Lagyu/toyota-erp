@@ -24,6 +24,25 @@ x-app: &app
     options: { max-size: 20m, max-file: "5" }
   networks: [backend, egress]
 
+# What the backup and restore-drill jobs need (scheduler, for scripts/deploy/upgrade.sh and
+# manual runs; cron, for the schedules).
+x-backup-jobs: &backup-jobs
+  environment:
+    SITE_NAME: ${SITE_NAME:?}
+    RESTIC_REPOSITORY: ${RESTIC_REPOSITORY:?set RESTIC_REPOSITORY (off-host)}
+    RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+    RESTIC_KEEP_DAILY: ${RESTIC_KEEP_DAILY:-14}
+    RESTIC_KEEP_WEEKLY: ${RESTIC_KEEP_WEEKLY:-8}
+    RESTIC_KEEP_MONTHLY: ${RESTIC_KEEP_MONTHLY:-12}
+    AWS_ACCESS_KEY_ID: ${RESTIC_AWS_ACCESS_KEY_ID:-}
+    AWS_SECRET_ACCESS_KEY: ${RESTIC_AWS_SECRET_ACCESS_KEY:-}
+    DB_ROOT_PASSWORD_FILE: /run/secrets/db_password
+    BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 30 17 * * *}
+    RESTORE_DRILL_SCHEDULE: ${RESTORE_DRILL_SCHEDULE:-0 30 19 * * 6}
+  secrets: [restic_password, db_password]
+  volumes:
+    - ../../ops/backup:/opt/hinode/ops/backup:ro
+
 x-site-health: &site-health
   interval: 30s
   timeout: 5s
@@ -91,45 +110,21 @@ services:
     cpus: ${WORKER_CPUS:-2}
 
   scheduler:
-    <<: *app
+    <<: [*app, *backup-jobs]
     mem_limit: 512m
     cpus: 1
-    labels:
-      ofelia.enabled: "true"
-      # schedules are UTC (seconds first): 17:30 UTC = 02:30 JST, 19:30 UTC Saturday = Sunday 04:30 JST
-      # nightly encrypted backup to the off-host restic repository
-      ofelia.job-exec.backup.schedule: "${BACKUP_SCHEDULE:-0 30 17 * * *}"
-      ofelia.job-exec.backup.command: "bash /opt/hinode/ops/backup/backup.sh"
-      ofelia.job-exec.backup.user: "frappe"
-      # weekly restore drill into a scratch site (evidence in sites/<site>/private/ops/drills/)
-      ofelia.job-exec.restore-drill.schedule: "${RESTORE_DRILL_SCHEDULE:-0 30 19 * * 6}"
-      ofelia.job-exec.restore-drill.command: "bash /opt/hinode/ops/backup/restore-drill.sh"
-      ofelia.job-exec.restore-drill.user: "frappe"
-    environment:
-      SITE_NAME: ${SITE_NAME:?}
-      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY:?set RESTIC_REPOSITORY (off-host)}
-      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
-      RESTIC_KEEP_DAILY: ${RESTIC_KEEP_DAILY:-14}
-      RESTIC_KEEP_WEEKLY: ${RESTIC_KEEP_WEEKLY:-8}
-      RESTIC_KEEP_MONTHLY: ${RESTIC_KEEP_MONTHLY:-12}
-      AWS_ACCESS_KEY_ID: ${RESTIC_AWS_ACCESS_KEY_ID:-}
-      AWS_SECRET_ACCESS_KEY: ${RESTIC_AWS_SECRET_ACCESS_KEY:-}
-      DB_ROOT_PASSWORD_FILE: /run/secrets/db_password
-    secrets: [restic_password, db_password]
-    volumes:
-      - ../../ops/backup:/opt/hinode/ops/backup:ro
 
+  # The scheduled operations jobs (nightly off-host backup, weekly restore drill), run in
+  # the stack by ops/backup/cron.py with the scheduler's environment: no Docker socket (C-02).
+  # Schedules are UTC, seconds first: 17:30 UTC = 02:30 JST; 19:30 UTC Saturday = Sunday 04:30 JST.
   cron:
-    image: ${OFELIA_IMAGE:?}
-    restart: unless-stopped
-    command: daemon --docker
-    depends_on: [scheduler]
-    security_opt: [no-new-privileges:true]
-    logging: *logging
-    networks: [backend]
+    <<: [*app, *backup-jobs]
+    command: ["/home/frappe/frappe-bench/env/bin/python", "/opt/hinode/ops/backup/cron.py"]
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    mem_limit: 128m
+      - sites:/home/frappe/frappe-bench/sites
+      - ../../ops/backup:/opt/hinode/ops/backup:ro
+    mem_limit: 512m
+    cpus: 1
 
   db:
     image: ${MARIADB_IMAGE:?}

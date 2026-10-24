@@ -17,7 +17,7 @@ coverage is in [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md).
 | Cache and queues | Redis 8.6 (separate cache and durable queue instances) |
 | Container distribution | official `frappe_docker` v4.1.1 production compose + Hinode overrides, immutable application image |
 | Edge | Traefik v3.7 (TLS, security headers), frappe_docker nginx frontend |
-| Operations jobs | ofelia (backups, restore drills) |
+| Operations jobs | `cron` service on the application image (backups, restore drills; `ops/backup/cron.py`) |
 | Optional services | ClamAV 1.5 (upload scanning), Prometheus / Alertmanager / Grafana with MySQL, Redis and node exporters |
 
 ERPNext is not forked. Everything custom lives in versioned Frappe apps and reaches
@@ -248,7 +248,7 @@ by [`scripts/deploy/compose.sh`](scripts/deploy/compose.sh) with
 [`infra/deploy/compose.hinode.yaml`](infra/deploy/compose.hinode.yaml): Traefik in front
 (`TLS_MODE=letsencrypt` or `files`, with HSTS and security headers; `none` publishes the
 frontend directly for local test stacks only), private networks, restart
-policies, resource limits, health checks, durable volumes, ofelia jobs for backups and
+policies, resource limits, health checks, durable volumes, a socket-free cron service for backups and
 restore drills; optional ClamAV and monitoring overlays. The image is built once from the
 pins (dependency constraints frozen in [`infra/image/constraints.txt`](infra/image/constraints.txt))
 and promoted unchanged.

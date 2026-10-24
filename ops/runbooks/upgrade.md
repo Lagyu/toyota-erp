@@ -63,7 +63,7 @@ Before promoting an image, scan it: `./scripts/ci/sbom.sh IMAGE`. See [security-
 Upstream pins live in `infra/versions.env`:
 
 - Frappe, ERPNext and frappe_docker tag + commit;
-- image digests for bench, build, base, MariaDB, Redis, Traefik, Ofelia, ClamAV, monitoring and CI tools.
+- image digests for bench, build, base, MariaDB, Redis, Traefik, ClamAV, monitoring and CI tools.
 
 Every clone is verified against the pinned commit (`scripts/lib/verify-checkout.sh`), so a moved tag cannot change a build.
 

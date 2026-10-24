@@ -1,0 +1,17 @@
+# The route to the front end, from the file provider: the proxy needs no Docker socket
+# (ops/security/findings.md C-02). SITES_RULE comes from the proxy's environment; Traefik
+# applies Go templates to file-provider files.
+http:
+  routers:
+    frontend:
+      entryPoints: [websecure]
+      rule: '{{ env "SITES_RULE" }}'
+      service: frontend
+      middlewares: [hinode-headers]
+      tls: { certResolver: le }
+  services:
+    frontend:
+      loadBalancer:
+        passHostHeader: true
+        servers:
+          - url: http://frontend:8080

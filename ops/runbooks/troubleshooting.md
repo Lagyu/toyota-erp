@@ -20,7 +20,7 @@ SITE=erp.hinode.example
 
 | Where | What |
 |---|---|
-| `compose.sh … logs <service>` | container output; Traefik access log on `proxy`; Ofelia job runs on `cron` |
+| `compose.sh … logs <service>` | container output; Traefik access log on `proxy`; backup and drill runs on `cron` |
 | `sites/<site>/logs/` in any app container | Frappe site logs, including `automotive.log` (integration events with correlation ids) |
 | Desk **Error Log** (`/desk/error-log`) | server exceptions, failed trigger creation, audit chain failures |
 | Desk **RQ Job** / **RQ Worker** / **System Health Report** | job queues, failed jobs, workers |
@@ -222,7 +222,7 @@ See [integration-operations.md](integration-operations.md) for statuses and acti
 
 ## Scheduled backup or drill never runs
 
-The `cron` service (Ofelia) reads the job labels from the `scheduler` container. After `scheduler` was recreated (upgrade or configuration change), check `logs cron` for the registered `backup` and `restore-drill` jobs. Restart `cron` if they are missing:
+The `cron` service (`ops/backup/cron.py`) logs each job's schedule and next run when it starts, and every run with its exit status. Check `ps cron` and `logs cron`; a wrong `BACKUP_SCHEDULE` or `RESTORE_DRILL_SCHEDULE` (six fields, seconds first, UTC) stops the service at start. After fixing the variable, recreate it:
 
 ```bash
 ./scripts/deploy/compose.sh "$ENV" restart cron

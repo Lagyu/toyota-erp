@@ -32,7 +32,7 @@ The brief (§7) asks for RPO ≤ 15 minutes and RTO ≤ 2 hours where the archit
 
 ## What a backup contains and where it goes
 
-**Schedule.** The `cron` service (Ofelia) runs the jobs **inside the `scheduler` container** as user `frappe`, using the labels on `scheduler`:
+**Schedule.** The `cron` service runs the jobs as user `frappe` with the scheduler's environment and secrets (`ops/backup/cron.py` on the application image; it needs no Docker socket):
 
 | Job | Schedule variable | Default (UTC, seconds first) | Command |
 |---|---|---|---|
@@ -74,7 +74,7 @@ The brief (§7) asks for RPO ≤ 15 minutes and RTO ≤ 2 hours where the archit
 ## Check backup health
 
 ```bash
-# job runs and their output (Ofelia)
+# schedules at start, job runs, their output and exit status
 ./scripts/deploy/compose.sh "$ENV" logs --tail 100 cron
 # time of the last successful backup
 ./scripts/deploy/compose.sh "$ENV" exec -T scheduler cat "sites/$SITE/private/ops/backup-last-success.txt"

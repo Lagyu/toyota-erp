@@ -25,7 +25,7 @@ The system is ERPNext v16 on Frappe v16, at pinned upstream commits (`infra/vers
 - the scheduler;
 - MariaDB 11.8 and Redis (cache, plus a persistent queue);
 - Traefik for TLS;
-- Ofelia for scheduled backups and restore drills;
+- a `cron` service for scheduled backups and restore drills (no Docker socket);
 - optionally ClamAV and a Prometheus/Alertmanager/Grafana overlay.
 
 **Networks.** The database and Redis sit on an internal network without outbound access.
@@ -77,7 +77,7 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 | `scripts/deploy/smoke.sh ENV` | Post-deploy checks |
 | `scripts/deploy/upgrade.sh ENV` | Backup, maintenance, new image, migrate, smoke |
 | `scripts/deploy/restore.sh ENV [SNAPSHOT]` | Restore a snapshot over the site (destructive, asks for confirmation) |
-| `ops/backup/backup.sh`, `ops/backup/restore-drill.sh` | Run inside `scheduler`, by Ofelia or by hand |
+| `ops/backup/backup.sh`, `ops/backup/restore-drill.sh`, `ops/backup/cron.py` | The jobs (in `scheduler` by hand, in `cron` on their schedules) and their scheduler |
 | `scripts/ci/*.sh` | The CI suites ([testing.md](runbooks/testing.md)) |
 
 ## Where evidence is written

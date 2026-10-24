@@ -282,8 +282,7 @@ The TLS modes are described in [install-fresh-host.md](install-fresh-host.md#5-t
 
 **Docker socket:**
 
-- `proxy` (Traefik) and `cron` (Ofelia) mount `/var/run/docker.sock`.
-- **A read-only socket mount does not restrict the Docker API**, so treat these two containers as privileged; Ofelia uses the API to run jobs in `scheduler`.
+- No container mounts `/var/run/docker.sock`: Traefik routes from its file provider (`infra/deploy/traefik/routes*.yaml`) and the backup and drill schedules run in the `cron` service itself (`ops/backup/cron.py`). Keep it that way: a socket mount, even read-only, grants the whole Docker API.
 - `node-exporter` (monitoring) shares the host PID namespace and mounts `/` read-only.
 
 **Exposure:**

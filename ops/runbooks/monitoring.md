@@ -302,7 +302,7 @@ Reference performance measurements do not exist yet, so record the occurrence.
 
 **First response.**
 
-1. Check `ps cron` and `logs cron`, which list Ofelia's registered jobs and runs.
+1. Check `ps cron` and `logs cron`: the schedules and next run times at start, then each run with its exit status.
 2. Check the schedule value: UTC, seconds first.
 3. Run a drill by hand.
 

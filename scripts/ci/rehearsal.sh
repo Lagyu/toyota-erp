@@ -218,6 +218,16 @@ else
 	fail "see backup.log / drill.log"
 fi
 
+step "Scheduled jobs without the Docker socket"
+sockets=$(for c in $(compose ps -q); do docker_cmd inspect --format '{{.Name}} {{range .Mounts}}{{.Source}} {{end}}' "$c"; done \
+	| grep -c "docker.sock" || true)
+next=$(compose logs --no-color cron 2>/dev/null | grep -c "next at" || true)
+if [[ $(compose ps --format '{{.State}}' cron) == running && $next -ge 2 && $sockets -eq 0 ]]; then
+	pass "cron service running with the backup and drill schedules; no container mounts the Docker socket"
+else
+	fail "cron state '$(compose ps --format '{{.State}}' cron)', schedules logged $next, socket mounts $sockets"
+fi
+
 step "Monitoring targets"
 targets=$(compose exec -T prometheus wget -qO- 'http://localhost:9090/api/v1/targets?state=active' 2>/dev/null || true)
 summary=$(python3 -c 'import json,sys; t=json.load(sys.stdin)["data"]["activeTargets"]; print(sum(x["health"]=="up" for x in t), len(t), ",".join(sorted(x["labels"]["job"] for x in t if x["health"]!="up")))' \

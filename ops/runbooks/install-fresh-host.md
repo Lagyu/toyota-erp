@@ -177,7 +177,7 @@ Edit at least these:
 | `CUSTOM_IMAGE`, `CUSTOM_TAG`, `PULL_POLICY` | the immutable image, e.g. `registry.hinode.example/hinode/erp` and `0.1.0-<git sha>`. Never `latest`. `PULL_POLICY=always` pulls on `up`; `never` for locally built images. |
 | `*_FILE`, `MYSQLD_EXPORTER_CNF` | the secret files of step 3 |
 | `RESTIC_REPOSITORY`, `RESTIC_AWS_ACCESS_KEY_ID`, `RESTIC_AWS_SECRET_ACCESS_KEY` | off-host S3-compatible repository. Only these two AWS variables reach the scheduler, so other restic backends would need their variables added to `compose.hinode.yaml` (not implemented). |
-| `BACKUP_SCHEDULE`, `RESTORE_DRILL_SCHEDULE` | Ofelia cron with **seconds first, in UTC** (the cron container has no time zone). Defaults: `0 30 17 * * *` = 02:30 JST daily; `0 30 19 * * 6` = Sunday 04:30 JST. |
+| `BACKUP_SCHEDULE`, `RESTORE_DRILL_SCHEDULE` | Cron with **seconds first, in UTC** (`ops/backup/cron.py` evaluates them in UTC). Defaults: `0 30 17 * * *` = 02:30 JST daily; `0 30 19 * * 6` = Sunday 04:30 JST. |
 | `MONITORING` | `1` deploys Prometheus, Alertmanager, Grafana and exporters |
 | `CLAMAV` | not in the examples; **defaults to 1** (ClamAV deployed). Set `CLAMAV=0` to leave it out. |
 
@@ -256,7 +256,7 @@ Review the merged result with `./scripts/deploy/compose.sh "$ENV" config`.
 | `queue-short` | worker for queues `short,default` |
 | `queue-long` | worker for queues `long,default,short` |
 | `scheduler` | `bench schedule`; also runs backup and drill jobs |
-| `cron` | Ofelia; executes the scheduled jobs inside `scheduler` |
+| `cron` | Runs the nightly backup and the weekly restore drill on their schedules (`ops/backup/cron.py`), with the scheduler's environment; no Docker socket |
 | `db` | MariaDB 11.8 |
 | `redis-cache` | no persistence |
 | `redis-queue` | append-only file, fsync every second |
@@ -336,7 +336,7 @@ Keep the output of both as installation evidence (brief §8.2 gate 6). No script
 
 ## 10. Enable backups, ClamAV and monitoring
 
-- **Backups** run automatically from the first start: Ofelia labels on `scheduler` run `ops/backup/backup.sh` nightly and `ops/backup/restore-drill.sh` weekly. Take a first backup and drill now, and confirm the evidence, as described in [backup-restore.md](backup-restore.md):
+- **Backups** run automatically from the first start: the `cron` service runs `ops/backup/backup.sh` nightly and `ops/backup/restore-drill.sh` weekly. Take a first backup and drill now, and confirm the evidence, as described in [backup-restore.md](backup-restore.md):
 
   ```bash
   ./scripts/deploy/compose.sh "$ENV" exec -T scheduler bash /opt/hinode/ops/backup/backup.sh
@@ -376,7 +376,7 @@ systemctl is-active docker                                                   # a
 ./scripts/deploy/compose.sh "$ENV" ps                                        # all Up / healthy, configurator Exited (0)
 ./scripts/deploy/smoke.sh "$ENV"                                             # all ok
 ./scripts/deploy/compose.sh "$ENV" exec -T backend bench --site "$SITE" scheduler status   # Scheduler is enabled ...
-./scripts/deploy/compose.sh "$ENV" logs --tail 20 cron                       # Ofelia registered the backup and restore-drill jobs
+./scripts/deploy/compose.sh "$ENV" logs --tail 20 cron                       # the backup and restore-drill schedules and next runs
 ```
 
 If the site answers 502 after the reboot, restart the frontend ([troubleshooting.md](troubleshooting.md#502-bad-gateway-after-a-restart)).
