@@ -1,0 +1,239 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"7d0b27d23e\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Supplier Collaboration</b></span>\", \"col\": 12}}, {\"id\": \"30204a1f54\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Supplier On-Time Delivery\", \"col\": 3}}, {\"id\": \"e9f4ed720f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Rejected Material\", \"col\": 3}}, {\"id\": \"f09ea9cf0a\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Receipt Discrepancies\", \"col\": 3}}, {\"id\": \"c0d99afb87\", \"type\": \"card\", \"data\": {\"card_name\": \"Sourcing\", \"col\": 4}}, {\"id\": \"788283f374\", \"type\": \"card\", \"data\": {\"card_name\": \"Ordering\", \"col\": 4}}, {\"id\": \"2b632b2d91\", \"type\": \"card\", \"data\": {\"card_name\": \"Inbound\", \"col\": 4}}, {\"id\": \"4fec3748f3\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.242526",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "handshake",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Supplier Collaboration",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sourcing",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Onboarding",
+   "link_count": 0,
+   "link_to": "Supplier Onboarding",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Approved Supplier List",
+   "link_count": 0,
+   "link_to": "Approved Supplier List",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Request for Quotation",
+   "link_count": 0,
+   "link_to": "Request for Quotation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Quotation",
+   "link_count": 0,
+   "link_to": "Supplier Quotation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sourcing Decision",
+   "link_count": 0,
+   "link_to": "Sourcing Decision",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Ordering",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Order",
+   "link_count": 0,
+   "link_to": "Purchase Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Blanket Order",
+   "link_count": 0,
+   "link_to": "Blanket Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Schedule",
+   "link_count": 0,
+   "link_to": "Supplier Delivery Schedule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Acknowledgement",
+   "link_count": 0,
+   "link_to": "Supplier Order Acknowledgement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inbound",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Advance Shipping Notice",
+   "link_count": 0,
+   "link_to": "Advance Shipping Notice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Receipt",
+   "link_count": 0,
+   "link_to": "Purchase Receipt",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Receipt Discrepancy",
+   "link_count": 0,
+   "link_to": "Receipt Discrepancy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier Notice",
+   "link_count": 0,
+   "link_to": "Supplier Notice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Supplier Performance",
+   "link_count": 0,
+   "link_to": "Supplier Performance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.659344",
+ "modified_by": "Administrator",
+ "module": "Supplier Collaboration",
+ "name": "Supplier Collaboration",
+ "number_cards": [
+  {
+   "label": "Supplier On-Time Delivery",
+   "number_card_name": "Supplier On-Time Delivery"
+  },
+  {
+   "label": "Rejected Material",
+   "number_card_name": "Rejected Material"
+  },
+  {
+   "label": "Open Receipt Discrepancies",
+   "number_card_name": "Open Receipt Discrepancies"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Buyer"
+  },
+  {
+   "role": "Procurement Manager"
+  },
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Warehouse Clerk"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 34.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Supplier Collaboration",
+ "type": "Workspace"
+}

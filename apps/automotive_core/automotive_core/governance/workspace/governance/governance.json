@@ -1,0 +1,200 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"ff5b86a37c\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Governance</b></span>\", \"col\": 12}}, {\"id\": \"f36a76b532\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Pending Approvals\", \"col\": 3}}, {\"id\": \"2269b55b7e\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Approval Inbox\", \"col\": 3}}, {\"id\": \"5ed4d8d79a\", \"type\": \"card\", \"data\": {\"card_name\": \"Approvals\", \"col\": 4}}, {\"id\": \"b04f2cfd2c\", \"type\": \"card\", \"data\": {\"card_name\": \"Accountability\", \"col\": 4}}, {\"id\": \"69883422a7\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.215124",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "shield-check",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Governance",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Approvals",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Approval Request",
+   "link_count": 0,
+   "link_to": "Approval Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Approval Policy",
+   "link_count": 0,
+   "link_to": "Approval Policy",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Approval Delegation",
+   "link_count": 0,
+   "link_to": "Approval Delegation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Accountability",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Audit Event",
+   "link_count": 0,
+   "link_to": "Audit Event",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Segregation of Duties Rule",
+   "link_count": 0,
+   "link_to": "Segregation of Duties Rule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "User Provisioning Request",
+   "link_count": 0,
+   "link_to": "User Provisioning Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Segregation of Duties Review",
+   "link_count": 0,
+   "link_to": "Segregation of Duties Review",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.637402",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "Governance",
+ "number_cards": [
+  {
+   "label": "Pending Approvals",
+   "number_card_name": "Pending Approvals"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "Group Controller"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Procurement Manager"
+  },
+  {
+   "role": "Treasury Approver"
+  },
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Engineering Manager"
+  },
+  {
+   "role": "IT Operator"
+  },
+  {
+   "role": "Production Supervisor"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Buyer"
+  },
+  {
+   "role": "AP Clerk"
+  },
+  {
+   "role": "Dealer Liaison"
+  },
+  {
+   "role": "Product Engineer"
+  },
+  {
+   "role": "Quality Inspector"
+  },
+  {
+   "role": "Warehouse Clerk"
+  },
+  {
+   "role": "Logistics Coordinator"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 20.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "",
+   "label": "Approval Inbox",
+   "link_to": "approval-inbox",
+   "type": "Page"
+  }
+ ],
+ "standard": 1,
+ "title": "Governance",
+ "type": "Workspace"
+}

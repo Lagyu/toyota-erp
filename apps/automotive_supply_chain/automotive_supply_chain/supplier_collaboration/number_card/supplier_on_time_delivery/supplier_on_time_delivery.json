@@ -1,0 +1,18 @@
+{
+ "creation": "2026-10-24 10:07:52.240575",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "filters_json": "{\"kpi_code\": \"SC-SUP-OTD\"}",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Supplier On-Time Delivery",
+ "method": "automotive_core.analytics.cards.kpi_card",
+ "modified": "2026-10-24 10:07:52.240575",
+ "modified_by": "Administrator",
+ "module": "Supplier Collaboration",
+ "name": "Supplier On-Time Delivery",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Custom"
+}

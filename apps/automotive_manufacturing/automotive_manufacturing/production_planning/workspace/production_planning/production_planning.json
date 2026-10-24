@@ -1,0 +1,167 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"b14d0866c6\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Production Planning</b></span>\", \"col\": 12}}, {\"id\": \"81145e36c4\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Production Attainment\", \"col\": 3}}, {\"id\": \"4042567212\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Shortage Risk\", \"col\": 3}}, {\"id\": \"9a544a2b4a\", \"type\": \"card\", \"data\": {\"card_name\": \"Planning\", \"col\": 4}}, {\"id\": \"b6b823cfff\", \"type\": \"card\", \"data\": {\"card_name\": \"Orders\", \"col\": 4}}, {\"id\": \"daa1939861\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.228433",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "calendar-range",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Production Planning",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Run",
+   "link_count": 0,
+   "link_to": "Planning Run",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Planning Parameter Set",
+   "link_count": 0,
+   "link_to": "Planning Parameter Set",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Plant Schedule",
+   "link_count": 0,
+   "link_to": "Plant Schedule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Schedule Changes",
+   "link_count": 0,
+   "link_to": "Plant Schedule Change",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Orders",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Production Plan",
+   "link_count": 0,
+   "link_to": "Production Plan",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Work Order",
+   "link_count": 0,
+   "link_to": "Work Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Material Request",
+   "link_count": 0,
+   "link_to": "Material Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Production Variance",
+   "link_count": 0,
+   "link_to": "Production Variance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.648413",
+ "modified_by": "Administrator",
+ "module": "Production Planning",
+ "name": "Production Planning",
+ "number_cards": [
+  {
+   "label": "Production Attainment",
+   "number_card_name": "Production Attainment"
+  },
+  {
+   "label": "Shortage Risk",
+   "number_card_name": "Shortage Risk"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Production Supervisor"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "Buyer"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 30.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Production Planning",
+ "type": "Workspace"
+}

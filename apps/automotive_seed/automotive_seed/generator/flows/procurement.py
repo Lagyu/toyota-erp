@@ -24,6 +24,12 @@ from automotive_seed.generator.supply import primary_supplier
 PLANT_OF_COMPANY = {AICHI: "AICHI-VA", KYUSHU: "KYUSHU-PT", NA: "NA-PDC"}
 
 
+class MaterialShortage(Exception):
+	def __init__(self, item: str, qty: float, warehouse: str):
+		super().__init__(f"{item}: {qty} short in {warehouse}")
+		self.item, self.qty, self.warehouse = item, qty, warehouse
+
+
 class Procurement:
 	def __init__(self, sim):
 		self.sim = sim
@@ -169,11 +175,17 @@ class Procurement:
 				with ctx.as_user(clerk):
 					pr = frappe.get_doc("Purchase Receipt", make_purchase_receipt(asn))
 				rejected = []
+				inspections = {}
 				for row in pr.items:
 					if not frappe.get_cached_value("Item", row.item_code, "inspection_required_before_purchase"):
 						continue
 					bad = rng.random() < float(ctx.v("incoming_reject_rate"))
-					row.quality_inspection = self.sim.quality.incoming(row.item_code, pr.name, row.batch_no, plant, bad)
+					inspections[row.name] = (self.sim.quality.incoming(row.item_code, pr.name, row.batch_no, plant, bad), bad)
+				pr.reload()  # submitting an inspection writes its reference back to the receipt
+				for row in pr.items:
+					if row.name not in inspections:
+						continue
+					row.quality_inspection, bad = inspections[row.name]
 					if bad:
 						row.rejected_qty, row.qty = row.qty, 0
 						row.rejected_warehouse = frappe.get_cached_value("Plant", plant, "quarantine_warehouse")
@@ -281,8 +293,8 @@ class Procurement:
 					run = planning_run.start(company, plant, params)
 				ctx.count("Planning Run")
 				doc = frappe.get_doc("Planning Run", run)
-				if doc.status != "Completed":
-					continue
+				if doc.status != "Completed":  # never continue on a partial day
+					raise RuntimeError(f"Planning Run {run} {doc.status}: {(doc.error or '')[-800:]}")
 				purchases = 0
 				for p in doc.proposals:
 					is_buy = p.proposal_type == "Purchase" and p.supplier and not frappe.db.get_value(
@@ -321,7 +333,7 @@ class Procurement:
 
 	def intercompany_powertrains(self, day: dt.date) -> None:
 		"""Aichi's weekly order for Kyushu powertrains (transfer-priced); Kyushu's mirrored sales order."""
-		from erpnext.buying.doctype.purchase_order.purchase_order import make_inter_company_sales_order
+		from automotive_supply_chain.intercompany.orders import create_seller_order
 
 		ctx = self.ctx
 		need = self.sim.production.powertrain_need(add_days(day, 5))
@@ -345,15 +357,9 @@ class Procurement:
 			return
 		with ctx.step(6, 50):
 			po = self.purchase_order(internal, AICHI, lines, "AICHI-VA", extra={"buying_price_list": "Intercompany JPY"})
-			planner = self.sim.person("Production Planner", "KYUSHU-PT")
-			with ctx.as_user(planner):
-				so = make_inter_company_sales_order(po)
-				so.delivery_date = add_days(day, 2)
-				for item in so.items:
-					item.warehouse = frappe.get_cached_value("Plant", "KYUSHU-PT", "finished_goods_warehouse")
-					item.delivery_date = so.delivery_date
-				so.flags.ignore_permissions = True
-				so.insert()
+			with ctx.as_user(self.sim.person("Sales Manager")):  # group sales desk confirms Kyushu's order
+				so = frappe.get_doc("Sales Order", create_seller_order(po, add_days(day, 2),
+					frappe.get_cached_value("Plant", "KYUSHU-PT", "finished_goods_warehouse")))
 				so.submit()
 		ctx.count("Sales Order")
 
@@ -381,9 +387,11 @@ class Procurement:
 		ctx = self.ctx
 		supplier = primary_supplier(item, plant)
 		if not supplier:
-			raise RuntimeError(f"no approved supplier for {item} at {plant}")
+			# group-supplied parts (Kyushu powertrains) cannot be bought in: the unit waits
+			raise MaterialShortage(item, qty, warehouse)
 		company = frappe.get_cached_value("Plant", plant, "company")
 		qty = math.ceil(qty) if frappe.get_cached_value("Item", item, "stock_uom") == "Nos" else round(qty + 0.5, 1)
+		qty = max(qty, flt(frappe.get_cached_value("Item", item, "min_order_qty")))  # suppliers ship whole MOQs
 		rate = flt(frappe.get_cached_value("Item", item, "automotive_standard_cost")) * 1.08
 		with ctx.frozen(ctx.clock.tick(60)):
 			po = self.purchase_order(supplier, company, [{"item_code": item, "qty": qty, "rate": rate,
@@ -392,9 +400,13 @@ class Procurement:
 			clerk = self.sim.person("Warehouse Clerk", plant)
 			with ctx.as_user(clerk):
 				pr = frappe.get_doc("Purchase Receipt", make_purchase_receipt(asn))
+				inspections = {row.name: self.sim.quality.incoming(row.item_code, pr.name, row.batch_no, plant, False)
+					for row in pr.items
+					if frappe.get_cached_value("Item", row.item_code, "inspection_required_before_purchase")}
+				pr.reload()  # submitting an inspection writes its reference back to the receipt
 				for row in pr.items:
-					if frappe.get_cached_value("Item", row.item_code, "inspection_required_before_purchase"):
-						row.quality_inspection = self.sim.quality.incoming(row.item_code, pr.name, row.batch_no, plant, False)
+					if row.name in inspections:
+						row.quality_inspection = inspections[row.name]
 				pr.save()
 				pr.submit()
 		self.s["asn_due"].pop(asn, None)

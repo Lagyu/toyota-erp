@@ -1,0 +1,184 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"32bf05532c\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Dealer Operations</b></span>\", \"col\": 12}}, {\"id\": \"af19c6de1f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"OTIF\", \"col\": 3}}, {\"id\": \"fee1aac587\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Dealer Orders to Accept\", \"col\": 3}}, {\"id\": \"5af5b0bb49\", \"type\": \"card\", \"data\": {\"card_name\": \"Dealers\", \"col\": 4}}, {\"id\": \"621ff8bbd0\", \"type\": \"card\", \"data\": {\"card_name\": \"Orders\", \"col\": 4}}, {\"id\": \"813b117425\", \"type\": \"card\", \"data\": {\"card_name\": \"Delivery & Billing\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.243574",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "store",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Dealer Operations",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dealers",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dealer Registration",
+   "link_count": 0,
+   "link_to": "Dealer Registration",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_count": 0,
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Allocation Rule",
+   "link_count": 0,
+   "link_to": "Allocation Rule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Orders",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dealer Order",
+   "link_count": 0,
+   "link_to": "Dealer Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dealer Order Change",
+   "link_count": 0,
+   "link_to": "Dealer Order Change",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Order",
+   "link_count": 0,
+   "link_to": "Sales Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Allocation",
+   "link_count": 0,
+   "link_to": "Vehicle Allocation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery & Billing",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Note",
+   "link_count": 0,
+   "link_to": "Delivery Note",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Acceptance",
+   "link_count": 0,
+   "link_to": "Delivery Acceptance",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.660494",
+ "modified_by": "Administrator",
+ "module": "Dealer Operations",
+ "name": "Dealer Operations",
+ "number_cards": [
+  {
+   "label": "OTIF",
+   "number_card_name": "OTIF"
+  },
+  {
+   "label": "Dealer Orders to Accept",
+   "number_card_name": "Dealer Orders to Accept"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Dealer Liaison"
+  },
+  {
+   "role": "Logistics Coordinator"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 37.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Dealer Operations",
+ "type": "Workspace"
+}

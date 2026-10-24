@@ -89,6 +89,30 @@ services:
       - 127.0.0.1:${DEV_SOCKETIO_PORT:-19000}:9000
     mem_limit: ${DEV_BENCH_MEM_LIMIT:-5g}
 
+  # Background jobs for every dev site (queued document actions, e-mail, outbox, ...).
+  # Without it queued actions keep their document locked. The scheduler stays off in dev;
+  # run `bench --site <site> trigger-scheduler-event <event>` to exercise scheduled jobs.
+  worker:
+    <<: *small-service
+    image: ${BENCH_IMAGE:?}
+    init: true
+    working_dir: /home/frappe/dev/frappe-bench
+    command:
+      - bash
+      - -lc
+      - >-
+        until [ -f /home/frappe/dev/markers/erpnext.done ] && [ -d /home/frappe/dev/frappe-bench/sites ];
+        do sleep 10; done; cd /home/frappe/dev/frappe-bench && exec bench worker --queue short,default,long
+    environment:
+      TZ: Asia/Tokyo
+    depends_on:
+      redis-queue: { condition: service_healthy }
+      mariadb: { condition: service_healthy }
+    volumes:
+      - ../..:/workspace
+      - ${DEV_STATE_DIR:?}:/home/frappe/dev
+    mem_limit: ${DEV_WORKER_MEM_LIMIT:-1g}
+
 volumes:
   mariadb-data:
   redis-queue-data:

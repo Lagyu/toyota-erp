@@ -205,6 +205,8 @@ class Production:
 	# vehicles: build in schedule sequence, final inspection
 	# -----------------------------------------------------------------------------------
 	def vehicles(self, day: dt.date) -> None:
+		from automotive_seed.generator.flows.procurement import MaterialShortage
+
 		ctx = self.ctx
 		rate = float(ctx.v("final_reject_rate"))
 		rng = ctx.rng("final-inspection", day)
@@ -217,8 +219,13 @@ class Production:
 			for slot in sorted(doc.slots, key=lambda s: s.sequence_no):
 				if frappe.db.get_value("Work Order", slot.work_order, "status") not in OPEN_WO:
 					continue
-				with ctx.step(8, 0):
-					se = self.build(slot.work_order, 1, operator)
+				try:
+					with ctx.step(8, 0):
+						se = self.build(slot.work_order, 1, operator)
+				except MaterialShortage as short:
+					self.s.setdefault("shortages", []).append({"day": str(day), "work_order": slot.work_order,
+						"item": short.item, "qty": short.qty})
+					continue
 				vin = slot.vehicle_unit
 				with ctx.step(8, 0):
 					self.sim.quality.final_inspection(vin, se, inspector, rejected=rng.random() < rate)
@@ -320,8 +327,14 @@ class Production:
 		lines = frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "qty"])
 		line = rng.choice(lines)
 		engineer = self.sim.person("Product Engineer", "AICHI-VA")
+		factor = rng.choice((0.9, 1.1, 1.05))
+		uom = frappe.get_cached_value("Item", line.item_code, "stock_uom")
+		if frappe.get_cached_value("UOM", uom, "must_be_whole_number"):
+			new_qty = max(1, flt(line.qty) + (1 if factor > 1 else -1))  # whole parts: one more / one fewer
+		else:
+			new_qty = round(flt(line.qty) * factor, 3) or flt(line.qty)
 		change = {"change_type": "Change Quantity", "target_bom": bom, "component": line.item_code,
-			"qty": round(flt(line.qty) * rng.choice((0.9, 1.1, 1.05)), 3) or 1, "reason": "Design optimisation"}
+			"qty": new_qty, "reason": "Design optimisation"}
 		if target_item.startswith("FAST-KIT"):
 			family = line.item_code.rsplit("-", 1)[0]
 			alternatives = sorted(f for f in self.structure.get("fasteners", []) if f.startswith(family) and f != line.item_code

@@ -1,0 +1,42 @@
+{
+ "creation": "2026-10-24 10:07:52.230988",
+ "docstatus": 0,
+ "doctype": "Sidebar",
+ "header_icon": "database",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "house",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "Reference Data",
+   "link_type": "Workspace",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "sprout",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Seed Run",
+   "link_to": "Seed Run",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:07:52.230988",
+ "modified_by": "Administrator",
+ "module": "Reference Data",
+ "name": "Reference Data",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Reference Data"
+}

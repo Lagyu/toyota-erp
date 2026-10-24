@@ -1,0 +1,78 @@
+{
+ "creation": "2026-10-24 10:07:52.214641",
+ "docstatus": 0,
+ "doctype": "Page",
+ "icon": "inbox",
+ "idx": 0,
+ "modified": "2026-10-24 10:07:52.214641",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "approval-inbox",
+ "owner": "Administrator",
+ "page_name": "approval-inbox",
+ "roles": [
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "Group Controller"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Procurement Manager"
+  },
+  {
+   "role": "Treasury Approver"
+  },
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "Engineering Manager"
+  },
+  {
+   "role": "IT Operator"
+  },
+  {
+   "role": "Production Supervisor"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Buyer"
+  },
+  {
+   "role": "AP Clerk"
+  },
+  {
+   "role": "Dealer Liaison"
+  },
+  {
+   "role": "Product Engineer"
+  },
+  {
+   "role": "Quality Inspector"
+  },
+  {
+   "role": "Warehouse Clerk"
+  },
+  {
+   "role": "Logistics Coordinator"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "standard": "Yes",
+ "system_page": 0,
+ "title": "Approval Inbox"
+}

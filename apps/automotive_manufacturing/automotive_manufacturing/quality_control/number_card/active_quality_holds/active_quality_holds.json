@@ -1,0 +1,20 @@
+{
+ "color": "#E03131",
+ "creation": "2026-10-24 10:07:52.227036",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Quality Hold",
+ "filters_json": "[[\"Quality Hold\", \"status\", \"=\", \"Active\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Active Quality Holds",
+ "modified": "2026-10-24 10:07:52.227036",
+ "modified_by": "Administrator",
+ "module": "Quality Control",
+ "name": "Active Quality Holds",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

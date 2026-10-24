@@ -122,10 +122,13 @@ def bom_for(item: str, on: dt.date, boms_by_item: dict[str, list[tuple[str, dict
 
 
 def lot_size(need: float, item: dict[str, Any], policy: str) -> float:
-	if policy == "Minimum Order Qty Multiples" and item.get("min_order_qty"):
-		moq = float(item["min_order_qty"])
+	moq = float(item.get("min_order_qty") or 0)
+	if policy == "Minimum Order Qty Multiples" and moq:
 		return _r(math.ceil((need - EPS) / moq) * moq)
-	return _r(math.ceil(need - EPS) if item.get("whole_units", True) else need)
+	qty = _r(math.ceil(need - EPS) if item.get("whole_units", True) else need)
+	if moq and item.get("is_purchased"):
+		qty = max(qty, _r(moq))  # a supplier's minimum order is a hard floor under any policy
+	return qty
 
 
 def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:

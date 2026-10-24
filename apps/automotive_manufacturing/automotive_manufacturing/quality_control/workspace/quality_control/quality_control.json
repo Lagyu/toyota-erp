@@ -1,0 +1,129 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"84d9cd634a\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Quality Control</b></span>\", \"col\": 12}}, {\"id\": \"a21204e89f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Active Quality Holds\", \"col\": 3}}, {\"id\": \"5b7e4b157c\", \"type\": \"card\", \"data\": {\"card_name\": \"Inspection\", \"col\": 4}}, {\"id\": \"48ae28525e\", \"type\": \"card\", \"data\": {\"card_name\": \"Nonconformance\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.229226",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "badge-check",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Quality Control",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inspection",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Inspection",
+   "link_count": 0,
+   "link_to": "Quality Inspection",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Inspection Template",
+   "link_count": 0,
+   "link_to": "Quality Inspection Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Nonconformance",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Non Conformance",
+   "link_count": 0,
+   "link_to": "Non Conformance",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Hold",
+   "link_count": 0,
+   "link_to": "Quality Hold",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Disposition",
+   "link_count": 0,
+   "link_to": "Quality Disposition",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Quality Action",
+   "link_count": 0,
+   "link_to": "Quality Action",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.649166",
+ "modified_by": "Administrator",
+ "module": "Quality Control",
+ "name": "Quality Control",
+ "number_cards": [
+  {
+   "label": "Active Quality Holds",
+   "number_card_name": "Active Quality Holds"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Quality Inspector"
+  },
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 32.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Quality Control",
+ "type": "Workspace"
+}

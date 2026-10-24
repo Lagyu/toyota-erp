@@ -123,6 +123,13 @@ class TestMrp(unittest.TestCase):
 		b = mrp.plan(copy.deepcopy(base_snapshot()))
 		self.assertEqual(a, b)
 
+	def test_supplier_minimum_is_a_floor_under_lot_for_lot(self):
+		bought = {"is_purchased": True, "min_order_qty": 100}
+		self.assertEqual(mrp.lot_size(3, bought, "Lot For Lot"), 100)
+		self.assertEqual(mrp.lot_size(130, bought, "Lot For Lot"), 130)
+		self.assertEqual(mrp.lot_size(130, bought, "Minimum Order Qty Multiples"), 200)
+		self.assertEqual(mrp.lot_size(3, {"min_order_qty": 100}, "Lot For Lot"), 3)  # made in-house
+
 	def test_bom_cycle_is_rejected(self):
 		snapshot = base_snapshot()
 		snapshot["boms"]["BOM-FOAM"] = {"item": "FOAM", "quantity": 1, "lines": [{"item_code": "CAR", "qty": 1}]}

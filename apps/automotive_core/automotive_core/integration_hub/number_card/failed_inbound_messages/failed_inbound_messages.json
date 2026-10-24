@@ -1,0 +1,20 @@
+{
+ "color": "#E03131",
+ "creation": "2026-10-24 10:07:52.214062",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Integration Inbound Message",
+ "filters_json": "[[\"Integration Inbound Message\", \"status\", \"=\", \"Failed\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Failed Inbound Messages",
+ "modified": "2026-10-24 10:07:52.214062",
+ "modified_by": "Administrator",
+ "module": "Integration Hub",
+ "name": "Failed Inbound Messages",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

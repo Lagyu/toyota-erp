@@ -1,0 +1,20 @@
+{
+ "color": "#E03131",
+ "creation": "2026-10-24 10:07:52.214165",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Integration Outbound Message",
+ "filters_json": "[[\"Integration Outbound Message\", \"status\", \"=\", \"Dead Letter\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Outbound Dead Letters",
+ "modified": "2026-10-24 10:07:52.214165",
+ "modified_by": "Administrator",
+ "module": "Integration Hub",
+ "name": "Outbound Dead Letters",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

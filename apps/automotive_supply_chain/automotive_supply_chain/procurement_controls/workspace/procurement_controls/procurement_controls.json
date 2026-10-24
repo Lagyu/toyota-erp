@@ -1,0 +1,119 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"94c5fa6f1c\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Procurement Controls</b></span>\", \"col\": 12}}, {\"id\": \"7bc0919d56\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Purchase-to-Pay Cycle\", \"col\": 3}}, {\"id\": \"43646e05ae\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Match Exceptions\", \"col\": 3}}, {\"id\": \"9a9e6c33fb\", \"type\": \"card\", \"data\": {\"card_name\": \"Three-Way Match\", \"col\": 4}}, {\"id\": \"85c248a26f\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.242925",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "scale",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Procurement Controls",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Three-Way Match",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Invoice",
+   "link_count": 0,
+   "link_to": "Purchase Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Invoice Match Exception",
+   "link_count": 0,
+   "link_to": "Invoice Match Exception",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supply Chain Settings",
+   "link_count": 0,
+   "link_to": "Supply Chain Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Purchase Price Variance",
+   "link_count": 0,
+   "link_to": "Purchase Price Variance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.659775",
+ "modified_by": "Administrator",
+ "module": "Procurement Controls",
+ "name": "Procurement Controls",
+ "number_cards": [
+  {
+   "label": "Purchase-to-Pay Cycle",
+   "number_card_name": "Purchase-to-Pay Cycle"
+  },
+  {
+   "label": "Open Match Exceptions",
+   "number_card_name": "Open Match Exceptions"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "AP Clerk"
+  },
+  {
+   "role": "Procurement Manager"
+  },
+  {
+   "role": "Buyer"
+  },
+  {
+   "role": "Treasury Approver"
+  },
+  {
+   "role": "Group Controller"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 35.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Procurement Controls",
+ "type": "Workspace"
+}

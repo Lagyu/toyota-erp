@@ -211,9 +211,9 @@ class Sales:
 	# -----------------------------------------------------------------------------------
 	def export(self, day: dt.date) -> None:
 		"""NA replenishes its stock by an intercompany order; Aichi ships released vehicles against it."""
-		from erpnext.buying.doctype.purchase_order.purchase_order import make_inter_company_sales_order
 		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
 
+		from automotive_supply_chain.intercompany.orders import create_seller_order
 		from automotive_supply_chain.intercompany.transfer_pricing import agreed_price
 
 		ctx = self.ctx
@@ -234,13 +234,7 @@ class Sales:
 			po = self.sim.procurement.purchase_order(internal_supplier, NA, lines, "NA-PDC", buyer,
 				extra={"buying_price_list": "Intercompany USD", "currency": "USD"})
 			with ctx.as_user(self.sim.person("Dealer Liaison")):
-				so = make_inter_company_sales_order(po)
-				so.delivery_date = add_days(day, 7)
-				for item in so.items:
-					item.warehouse = fg_for("AICHI-VA")
-					item.delivery_date = so.delivery_date
-				so.flags.ignore_permissions = True
-				so.insert()
+				so = frappe.get_doc("Sales Order", create_seller_order(po, add_days(day, 7), fg_for("AICHI-VA")))
 				so.submit()
 			ctx.count("Sales Order")
 		# ship released, unallocated vehicles against open export lines (FIFO)

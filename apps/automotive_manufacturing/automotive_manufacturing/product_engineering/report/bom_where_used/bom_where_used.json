@@ -1,0 +1,44 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2026-10-24 10:07:52.227229",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "modified": "2026-10-24 10:07:52.227229",
+ "modified_by": "Administrator",
+ "module": "Product Engineering",
+ "name": "BOM Where Used",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "query": "",
+ "ref_doctype": "BOM",
+ "report_name": "BOM Where Used",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "Product Engineer"
+  },
+  {
+   "role": "Engineering Manager"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Buyer"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ]
+}

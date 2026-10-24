@@ -1,0 +1,214 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"5c603b3f41\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Shop Floor</b></span>\", \"col\": 12}}, {\"id\": \"9c8661a6ad\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"OEE\", \"col\": 3}}, {\"id\": \"3d7f2f9432\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Line Stop Hours\", \"col\": 3}}, {\"id\": \"1318a6aadf\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"WIP Value\", \"col\": 3}}, {\"id\": \"dd121f94fb\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Andon Events\", \"col\": 3}}, {\"id\": \"9d111e5ce2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Kanban Signals\", \"col\": 3}}, {\"id\": \"8d7d5b74fc\", \"type\": \"card\", \"data\": {\"card_name\": \"Execution\", \"col\": 4}}, {\"id\": \"2dd77dd516\", \"type\": \"card\", \"data\": {\"card_name\": \"Andon\", \"col\": 4}}, {\"id\": \"de978ca545\", \"type\": \"card\", \"data\": {\"card_name\": \"Kanban\", \"col\": 4}}, {\"id\": \"e97b2c21bd\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.228867",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "factory",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Shop Floor",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Execution",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Work Order",
+   "link_count": 0,
+   "link_to": "Work Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Job Card",
+   "link_count": 0,
+   "link_to": "Job Card",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shift Handover",
+   "link_count": 0,
+   "link_to": "Shift Handover",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Downtime Entry",
+   "link_count": 0,
+   "link_to": "Downtime Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Andon",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Andon Event",
+   "link_count": 0,
+   "link_to": "Andon Event",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Andon Reason Code",
+   "link_count": 0,
+   "link_to": "Andon Reason Code",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Kanban",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Kanban Loop",
+   "link_count": 0,
+   "link_to": "Kanban Loop",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Kanban Card",
+   "link_count": 0,
+   "link_to": "Kanban Card",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Kanban Signal",
+   "link_count": 0,
+   "link_to": "Kanban Signal",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "WIP by Line",
+   "link_count": 0,
+   "link_to": "WIP by Line",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "OEE by Line",
+   "link_count": 0,
+   "link_to": "OEE by Line",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.648797",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Shop Floor",
+ "number_cards": [
+  {
+   "label": "OEE",
+   "number_card_name": "OEE"
+  },
+  {
+   "label": "Line Stop Hours",
+   "number_card_name": "Line Stop Hours"
+  },
+  {
+   "label": "WIP Value",
+   "number_card_name": "WIP Value"
+  },
+  {
+   "label": "Open Andon Events",
+   "number_card_name": "Open Andon Events"
+  },
+  {
+   "label": "Open Kanban Signals",
+   "number_card_name": "Open Kanban Signals"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Production Supervisor"
+  },
+  {
+   "role": "Line Operator"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 31.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Shop Floor",
+ "type": "Workspace"
+}

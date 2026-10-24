@@ -1,0 +1,193 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"eee45f95c0\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Management</b></span>\", \"col\": 12}}, {\"id\": \"75f86a7e0f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Production Attainment\", \"col\": 3}}, {\"id\": \"2cff303e77\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"OTIF\", \"col\": 3}}, {\"id\": \"4f9935fd5e\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Line Stop Hours\", \"col\": 3}}, {\"id\": \"de3a3d0f9d\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Shortage Risk\", \"col\": 3}}, {\"id\": \"910905499d\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Stock Accuracy\", \"col\": 3}}, {\"id\": \"fa0d74dfd8\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Supplier On-Time Delivery\", \"col\": 3}}, {\"id\": \"c38bfcb133\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Rejected Material\", \"col\": 3}}, {\"id\": \"24b9871669\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"WIP Value\", \"col\": 3}}, {\"id\": \"9f9f5facfe\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"OEE\", \"col\": 3}}, {\"id\": \"e97adb6628\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Purchase-to-Pay Cycle\", \"col\": 3}}, {\"id\": \"0eb087ecf2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Days Sales Outstanding\", \"col\": 3}}, {\"id\": \"2fe9a5f048\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Gross Margin\", \"col\": 3}}, {\"id\": \"870f6b4be9\", \"type\": \"card\", \"data\": {\"card_name\": \"KPIs\", \"col\": 4}}, {\"id\": \"2748deac85\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.216115",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "chart-line",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Management",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "KPIs",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "KPI Definition",
+   "link_count": 0,
+   "link_to": "KPI Definition",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "KPI Snapshot",
+   "link_count": 0,
+   "link_to": "KPI Snapshot",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 6,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Group Consolidation",
+   "link_count": 0,
+   "link_to": "Group Consolidation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "OEE by Line",
+   "link_count": 0,
+   "link_to": "OEE by Line",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Production Variance",
+   "link_count": 0,
+   "link_to": "Production Variance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Supplier Performance",
+   "link_count": 0,
+   "link_to": "Supplier Performance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Purchase Price Variance",
+   "link_count": 0,
+   "link_to": "Purchase Price Variance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Inventory Position",
+   "link_count": 0,
+   "link_to": "Inventory Position",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.638502",
+ "modified_by": "Administrator",
+ "module": "Analytics",
+ "name": "Management",
+ "number_cards": [
+  {
+   "label": "Production Attainment",
+   "number_card_name": "Production Attainment"
+  },
+  {
+   "label": "OTIF",
+   "number_card_name": "OTIF"
+  },
+  {
+   "label": "Line Stop Hours",
+   "number_card_name": "Line Stop Hours"
+  },
+  {
+   "label": "Shortage Risk",
+   "number_card_name": "Shortage Risk"
+  },
+  {
+   "label": "Stock Accuracy",
+   "number_card_name": "Stock Accuracy"
+  },
+  {
+   "label": "Supplier On-Time Delivery",
+   "number_card_name": "Supplier On-Time Delivery"
+  },
+  {
+   "label": "Rejected Material",
+   "number_card_name": "Rejected Material"
+  },
+  {
+   "label": "WIP Value",
+   "number_card_name": "WIP Value"
+  },
+  {
+   "label": "OEE",
+   "number_card_name": "OEE"
+  },
+  {
+   "label": "Purchase-to-Pay Cycle",
+   "number_card_name": "Purchase-to-Pay Cycle"
+  },
+  {
+   "label": "Days Sales Outstanding",
+   "number_card_name": "Days Sales Outstanding"
+  },
+  {
+   "label": "Gross Margin",
+   "number_card_name": "Gross Margin"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "Group Controller"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 10.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Management",
+ "type": "Workspace"
+}

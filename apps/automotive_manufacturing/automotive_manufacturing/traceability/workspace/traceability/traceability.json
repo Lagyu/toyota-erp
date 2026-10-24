@@ -1,0 +1,145 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"f83b77d2b9\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Traceability</b></span>\", \"col\": 12}}, {\"id\": \"4e5c6f17fc\", \"type\": \"card\", \"data\": {\"card_name\": \"Units\", \"col\": 4}}, {\"id\": \"afeccb3d7f\", \"type\": \"card\", \"data\": {\"card_name\": \"Genealogy\", \"col\": 4}}, {\"id\": \"d9259292a8\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.229509",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "git-branch",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Traceability",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Units",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Unit",
+   "link_count": 0,
+   "link_to": "Vehicle Unit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Serial No",
+   "link_count": 0,
+   "link_to": "Serial No",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Batch",
+   "link_count": 0,
+   "link_to": "Batch",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Genealogy",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Genealogy Link",
+   "link_count": 0,
+   "link_to": "Genealogy Link",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Recall Campaign",
+   "link_count": 0,
+   "link_to": "Recall Campaign",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Vehicle Genealogy",
+   "link_count": 0,
+   "link_to": "Vehicle Genealogy",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Affected Vehicles",
+   "link_count": 0,
+   "link_to": "Affected Vehicles",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.649468",
+ "modified_by": "Administrator",
+ "module": "Traceability",
+ "name": "Traceability",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Quality Inspector"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Dealer Liaison"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 33.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Traceability",
+ "type": "Workspace"
+}

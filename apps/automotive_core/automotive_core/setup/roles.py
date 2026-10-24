@@ -83,6 +83,18 @@ def _ensure_role(name: str, desk_access: int) -> None:
 
 
 def ensure_role_profiles() -> None:
+	"""Upsert the persona role profiles. Users holding a changed profile are re-synced in the
+	same step (as during install) instead of by a queued job, so a migration never leaves a
+	locked Role Profile behind for a worker to release."""
+	previous = frappe.flags.in_install
+	frappe.flags.in_install = previous or "automotive_core"
+	try:
+		_ensure_role_profiles()
+	finally:
+		frappe.flags.in_install = previous
+
+
+def _ensure_role_profiles() -> None:
 	for profile, roles in ROLE_PROFILES.items():
 		if frappe.db.exists("Role Profile", profile):
 			doc = frappe.get_doc("Role Profile", profile)

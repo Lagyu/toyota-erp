@@ -1,0 +1,35 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"ee958726d3\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Reference Data</b></span>\", \"col\": 12}}]",
+ "creation": "2026-10-24 10:07:52.230861",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "database",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Reference Data",
+ "links": [],
+ "modified": "2026-10-24 10:09:24.650486",
+ "modified_by": "Administrator",
+ "module": "Reference Data",
+ "name": "Reference Data",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 99.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Reference Data",
+ "type": "Workspace"
+}

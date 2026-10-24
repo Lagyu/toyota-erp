@@ -1,0 +1,20 @@
+{
+ "color": "#E03131",
+ "creation": "2026-10-24 10:07:52.226876",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Andon Event",
+ "filters_json": "[[\"Andon Event\", \"status\", \"in\", [\"Raised\", \"Acknowledged\", \"Contained\"], false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Open Andon Events",
+ "modified": "2026-10-24 10:07:52.226876",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Open Andon Events",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

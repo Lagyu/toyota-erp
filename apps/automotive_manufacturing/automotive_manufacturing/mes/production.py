@@ -38,16 +38,20 @@ def build_entry(work_order: str, qty: float = 1, serial_nos: list[str] | None = 
 		se.set_posting_time = 1
 		se.posting_date = getdate(posting_date)
 		se.posting_time = posting_time or nowtime()
-	has_serial = frappe.get_cached_value("Item", wo.production_item, "has_serial_no")
-	if has_serial:
-		serials = serial_nos or planned_vins(work_order, int(qty))
-		if len(serials) != int(qty):
+	serials = None
+	if frappe.get_cached_value("Item", wo.production_item, "has_serial_no"):
+		if serial_nos:
+			serials = serial_nos
+		elif frappe.db.exists("Vehicle Unit", {"work_order": work_order}):
+			serials = planned_vins(work_order, int(qty))  # vehicles: the VINs reserved in build sequence
+		# other serialized products (powertrains, engines) take the next numbers of their series
+		if serials is not None and len(serials) != int(qty):
 			frappe.throw(_("Work Order {0}: {1} serial number(s) needed, {2} available.").format(
 				work_order, int(qty), len(serials)))
 	for row in se.items:
 		if row.is_finished_item:
 			row.use_serial_batch_fields = 1
-			if has_serial:
+			if serials:
 				row.serial_no = "\n".join(serials)
 	scanned = {}
 	for comp in components or []:

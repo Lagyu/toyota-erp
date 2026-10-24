@@ -1,0 +1,194 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"4e9189d01f\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Logistics</b></span>\", \"col\": 12}}, {\"id\": \"bbd41edaa9\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Stock Accuracy\", \"col\": 3}}, {\"id\": \"312ba2166f\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Open Transport Exceptions\", \"col\": 3}}, {\"id\": \"7a2c55d7a8\", \"type\": \"card\", \"data\": {\"card_name\": \"Warehouse\", \"col\": 4}}, {\"id\": \"73755da871\", \"type\": \"card\", \"data\": {\"card_name\": \"Transport\", \"col\": 4}}, {\"id\": \"9076ab7cc2\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.243227",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "warehouse",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Logistics",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Entry",
+   "link_count": 0,
+   "link_to": "Stock Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Cycle Count",
+   "link_count": 0,
+   "link_to": "Cycle Count",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stock Reconciliation",
+   "link_count": 0,
+   "link_to": "Stock Reconciliation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse",
+   "link_count": 0,
+   "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transport",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transport Booking",
+   "link_count": 0,
+   "link_to": "Transport Booking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shipment Manifest",
+   "link_count": 0,
+   "link_to": "Shipment Manifest",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transport Exception",
+   "link_count": 0,
+   "link_to": "Transport Exception",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Note",
+   "link_count": 0,
+   "link_to": "Delivery Note",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Inventory Position",
+   "link_count": 0,
+   "link_to": "Inventory Position",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Ledger",
+   "link_count": 0,
+   "link_to": "Stock Ledger",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Stock Balance",
+   "link_count": 0,
+   "link_to": "Stock Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.660117",
+ "modified_by": "Administrator",
+ "module": "Logistics",
+ "name": "Logistics",
+ "number_cards": [
+  {
+   "label": "Stock Accuracy",
+   "number_card_name": "Stock Accuracy"
+  },
+  {
+   "label": "Open Transport Exceptions",
+   "number_card_name": "Open Transport Exceptions"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Warehouse Clerk"
+  },
+  {
+   "role": "Logistics Coordinator"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 36.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Logistics",
+ "type": "Workspace"
+}

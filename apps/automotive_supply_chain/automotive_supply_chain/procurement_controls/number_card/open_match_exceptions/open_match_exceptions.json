@@ -1,0 +1,20 @@
+{
+ "color": "#E8590C",
+ "creation": "2026-10-24 10:07:52.241199",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Invoice Match Exception",
+ "filters_json": "[[\"Invoice Match Exception\", \"status\", \"=\", \"Open\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Open Match Exceptions",
+ "modified": "2026-10-24 10:07:52.241199",
+ "modified_by": "Administrator",
+ "module": "Procurement Controls",
+ "name": "Open Match Exceptions",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

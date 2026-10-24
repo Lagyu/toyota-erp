@@ -1,0 +1,66 @@
+{
+ "creation": "2026-10-24 10:07:52.243995",
+ "docstatus": 0,
+ "doctype": "Sidebar",
+ "header_icon": "arrow-left-right",
+ "idx": 0,
+ "items": [
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "house",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Home",
+   "link_to": "Intercompany",
+   "link_type": "Workspace",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "file-signature",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Transfer Price Agreement",
+   "link_to": "Transfer Price Agreement",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "sheet",
+   "indent": 1,
+   "keep_closed": 1,
+   "label": "Reports",
+   "link_type": "DocType",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Intercompany Reconciliation",
+   "link_to": "Intercompany Reconciliation",
+   "link_type": "Report",
+   "open_in_new_tab": 0,
+   "show_arrow": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:07:52.243995",
+ "modified_by": "Administrator",
+ "module": "Intercompany",
+ "name": "Intercompany",
+ "owner": "Administrator",
+ "standard": 1,
+ "title": "Intercompany"
+}

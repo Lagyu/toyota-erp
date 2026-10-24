@@ -90,6 +90,7 @@ def send_welcome_email() -> int:
 
 def commit() -> None:
 	"""Commit a scheduled/background unit of work. Tests run inside a transaction that
-	IntegrationTestCase rolls back, so committing there would leak test data."""
-	if not frappe.flags.in_test:
+	IntegrationTestCase rolls back, so committing there would leak test data; a bulk
+	generator (automotive_seed) owns its transaction boundaries (one per simulated day)."""
+	if not (frappe.flags.in_test or frappe.flags.automotive_bulk):
 		frappe.db.commit()

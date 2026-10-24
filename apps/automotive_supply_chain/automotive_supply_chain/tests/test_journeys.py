@@ -178,7 +178,6 @@ class TestIntercompanyJourney(JourneyTestCase):
 
 	def test_intercompany_shipment_balances(self):
 		from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_inter_company_purchase_invoice
-		from erpnext.buying.doctype.purchase_order.purchase_order import make_inter_company_sales_order
 		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
 		from erpnext.stock.doctype.delivery_note.delivery_note import (
 			make_inter_company_purchase_receipt,
@@ -214,13 +213,24 @@ class TestIntercompanyJourney(JourneyTestCase):
 		with as_user(h.BUYER):
 			po.reload()
 			po.submit()
-		so = make_inter_company_sales_order(po.name)
-		so.delivery_date = add_days(nowdate(), 2)
-		for item in so.items:
-			item.warehouse = h.KYUSHU_FG
-			item.delivery_date = so.delivery_date
-		so.insert(ignore_permissions=True)
-		so.submit()
+		from automotive_supply_chain.intercompany.orders import create_seller_order
+
+		with as_user(h.SALES_MGR):  # the seller's desk may not read Aichi's PO; the mapping is a system step
+			so = frappe.get_doc("Sales Order", create_seller_order(po.name, add_days(nowdate(), 2), h.KYUSHU_FG))
+			self.assertEqual(create_seller_order(po.name), so.name)  # idempotent
+			so.submit()
+		self.assertEqual((so.owner, so.company, so.inter_company_order_reference), (h.SALES_MGR, KYUSHU, po.name))
+		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "system.on_behalf_of",
+			"reference_name": po.name, "on_behalf_of": h.SALES_MGR}))
+		external = frappe.get_doc({"doctype": "Purchase Order", "supplier": h.supplier("Hoshi Metalworks"),
+			"company": AICHI, "transaction_date": nowdate(), "schedule_date": add_days(nowdate(), 3),
+			"items": [{"item_code": self.cat["wheel"], "qty": 1, "rate": 120, "warehouse": catalog.PARTS_STORE,
+				"schedule_date": add_days(nowdate(), 3)}]}).insert(ignore_permissions=True)
+		approve(external, h.BUYER, [h.PROC_MGR])
+		external.reload()
+		external.submit()
+		with as_user(h.SALES_MGR), self.assertRaises(frappe.ValidationError):
+			create_seller_order(external.name)
 		dn = make_delivery_note(so.name)
 		dn.insert(ignore_permissions=True)
 		dn.submit()

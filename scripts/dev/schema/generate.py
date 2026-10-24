@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import desk
 from dsl import DocType, class_name, scrub
 
 REPO = Path(__file__).resolve().parents[3]
@@ -38,8 +39,9 @@ class {cls}(Document):
 '''
 
 
-def load_specs(app_dir: Path) -> list[DocType]:
+def load_specs(app_dir: Path) -> tuple[list[DocType], list]:
 	specs: list[DocType] = []
+	desk_specs: list = []
 	for path in sorted((app_dir / "schema").glob("*.py")):
 		if path.name.startswith("_"):
 			continue
@@ -47,7 +49,8 @@ def load_specs(app_dir: Path) -> list[DocType]:
 		module = importlib.util.module_from_spec(module_spec)
 		module_spec.loader.exec_module(module)
 		specs.extend(getattr(module, "DOCTYPES", []))
-	return specs
+		desk_specs.extend(getattr(module, "DESK", []))
+	return specs, desk_specs
 
 
 def dumps(doc: dict) -> str:
@@ -83,7 +86,7 @@ def process_app(app_dir: Path, check: bool, problems: list[str]) -> int:
 	package = app_dir / app
 	modules_txt = package / "modules.txt"
 	declared_modules = set(modules_txt.read_text().split("\n")) if modules_txt.exists() else set()
-	specs = load_specs(app_dir)
+	specs, desk_specs = load_specs(app_dir)
 	seen: set[str] = set()
 	written = 0
 	for spec in specs:
@@ -115,7 +118,51 @@ def process_app(app_dir: Path, check: bool, problems: list[str]) -> int:
 		json_path.parent.mkdir(parents=True, exist_ok=True)
 		json_path.write_text(dumps(rendered))
 		written += 1
+	return written + process_desk(app, package, declared_modules, desk_specs, check, problems)
+
+
+def process_desk(app: str, package: Path, declared_modules: set[str], desk_specs: list, check: bool,
+		problems: list[str]) -> int:
+	written = 0
+	seen: set[tuple[str, str]] = set()
+	for spec in desk_specs:
+		for module, folder, stem, doc in desk.records(spec):
+			if (folder, stem) in seen:
+				problems.append(f"{app}: {folder} {stem} defined twice")
+				continue
+			seen.add((folder, stem))
+			if module not in declared_modules:
+				problems.append(f"{app}: module {module!r} of {folder} {stem} missing from modules.txt")
+			target_dir = package / scrub(module) / folder / stem
+			if folder in ("report", "page"):
+				for init in (package / scrub(module) / folder / "__init__.py", target_dir / "__init__.py"):
+					ensure_file(init, "", check, problems)
+				for suffix in (".py", ".js") if folder == "report" else (".js",):
+					if not (target_dir / f"{stem}{suffix}").exists():
+						problems.append(f"{app}: {folder} {doc['name']} needs {stem}{suffix} (written by hand)")
+			json_path = target_dir / f"{stem}.json"
+			existing = json.loads(json_path.read_text()) if json_path.exists() else None
+			rendered = render_record(doc, existing)
+			if existing == rendered:
+				continue
+			if check:
+				problems.append(f"stale {json_path.relative_to(REPO)}")
+				continue
+			json_path.parent.mkdir(parents=True, exist_ok=True)
+			json_path.write_text(dumps(rendered))
+			written += 1
 	return written
+
+
+def render_record(doc: dict, existing: dict | None) -> dict:
+	now = dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
+	doc = dict(doc)
+	doc["creation"] = (existing or {}).get("creation", now)
+	if existing and {k: v for k, v in existing.items() if k != "modified"} == doc:
+		doc["modified"] = existing.get("modified", now)
+		return doc
+	doc["modified"] = now
+	return doc
 
 
 def main() -> int:
@@ -135,7 +182,7 @@ def main() -> int:
 	if problems:
 		return 1
 	if not args.check:
-		print(f"schema: {total} DocType file(s) written")
+		print(f"schema: {total} file(s) written")
 	return 0
 
 

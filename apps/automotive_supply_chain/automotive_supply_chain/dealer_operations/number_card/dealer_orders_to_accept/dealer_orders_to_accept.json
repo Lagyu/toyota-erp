@@ -1,0 +1,20 @@
+{
+ "color": "#1C7ED6",
+ "creation": "2026-10-24 10:07:52.241744",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Dealer Order",
+ "filters_json": "[[\"Dealer Order\", \"status\", \"=\", \"Submitted\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Dealer Orders to Accept",
+ "modified": "2026-10-24 10:07:52.241744",
+ "modified_by": "Administrator",
+ "module": "Dealer Operations",
+ "name": "Dealer Orders to Accept",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

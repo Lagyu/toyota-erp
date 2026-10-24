@@ -1,0 +1,19 @@
+{
+ "creation": "2026-10-24 10:07:52.226958",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Kanban Signal",
+ "filters_json": "[[\"Kanban Signal\", \"status\", \"in\", [\"Open\", \"Ordered\", \"Shipped\", \"Escalated\"], false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Open Kanban Signals",
+ "modified": "2026-10-24 10:07:52.226958",
+ "modified_by": "Administrator",
+ "module": "Shop Floor",
+ "name": "Open Kanban Signals",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

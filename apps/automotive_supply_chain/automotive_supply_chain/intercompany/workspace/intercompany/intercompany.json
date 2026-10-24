@@ -1,0 +1,78 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"2180801abf\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Intercompany</b></span>\", \"col\": 12}}, {\"id\": \"d79fa9011f\", \"type\": \"card\", \"data\": {\"card_name\": \"Agreements\", \"col\": 4}}, {\"id\": \"d9566d055f\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.243881",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "arrow-left-right",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Intercompany",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Agreements",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Transfer Price Agreement",
+   "link_count": 0,
+   "link_to": "Transfer Price Agreement",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Intercompany Reconciliation",
+   "link_count": 0,
+   "link_to": "Intercompany Reconciliation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.660801",
+ "modified_by": "Administrator",
+ "module": "Intercompany",
+ "name": "Intercompany",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Group Controller"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 41.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Intercompany",
+ "type": "Workspace"
+}

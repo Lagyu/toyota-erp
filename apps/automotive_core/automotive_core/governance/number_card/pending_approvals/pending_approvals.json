@@ -1,0 +1,20 @@
+{
+ "color": "#E8590C",
+ "creation": "2026-10-24 10:07:52.213956",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Approval Request",
+ "filters_json": "[[\"Approval Request\", \"status\", \"=\", \"Pending\", false]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Pending Approvals",
+ "modified": "2026-10-24 10:07:52.213956",
+ "modified_by": "Administrator",
+ "module": "Governance",
+ "name": "Pending Approvals",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "type": "Document Type"
+}

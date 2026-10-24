@@ -147,7 +147,11 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 	n = int(ctx.profile["partners"]["suppliers"])
 	by_commodity: dict[str, list[str]] = {c: [] for c in COMMODITIES}
 	for i in range(n):
-		commodity = COMMODITIES[i % len(COMMODITIES)]
+		# with fewer suppliers than commodities each supplier covers several, so every
+		# commodity has a source; otherwise one commodity each, round robin
+		covered = [COMMODITIES[k] for k in range(len(COMMODITIES)) if k % n == i] if n < len(COMMODITIES) \
+			else [COMMODITIES[i % len(COMMODITIES)]]
+		commodity = covered[0]
 		region = "US" if i % 15 == 14 else "JP"
 		name = names.supplier_name(i, commodity, region)
 		code = f"S{i + 1:03d}"
@@ -159,9 +163,7 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 				f2, l2 = names.person(rng, region)
 				contacts.append({"first_name": f2, "last_name": l2, "email": f"logistics@{code.lower()}.supplier.example",
 					"partner_role": "Logistics"})
-			plants = ["KYUSHU-PT"] if commodity in ("castings", "forgings", "machining") else ["AICHI-VA"]
-			if commodity in ("battery", "motors", "electronics", "rubber"):
-				plants = ["AICHI-VA", "KYUSHU-PT"]
+			plants = sorted({p for c in covered for p in _commodity_plants(c)})
 			with ctx.as_user(buyer):
 				doc = frappe.get_doc({"doctype": "Supplier Onboarding", "supplier_name": name, "partner_code": code,
 					"supplier_group": "Production Material", "country": "United States" if region == "US" else "Japan",
@@ -169,7 +171,8 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 					"certifications": [{"standard": "IATF 16949", "certificate_no": f"IATF-{code}-2025",
 						"valid_until": add_days(ctx.end, 400)}],
 					"contacts": contacts,
-					"proposed_items": [{"item_group": g, "plant": p} for g in COMMODITY_GROUPS[commodity] for p in plants]})
+					"proposed_items": [{"item_group": g, "plant": p}
+						for g in sorted({g for c in covered for g in COMMODITY_GROUPS[c]}) for p in plants]})
 				doc.insert()
 				req = approvals.request_approval(doc.doctype, doc.name)
 			with ctx.as_user(managers[0]):
@@ -185,9 +188,19 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 				asl.status, asl.ppap_status, asl.share_percent = "Approved", "Approved", 100
 				with ctx.as_user(managers[-1]):
 					asl.save()
-		by_commodity[commodity].append(frappe.db.get_value("Supplier", {"supplier_name": name}, "name"))
+		supplier = frappe.db.get_value("Supplier", {"supplier_name": name}, "name")
+		for c in covered:
+			by_commodity[c].append(supplier)
 	frappe.db.commit()
 	return by_commodity
+
+
+def _commodity_plants(commodity: str) -> list[str]:
+	if commodity in ("castings", "forgings", "machining"):
+		return ["KYUSHU-PT"]
+	if commodity in ("battery", "motors", "electronics", "rubber"):
+		return ["AICHI-VA", "KYUSHU-PT"]
+	return ["AICHI-VA"]
 
 
 def carriers(ctx: SeedContext) -> list[str]:

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import contextlib
 import datetime as dt
+import functools
 import hashlib
 import json
 import random
@@ -45,11 +46,15 @@ class Clock:
 		self.now = max(self.now + dt.timedelta(seconds=7), target)
 		return self.now
 
-	def tick(self, seconds: int = 30) -> dt.datetime:
-		self.now = self.now + dt.timedelta(seconds=seconds)
-		end = dt.datetime.combine(self.day, dt.time(23, 59, 0))
-		if self.now > end:
-			self.now = end
+	def tick(self, seconds: float = 30) -> dt.datetime:
+		"""Advance; near midnight keep strictly increasing in microseconds so every posting
+		still lands on the simulated day."""
+		end = dt.datetime.combine(self.day, dt.time(23, 59, 59))
+		step = self.now + dt.timedelta(seconds=seconds)
+		if step <= end:
+			self.now = step
+		elif self.now < dt.datetime.combine(self.day, dt.time(23, 59, 59, 999_999)):
+			self.now = max(self.now, end) + dt.timedelta(microseconds=1)
 		return self.now
 
 
@@ -104,6 +109,49 @@ class SeedContext:
 		moment = self.clock.at(hour, minute)
 		with self.frozen(moment):
 			yield moment
+
+	def advance(self, seconds: float = 2) -> None:
+		"""Move the active frozen moment forward by one clock tick (no-op when not frozen)."""
+		if not self._freezers or not self.clock:
+			return
+		moment = self.clock.tick(seconds)
+		self._latest = max(self._latest, moment) if self._latest else moment
+		self._freezers[-1].move_to(_utc(self._latest))
+
+	@contextlib.contextmanager
+	def auto_tick(self, seconds: float = 2):
+		"""Give every top-level document insert/submit/cancel its own, later moment.
+
+		Stock postings made in one frozen step would otherwise share a timestamp, and
+		ERPNext's batch/serial availability checks treat same-instant entries as not yet
+		posted (a transfer to line side followed by the build that consumes it fails).
+		Documents created *inside* a submit (ledger entries, bundles) keep their voucher's time.
+		"""
+		from frappe.model.document import Document
+
+		depth = [0]
+
+		def wrap(fn):
+			@functools.wraps(fn)
+			def inner(doc, *args, **kwargs):
+				if depth[0] == 0:
+					self.advance(seconds)
+				depth[0] += 1
+				try:
+					return fn(doc, *args, **kwargs)
+				finally:
+					depth[0] -= 1
+
+			return inner
+
+		originals = {name: Document.__dict__[name] for name in ("insert", "submit", "cancel")}
+		for name, fn in originals.items():
+			setattr(Document, name, wrap(fn))
+		try:
+			yield
+		finally:
+			for name, fn in originals.items():
+				setattr(Document, name, fn)
 
 	def count(self, doctype: str, n: int = 1) -> None:
 		self.counts[doctype] += n

@@ -15,9 +15,11 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import time
 import traceback
+import warnings
 from pathlib import Path
 
 import frappe
@@ -188,8 +190,14 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		last = frappe.db.get_value("Seed Run", name, "simulated_date")
 		day = add_days(getdate(last), 1) if last else ctx.start
 		sim = simulation.Simulation(ctx, state)
+		with ctx.auto_tick():
+			_simulate(ctx, sim, name, state, day, stop_at)
+		return f"history to {min(stop_at, ctx.end)}"
+
+	def _simulate(ctx, sim, name, state, day, stop_at):
 		while day <= min(stop_at, ctx.end):
-			sim.run_day(day)
+			with _atomic_day():
+				sim.run_day(day)
 			frappe.db.commit()
 			with ctx.step(23, 30):
 				_repost_pending()
@@ -204,7 +212,6 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 			day = add_days(day, 1)
 		if day <= ctx.end:
 			raise _Paused
-		return f"history to {min(stop_at, ctx.end)}"
 
 	try:
 		stage("history", history)
@@ -225,6 +232,20 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 
 class _Paused(Exception):
 	pass
+
+
+@contextlib.contextmanager
+def _atomic_day():
+	"""A simulated day is one transaction: code that commits on its own (background-job
+	style work run inline) is suppressed until the day ends, and a full mid-day rollback
+	is a no-op rather than silently discarding the morning (Frappe's transaction control)."""
+	frappe.db._disable_transaction_control += 1
+	try:
+		with warnings.catch_warnings():
+			warnings.filterwarnings("ignore", message="Commit/rollback are disabled")
+			yield
+	finally:
+		frappe.db._disable_transaction_control -= 1
 
 
 def _repost_pending() -> None:

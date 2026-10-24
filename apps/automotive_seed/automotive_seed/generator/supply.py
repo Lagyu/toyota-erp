@@ -37,6 +37,17 @@ def daily_usage(structure, ctx: SeedContext) -> dict[str, float]:
 	return usage
 
 
+def powertrain_usage(structure, ctx: SeedContext) -> dict[str, float]:
+	"""Average daily consumption at Aichi of each powertrain (supplied by Kyushu)."""
+	share = float(ctx.v("aichi_vehicles_per_day")) / max(len(structure["variants"]), 1)
+	usage: dict[str, float] = {}
+	for _code, info in sorted(structure["variants"].items()):
+		for row in frappe.get_all("BOM Item", filters={"parent": info["bom"]}, fields=["item_code", "stock_qty"]):
+			if row.item_code in structure["powertrains"]:
+				usage[row.item_code] = usage.get(row.item_code, 0) + share * flt(row.stock_qty)
+	return usage
+
+
 def sourcing(ctx: SeedContext, structure, roster, suppliers_by_commodity) -> None:
 	"""One awarded Sourcing Decision per production part used in a BOM (catalogue parts
 	rely on the commodity-level ASL entries created at onboarding)."""
@@ -47,7 +58,7 @@ def sourcing(ctx: SeedContext, structure, roster, suppliers_by_commodity) -> Non
 		info = structure["purchased"][code]
 		candidates = suppliers_by_commodity.get(info["commodity"]) or []
 		if not candidates:
-			continue
+			raise RuntimeError(f"no supplier covers commodity {info['commodity']} ({code})")
 		plant = info["plant"]
 		company = KYUSHU if plant == "KYUSHU-PT" else AICHI
 		if frappe.db.exists("Sourcing Decision", {"item_code": code, "plant": plant, "docstatus": 1}):
@@ -259,6 +270,14 @@ def _opening_stock(ctx, structure, usage, day) -> None:
 				row["qty"] = math.ceil(qty)
 				row["serial_no"] = "\n".join(f"{code}-OPN{n + 1}-{i:05d}" for i in range(1, row["qty"] + 1))
 			by_company.setdefault(company, []).append(row)
+	# Aichi starts with a few days of Kyushu powertrains (at the cost-plus transfer price), as
+	# a running plant would; afterwards they arrive by intercompany shipment.
+	for code, per_day in sorted(powertrain_usage(structure, ctx).items()):
+		qty = math.ceil(per_day * 4)
+		cost = round(flt(frappe.get_cached_value("Item", code, "automotive_standard_cost")) * 1.08, 2)
+		by_company.setdefault(AICHI, []).append({"item_code": code, "warehouse": store_for("AICHI-VA"), "qty": qty,
+			"valuation_rate": cost, "use_serial_batch_fields": 1,
+			"serial_no": "\n".join(f"{code.replace('-', '')}-OPN-{i:05d}" for i in range(1, qty + 1))})
 	for company, rows in by_company.items():
 		if frappe.db.exists("Stock Reconciliation", {"company": company, "purpose": "Opening Stock", "docstatus": 1}):
 			continue

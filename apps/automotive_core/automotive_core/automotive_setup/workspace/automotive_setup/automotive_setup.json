@@ -1,0 +1,169 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"f3f030d7a8\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Automotive Setup</b></span>\", \"col\": 12}}, {\"id\": \"535c8f2deb\", \"type\": \"card\", \"data\": {\"card_name\": \"Organisation\", \"col\": 4}}, {\"id\": \"4e3d26a7b4\", \"type\": \"card\", \"data\": {\"card_name\": \"Access\", \"col\": 4}}, {\"id\": \"1ab0c803cb\", \"type\": \"card\", \"data\": {\"card_name\": \"Settings\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.214792",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "settings",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Automotive Setup",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Organisation",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Plant",
+   "link_count": 0,
+   "link_to": "Plant",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Production Line",
+   "link_count": 0,
+   "link_to": "Production Line",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shift Pattern",
+   "link_count": 0,
+   "link_to": "Shift Pattern",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Company",
+   "link_count": 0,
+   "link_to": "Company",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse",
+   "link_count": 0,
+   "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Access",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Plant Assignment",
+   "link_count": 0,
+   "link_to": "Plant Assignment",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Partner User Access",
+   "link_count": 0,
+   "link_to": "Partner User Access",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "User",
+   "link_count": 0,
+   "link_to": "User",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Role Profile",
+   "link_count": 0,
+   "link_to": "Role Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Settings",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Automotive Settings",
+   "link_count": 0,
+   "link_to": "Automotive Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.637012",
+ "modified_by": "Administrator",
+ "module": "Automotive Setup",
+ "name": "Automotive Setup",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "IT Operator"
+  },
+  {
+   "role": "Plant Director"
+  },
+  {
+   "role": "Group Controller"
+  }
+ ],
+ "sequence_id": 90.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Automotive Setup",
+ "type": "Workspace"
+}

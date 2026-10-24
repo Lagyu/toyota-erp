@@ -1,0 +1,232 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"6e07e49df0\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Finance Controls</b></span>\", \"col\": 12}}, {\"id\": \"7b69709da8\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Days Sales Outstanding\", \"col\": 3}}, {\"id\": \"d40f453ea0\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Gross Margin\", \"col\": 3}}, {\"id\": \"a33bfe799a\", \"type\": \"card\", \"data\": {\"card_name\": \"Period Close\", \"col\": 4}}, {\"id\": \"fdcd9729b6\", \"type\": \"card\", \"data\": {\"card_name\": \"Payables & Treasury\", \"col\": 4}}, {\"id\": \"39ccec426d\", \"type\": \"card\", \"data\": {\"card_name\": \"Receivables\", \"col\": 4}}, {\"id\": \"9ef1373523\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.215745",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "landmark",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Finance Controls",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Period Close",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Period Close Checklist",
+   "link_count": 0,
+   "link_to": "Period Close Checklist",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Accounting Period",
+   "link_count": 0,
+   "link_to": "Accounting Period",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Period Closing Voucher",
+   "link_count": 0,
+   "link_to": "Period Closing Voucher",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Exchange Rate Revaluation",
+   "link_count": 0,
+   "link_to": "Exchange Rate Revaluation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payables & Treasury",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Invoice",
+   "link_count": 0,
+   "link_to": "Purchase Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Payment Entry",
+   "link_count": 0,
+   "link_to": "Payment Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Bank Account",
+   "link_count": 0,
+   "link_to": "Bank Account",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Receivables",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Journal Entry",
+   "link_count": 0,
+   "link_to": "Journal Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Group Consolidation",
+   "link_count": 0,
+   "link_to": "Group Consolidation",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Trial Balance",
+   "link_count": 0,
+   "link_to": "Trial Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "General Ledger",
+   "link_count": 0,
+   "link_to": "General Ledger",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Accounts Receivable",
+   "link_count": 0,
+   "link_to": "Accounts Receivable",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Accounts Payable",
+   "link_count": 0,
+   "link_to": "Accounts Payable",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.638094",
+ "modified_by": "Administrator",
+ "module": "Finance Controls",
+ "name": "Finance Controls",
+ "number_cards": [
+  {
+   "label": "Days Sales Outstanding",
+   "number_card_name": "Days Sales Outstanding"
+  },
+  {
+   "label": "Gross Margin",
+   "number_card_name": "Gross Margin"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Group Controller"
+  },
+  {
+   "role": "AP Clerk"
+  },
+  {
+   "role": "Treasury Approver"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "Automotive Executive"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 40.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Finance Controls",
+ "type": "Workspace"
+}

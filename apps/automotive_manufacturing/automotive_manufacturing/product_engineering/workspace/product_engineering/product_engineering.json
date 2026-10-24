@@ -1,0 +1,155 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"863da516c5\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Product Engineering</b></span>\", \"col\": 12}}, {\"id\": \"328cb14269\", \"type\": \"card\", \"data\": {\"card_name\": \"Products\", \"col\": 4}}, {\"id\": \"960a592cbc\", \"type\": \"card\", \"data\": {\"card_name\": \"Change Control\", \"col\": 4}}, {\"id\": \"9ff1abdeab\", \"type\": \"card\", \"data\": {\"card_name\": \"Reports\", \"col\": 4}}]",
+ "creation": "2026-10-24 10:07:52.228100",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "pencil-ruler",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Product Engineering",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Products",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Model",
+   "link_count": 0,
+   "link_to": "Vehicle Model",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Option Rules",
+   "link_count": 0,
+   "link_to": "Vehicle Option Rule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Vehicle Configuration",
+   "link_count": 0,
+   "link_to": "Vehicle Configuration",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "BOM",
+   "link_count": 0,
+   "link_to": "BOM",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Change Control",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Change Request",
+   "link_count": 0,
+   "link_to": "Engineering Change Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Engineering Change Order",
+   "link_count": 0,
+   "link_to": "Engineering Change Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "BOM Where Used",
+   "link_count": 0,
+   "link_to": "BOM Where Used",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-10-24 10:09:24.648043",
+ "modified_by": "Administrator",
+ "module": "Product Engineering",
+ "name": "Product Engineering",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [
+  {
+   "role": "Product Engineer"
+  },
+  {
+   "role": "Engineering Manager"
+  },
+  {
+   "role": "Production Planner"
+  },
+  {
+   "role": "Quality Manager"
+  },
+  {
+   "role": "Auditor"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 50.0,
+ "shortcuts": [],
+ "standard": 1,
+ "title": "Product Engineering",
+ "type": "Workspace"
+}

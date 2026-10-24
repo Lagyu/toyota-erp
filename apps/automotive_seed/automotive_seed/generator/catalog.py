@@ -370,7 +370,8 @@ def _vehicles(ctx, structure, aichi, wh, colors) -> None:
 		m = model["code"]
 		if not frappe.db.exists("Item", m):
 			frappe.get_doc({"doctype": "Item", "item_code": m, "item_name": model["name"], "item_group": "Vehicles",
-				"stock_uom": "Nos", "is_stock_item": 1, "has_variants": 1, "has_serial_no": 1, "is_purchase_item": 0,
+				# purchase item too: the North American distributor buys vehicles from Aichi
+				"stock_uom": "Nos", "is_stock_item": 1, "has_variants": 1, "has_serial_no": 1, "is_purchase_item": 1,
 				"attributes": [{"attribute": a} for a in model["attrs"]], "item_defaults": _defaults(fg)}).insert(
 				ignore_permissions=True)
 			ctx.count("Item")

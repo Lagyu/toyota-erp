@@ -304,10 +304,10 @@ def submit_quotation(rfq_name: str, lines: list | str, valid_till: str, lead_tim
 		if lead_time_days is not None:
 			for item in sq.items:
 				item.lead_time_days = int(lead_time_days)
-		sq.owner = requester
 		sq.run_method("set_missing_values")
 		sq.insert()
 		sq.submit()
+		sq.db_set("owner", requester, update_modified=False)  # the supplier user's offer
 		frappe.db.set_value("Request for Quotation Supplier", {"parent": doc.name, "supplier": supplier},
 			"quote_status", "Received")
 	return {"supplier_quotation": sq.name, "grand_total": sq.grand_total, "currency": sq.currency}
