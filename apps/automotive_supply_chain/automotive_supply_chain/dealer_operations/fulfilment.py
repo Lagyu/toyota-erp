@@ -34,11 +34,21 @@ def vehicles_of(doc) -> list[str]:
 	return vins
 
 
+def _internal_customer(customer: str) -> bool:
+	return bool(frappe.get_cached_value("Customer", customer, "is_internal_customer"))
+
+
 def on_delivery_note_submit(doc, method=None) -> None:
 	if doc.get("is_return"):
 		for vin in vehicles_of(doc):
 			frappe.db.set_value("Vehicle Unit", vin, {"inventory_status": "In Stock", "shipment_status": "Not Shipped",
 				"current_warehouse": frappe.db.get_value("Serial No", vin, "warehouse")})
+		return
+	if _internal_customer(doc.customer):
+		# group transfer (e.g. Aichi -> North America): in transit until the buyer's receipt
+		for vin in vehicles_of(doc):
+			frappe.db.set_value("Vehicle Unit", vin, {"inventory_status": "In Transit", "shipment_status": "Dispatched",
+				"current_warehouse": None})
 		return
 	for vin in vehicles_of(doc):
 		allocation = frappe.db.get_value("Vehicle Unit", vin, "automotive_allocation")
@@ -125,3 +135,18 @@ def on_acceptance_submit(doc) -> None:
 		doc.db_set("transport_exception", exc.name)
 	audit.record("dealer.delivery_accepted", "Delivery Note", dn.name, {"acceptance": doc.name,
 		"condition": doc.condition}, company=dn.company)
+
+
+def on_purchase_receipt_submit(doc, method=None) -> None:
+	"""Vehicles received by a group company (intercompany receipt) are in its stock again."""
+	if doc.get("is_return"):
+		return
+	for vin in vehicles_of(doc):
+		frappe.db.set_value("Vehicle Unit", vin, {"inventory_status": "In Stock", "shipment_status": "Not Shipped",
+			"current_warehouse": frappe.db.get_value("Serial No", vin, "warehouse"), "dealer": None,
+			"sales_order": None})
+
+
+def on_purchase_receipt_cancel(doc, method=None) -> None:
+	for vin in vehicles_of(doc):
+		frappe.db.set_value("Vehicle Unit", vin, {"inventory_status": "In Transit", "current_warehouse": None})

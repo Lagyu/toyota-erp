@@ -30,8 +30,10 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Batch", "Line Operator", READ),
 	("Serial No", "Line Operator", READ),
 	("Downtime Entry", "Line Operator", WRITE),
-	# Supervisors approve operator work and record downtime / handovers.
+	# Supervisors approve operator work and record downtime / handovers; posting a build of a
+	# batch-tracked module creates its production batch.
 	("Downtime Entry", "Production Supervisor", SUBMIT),
+	("Batch", "Production Supervisor", WRITE),
 	# Quality inspectors: inspections and nonconformance capture.
 	("Quality Inspection", "Quality Inspector", SUBMIT),
 	("Quality Inspection Template", "Quality Inspector", READ),
@@ -58,7 +60,7 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Work Order", "Product Engineer", READ),
 	("Supplier", "Product Engineer", READ),
 	("Item", "Engineering Manager", WRITE),
-	("BOM", "Engineering Manager", SUBMIT + ("cancel", "amend")),
+	("BOM", "Engineering Manager", (*SUBMIT, "cancel", "amend")),
 	# Treasury approvers review payments; they never create or submit them.
 	("Payment Entry", "Treasury Approver", READ),
 	("Purchase Invoice", "Treasury Approver", READ),
@@ -66,6 +68,18 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Bank Account", "Treasury Approver", READ),
 	("Bank", "Treasury Approver", READ),
 	("Bank Account", "AP Clerk", WRITE),
+	# Procurement: blanket (scheduling) agreements are negotiated by buyers and approved by
+	# procurement managers; ERPNext itself grants purchase roles only "select" on them.
+	("Blanket Order", "Buyer", SUBMIT),
+	("Blanket Order", "Procurement Manager", (*SUBMIT, "cancel", "amend")),
+	("Blanket Order", "Production Planner", READ),
+	("Blanket Order", "AP Clerk", READ),
+	# Buyers issue RFQs (ERPNext reserves submit for Purchase Manager).
+	("Request for Quotation", "Buyer", SUBMIT),
+	("Request for Quotation", "Procurement Manager", (*SUBMIT, "cancel", "amend")),
+	# Receiving: ERPNext validates the supplier's payable account currency on every receipt,
+	# which needs "select" on Account (ERPNext grants it to Stock Manager but not Stock User).
+	("Account", "Warehouse Clerk", ("select",)),
 	# Logistics: shipments and dispatch.
 	("Shipment", "Logistics Coordinator", SUBMIT),
 	("Delivery Note", "Logistics Coordinator", READ),
@@ -106,6 +120,7 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 			"Warehouse",
 			"Stock Reconciliation",
 			"Non Conformance",
+			"Blanket Order",
 		)
 	],
 ]

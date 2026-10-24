@@ -23,14 +23,14 @@ from dsl import (
 	table,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 MODULE = "Production Planning"
-READ_ALL = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
+READ_ALL = [perm(r, "r p") for r in INTERNAL]
 PLANNING = [
-	perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-	perm(PLANNER, "rwc sxa pe"),  # noqa: F405
-	perm(PLANT_DIRECTOR, "rwc sxa pe"),  # noqa: F405
+	perm(SYSTEM, "rwcd sxa pe"),
+	perm(PLANNER, "rwc sxa pe"),
+	perm(PLANT_DIRECTOR, "rwc sxa pe"),
 ]
 
 DOCTYPES = [
@@ -121,10 +121,10 @@ DOCTYPES = [
 			table("capacity", "Capacity Load", "Planning Run Capacity", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(PLANNER, "rwc pe"),  # noqa: F405
-			perm(PLANT_DIRECTOR, "rwc pe"),  # noqa: F405
-			perm(BUYER, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(PLANNER, "rwc pe"),
+			perm(PLANT_DIRECTOR, "rwc pe"),
+			perm(BUYER, "r pe"),
 			*READ_ALL,
 		],
 	),
@@ -203,10 +203,10 @@ DOCTYPES = [
 			table("slots", "Sequence", "Plant Schedule Slot"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(PLANNER, "rwc pe"),  # noqa: F405
-			perm(SUPERVISOR, "rw pe"),  # noqa: F405
-			perm(PLANT_DIRECTOR, "rwc pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(PLANNER, "rwc pe"),
+			perm(SUPERVISOR, "rw pe"),
+			perm(PLANT_DIRECTOR, "rwc pe"),
 			*READ_ALL,
 		],
 	),
@@ -245,6 +245,6 @@ DOCTYPES = [
 			code("before_json", "Before", options="JSON", read_only=1),
 			code("after_json", "After", options="JSON", read_only=1),
 		],
-		permissions=[perm(SYSTEM, "r pe"), perm(AUDITOR, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[perm(SYSTEM, "r pe"), perm(AUDITOR, "r pe"), *READ_ALL],
 	),
 ]

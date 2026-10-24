@@ -24,14 +24,14 @@ from dsl import (
 	text,
 	text_editor,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 MODULE = "Product Engineering"
-READ_ALL = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
+READ_ALL = [perm(r, "r p") for r in INTERNAL]
 ENGINEERING = [
-	perm(SYSTEM, "rwcd pe i"),  # noqa: F405
-	perm(ENGINEER, "rwc pe i"),  # noqa: F405
-	perm(ENGINEERING_MANAGER, "rwcd pe i"),  # noqa: F405
+	perm(SYSTEM, "rwcd pe i"),
+	perm(ENGINEER, "rwc pe i"),
+	perm(ENGINEERING_MANAGER, "rwcd pe i"),
 ]
 
 DOCTYPES = [
@@ -67,7 +67,7 @@ DOCTYPES = [
 			section("Description"),
 			small_text("description", "Description"),
 		],
-		permissions=[*ENGINEERING, *READ_ALL, perm(DEALER_PORTAL, "r")],  # noqa: F405
+		permissions=[*ENGINEERING, *READ_ALL, perm(DEALER_PORTAL, "r")],
 	),
 	DocType(
 		"Vehicle Model Option Group",
@@ -103,7 +103,7 @@ DOCTYPES = [
 			small_text("then_values", "Values", reqd=1, description="One value per line."),
 			data("message", "Message Shown To Users", translatable=1),
 		],
-		permissions=[*ENGINEERING, *READ_ALL, perm(DEALER_PORTAL, "r")],  # noqa: F405
+		permissions=[*ENGINEERING, *READ_ALL, perm(DEALER_PORTAL, "r")],
 	),
 	DocType(
 		"Vehicle Configuration",
@@ -127,11 +127,11 @@ DOCTYPES = [
 			table("selections", "Selections", "Vehicle Configuration Selection", reqd=1),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(ENGINEER, "rwc pe"),  # noqa: F405
-			perm(SALES_MANAGER, "rwc pe"),  # noqa: F405
-			perm(DEALER_LIAISON, "rwc pe"),  # noqa: F405
-			perm(DEALER_PORTAL, "rc"),  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(ENGINEER, "rwc pe"),
+			perm(SALES_MANAGER, "rwc pe"),
+			perm(DEALER_LIAISON, "rwc pe"),
+			perm(DEALER_PORTAL, "rc"),
 			*READ_ALL,
 		],
 	),
@@ -182,10 +182,10 @@ DOCTYPES = [
 			amended_from("Engineering Change Request"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-			perm(ENGINEER, "rwc sxa pe"),  # noqa: F405
-			perm(ENGINEERING_MANAGER, "rwc sxa pe"),  # noqa: F405
-			perm(QUALITY_MANAGER, "rwc s pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd sxa pe"),
+			perm(ENGINEER, "rwc sxa pe"),
+			perm(ENGINEERING_MANAGER, "rwc sxa pe"),
+			perm(QUALITY_MANAGER, "rwc s pe"),
 			*READ_ALL,
 		],
 	),
@@ -231,9 +231,9 @@ DOCTYPES = [
 			amended_from("Engineering Change Order"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-			perm(ENGINEER, "rwc s pe"),  # noqa: F405
-			perm(ENGINEERING_MANAGER, "rwc sxa pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd sxa pe"),
+			perm(ENGINEER, "rwc s pe"),
+			perm(ENGINEERING_MANAGER, "rwc sxa pe"),
 			*READ_ALL,
 		],
 	),

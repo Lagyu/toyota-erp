@@ -22,7 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from dsl import DocType, class_name, scrub  # noqa: E402
+from dsl import DocType, class_name, scrub
 
 REPO = Path(__file__).resolve().parents[3]
 APPS_DIR = REPO / "apps"

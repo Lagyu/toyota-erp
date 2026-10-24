@@ -23,14 +23,14 @@ from dsl import (
 	table_multiselect,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 LOG = "Logistics"
 DEALER = "Dealer Operations"
 IC = "Intercompany"
-READ_ALL = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
-LOGISTICS_RW = [perm(SYSTEM, "rwcd sxa pe"), perm(LOGISTICS, "rwc sxa pe"), perm(WAREHOUSE, "rwc s pe")]  # noqa: F405
-SALES_RW = [perm(SYSTEM, "rwcd sxa pe"), perm(SALES_MANAGER, "rwc sxa pe"), perm(DEALER_LIAISON, "rwc sx pe")]  # noqa: F405
+READ_ALL = [perm(r, "r p") for r in INTERNAL]
+LOGISTICS_RW = [perm(SYSTEM, "rwcd sxa pe"), perm(LOGISTICS, "rwc sxa pe"), perm(WAREHOUSE, "rwc s pe")]
+SALES_RW = [perm(SYSTEM, "rwcd sxa pe"), perm(SALES_MANAGER, "rwc sxa pe"), perm(DEALER_LIAISON, "rwc sx pe")]
 
 DOCTYPES = [
 	DocType(
@@ -91,7 +91,7 @@ DOCTYPES = [
 			attach("proof_of_delivery", "Signed Delivery Receipt", allow_on_submit=1),
 			amended_from("Shipment Manifest"),
 		],
-		permissions=[*LOGISTICS_RW, *READ_ALL, perm(DEALER_PORTAL, "r")],  # noqa: F405
+		permissions=[*LOGISTICS_RW, *READ_ALL, perm(DEALER_PORTAL, "r")],
 	),
 	DocType("Shipment Manifest Item", LOG, child=True, fields=[
 		link("delivery_note", "Delivery Note", "Delivery Note", reqd=1, in_list_view=1),
@@ -124,7 +124,7 @@ DOCTYPES = [
 			text("description", "Description", reqd=1),
 			small_text("resolution", "Resolution"),
 		],
-		permissions=[*LOGISTICS_RW, *READ_ALL, perm(DEALER_PORTAL, "rc")],  # noqa: F405
+		permissions=[*LOGISTICS_RW, *READ_ALL, perm(DEALER_PORTAL, "rc")],
 	),
 	DocType(
 		"Cycle Count",
@@ -152,7 +152,7 @@ DOCTYPES = [
 			table("lines", "Lines", "Cycle Count Line"),
 			amended_from("Cycle Count"),
 		],
-		permissions=[*LOGISTICS_RW, perm(CONTROLLER, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[*LOGISTICS_RW, perm(CONTROLLER, "r pe"), *READ_ALL],
 	),
 	DocType("Cycle Count Line", LOG, child=True, fields=[
 		link("item_code", "Item", "Item", reqd=1, in_list_view=1),
@@ -190,7 +190,7 @@ DOCTYPES = [
 			table("contacts", "Contacts", "Dealer Registration Contact"),
 			amended_from("Dealer Registration"),
 		],
-		permissions=[*SALES_RW, perm(CONTROLLER, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[*SALES_RW, perm(CONTROLLER, "r pe"), *READ_ALL],
 	),
 	DocType("Dealer Authorised Model", DEALER, child=True,
 		fields=[link("vehicle_model", "Vehicle Model", "Vehicle Model", reqd=1, in_list_view=1)]),
@@ -230,7 +230,7 @@ DOCTYPES = [
 			table("items", "Vehicles", "Dealer Order Item", reqd=1),
 			amended_from("Dealer Order"),
 		],
-		permissions=[*SALES_RW, *READ_ALL, perm(DEALER_PORTAL, "rwc s")],  # noqa: F405
+		permissions=[*SALES_RW, *READ_ALL, perm(DEALER_PORTAL, "rwc s")],
 	),
 	DocType("Dealer Order Item", DEALER, child=True, fields=[
 		link("vehicle_model", "Model", "Vehicle Model", reqd=1, in_list_view=1),
@@ -269,7 +269,7 @@ DOCTYPES = [
 			small_text("effect", "Effect", read_only=1, allow_on_submit=1, no_copy=1),
 			amended_from("Dealer Order Change"),
 		],
-		permissions=[*SALES_RW, *READ_ALL, perm(DEALER_PORTAL, "rwc s")],  # noqa: F405
+		permissions=[*SALES_RW, *READ_ALL, perm(DEALER_PORTAL, "rwc s")],
 	),
 	DocType(
 		"Allocation Rule",
@@ -314,7 +314,7 @@ DOCTYPES = [
 				in_list_view=1, in_standard_filter=1, search_index=1),
 			small_text("release_reason", "Release Reason", read_only=1),
 		],
-		permissions=[perm(SYSTEM, "r pe"), perm(SALES_MANAGER, "r pe"), perm(DEALER_LIAISON, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[perm(SYSTEM, "r pe"), perm(SALES_MANAGER, "r pe"), perm(DEALER_LIAISON, "r pe"), *READ_ALL],
 	),
 	DocType(
 		"Delivery Acceptance",
@@ -339,7 +339,7 @@ DOCTYPES = [
 			attach("photos", "Photos"),
 			amended_from("Delivery Acceptance"),
 		],
-		permissions=[*SALES_RW, *READ_ALL, perm(DEALER_PORTAL, "rwc s")],  # noqa: F405
+		permissions=[*SALES_RW, *READ_ALL, perm(DEALER_PORTAL, "rwc s")],
 	),
 	DocType(
 		"Transfer Price Agreement",
@@ -365,6 +365,6 @@ DOCTYPES = [
 			small_text("basis", "Basis / Documentation", reqd=1),
 			amended_from("Transfer Price Agreement"),
 		],
-		permissions=[perm(SYSTEM, "rwcd sxa pe"), perm(CONTROLLER, "rwc sxa pe"), *READ_ALL],  # noqa: F405
+		permissions=[perm(SYSTEM, "rwcd sxa pe"), perm(CONTROLLER, "rwc sxa pe"), *READ_ALL],
 	),
 ]

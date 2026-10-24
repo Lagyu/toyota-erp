@@ -18,6 +18,12 @@ ignore = [
 ]
 typing-modules = ["frappe.types.DF"]
 
+[lint.isort]
+known-first-party = [
+    "automotive_core", "automotive_manufacturing", "automotive_supply_chain", "automotive_portals", "automotive_seed",
+]
+known-third-party = ["frappe", "erpnext"]
+
 [lint.per-file-ignores]
 "**/schema/*.py" = ["F405"]
 "**/tests/**" = ["S105", "S106"]

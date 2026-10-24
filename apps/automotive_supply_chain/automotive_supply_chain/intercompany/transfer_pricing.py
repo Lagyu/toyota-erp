@@ -36,6 +36,15 @@ def agreed_price(seller: str, buyer: str, item_code: str, on_date) -> tuple[floa
 		return flt(tpa.price), tpa.currency, tpa.name
 	cost = flt(frappe.get_cached_value("Item", item_code, "automotive_standard_cost")) or flt(
 		frappe.get_cached_value("Item", item_code, "valuation_rate"))
+	cost_currency = frappe.get_cached_value("Company", seller, "default_currency")
+	if cost_currency != tpa.currency:
+		from erpnext.setup.utils import get_exchange_rate
+
+		rate = flt(get_exchange_rate(cost_currency, tpa.currency, str(getdate(on_date))))
+		if not rate:
+			frappe.throw(_("No {0}/{1} exchange rate on {2} for transfer price {3}.").format(
+				cost_currency, tpa.currency, on_date, tpa.name))
+		cost = cost * rate
 	return flt(cost * (1 + flt(tpa.markup_percent) / 100), 2), tpa.currency, tpa.name
 
 

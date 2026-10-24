@@ -1,0 +1,19 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block style %}{{ include_style("portal.bundle.css") }}{% endblock %}
+
+{% block page_content %}
+<main id="hinode-portal" data-portal="supplier" data-party-name="{{ party_name | e }}">
+	<noscript>{{ _("This portal needs JavaScript.") }}</noscript>
+	<p class="hp-loading">{{ _("Loading…") }}</p>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+	frappe._messages = Object.assign(frappe._messages || {}, {{ translated_messages }});
+</script>
+{{ include_script("portal.bundle.js") }}
+{% endblock %}

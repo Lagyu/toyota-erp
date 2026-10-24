@@ -58,8 +58,8 @@ ROLE_PROFILES: dict[str, list[str]] = {
 	"Product Engineer": ["Product Engineer"],
 	"Engineering Manager": ["Engineering Manager", "Manufacturing Manager"],
 	"Logistics Coordinator": ["Logistics Coordinator", "Stock User", "Delivery User"],
-	"Supplier Portal User": ["Supplier Portal User", "Supplier"],
-	"Dealer Portal User": ["Dealer Portal User", "Customer"],
+	"Supplier Portal User": ["Supplier Portal User"],
+	"Dealer Portal User": ["Dealer Portal User"],
 }
 
 

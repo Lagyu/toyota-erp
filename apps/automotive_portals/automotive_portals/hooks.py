@@ -9,3 +9,13 @@ required_apps = ['frappe', 'erpnext', 'automotive_core', 'automotive_manufacturi
 
 # Every app prepares the test site the same way (Frappe runs the tested app's hook only).
 before_tests = "automotive_core.tests.fixtures.before_tests"
+
+# Partner users land on their portal after login; the standard portal menu links to it.
+role_home_page = {
+	"Supplier Portal User": "supplier-portal",
+	"Dealer Portal User": "dealer-portal",
+}
+standard_portal_menu_items = [
+	{"title": "Supplier Portal", "route": "/supplier-portal", "role": "Supplier Portal User"},
+	{"title": "Dealer Portal", "route": "/dealer-portal", "role": "Dealer Portal User"},
+]

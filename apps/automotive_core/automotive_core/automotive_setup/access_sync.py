@@ -17,16 +17,20 @@ import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate
 
-from automotive_core.utils import commit
 from automotive_core.access import user_permissions
 from automotive_core.governance import audit
+from automotive_core.utils import commit
 
 PLANT_SOURCE = "Plant Assignment"
 PARTNER_SOURCE = "Partner User Access"
 PORTAL_ROLES = {
-	"Supplier": ("Supplier Portal User", "Supplier"),
-	"Customer": ("Dealer Portal User", "Customer"),
+	"Supplier": ("Supplier Portal User",),
+	"Customer": ("Dealer Portal User",),
 }
+# ERPNext's generic portal roles are not granted: its standard portal pages resolve the
+# party through Supplier/Customer "Portal Users" rows instead of Partner User Access, so
+# partners use the automotive portals (and their party-scoped APIs) exclusively.
+UNGRANTED_ROLES = ("Supplier", "Customer")
 
 
 def effective_status(from_date, to_date, revoked: bool = False) -> str:
@@ -95,7 +99,7 @@ def sync_partner_access(user: str) -> None:
 	user_permissions.sync(user, PARTNER_SOURCE, desired)
 
 	user_doc = frappe.get_doc("User", user)
-	all_portal_roles = {r for pair in PORTAL_ROLES.values() for r in pair}
+	all_portal_roles = {r for pair in PORTAL_ROLES.values() for r in pair} | set(UNGRANTED_ROLES)
 	current = {r.role for r in user_doc.roles}
 	wanted = (current - all_portal_roles) | needed_roles
 	if wanted != current:
@@ -103,6 +107,20 @@ def sync_partner_access(user: str) -> None:
 		user_doc.append_roles(*sorted(wanted))
 		user_doc.flags.ignore_permissions = True
 		user_doc.save()
+
+
+def strip_ungranted_roles(doc, method=None) -> None:
+	"""User.on_update (after ERPNext's): ERPNext gives every user whose Contact links a
+	Supplier/Customer its generic portal role on each save (erpnext.portal.utils.
+	set_default_role); partner users keep only the automotive portal roles."""
+	if doc.user_type != "Website User" or not frappe.db.exists("Partner User Access", {"user": doc.name}):
+		return
+	extra = sorted({r.role for r in doc.roles if r.role in UNGRANTED_ROLES})
+	if not extra:
+		return
+	frappe.db.delete("Has Role", {"parenttype": "User", "parent": doc.name, "role": ("in", extra)})
+	doc.set("roles", [r for r in doc.roles if r.role not in UNGRANTED_ROLES])
+	frappe.clear_cache(user=doc.name)
 
 
 def ensure_contact(doc) -> str:

@@ -22,13 +22,13 @@ from dsl import (
 	table_multiselect,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 MODULE = "Governance"
 APPROVERS = [
-	EXECUTIVE, CONTROLLER, PLANT_DIRECTOR, PROCUREMENT_MANAGER, TREASURY, QUALITY_MANAGER,  # noqa: F405
-	SALES_MANAGER, ENGINEERING_MANAGER, IT_OPERATOR, SUPERVISOR, PLANNER, BUYER, AP_CLERK,  # noqa: F405
-	DEALER_LIAISON, ENGINEER, QUALITY_INSPECTOR, WAREHOUSE, LOGISTICS,  # noqa: F405
+	EXECUTIVE, CONTROLLER, PLANT_DIRECTOR, PROCUREMENT_MANAGER, TREASURY, QUALITY_MANAGER,
+	SALES_MANAGER, ENGINEERING_MANAGER, IT_OPERATOR, SUPERVISOR, PLANNER, BUYER, AP_CLERK,
+	DEALER_LIAISON, ENGINEER, QUALITY_INSPECTOR, WAREHOUSE, LOGISTICS,
 ]
 
 DOCTYPES = [
@@ -66,10 +66,10 @@ DOCTYPES = [
 			small_text("description", "Description"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(IT_OPERATOR, "rwc pe"),  # noqa: F405
-			perm(CONTROLLER, "rw pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(IT_OPERATOR, "rwc pe"),
+			perm(CONTROLLER, "rw pe"),
+			perm(AUDITOR, "r pe"),
 			*[perm(r, "r") for r in APPROVERS],
 		],
 	),
@@ -119,8 +119,8 @@ DOCTYPES = [
 			table("steps", "Steps", "Approval Request Step", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "r pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "r pe"),
+			perm(AUDITOR, "r pe"),
 			*[perm(r, "r p") for r in APPROVERS],
 		],
 	),
@@ -168,8 +168,8 @@ DOCTYPES = [
 			small_text("comment", "Comment", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "r pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "r pe"),
+			perm(AUDITOR, "r pe"),
 			*[perm(r, "r") for r in APPROVERS],
 		],
 	),
@@ -201,9 +201,9 @@ DOCTYPES = [
 			amended_from("Approval Delegation"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-			perm(IT_OPERATOR, "rwc sxa pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd sxa pe"),
+			perm(IT_OPERATOR, "rwc sxa pe"),
+			perm(AUDITOR, "r pe"),
 			*[perm(r, "rwc sx o") for r in APPROVERS],
 		],
 	),
@@ -237,7 +237,7 @@ DOCTYPES = [
 			data("event_hash", "Event Hash", read_only=1),
 			datetime("sealed_at", "Sealed At", read_only=1),
 		],
-		permissions=[perm(SYSTEM, "r pe"), perm(AUDITOR, "r pe"), perm(IT_OPERATOR, "r p")],  # noqa: F405
+		permissions=[perm(SYSTEM, "r pe"), perm(AUDITOR, "r pe"), perm(IT_OPERATOR, "r p")],
 	),
 	DocType(
 		"Segregation of Duties Rule",
@@ -253,10 +253,10 @@ DOCTYPES = [
 			small_text("rationale", "Rationale", reqd=1),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(IT_OPERATOR, "rwc pe"),  # noqa: F405
-			perm(CONTROLLER, "rw pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(IT_OPERATOR, "rwc pe"),
+			perm(CONTROLLER, "rw pe"),
+			perm(AUDITOR, "r pe"),
 		],
 	),
 	DocType(
@@ -293,10 +293,10 @@ DOCTYPES = [
 			amended_from("User Provisioning Request"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-			perm(IT_OPERATOR, "rwc sxa pe"),  # noqa: F405
-			perm(PLANT_DIRECTOR, "rwc pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd sxa pe"),
+			perm(IT_OPERATOR, "rwc sxa pe"),
+			perm(PLANT_DIRECTOR, "rwc pe"),
+			perm(AUDITOR, "r pe"),
 		],
 	),
 	DocType(

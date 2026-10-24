@@ -77,7 +77,7 @@ def record(
 	doc.flags.ignore_permissions = True
 	doc.flags.automotive_audit_insert = True
 	doc.insert()
-	if not frappe.flags.in_test:
+	if not (frappe.flags.in_test or frappe.flags.automotive_bulk):
 		frappe.enqueue(
 			"automotive_core.governance.audit.seal_pending",
 			queue="short",
@@ -127,7 +127,7 @@ def seal_pending(limit: int = 5000) -> int:
 		index, head = (int(last[0][0]), last[0][1]) if last else (0, GENESIS)
 		rows = frappe.db.sql(
 			f"""select {", ".join(f"`{f}`" for f in SEALED_FIELDS)} from `tabAudit Event`
-			where ifnull(chain_index, 0) = 0 order by name asc limit %s""",
+			where ifnull(chain_index, 0) = 0 order by name asc limit %s""",  # noqa: S608 (constant SQL fragments; values are bound)
 			limit,
 			as_dict=True,
 		)
@@ -162,7 +162,7 @@ def verify_chain(batch: int = 5000) -> dict[str, Any]:
 	while True:
 		rows = frappe.db.sql(
 			f"""select chain_index, previous_hash, event_hash, {", ".join(f"`{f}`" for f in SEALED_FIELDS)}
-			from `tabAudit Event` where chain_index > %s order by chain_index asc limit %s""",
+			from `tabAudit Event` where chain_index > %s order by chain_index asc limit %s""",  # noqa: S608 (constant SQL fragments; values are bound)
 			(last_index, batch),
 			as_dict=True,
 		)

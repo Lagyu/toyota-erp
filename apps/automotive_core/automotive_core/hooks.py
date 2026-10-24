@@ -86,7 +86,10 @@ doc_events = {
 	},
 	"User": {
 		"validate": "automotive_core.governance.sod.validate_user_roles",
-		"on_update": "automotive_core.governance.sod.record_warnings",
+		"on_update": [
+			"automotive_core.governance.sod.record_warnings",
+			"automotive_core.automotive_setup.access_sync.strip_ungranted_roles",
+		],
 	},
 	"File": {
 		"validate": "automotive_core.files.policy.validate_file",

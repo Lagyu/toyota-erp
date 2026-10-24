@@ -24,18 +24,18 @@ from dsl import (
 	table_multiselect,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 SC = "Supplier Collaboration"
 PC = "Procurement Controls"
-READ_ALL = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
+READ_ALL = [perm(r, "r p") for r in INTERNAL]
 PURCHASING = [
-	perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-	perm(BUYER, "rwc sx pe"),  # noqa: F405
-	perm(PROCUREMENT_MANAGER, "rwc sxa pe"),  # noqa: F405
+	perm(SYSTEM, "rwcd sxa pe"),
+	perm(BUYER, "rwc sx pe"),
+	perm(PROCUREMENT_MANAGER, "rwc sxa pe"),
 ]
-SUPPLIER_PORTAL_RW = perm(SUPPLIER_PORTAL, "rwc s")  # noqa: F405
-SUPPLIER_PORTAL_R = perm(SUPPLIER_PORTAL, "r")  # noqa: F405
+SUPPLIER_PORTAL_RW = perm(SUPPLIER_PORTAL, "rwc s")
+SUPPLIER_PORTAL_R = perm(SUPPLIER_PORTAL, "r")
 
 DOCTYPES = [
 	DocType(
@@ -61,7 +61,7 @@ DOCTYPES = [
 			int_("promise_transit_days", "Default Transit Days For Promise Dates", default="7"),
 			check("auto_allocate", "Allocate Released Vehicles Automatically", default="1"),
 		],
-		permissions=[perm(SYSTEM, "rw"), perm(PROCUREMENT_MANAGER, "rw"), perm(SALES_MANAGER, "rw"),  # noqa: F405
+		permissions=[perm(SYSTEM, "rw"), perm(PROCUREMENT_MANAGER, "rw"), perm(SALES_MANAGER, "rw"),
 			*READ_ALL],
 	),
 	DocType("Supply Chain Item Group", PC, child=True,
@@ -95,7 +95,7 @@ DOCTYPES = [
 			table("proposed_items", "Proposed Items", "Supplier Onboarding Item"),
 			amended_from("Supplier Onboarding"),
 		],
-		permissions=[*PURCHASING, perm(QUALITY_MANAGER, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[*PURCHASING, perm(QUALITY_MANAGER, "r pe"), *READ_ALL],
 	),
 	DocType("Supplier Certification", SC, child=True, fields=[
 		select("standard", "Standard", ["IATF 16949", "ISO 9001", "ISO 14001", "ISO 45001", "Other"], reqd=1,
@@ -172,7 +172,7 @@ DOCTYPES = [
 			small_text("rationale", "Rationale", reqd=1),
 			amended_from("Sourcing Decision"),
 		],
-		permissions=[*PURCHASING, perm(PLANT_DIRECTOR, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[*PURCHASING, perm(PLANT_DIRECTOR, "r pe"), *READ_ALL],
 	),
 	DocType("Sourcing Quote", SC, child=True, fields=[
 		link("supplier", "Supplier", "Supplier", reqd=1, in_list_view=1),
@@ -211,7 +211,7 @@ DOCTYPES = [
 			table("lines", "Schedule Lines", "Supplier Schedule Line", reqd=1),
 			amended_from("Supplier Delivery Schedule"),
 		],
-		permissions=[*PURCHASING, perm(PLANNER, "r pe"), *READ_ALL, SUPPLIER_PORTAL_R],  # noqa: F405
+		permissions=[*PURCHASING, perm(PLANNER, "r pe"), *READ_ALL, SUPPLIER_PORTAL_R],
 	),
 	DocType("Supplier Schedule Line", SC, child=True, fields=[
 		link("item_code", "Item", "Item", reqd=1, in_list_view=1),
@@ -287,7 +287,7 @@ DOCTYPES = [
 			small_text("purchase_receipts", "Purchase Receipts", read_only=1, allow_on_submit=1, no_copy=1),
 			amended_from("Advance Shipping Notice"),
 		],
-		permissions=[*PURCHASING, perm(WAREHOUSE, "r pe"), perm(LOGISTICS, "r pe"), *READ_ALL, SUPPLIER_PORTAL_RW],  # noqa: F405
+		permissions=[*PURCHASING, perm(WAREHOUSE, "r pe"), perm(LOGISTICS, "r pe"), *READ_ALL, SUPPLIER_PORTAL_RW],
 	),
 	DocType("ASN Item", SC, child=True, fields=[
 		link("purchase_order", "Purchase Order", "Purchase Order", reqd=1, in_list_view=1),
@@ -324,7 +324,7 @@ DOCTYPES = [
 			link("resolved_by", "Resolved By", "User", read_only=1),
 			datetime("resolved_at", "Resolved At", read_only=1),
 		],
-		permissions=[*PURCHASING, perm(WAREHOUSE, "rwc pe"), perm(AP_CLERK, "r pe"), *READ_ALL, SUPPLIER_PORTAL_R],  # noqa: F405
+		permissions=[*PURCHASING, perm(WAREHOUSE, "rwc pe"), perm(AP_CLERK, "r pe"), *READ_ALL, SUPPLIER_PORTAL_R],
 	),
 	DocType(
 		"Supplier Notice",
@@ -344,7 +344,7 @@ DOCTYPES = [
 			text("message", "Message", reqd=1),
 			datetime("read_at", "Read By Supplier At", read_only=1),
 		],
-		permissions=[*PURCHASING, perm(QUALITY_MANAGER, "rwc pe"), *READ_ALL, SUPPLIER_PORTAL_R],  # noqa: F405
+		permissions=[*PURCHASING, perm(QUALITY_MANAGER, "rwc pe"), *READ_ALL, SUPPLIER_PORTAL_R],
 	),
 	DocType(
 		"Invoice Match Exception",
@@ -380,12 +380,12 @@ DOCTYPES = [
 			datetime("resolved_at", "Resolved At", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "r pe"),  # noqa: F405
-			perm(AP_CLERK, "r pe"),  # noqa: F405
-			perm(PROCUREMENT_MANAGER, "r pe"),  # noqa: F405
-			perm(CONTROLLER, "r pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
-			perm(BUYER, "r"),  # noqa: F405
+			perm(SYSTEM, "r pe"),
+			perm(AP_CLERK, "r pe"),
+			perm(PROCUREMENT_MANAGER, "r pe"),
+			perm(CONTROLLER, "r pe"),
+			perm(AUDITOR, "r pe"),
+			perm(BUYER, "r"),
 		],
 	),
 ]

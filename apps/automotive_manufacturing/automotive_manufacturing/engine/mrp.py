@@ -162,7 +162,7 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 		if params.get("safety_stock_policy") == "Days Of Cover":
 			safety = float(item.get("daily_usage") or 0) * float(params.get("days_of_cover") or 0)
 		events: dict[dt.date, dict[str, Any]] = defaultdict(lambda: {"in": 0.0, "out": 0.0, "sources": []})
-		for day, qty, source in receipts.get(item_code, []):
+		for day, qty, _source in receipts.get(item_code, []):
 			events[day]["in"] += qty
 		for day, qty, source in gross.get(item_code, []):
 			events[day]["out"] += qty

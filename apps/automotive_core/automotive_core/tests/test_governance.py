@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import itertools
+
 import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, now_datetime, nowdate
@@ -20,7 +22,7 @@ class TestAuditChain(IntegrationTestCase):
 		rows = frappe.get_all("Audit Event", filters={"name": ("in", names)},
 			fields=["name", "chain_index", "previous_hash", "event_hash"], order_by="chain_index asc")
 		self.assertTrue(all(r.event_hash for r in rows))
-		for prev, cur in zip(rows, rows[1:], strict=False):
+		for prev, cur in itertools.pairwise(rows):
 			self.assertEqual(cur.previous_hash, prev.event_hash)
 			self.assertEqual(cur.chain_index, prev.chain_index + 1)
 		result = audit.verify_chain()

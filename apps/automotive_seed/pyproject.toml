@@ -10,6 +10,8 @@ license = { text = "GPL-3.0-only" }
 dynamic = ["version"]
 dependencies = [
     # frappe and erpnext are installed and pinned by bench (infra/versions.env).
+    # Synthetic history is generated under frozen time so "today" rules hold per simulated day.
+    "freezegun~=1.5.5",
 ]
 
 [build-system]

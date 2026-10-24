@@ -22,13 +22,13 @@ from dsl import (
 	table,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
-READ_ALL = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
+READ_ALL = [perm(r, "r p") for r in INTERNAL]
 QUALITY = [
-	perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-	perm(QUALITY_MANAGER, "rwc sxa pe"),  # noqa: F405
-	perm(QUALITY_INSPECTOR, "rwc s pe"),  # noqa: F405
+	perm(SYSTEM, "rwcd sxa pe"),
+	perm(QUALITY_MANAGER, "rwc sxa pe"),
+	perm(QUALITY_INSPECTOR, "rwc s pe"),
 ]
 
 DOCTYPES = [
@@ -77,8 +77,8 @@ DOCTYPES = [
 			data("warranty_reference", "Warranty Reference", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "rw pe"),  # noqa: F405
-			perm(PLANNER, "rw pe"),  # noqa: F405
+			perm(SYSTEM, "rw pe"),
+			perm(PLANNER, "rw pe"),
 			*READ_ALL,
 		],
 	),
@@ -106,7 +106,7 @@ DOCTYPES = [
 			link("plant", "Plant", "Plant", read_only=1),
 			datetime("recorded_at", "Recorded At", read_only=1),
 		],
-		permissions=[perm(SYSTEM, "r pe"), *READ_ALL],  # noqa: F405
+		permissions=[perm(SYSTEM, "r pe"), *READ_ALL],
 	),
 	DocType(
 		"Recall Campaign",
@@ -137,9 +137,9 @@ DOCTYPES = [
 			table("affected", "Affected Units", "Recall Affected Unit", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(QUALITY_MANAGER, "rwc pe"),  # noqa: F405
-			perm(ENGINEERING_MANAGER, "rwc pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(QUALITY_MANAGER, "rwc pe"),
+			perm(ENGINEERING_MANAGER, "rwc pe"),
 			*READ_ALL,
 		],
 	),
@@ -192,7 +192,7 @@ DOCTYPES = [
 			datetime("released_at", "Released At", read_only=1),
 			small_text("release_note", "Release Note", read_only=1),
 		],
-		permissions=[*QUALITY, perm(SUPERVISOR, "rwc pe"), *READ_ALL],  # noqa: F405
+		permissions=[*QUALITY, perm(SUPERVISOR, "rwc pe"), *READ_ALL],
 	),
 	DocType(
 		"Quality Hold Release Check",
@@ -238,6 +238,6 @@ DOCTYPES = [
 			link("rework_work_order", "Rework Work Order", "Work Order", read_only=1, allow_on_submit=1, no_copy=1),
 			amended_from("Quality Disposition"),
 		],
-		permissions=[*QUALITY, perm(PLANT_DIRECTOR, "r s pe"), *READ_ALL],  # noqa: F405
+		permissions=[*QUALITY, perm(PLANT_DIRECTOR, "r s pe"), *READ_ALL],
 	),
 ]

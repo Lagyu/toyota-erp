@@ -126,7 +126,7 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 
 		self.assertTrue(all(is_valid(v) for v in units))
 		for i, vin in enumerate(units):
-			se = build_entry(wo.name, 1, components=[{"item_code": cat["ecu"], "serial_no": stock["ecus"][i]},
+			build_entry(wo.name, 1, components=[{"item_code": cat["ecu"], "serial_no": stock["ecus"][i]},
 				{"item_code": cat["seat"], "batch_no": stock["seat_batch"]}])
 			self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "production_status"), "Built")
 			self.assertEqual(frappe.db.get_value("Serial No", vin, "warehouse"), catalog.FG)
@@ -229,8 +229,8 @@ class TestJidoka(ManufacturingTestCase):
 		self.assertTrue(andon.quality_hold)
 		with self.assertRaises(QualityHoldError):
 			build_entry(wo.name, 1)
-		from automotive_manufacturing.shop_floor import andon as andon_service
 		from automotive_manufacturing.quality_control import holds
+		from automotive_manufacturing.shop_floor import andon as andon_service
 
 		with as_user(SUPERVISOR):
 			andon_service.acknowledge(andon.name)

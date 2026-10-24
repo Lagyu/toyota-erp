@@ -113,7 +113,7 @@ def where_used(item_code: str, released_only: bool = True, max_depth: int = 10) 
 			filters = "and b.docstatus = 1 and b.is_active = 1" if released_only else "and b.docstatus < 2"
 			rows = frappe.db.sql(
 				f"""select distinct b.name, b.item, bi.qty from `tabBOM Item` bi join `tabBOM` b on b.name = bi.parent
-				where bi.item_code = %s {filters}""",
+				where bi.item_code = %s {filters}""",  # noqa: S608 (constant SQL fragments; values are bound)
 				code,
 				as_dict=True,
 			)

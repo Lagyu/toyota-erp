@@ -19,9 +19,9 @@ from dsl import (
 	table,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
-FINANCE_READERS = [perm(r, "r p") for r in (EXECUTIVE, PLANT_DIRECTOR, PROCUREMENT_MANAGER, SALES_MANAGER)]  # noqa: F405
+FINANCE_READERS = [perm(r, "r p") for r in (EXECUTIVE, PLANT_DIRECTOR, PROCUREMENT_MANAGER, SALES_MANAGER)]
 
 DOCTYPES = [
 	DocType(
@@ -51,9 +51,9 @@ DOCTYPES = [
 			amended_from("Period Close Checklist"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-			perm(CONTROLLER, "rwc sxa pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd sxa pe"),
+			perm(CONTROLLER, "rwc sxa pe"),
+			perm(AUDITOR, "r pe"),
 			*FINANCE_READERS,
 		],
 	),
@@ -101,9 +101,9 @@ DOCTYPES = [
 			small_text("reconciliation_check", "Reconciliation Check", reqd=1),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd pe"),  # noqa: F405
-			perm(IT_OPERATOR, "rwc pe"),  # noqa: F405
-			*[perm(r, "r p") for r in INTERNAL],  # noqa: F405
+			perm(SYSTEM, "rwcd pe"),
+			perm(IT_OPERATOR, "rwc pe"),
+			*[perm(r, "r p") for r in INTERNAL],
 		],
 	),
 	DocType(
@@ -132,9 +132,9 @@ DOCTYPES = [
 			small_text("reconciliation_note", "Reconciliation Note", read_only=1),
 		],
 		permissions=[
-			perm(SYSTEM, "r pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
-			*[perm(r, "r p") for r in INTERNAL if r != AUDITOR],  # noqa: F405
+			perm(SYSTEM, "r pe"),
+			perm(AUDITOR, "r pe"),
+			*[perm(r, "r p") for r in INTERNAL if r != AUDITOR],
 		],
 	),
 ]

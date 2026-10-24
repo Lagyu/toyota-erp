@@ -181,7 +181,7 @@ def units_containing(item_code: str | None = None, batch_nos: list[str] | None =
 	where = " and ".join(clauses)
 	start = frappe.db.sql(
 		f"""select parent_item, parent_serial_no, parent_batch_no, component_item,
-		ifnull(component_serial_no, component_batch_no) as via from `tabGenealogy Link` where {where}""",
+		ifnull(component_serial_no, component_batch_no) as via from `tabGenealogy Link` where {where}""",  # noqa: S608 (constant SQL fragments; values are bound)
 		values,
 		as_dict=True,
 	)

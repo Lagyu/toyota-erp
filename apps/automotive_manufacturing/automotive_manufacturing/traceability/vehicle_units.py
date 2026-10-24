@@ -120,7 +120,7 @@ def planned_vins(work_order: str, qty: int) -> list[str]:
 def on_stock_entry_submit(doc, method=None) -> None:
 	if doc.purpose != "Manufacture":
 		return
-	for item_code, serial in units_for_entry(doc):
+	for _item_code, serial in units_for_entry(doc):
 		if not frappe.db.exists("Vehicle Unit", serial):
 			continue
 		warehouse = frappe.db.get_value("Serial No", serial, "warehouse")

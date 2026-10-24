@@ -37,8 +37,14 @@ doc_events = {
 		"on_submit": "automotive_supply_chain.supplier_collaboration.schedules.on_purchase_order_submit",
 	},
 	"Purchase Receipt": {
-		"on_submit": "automotive_supply_chain.supplier_collaboration.shipments.on_purchase_receipt_submit",
-		"on_cancel": "automotive_supply_chain.supplier_collaboration.shipments.on_purchase_receipt_cancel",
+		"on_submit": [
+			"automotive_supply_chain.supplier_collaboration.shipments.on_purchase_receipt_submit",
+			"automotive_supply_chain.dealer_operations.fulfilment.on_purchase_receipt_submit",
+		],
+		"on_cancel": [
+			"automotive_supply_chain.supplier_collaboration.shipments.on_purchase_receipt_cancel",
+			"automotive_supply_chain.dealer_operations.fulfilment.on_purchase_receipt_cancel",
+		],
 	},
 	"Purchase Invoice": {
 		"after_insert": "automotive_supply_chain.procurement_controls.three_way_match.after_insert_purchase_invoice",

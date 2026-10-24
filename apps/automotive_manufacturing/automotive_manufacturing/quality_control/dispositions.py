@@ -16,7 +16,7 @@ def _plant_warehouse(plant: str | None, field: str) -> str | None:
 
 
 def validate(doc) -> None:
-	if not frappe.get_cached_value("Warehouse", doc.from_warehouse, "automotive_warehouse_role") in ("Quarantine",
+	if frappe.get_cached_value("Warehouse", doc.from_warehouse, "automotive_warehouse_role") not in ("Quarantine",
 			"Receiving Inspection"):
 		frappe.throw(_("Dispositions act on segregated stock: {0} is not a quarantine/inspection warehouse.").format(
 			doc.from_warehouse))

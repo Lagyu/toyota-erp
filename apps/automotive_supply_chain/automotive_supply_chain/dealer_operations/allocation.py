@@ -61,7 +61,9 @@ def _sort_key(method: str):
 
 
 def _reserve(line, vehicle) -> str:
-	from erpnext.stock.doctype.stock_reservation_entry.stock_reservation_entry import get_available_qty_to_reserve
+	from erpnext.stock.doctype.stock_reservation_entry.stock_reservation_entry import (
+		get_available_qty_to_reserve,
+	)
 
 	company = frappe.db.get_value("Sales Order", line.parent, "company")
 	sre = frappe.get_doc({

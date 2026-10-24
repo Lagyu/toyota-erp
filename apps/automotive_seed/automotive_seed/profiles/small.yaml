@@ -1,0 +1,35 @@
+# Small profile: CI smoke dataset (same mechanics, two weeks, low volume).
+profile: small
+seed: 20261024
+start_date: "2026-09-01"
+months: 0.5
+targets: {internal_users: 40, partner_users: 20, suppliers: 15, dealers: 6, items: 300, boms: 60, work_orders: 120,
+  stock_ledger_events: 600}
+people:
+  per_manufacturing_plant: {Plant Director: 1, Production Planner: 1, Production Supervisor: 2, Line Operator: 4,
+    Warehouse Clerk: 2, Quality Inspector: 2, Quality Manager: 2, Product Engineer: 1, Engineering Manager: 1,
+    Logistics Coordinator: 1}
+  na_plant: {Plant Director: 1, Warehouse Clerk: 1, Logistics Coordinator: 1, Quality Inspector: 1, Sales Manager: 1,
+    Dealer Liaison: 2, Production Supervisor: 1, Line Operator: 1}
+  group: {Automotive Executive: 1, Group Controller: 2, AP Clerk: 2, Treasury Approver: 2, Buyer: 2,
+    Procurement Manager: 2, IT Operator: 2, Auditor: 1, Sales Manager: 2, Dealer Liaison: 2}
+partners: {suppliers: 15, carriers: 2, dealers_jp: 4, dealers_us: 2, second_portal_user_share: 0.2, edi_suppliers: 3,
+  edi_dealers: 1}
+catalog: {bulk_component_items: 60, colors: 4}
+volume:
+  aichi_vehicles_per_day: 6
+  na_share: 0.35
+  kyushu_powertrain_batch: 3
+  subassembly_batches_per_day: 4
+  dealer_order_lines_per_day: 6
+  final_reject_rate: 0.05
+  incoming_inspection_share: 0.25
+  incoming_reject_rate: 0.03
+  andon_events_per_week_per_plant: 3
+  price_variance_rate: 0.1
+  revised_promise_rate: 0.1
+  ecos_per_month: 2
+  cycle_counts_per_week: 2
+  dealer_payment_days: 7
+  supplier_payment_weekday: 4
+  ocean_transit_days: 5

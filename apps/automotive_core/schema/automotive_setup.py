@@ -20,11 +20,11 @@ from dsl import (
 	table,
 	time,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 MODULE = "Automotive Setup"
-ALL_INTERNAL_READ = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
-ADMIN = [perm(SYSTEM, "rwcd pe i h t m"), perm(IT_OPERATOR, "rwcd pe i h t m")]  # noqa: F405
+ALL_INTERNAL_READ = [perm(r, "r p") for r in INTERNAL]
+ADMIN = [perm(SYSTEM, "rwcd pe i h t m"), perm(IT_OPERATOR, "rwcd pe i h t m")]
 
 PLANT_WAREHOUSES = [
 	("receiving_warehouse", "Receiving Dock"),
@@ -81,7 +81,7 @@ DOCTYPES = [
 			section("Per-DocType Rules"),
 			table("attachment_rules", "Attachment Rules", "Attachment Policy Rule"),
 		],
-		permissions=[perm(SYSTEM, "rw t"), perm(IT_OPERATOR, "rw t"), perm(AUDITOR, "r")],  # noqa: F405
+		permissions=[perm(SYSTEM, "rw t"), perm(IT_OPERATOR, "rw t"), perm(AUDITOR, "r")],
 	),
 	DocType(
 		"Attachment Policy Rule",
@@ -172,7 +172,7 @@ DOCTYPES = [
 		],
 		permissions=[
 			*ADMIN,
-			perm(PLANT_DIRECTOR, "rw pe"),  # noqa: F405
+			perm(PLANT_DIRECTOR, "rw pe"),
 			*ALL_INTERNAL_READ,
 		],
 	),
@@ -222,7 +222,7 @@ DOCTYPES = [
 			table("shifts", "Shifts", "Shift Pattern Slot", reqd=1),
 			float_("available_minutes_per_day", "Available Minutes Per Working Day", read_only=1),
 		],
-		permissions=[*ADMIN, perm(PLANT_DIRECTOR, "rwc pe"), perm(PLANNER, "rwc pe"), *ALL_INTERNAL_READ],  # noqa: F405
+		permissions=[*ADMIN, perm(PLANT_DIRECTOR, "rwc pe"), perm(PLANNER, "rwc pe"), *ALL_INTERNAL_READ],
 	),
 	DocType(
 		"Shift Pattern Slot",
@@ -271,8 +271,8 @@ DOCTYPES = [
 		],
 		permissions=[
 			*ADMIN,
-			perm(PLANT_DIRECTOR, "rwc pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(PLANT_DIRECTOR, "rwc pe"),
+			perm(AUDITOR, "r pe"),
 		],
 	),
 	DocType(
@@ -301,9 +301,9 @@ DOCTYPES = [
 		],
 		permissions=[
 			*ADMIN,
-			perm(PROCUREMENT_MANAGER, "rwc pe"),  # noqa: F405
-			perm(DEALER_LIAISON, "rwc pe"),  # noqa: F405
-			perm(AUDITOR, "r pe"),  # noqa: F405
+			perm(PROCUREMENT_MANAGER, "rwc pe"),
+			perm(DEALER_LIAISON, "rwc pe"),
+			perm(AUDITOR, "r pe"),
 		],
 	),
 ]

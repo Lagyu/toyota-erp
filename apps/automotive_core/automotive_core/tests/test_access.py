@@ -28,7 +28,7 @@ class TestTenantStructure(IntegrationTestCase):
 		self.assertEqual(frappe.db.get_value("Company", NA, "default_currency"), "USD")
 		self.assertTrue(frappe.db.exists("Customer", {"is_internal_customer": 1, "represents_company": AICHI}))
 		line = frappe.get_doc("Production Line", "AICHI-FA1")
-		self.assertEqual(line.max_units_per_day, int(960 * 60 // 64))
+		self.assertEqual(line.max_units_per_day, (960 * 60 // 64))
 		self.assertEqual(len(line.stations), 5)
 
 	def test_holiday_calendars_include_plant_shutdowns(self):

@@ -1,0 +1,146 @@
+"""Quality flows: final/powertrain/incoming inspections, rework of rejected vehicles,
+Andon events with containment and restart, nonconformance closure with CAPA."""
+
+from __future__ import annotations
+
+import datetime as dt
+
+import frappe
+from frappe.utils import add_days
+
+from automotive_manufacturing.quality_control import holds
+from automotive_manufacturing.shop_floor import andon as andon_service
+
+
+class Quality:
+	def __init__(self, sim):
+		self.sim = sim
+		self.ctx = sim.ctx
+		self.s = sim.state["sim"]
+
+	def _qi(self, item: str, reference_type: str, reference: str, stage: str, inspector: str, status: str,
+			company: str, serial: str | None = None, batch: str | None = None, remarks: str | None = None) -> str:
+		with self.ctx.as_user(inspector):
+			qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "Incoming" if stage == "Incoming"
+				else "In Process", "automotive_inspection_stage": stage, "reference_type": reference_type,
+				"reference_name": reference, "item_code": item, "item_serial_no": serial, "batch_no": batch,
+				"sample_size": 1, "inspected_by": inspector, "status": status, "manual_inspection": 1,
+				"company": company, "remarks": remarks})
+			qi.insert()
+			qi.submit()
+		self.ctx.count("Quality Inspection")
+		return qi.name
+
+	def final_inspection(self, vin: str, stock_entry: str, inspector: str, rejected: bool) -> None:
+		variant = frappe.db.get_value("Vehicle Unit", vin, "variant_item")
+		company = frappe.db.get_value("Vehicle Unit", vin, "company")
+		status = "Rejected" if rejected else "Accepted"
+		self._qi(variant, "Stock Entry", stock_entry, "Final", inspector, status, company, serial=vin,
+			remarks="Water leak at rear hatch seal" if rejected else None)
+		if rejected:
+			self.s.setdefault("rework", []).append({"vin": vin, "entry": stock_entry})
+
+	def powertrain_inspection(self, item: str, stock_entry: str, inspector: str) -> None:
+		rows = frappe.get_all("Stock Entry Detail", filters={"parent": stock_entry, "is_finished_item": 1},
+			fields=["serial_no"])
+		serial = (rows[0].serial_no or "").split("\n")[0] if rows else None
+		self._qi(item, "Stock Entry", stock_entry, "Final", inspector, "Accepted", "Hinode Powertrain Components",
+			serial=serial or None)
+
+	def incoming(self, item: str, receipt: str, batch: str | None, plant: str, rejected: bool) -> str:
+		inspector = self.sim.person("Quality Inspector", plant)
+		company = frappe.get_cached_value("Plant", plant, "company")
+		return self._qi(item, "Purchase Receipt", receipt, "Incoming", inspector, "Rejected" if rejected else "Accepted",
+			company, batch=batch, remarks="Dimensional check out of tolerance" if rejected else None)
+
+	# -----------------------------------------------------------------------------------
+	def daily(self, day: dt.date) -> None:
+		"""Rework yesterday's rejected vehicles, then release them after re-inspection."""
+		ctx = self.ctx
+		pending = self.s.get("rework", [])
+		keep = []
+		qm = [u for u in self.sim.roster.get("Quality Manager", []) if ctx.cache.get("plant_of", {}).get(u) == "AICHI-VA"]
+		for item in pending:
+			vin = item["vin"]
+			hold = frappe.db.get_value("Quality Hold", {"serial_no": vin, "status": "Active"}, "name")
+			if not hold:
+				continue
+			with ctx.step(18, 30):
+				doc = frappe.get_doc("Quality Hold", hold)
+				raiser = doc.raised_by
+				releaser = next((u for u in qm if u != raiser), qm[0] if qm else "Administrator")
+				for check in doc.release_checks:
+					check.done = 1
+				with ctx.as_user(releaser):
+					doc.save()
+					inspector = self.sim.person("Quality Inspector", "AICHI-VA", 1)
+					self._qi(frappe.db.get_value("Vehicle Unit", vin, "variant_item"), "Stock Entry", item["entry"], "Final",
+						inspector, "Accepted", "Hinode Automotive Manufacturing Japan", serial=vin,
+						remarks="Re-inspection after rework")
+					holds.release(hold, "Seal replaced and water test passed")
+				self._close_nc(doc, releaser)
+		self.s["rework"] = keep
+
+	def _close_nc(self, hold, manager: str) -> None:
+		nc_name = frappe.db.get_value("Non Conformance", {"automotive_quality_hold": hold.name}, "name")
+		if not nc_name:
+			return
+		with self.ctx.as_user(manager):
+			action = frappe.get_doc({"doctype": "Quality Action", "corrective_preventive": "Corrective",
+				"status": "Completed", "date": frappe.utils.nowdate(), "resolutions": [{"problem": "Hatch seal leak",
+					"resolution": "Seal fitting fixture recalibrated", "status": "Completed"}]})
+			action.insert(ignore_permissions=True)
+			nc = frappe.get_doc("Non Conformance", nc_name)
+			nc.corrective_action = nc.corrective_action or "Rework: seal replaced, water test repeated"
+			nc.automotive_root_cause_method = "5 Why"
+			nc.automotive_root_cause = "Seal fitting fixture out of calibration"
+			nc.automotive_capa = action.name
+			nc.status = "Resolved"
+			if nc.owner == manager:
+				return  # the reporter cannot approve closure; another manager will
+			nc.save(ignore_permissions=True)
+
+	# -----------------------------------------------------------------------------------
+	def andon(self, day: dt.date) -> None:
+		ctx = self.ctx
+		rng = ctx.rng("andon", day)
+		per_day = float(ctx.v("andon_events_per_week_per_plant")) / 5.0
+		for plant, lines in (("AICHI-VA", ["AICHI-FA1", "AICHI-FA2", "AICHI-BODY"]), ("KYUSHU-PT", ["KYU-P180", "KYU-E240"])):
+			if rng.random() > per_day:
+				continue
+			line = rng.choice(lines)
+			stations = frappe.get_all("Production Line Station", filters={"parent": line}, pluck="workstation")
+			reason = rng.choice(["E-BREAKDOWN", "E-TOOL", "M-SHORT", "P-OVERCYCLE", "Q-GAUGE", "S-NEAR-MISS"])
+			stop_type = "Call" if reason in ("P-OVERCYCLE", "S-NEAR-MISS") else "Line Stop"
+			operator = self.sim.person("Line Operator", plant, rng.randint(0, 50))
+			supervisor = self.sim.person("Production Supervisor", plant, rng.randint(0, 50))
+			hour = rng.randint(9, 15)
+			with ctx.step(hour, rng.randint(0, 59)):
+				with ctx.as_user(operator):
+					event = frappe.get_doc({"doctype": "Andon Event", "production_line": line,
+						"workstation": rng.choice(stations), "reason_code": reason, "stop_type": stop_type,
+						"description": "Raised from the station andon cord"}).insert()
+				ctx.count("Andon Event")
+			minutes = rng.randint(4, 38)
+			with ctx.frozen(ctx.clock.tick(60)):
+				with ctx.as_user(supervisor):
+					andon_service.acknowledge(event.name)
+					andon_service.contain(event.name, "Station isolated, team leader on site")
+			with ctx.frozen(ctx.clock.tick(minutes * 60)):
+				event.reload()
+				if event.quality_hold:
+					hold = frappe.get_doc("Quality Hold", event.quality_hold)
+					for check in hold.release_checks:
+						check.done = 1
+					managers = [u for u in self.sim.roster.get("Quality Manager", [])
+						if ctx.cache.get("plant_of", {}).get(u) == plant]
+					with ctx.as_user(managers[0]):
+						hold.save()
+						holds.release(hold.name, "Gauge re-verified, last parts re-checked")
+					restarter = managers[0]
+				else:
+					restarter = supervisor
+				with ctx.as_user(restarter):
+					andon_service.authorize_restart(event.name, "Containment verified")
+				with ctx.as_user(supervisor):
+					andon_service.close(event.name)

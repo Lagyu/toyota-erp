@@ -1,0 +1,51 @@
+# Large profile: double the standard volumes (sizing and load tests).
+# Deterministic: the same seed and profile always produce the same documents in the same order.
+profile: large
+seed: 20261024
+start_date: "2025-10-01"
+months: 12
+targets:            # acceptance minimums checked by validation
+  internal_users: 120
+  partner_users: 80
+  suppliers: 60
+  dealers: 20
+  items: 16000
+  boms: 800
+  work_orders: 24000
+  stock_ledger_events: 160000
+people:
+  per_manufacturing_plant: {Plant Director: 1, Production Planner: 3, Production Supervisor: 6, Line Operator: 16,
+    Warehouse Clerk: 6, Quality Inspector: 5, Quality Manager: 2, Product Engineer: 4, Engineering Manager: 1,
+    Logistics Coordinator: 3}
+  na_plant: {Plant Director: 1, Warehouse Clerk: 4, Logistics Coordinator: 3, Quality Inspector: 2, Sales Manager: 2,
+    Dealer Liaison: 4, Production Supervisor: 1, Line Operator: 4}
+  group: {Automotive Executive: 3, Group Controller: 2, AP Clerk: 4, Treasury Approver: 3, Buyer: 6,
+    Procurement Manager: 3, IT Operator: 2, Auditor: 2, Sales Manager: 2, Dealer Liaison: 4}
+partners:
+  suppliers: 60
+  carriers: 5
+  dealers_jp: 12
+  dealers_us: 8
+  second_portal_user_share: 0.15
+  edi_suppliers: 12
+  edi_dealers: 4
+catalog:
+  bulk_component_items: 15000   # service / catalogue parts (fasteners, connectors, hoses, ...)
+  colors: 8
+volume:
+  aichi_vehicles_per_day: 60
+  na_share: 0.35               # share of Aichi production exported to North America
+  kyushu_powertrain_batch: 3
+  subassembly_batches_per_day: 24
+  dealer_order_lines_per_day: 52
+  final_reject_rate: 0.02
+  incoming_inspection_share: 0.25
+  incoming_reject_rate: 0.01
+  andon_events_per_week_per_plant: 4
+  price_variance_rate: 0.03
+  revised_promise_rate: 0.1
+  ecos_per_month: 3
+  cycle_counts_per_week: 3
+  dealer_payment_days: 30
+  supplier_payment_weekday: 4  # Friday payment run
+  ocean_transit_days: 21

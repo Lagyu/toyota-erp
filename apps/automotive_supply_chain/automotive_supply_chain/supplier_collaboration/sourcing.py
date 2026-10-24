@@ -7,6 +7,7 @@ from frappe import _
 from frappe.utils import flt, getdate, nowdate
 
 from automotive_core.governance import audit
+from automotive_core.utils import send_welcome_email
 
 # ---------------------------------------------------------------------------------------
 # Onboarding
@@ -57,7 +58,7 @@ def on_onboarding_submit(doc) -> None:
 		if not frappe.db.exists("User", contact.email):
 			frappe.get_doc({"doctype": "User", "email": contact.email, "first_name": contact.first_name,
 				"last_name": contact.last_name, "user_type": "Website User",
-				"send_welcome_email": 0 if frappe.flags.in_test or frappe.flags.in_import else 1}).insert(
+				"send_welcome_email": send_welcome_email()}).insert(
 				ignore_permissions=True)
 		frappe.get_doc({"doctype": "Partner User Access", "user": contact.email, "party_type": "Supplier",
 			"supplier": supplier.name, "partner_role": contact.partner_role, "from_date": nowdate()}).insert(

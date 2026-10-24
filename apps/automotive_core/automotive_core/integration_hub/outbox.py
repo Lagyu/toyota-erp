@@ -90,7 +90,7 @@ def publish(
 		msg.flags.ignore_permissions = True
 		msg.insert()
 		created.append(msg.name)
-	if created and not frappe.flags.in_test:
+	if created and not (frappe.flags.in_test or frappe.flags.automotive_bulk):
 		frappe.enqueue("automotive_core.integration_hub.outbox.dispatch_due", queue="short",
 			job_id="automotive-outbox-dispatch", deduplicate=True, enqueue_after_commit=True)
 	return created

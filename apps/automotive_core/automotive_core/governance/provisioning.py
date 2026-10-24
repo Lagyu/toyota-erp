@@ -12,10 +12,10 @@ import frappe
 from frappe import _
 from frappe.utils import getdate, nowdate, validate_email_address
 
-from automotive_core.utils import commit
 from automotive_core.access import user_permissions
 from automotive_core.governance import audit
 from automotive_core.governance.sod import SegregationOfDutiesError, conflicts
+from automotive_core.utils import commit, send_welcome_email
 
 MANAGED_BY = "User Provisioning Request"
 
@@ -81,7 +81,7 @@ def apply(doc) -> str:
 				"last_name": doc.last_name,
 				"user_type": doc.user_type,
 				"language": doc.language or "en",
-				"send_welcome_email": 0 if frappe.flags.in_import or frappe.flags.in_test else 1,
+				"send_welcome_email": send_welcome_email(),
 				"automotive_access_expiry_date": doc.access_expiry_date,
 			}
 		)

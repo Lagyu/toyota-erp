@@ -530,7 +530,7 @@ def _users_with_role(role: str, company: str | None) -> list[str]:
 
 
 def _notify(users: list[str], req, subject: str) -> None:
-	if frappe.flags.in_import or not users:
+	if frappe.flags.in_import or frappe.flags.automotive_bulk or not users:
 		return
 	from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
 

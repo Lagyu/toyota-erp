@@ -10,6 +10,7 @@ from frappe.utils import add_days, cint, flt, getdate, nowdate
 
 from automotive_core.governance import audit
 from automotive_core.integration_hub import outbox
+from automotive_core.utils import send_welcome_email
 from automotive_supply_chain.partners import assert_party_access, is_portal_user
 
 INTERCOMPANY_TRANSIT_DAYS = 21
@@ -55,7 +56,7 @@ def on_registration_submit(doc) -> None:
 		if not frappe.db.exists("User", contact.email):
 			frappe.get_doc({"doctype": "User", "email": contact.email, "first_name": contact.first_name,
 				"last_name": contact.last_name, "user_type": "Website User",
-				"send_welcome_email": 0 if frappe.flags.in_test or frappe.flags.in_import else 1}).insert(
+				"send_welcome_email": send_welcome_email()}).insert(
 				ignore_permissions=True)
 		frappe.get_doc({"doctype": "Partner User Access", "user": contact.email, "party_type": "Customer",
 			"customer": customer.name, "partner_role": contact.partner_role, "from_date": nowdate()}).insert(
@@ -144,6 +145,10 @@ def validate_dealer_order(doc) -> None:
 	registration = frappe.db.get_value("Customer", doc.dealer, "automotive_dealer_registration")
 	authorised = set(frappe.get_all("Dealer Authorised Model", filters={"parent": registration}, pluck="vehicle_model")) \
 		if registration else set()
+	contracting = frappe.db.get_value("Dealer Registration", registration, "company") if registration else None
+	if contracting and doc.company != contracting:
+		# a dealer buys from the group company it is contracted with, never another one
+		frappe.throw(_("{0} orders from {1}.").format(doc.dealer, contracting))
 	price_list = frappe.db.get_value("Customer", doc.dealer, "default_price_list")
 	if not price_list:
 		frappe.throw(_("Dealer {0} has no price list.").format(doc.dealer))
@@ -286,46 +291,50 @@ def _trans_items(so, overrides: dict[str, dict] | None = None, drop: set[str] | 
 def apply_change(doc) -> str:
 	from erpnext.controllers.accounts_controller import update_child_qty_rate
 
+	from automotive_core.governance import elevation
 	from automotive_supply_chain.dealer_operations import allocation
 
 	so = frappe.get_doc("Sales Order", doc.sales_order)
 	order = frappe.get_doc("Dealer Order", doc.dealer_order)
-	if doc.change_type == "Cancel Order":
-		released = allocation.release_for_sales_order(so.name, reason=doc.reason)
-		so.flags.cancel_reason = _("Dealer order change {0}: {1}").format(doc.name, doc.reason)
-		so.flags.ignore_permissions = True
-		so.cancel()
-		order.db_set("status", "Cancelled")
-		effect = _("Sales order {0} cancelled; {1} vehicle allocation(s) released.").format(so.name, released)
-	else:
-		row = so.items[cint(doc.item_row) - 1]
-		if doc.change_type == "Change Quantity":
-			allocated = flt(row.automotive_allocated_qty)
-			keep = max(cint(doc.new_qty) - flt(row.delivered_qty), 0)
-			released = allocation.release_for_line(so.name, row.name, int(max(allocated - keep, 0)), doc.reason)
-			update_child_qty_rate("Sales Order", _trans_items(so, {row.name: {"qty": cint(doc.new_qty)}}), so.name)
-			effect = _("Line {0}: qty {1} -> {2}; {3} allocation(s) released.").format(doc.item_row, row.qty,
-				doc.new_qty, released)
-		elif doc.change_type == "Change Delivery Date":
-			update_child_qty_rate("Sales Order", _trans_items(so, {row.name: {"delivery_date": str(doc.new_delivery_date)}}),
-				so.name)
-			effect = _("Line {0}: delivery date {1} -> {2}.").format(doc.item_row, row.delivery_date, doc.new_delivery_date)
+	# the dealer may request the change; applying it to the Sales Order and its reservations
+	# is a system step taken on the dealer's behalf (validated in validate_change)
+	with elevation.on_behalf_of(_("Apply dealer order change {0}").format(doc.name), doc.doctype, doc.name):
+		if doc.change_type == "Cancel Order":
+			released = allocation.release_for_sales_order(so.name, reason=doc.reason)
+			so.flags.cancel_reason = _("Dealer order change {0}: {1}").format(doc.name, doc.reason)
+			so.flags.ignore_permissions = True
+			so.cancel()
+			order.db_set("status", "Cancelled")
+			effect = _("Sales order {0} cancelled; {1} vehicle allocation(s) released.").format(so.name, released)
 		else:
-			released = allocation.release_for_line(so.name, row.name, int(flt(row.automotive_allocated_qty)), doc.reason)
-			variant = frappe.db.get_value("Vehicle Configuration", doc.new_configuration, "variant_item")
-			price_list = so.selling_price_list
-			rate = flt(frappe.db.get_value("Item Price", {"item_code": variant, "price_list": price_list}, "price_list_rate")
-				or frappe.db.get_value("Item Price", {"item_code": frappe.get_cached_value("Item", variant, "variant_of"),
-					"price_list": price_list}, "price_list_rate")) * (1 - flt(row.discount_percentage) / 100)
-			update_child_qty_rate("Sales Order", _trans_items(so, drop={row.name}, add=[{"item_code": variant,
-				"qty": row.qty, "rate": rate, "delivery_date": str(row.delivery_date), "conversion_factor": 1,
-				"uom": row.uom}]), so.name)
-			so.reload()
-			new_row = next(i for i in so.items if i.item_code == variant and not i.automotive_configuration)
-			new_row.db_set("automotive_configuration", doc.new_configuration)
-			effect = _("Line {0}: {1} -> {2}; {3} allocation(s) released.").format(doc.item_row, row.item_code,
-				variant, released)
-		allocation.allocate(so.company)
+			row = so.items[cint(doc.item_row) - 1]
+			if doc.change_type == "Change Quantity":
+				allocated = flt(row.automotive_allocated_qty)
+				keep = max(cint(doc.new_qty) - flt(row.delivered_qty), 0)
+				released = allocation.release_for_line(so.name, row.name, int(max(allocated - keep, 0)), doc.reason)
+				update_child_qty_rate("Sales Order", _trans_items(so, {row.name: {"qty": cint(doc.new_qty)}}), so.name)
+				effect = _("Line {0}: qty {1} -> {2}; {3} allocation(s) released.").format(doc.item_row, row.qty,
+					doc.new_qty, released)
+			elif doc.change_type == "Change Delivery Date":
+				update_child_qty_rate("Sales Order", _trans_items(so, {row.name: {"delivery_date": str(doc.new_delivery_date)}}),
+					so.name)
+				effect = _("Line {0}: delivery date {1} -> {2}.").format(doc.item_row, row.delivery_date, doc.new_delivery_date)
+			else:
+				released = allocation.release_for_line(so.name, row.name, int(flt(row.automotive_allocated_qty)), doc.reason)
+				variant = frappe.db.get_value("Vehicle Configuration", doc.new_configuration, "variant_item")
+				price_list = so.selling_price_list
+				rate = flt(frappe.db.get_value("Item Price", {"item_code": variant, "price_list": price_list}, "price_list_rate")
+					or frappe.db.get_value("Item Price", {"item_code": frappe.get_cached_value("Item", variant, "variant_of"),
+						"price_list": price_list}, "price_list_rate")) * (1 - flt(row.discount_percentage) / 100)
+				update_child_qty_rate("Sales Order", _trans_items(so, drop={row.name}, add=[{"item_code": variant,
+					"qty": row.qty, "rate": rate, "delivery_date": str(row.delivery_date), "conversion_factor": 1,
+					"uom": row.uom}]), so.name)
+				so.reload()
+				new_row = next(i for i in so.items if i.item_code == variant and not i.automotive_configuration)
+				new_row.db_set("automotive_configuration", doc.new_configuration)
+				effect = _("Line {0}: {1} -> {2}; {3} allocation(s) released.").format(doc.item_row, row.item_code,
+					variant, released)
+			allocation.allocate(so.company)
 	audit.record("dealer_order.changed", "Sales Order", so.name, {"change": doc.name, "type": doc.change_type,
 		"effect": effect}, company=so.company)
 	outbox.publish("dealer_order.changed", {"dealer_order": order.name, "change": doc.change_type, "effect": effect},

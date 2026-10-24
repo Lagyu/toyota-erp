@@ -222,7 +222,9 @@ settings:
     allow_partial_reservation: 1
     allow_negative_stock: 0
     allow_internal_transfer_at_arms_length_price: 1
-    action_if_quality_inspection_is_rejected: Stop
+    # rejected lots are received into quarantine and blocked by a Quality Hold (jidoka);
+    # ERPNext's hard stop would prevent recording the rejected quantity at all
+    action_if_quality_inspection_is_rejected: Warn
     action_if_quality_inspection_is_not_submitted: Stop
   Buying Settings:
     po_required: "Yes"

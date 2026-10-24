@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import flt
 
 from automotive_manufacturing.shop_floor.kanban import ensure_cards, recommended_cards
 
@@ -18,6 +19,11 @@ class KanbanLoop(Document):
 			frappe.throw(_("{0} belongs to plant {1}.").format(self.line_side_warehouse, plant))
 		if self.supply_type == "Internal Transfer" and self.source_warehouse == self.line_side_warehouse:
 			frappe.throw(_("Source and line-side warehouse must differ."))
+		if flt(self.container_qty) <= 0:
+			frappe.throw(_("Container quantity must be positive."))
+		uom = frappe.get_cached_value("Item", self.item_code, "stock_uom")
+		if frappe.get_cached_value("UOM", uom, "must_be_whole_number") and flt(self.container_qty) % 1:
+			frappe.throw(_("Container quantity {0} must be a whole number of {1}.").format(self.container_qty, uom))
 		if self.flags.get("ignore_card_reduction") is None and not self.is_new():
 			before = self.get_doc_before_save()
 			if before and self.number_of_cards < before.number_of_cards:

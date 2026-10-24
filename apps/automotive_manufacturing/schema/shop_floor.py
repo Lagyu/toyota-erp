@@ -19,14 +19,14 @@ from dsl import (
 	table,
 	time,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 MODULE = "Shop Floor"
-READ_ALL = [perm(r, "r p") for r in INTERNAL]  # noqa: F405
+READ_ALL = [perm(r, "r p") for r in INTERNAL]
 FLOOR = [
-	perm(SYSTEM, "rwcd pe"),  # noqa: F405
-	perm(SUPERVISOR, "rwc pe"),  # noqa: F405
-	perm(PLANT_DIRECTOR, "rwc pe"),  # noqa: F405
+	perm(SYSTEM, "rwcd pe"),
+	perm(SUPERVISOR, "rwc pe"),
+	perm(PLANT_DIRECTOR, "rwc pe"),
 ]
 
 DOCTYPES = [
@@ -67,7 +67,7 @@ DOCTYPES = [
 			section("Just-in-Time Delivery Windows"),
 			table("delivery_windows", "Delivery Windows", "Kanban Delivery Window"),
 		],
-		permissions=[*FLOOR, perm(PLANNER, "rwc pe"), perm(WAREHOUSE, "r p"), *READ_ALL],  # noqa: F405
+		permissions=[*FLOOR, perm(PLANNER, "rwc pe"), perm(WAREHOUSE, "r p"), *READ_ALL],
 	),
 	DocType(
 		"Kanban Delivery Window",
@@ -98,7 +98,7 @@ DOCTYPES = [
 			link("current_signal", "Current Signal", "Kanban Signal", read_only=1),
 			datetime("last_scan_at", "Last Scan", read_only=1),
 		],
-		permissions=[*FLOOR, perm(OPERATOR, "r"), perm(WAREHOUSE, "r p"), *READ_ALL],  # noqa: F405
+		permissions=[*FLOOR, perm(OPERATOR, "r"), perm(WAREHOUSE, "r p"), *READ_ALL],
 	),
 	DocType(
 		"Kanban Signal",
@@ -132,7 +132,7 @@ DOCTYPES = [
 			float_("lead_time_hours_actual", "Actual Lead Time (Hours)", read_only=1),
 			small_text("escalation_note", "Escalation Note", read_only=1),
 		],
-		permissions=[*FLOOR, perm(WAREHOUSE, "r pe"), perm(BUYER, "r pe"), perm(OPERATOR, "r"), *READ_ALL],  # noqa: F405
+		permissions=[*FLOOR, perm(WAREHOUSE, "r pe"), perm(BUYER, "r pe"), perm(OPERATOR, "r"), *READ_ALL],
 	),
 	DocType(
 		"Andon Reason Code",
@@ -147,7 +147,7 @@ DOCTYPES = [
 			check("raises_quality_hold", "Raises Quality Hold"),
 			check("stops_line", "Stops The Line", default="1"),
 		],
-		permissions=[*FLOOR, perm(QUALITY_MANAGER, "rwc pe"), *READ_ALL],  # noqa: F405
+		permissions=[*FLOOR, perm(QUALITY_MANAGER, "rwc pe"), *READ_ALL],
 	),
 	DocType(
 		"Andon Event",
@@ -193,9 +193,9 @@ DOCTYPES = [
 		],
 		permissions=[
 			*FLOOR,
-			perm(OPERATOR, "rc"),  # noqa: F405
-			perm(QUALITY_MANAGER, "rw pe"),  # noqa: F405
-			perm(QUALITY_INSPECTOR, "rc pe"),  # noqa: F405
+			perm(OPERATOR, "rc"),
+			perm(QUALITY_MANAGER, "rw pe"),
+			perm(QUALITY_INSPECTOR, "rc pe"),
 			*READ_ALL,
 		],
 	),
@@ -234,9 +234,9 @@ DOCTYPES = [
 			amended_from("Shift Handover"),
 		],
 		permissions=[
-			perm(SYSTEM, "rwcd sxa pe"),  # noqa: F405
-			perm(SUPERVISOR, "rwc sx pe"),  # noqa: F405
-			perm(PLANT_DIRECTOR, "r pe"),  # noqa: F405
+			perm(SYSTEM, "rwcd sxa pe"),
+			perm(SUPERVISOR, "rwc sx pe"),
+			perm(PLANT_DIRECTOR, "r pe"),
 			*READ_ALL,
 		],
 	),

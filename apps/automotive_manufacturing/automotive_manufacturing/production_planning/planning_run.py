@@ -134,7 +134,7 @@ def load_snapshot(run_name: str) -> dict:
 
 @frappe.whitelist(methods=["POST"])
 def replay(name: str) -> str:
-	frappe.only_for(PLANNER_ROLES + ("Auditor",))
+	frappe.only_for((*PLANNER_ROLES, "Auditor"))
 	original = frappe.get_doc("Planning Run", name)
 	run = frappe.get_doc({"doctype": "Planning Run", "company": original.company, "plant": original.plant,
 		"parameter_set": original.parameter_set, "replay_of": original.name, "status": "Queued",

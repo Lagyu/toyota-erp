@@ -103,7 +103,7 @@ def _produced(company, from_date, to_date, plant=None) -> float:
 	return flt(frappe.db.sql(
 		f"""select sum(se.fg_completed_qty) from `tabStock Entry` se
 		where se.docstatus=1 and se.purpose='Manufacture' and se.company=%(company)s
-		and se.posting_date between %(from)s and %(to)s {clause}""",
+		and se.posting_date between %(from)s and %(to)s {clause}""",  # noqa: S608 (constant SQL fragments; values are bound)
 		{"company": company, "from": from_date, "to": to_date, **values})[0][0])
 
 
@@ -113,7 +113,7 @@ def production_attainment(company, from_date, to_date, plant=None) -> KpiResult:
 	planned = flt(frappe.db.sql(
 		f"""select sum(ps.planned_units) from `tabPlant Schedule` ps
 		join `tabPlant` p on p.name = ps.plant
-		where p.company=%(company)s and ps.schedule_date between %(from)s and %(to)s {clause}""",
+		where p.company=%(company)s and ps.schedule_date between %(from)s and %(to)s {clause}""",  # noqa: S608 (constant SQL fragments; values are bound)
 		{"company": company, "from": from_date, "to": to_date, **values})[0][0])
 	return KpiResult(ratio(produced, planned), produced, planned,
 		{"company": company, "plant": plant, "from": str(from_date), "to": str(to_date)})
@@ -126,7 +126,7 @@ def reconcile_attainment(company, from_date, to_date, plant, result) -> tuple[bo
 		join `tabStock Entry` se on se.name = sle.voucher_no and sle.voucher_type = 'Stock Entry'
 		join `tabStock Entry Detail` sed on sed.name = sle.voucher_detail_no
 		where se.purpose='Manufacture' and sed.is_finished_item=1 and sle.is_cancelled=0
-		and se.company=%(company)s and se.posting_date between %(from)s and %(to)s {clause}""",
+		and se.company=%(company)s and se.posting_date between %(from)s and %(to)s {clause}""",  # noqa: S608 (constant SQL fragments; values are bound)
 		{"company": company, "from": from_date, "to": to_date, **values})[0][0])
 	ok = abs(sle - flt(result.numerator)) < 1e-6
 	return ok, f"produced {flt(result.numerator)} vs finished-goods SLE {sle}"
@@ -138,7 +138,7 @@ def _stops(company, from_date, to_date, plant=None):
 		f"""select ae.name, ae.duration_minutes, ae.downtime_entry from `tabAndon Event` ae
 		join `tabPlant` p on p.name = ae.plant
 		where p.company=%(company)s and ae.stop_type='Line Stop' and ae.restarted_at is not null
-		and date(ae.raised_at) between %(from)s and %(to)s {clause}""",
+		and date(ae.raised_at) between %(from)s and %(to)s {clause}""",  # noqa: S608 (constant SQL fragments; values are bound)
 		{"company": company, "from": from_date, "to": to_date, **values}, as_dict=True)
 
 

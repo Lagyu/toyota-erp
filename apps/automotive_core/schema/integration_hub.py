@@ -20,11 +20,11 @@ from dsl import (
 	table,
 	text,
 )
-from roles import *  # noqa: F403
+from roles import *
 
 MODULE = "Integration Hub"
-OPS = [perm(SYSTEM, "rwcd pe"), perm(IT_OPERATOR, "rwc pe")]  # noqa: F405
-OPS_READONLY = [perm(SYSTEM, "r pe"), perm(IT_OPERATOR, "rw pe"), perm(AUDITOR, "r pe")]  # noqa: F405
+OPS = [perm(SYSTEM, "rwcd pe"), perm(IT_OPERATOR, "rwc pe")]
+OPS_READONLY = [perm(SYSTEM, "r pe"), perm(IT_OPERATOR, "rw pe"), perm(AUDITOR, "r pe")]
 
 INBOUND_TYPES = [
 	"dealer_order",
@@ -83,7 +83,7 @@ DOCTYPES = [
 			column(),
 			small_text("last_error", "Last Error", read_only=1),
 		],
-		permissions=[*OPS, perm(AUDITOR, "r pe"), perm(PROCUREMENT_MANAGER, "r"), perm(DEALER_LIAISON, "r")],  # noqa: F405
+		permissions=[*OPS, perm(AUDITOR, "r pe"), perm(PROCUREMENT_MANAGER, "r"), perm(DEALER_LIAISON, "r")],
 	),
 	DocType(
 		"Integration Inbound Message",
@@ -202,6 +202,6 @@ DOCTYPES = [
 			link("partner", "Partner", "Integration Partner", read_only=1, in_list_view=1),
 			datetime("seen_at", "Seen At", read_only=1, in_list_view=1, search_index=1),
 		],
-		permissions=[perm(SYSTEM, "r"), perm(IT_OPERATOR, "r")],  # noqa: F405
+		permissions=[perm(SYSTEM, "r"), perm(IT_OPERATOR, "r")],
 	),
 ]

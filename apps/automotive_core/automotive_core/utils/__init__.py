@@ -83,6 +83,11 @@ def is_seed_or_install() -> bool:
 	return bool(frappe.flags.in_install or frappe.flags.in_migrate or frappe.flags.in_patch)
 
 
+def send_welcome_email() -> int:
+	"""Welcome emails go to real people only: not from tests, imports or bulk generation."""
+	return 0 if frappe.flags.in_test or frappe.flags.in_import or frappe.flags.automotive_bulk else 1
+
+
 def commit() -> None:
 	"""Commit a scheduled/background unit of work. Tests run inside a transaction that
 	IntegrationTestCase rolls back, so committing there would leak test data."""

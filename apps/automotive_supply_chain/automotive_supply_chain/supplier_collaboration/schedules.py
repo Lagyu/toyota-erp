@@ -43,7 +43,7 @@ def _open_requests(company: str, plant: str, supplier: str | None = None, kanban
 		where mr.docstatus = 1 and mr.material_request_type = 'Purchase' and mr.company = %(company)s
 		and mr.status not in ('Stopped', 'Cancelled', 'Ordered') and mri.stock_qty > mri.ordered_qty
 		{"and ifnull(mr.automotive_kanban_signal, '') != ''" if kanban_only else ""}
-		order by mri.schedule_date, mr.name, mri.idx""",
+		order by mri.schedule_date, mr.name, mri.idx""",  # noqa: S608 (constant SQL fragments; values are bound)
 		{"company": company},
 		as_dict=True,
 	)
@@ -224,8 +224,10 @@ def validate_acknowledgement(doc) -> None:
 		line.item_code, line.ordered_qty = row.item_code, row.qty
 		if flt(line.confirmed_qty) < 0 or flt(line.confirmed_qty) > flt(row.qty):
 			frappe.throw(_("Line {0}: confirmed quantity must be between 0 and {1}.").format(line.idx, row.qty))
-	if doc.ack_type == "Accepted" and any(flt(ln.confirmed_qty) != flt(ln.ordered_qty) for ln in doc.lines):
-		doc.ack_type = "Accepted With Changes"
+	changed = any(flt(ln.confirmed_qty) != flt(ln.ordered_qty)
+		or getdate(ln.promised_date) != getdate(rows[ln.po_item].schedule_date) for ln in doc.lines)
+	if doc.ack_type == "Accepted" and changed:
+		doc.ack_type = "Accepted With Changes"  # a revised quantity or delivery promise
 	if doc.is_new():
 		doc.acknowledged_by = frappe.session.user
 		doc.acknowledged_at = now_datetime()
