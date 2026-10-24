@@ -27,7 +27,7 @@ DOCTYPES = [
 		icon="sprout",
 		description="One deterministic synthetic-data generation (profile + seed); resumable, with validation results.",
 		fields=[
-			select("profile", "Profile", ["small", "standard", "large"], reqd=1, in_list_view=1),
+			select("profile", "Profile", ["small", "standard", "large", "closing"], reqd=1, in_list_view=1),
 			int_("seed", "Seed", reqd=1, in_list_view=1),
 			select(
 				"status",

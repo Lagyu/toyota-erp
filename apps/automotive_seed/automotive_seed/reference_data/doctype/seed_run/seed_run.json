@@ -32,7 +32,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Profile",
-   "options": "small\nstandard\nlarge",
+   "options": "small\nstandard\nlarge\nclosing",
    "reqd": 1
   },
   {
@@ -145,7 +145,7 @@
  ],
  "icon": "sprout",
  "links": [],
- "modified": "2026-10-24 16:23:34.028229",
+ "modified": "2026-10-25 01:05:11.316731",
  "modified_by": "Administrator",
  "module": "Reference Data",
  "name": "Seed Run",

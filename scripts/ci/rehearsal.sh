@@ -283,11 +283,28 @@ files=$(mktemp -d)
 # scanner does not flag this script)
 printf '%s%s' 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR' '-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' >"$files/eicar.txt"
 printf 'Rehearsal: a clean upload\n' >"$files/clean.txt"
-upload() { # the response's status and start go to scan.log; prints the file URL
+# the uploads are attachments of a ToDo of the user's, as a desk user attaches a file to a document
+todo=$(https -s -H "Authorization: token $keys" -H 'Content-Type: application/json' \
+	--data '{"description": "Rehearsal: attachments scanned by ClamAV"}' "https://$SITE/api/resource/ToDo" \
+	| python3 -c 'import json, sys; print(json.load(sys.stdin)["data"]["name"])' 2>>"$out/scan.log" || true)
+echo "attachments on ToDo ${todo:-none}" >>"$out/scan.log"
+upload() { # the response's status, and the error a refusal carries, go to scan.log; prints the file URL
 	local response
 	response=$(https -s -w '\n%{http_code}' -H "Authorization: token $keys" -F "file=@$1" -F is_private=1 \
-		"https://$SITE/api/method/upload_file" || true)
-	echo "upload ${1##*/}: HTTP ${response##*$'\n'} $(head -c 300 <<<"${response%$'\n'*}")" >>"$out/scan.log"
+		-F doctype=ToDo -F "docname=$todo" "https://$SITE/api/method/upload_file" || true)
+	python3 -c 'import json, sys
+body, status = sys.argv[1].rsplit("\n", 1)
+try:
+	data = json.loads(body)
+except ValueError:
+	data = {}
+error = ""
+if "exc" in data:
+	error = json.loads(data["exc"])[0].strip().splitlines()[-1]
+if data.get("_server_messages"):
+	error += " " + " ".join(json.loads(m).get("message", "") for m in json.loads(data["_server_messages"]))
+print("upload %s: HTTP %s %s" % (sys.argv[2], status, error or body[:200]))' "$response" "${1##*/}" \
+		>>"$out/scan.log" 2>&1 || true
 	python3 -c 'import json, sys; print(json.loads(sys.argv[1])["message"]["file_url"])' "${response%$'\n'*}" \
 		2>/dev/null || true
 }
