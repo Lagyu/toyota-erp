@@ -39,7 +39,7 @@ The system is ERPNext v16 on Frappe v16, at pinned upstream commits (`infra/vers
 Run every command from the repository checkout on the host, which must match the deployed release. Two variables are used throughout:
 
 ```bash
-ENV=/etc/hinode/production.env     # environment file (copy of infra/deploy/env/*.env.example)
+ENV=/etc/hinode/production.env     # environment file (copy of config/env/*.env.example)
 SITE=erp.hinode.example            # SITE_NAME in that file
 ./scripts/deploy/compose.sh "$ENV" ps                                     # docker compose for the environment
 ./scripts/deploy/compose.sh "$ENV" exec -T backend bench --site "$SITE" … # bench commands in the stack

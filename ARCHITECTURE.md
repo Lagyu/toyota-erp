@@ -240,7 +240,7 @@ signing secret) by running the generator's own flows at the current time.
 | Development | [`infra/dev/compose.yaml`](infra/dev/compose.yaml): MariaDB, Redis (cache + queue), a bench container with the repository mounted, a worker; sites `test.localhost` (tests) and reference sites for datasets |
 | CI | GitHub Actions running [`scripts/ci/`](scripts/ci/): lint, unit, integration on the development stack, image builds, SBOM and scan, production smoke test, end-to-end suite on a reference stack |
 | Staging / reference | production stack from the reference image (adds the generator), `ENVIRONMENT=staging` or `reference` |
-| Production | production image (no generator), [`infra/deploy/env/production.env.example`](infra/deploy/env/production.env.example) |
+| Production | production image (no generator), [`config/env/production.env.example`](config/env/production.env.example) |
 
 The production stack is the official frappe_docker compose (backend, frontend,
 websocket, short and long workers, scheduler, MariaDB, Redis cache and queue) assembled

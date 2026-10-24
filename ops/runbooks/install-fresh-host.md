@@ -19,7 +19,7 @@ Sources:
 - `scripts/host/install-docker-ubuntu.sh`
 - `scripts/deploy/{preflight,compose,new-site,smoke}.sh`
 - `infra/deploy/compose.hinode.yaml`, `compose.tls-files.yaml`, `compose.tls-letsencrypt.yaml`, `compose.clamav.yaml`, `compose.monitoring.yaml`
-- `infra/deploy/env/*.env.example`
+- `config/env/*.env.example`
 - the pinned upstream frappe_docker compose files (`infra/versions.env`)
 
 ## Prerequisites
@@ -177,7 +177,7 @@ With `MONITORING=1`, also create `mysqld_exporter.cnf` with the credentials of a
 ## 4. Environment file
 
 ```bash
-sudo cp infra/deploy/env/production.env.example /etc/hinode/production.env
+sudo cp config/env/production.env.example /etc/hinode/production.env
 sudo chown "$(id -un)" /etc/hinode/production.env && sudo chmod 600 /etc/hinode/production.env
 ```
 

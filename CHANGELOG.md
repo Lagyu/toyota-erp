@@ -209,6 +209,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   phases, p95 checked against the targets (`ops/performance/README.md`).
 - Permission matrix (`ops/security/permission-matrix.md`), checked against the live
   permission tables by the integration tests.
+- The environment templates moved from `infra/deploy/env/` to `config/env/`, with the other
+  safe configuration templates (`config/README.md`).
+- The production rehearsal gives up on a `compose up` of the previous release after 15 minutes
+  and records the services' states: releases from d7662a7 up to 0062cc2 restart their one-shot
+  configurator and cannot start.
 
 ### Security
 - Findings log with the image scan (SBOM, Trivy) and a configuration review

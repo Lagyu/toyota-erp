@@ -7,7 +7,7 @@ Loading, resuming and validating the deterministic synthetic Hinode dataset. The
 ## Prerequisites
 
 - **A reference image:** `./scripts/image/build.sh --reference`, which produces tags ending in `-reference`. See [upgrade.md](upgrade.md#build-the-image).
-- **A reference stack** deployed from `infra/deploy/env/reference.env.example` (`ENVIRONMENT=reference`) as in [install-fresh-host.md](install-fresh-host.md). With `ENVIRONMENT=reference`, `scripts/deploy/new-site.sh`:
+- **A reference stack** deployed from `config/env/reference.env.example` (`ENVIRONMENT=reference`) as in [install-fresh-host.md](install-fresh-host.md). With `ENVIRONMENT=reference`, `scripts/deploy/new-site.sh`:
   - installs `automotive_seed`;
   - sets `automotive_allow_seed` to 1;
   - sets `automotive_environment` to `reference`.

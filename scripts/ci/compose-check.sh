@@ -10,7 +10,7 @@ work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 status=0
 for tls in files letsencrypt none; do
-	sed -e "s/^TLS_MODE=.*/TLS_MODE=$tls/" "$REPO_ROOT/infra/deploy/env/production.env.example" >"$work/$tls.env"
+	sed -e "s/^TLS_MODE=.*/TLS_MODE=$tls/" "$REPO_ROOT/config/env/production.env.example" >"$work/$tls.env"
 	echo "CLAMAV=1" >>"$work/$tls.env"
 	"$REPO_ROOT/scripts/deploy/compose.sh" "$work/$tls.env" config --format json >"$work/$tls.json"
 	python3 - "$work/$tls.json" "$tls" <<'EOF' || status=1

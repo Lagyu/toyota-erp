@@ -119,7 +119,7 @@ sudo chown 65534 "$SECRETS/mysqld_exporter.cnf" && sudo chmod 0400 "$SECRETS/mys
 pass "$(sudo find "$SECRETS" -type f | wc -l) files, owners per runbook"
 
 step "Environment file and TLS certificate (steps 4-5)"
-sudo cp "$REPO_ROOT/infra/deploy/env/production.env.example" "$ENV"
+sudo cp "$REPO_ROOT/config/env/production.env.example" "$ENV"
 sudo chown "$(id -un)" "$ENV" && sudo chmod 600 "$ENV"
 s3_key=rehearsal$(random_secret | tr -dc 'a-z0-9' | cut -c1-8) s3_secret=$(random_secret)
 set_env "SITE_NAME=$SITE" "SITES_RULE=Host(\`$SITE\`)" "CUSTOM_IMAGE=${prev_image%:*}" "CUSTOM_TAG=${prev_image##*:}" \

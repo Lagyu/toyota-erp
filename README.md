@@ -47,7 +47,7 @@ integration_tests/    API contract tests: the running API against the committed 
 infra/                pinned versions, image build, production compose overrides, monitoring
 scripts/              development, CI, image, deployment, seed and host scripts
 ops/                  backup and restore drill scripts, operations runbooks, security findings
-config/               safe configuration (security review allowlist), Japanese glossary
+config/               safe configuration templates: environment files, security review allowlists, Japanese glossary
 seed/                 pointer to the synthetic data profiles
 .github/workflows/    CI
 ```
@@ -101,7 +101,7 @@ Production uses the official `frappe_docker` compose files plus the overrides in
 
 ```bash
 ./scripts/image/build.sh                                  # toyota-erp/erp:<version>-<git sha>
-cp infra/deploy/env/production.env.example /etc/hinode/production.env   # edit, provision secrets
+cp config/env/production.env.example /etc/hinode/production.env   # edit, provision secrets
 ./scripts/deploy/compose.sh /etc/hinode/production.env up -d
 ./scripts/deploy/new-site.sh /etc/hinode/production.env
 ./scripts/deploy/smoke.sh /etc/hinode/production.env
