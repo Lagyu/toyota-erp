@@ -24,9 +24,12 @@ read -r -p "This replaces ALL data of $site with snapshot $snapshot. Type the si
 	else restic restore "$SNAP" --target "$work"; fi
 	db=$(find "$work" -name "*-database.sql.gz" | head -1)
 	zcat "$db" | sed -E "s#/\*!50017 DEFINER=\`[^\`]*\`@\`[^\`]*\`\*/ ?##g" | gzip -c > "$work/restore.sql.gz"
+	# bench backup --compress writes .tgz archives (.tar without it); public must not match private
+	public=$(find "$work" \( -name "*-files.tar" -o -name "*-files.tgz" \) ! -name "*-private-files.*" | head -1)
+	private=$(find "$work" \( -name "*-private-files.tar" -o -name "*-private-files.tgz" \) | head -1)
+	if [ -z "$public" ] || [ -z "$private" ]; then echo "the snapshot holds no file archives" >&2; exit 1; fi
 	bench --site "$SITE_NAME" restore "$work/restore.sql.gz" \
-		--with-public-files "$(find "$work" -name "*-files.tar" | head -1)" \
-		--with-private-files "$(find "$work" -name "*-private-files.tar" | head -1)" \
+		--with-public-files "$public" --with-private-files "$private" \
 		--db-root-password "$(cat "$DB_ROOT_PASSWORD_FILE")" --force
 	rm -rf "$work"'
 "${compose[@]}" exec -T backend bench --site "$site" migrate

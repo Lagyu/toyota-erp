@@ -24,8 +24,13 @@ snapshot=$(restic snapshots --host "$site" --latest 1 --json | python3 -c 'impor
 log "restoring snapshot $snapshot"
 restic restore "$snapshot" --target "$work" --quiet
 db=$(find "$work" -name '*-database.sql.gz' | head -1)
-public=$(find "$work" -name '*-files.tar' | head -1)
-private=$(find "$work" -name '*-private-files.tar' | head -1)
+# bench backup --compress writes .tgz archives (.tar without it); public must not match private
+public=$(find "$work" \( -name '*-files.tar' -o -name '*-files.tgz' \) ! -name '*-private-files.*' | head -1)
+private=$(find "$work" \( -name '*-private-files.tar' -o -name '*-private-files.tgz' \) | head -1)
+if [[ -z $public || -z $private ]]; then
+	log "snapshot $snapshot holds no file archives: a backup without files cannot be restored completely"
+	exit 1
+fi
 # the dump's trigger DEFINERs name the production account; strip them for the scratch user
 zcat "$db" | sed -E 's#/\*!50017 DEFINER=`[^`]*`@`[^`]*`\*/ ?##g' | gzip -c >"$work/restore.sql.gz"
 

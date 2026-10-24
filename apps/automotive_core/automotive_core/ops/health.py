@@ -116,18 +116,26 @@ def collect() -> list[tuple[str, str, dict, float]]:
 	if last_scheduled:
 		out.append(("erp_scheduler_last_job_timestamp_seconds", "Unix time of the last completed scheduled job", {},
 			float(get_datetime(last_scheduled).timestamp())))
-	for _name, _help, labels, _value in out:
-		labels.setdefault("site", site)
+	for metric in out:
+		metric[2].setdefault("site", site)
 	return out
 
 
-def render(metrics: list[tuple[str, str, dict, float]]) -> str:
+def render(metrics: list[tuple]) -> str:
+	"""Prometheus text format. Entries are (name, help, labels, value) gauges, or carry a
+	fifth element with the type; histogram samples (_bucket/_sum/_count) share one header."""
 	lines: list[str] = []
 	seen: set[str] = set()
-	for name, help_text, labels, value in metrics:
-		if name not in seen:
-			lines += [f"# HELP {name} {help_text}", f"# TYPE {name} gauge"]
-			seen.add(name)
+	for name, help_text, labels, value, *kind in metrics:
+		kind = kind[0] if kind else "gauge"
+		family = name
+		if kind == "histogram":
+			for suffix in ("_bucket", "_sum", "_count"):
+				if name.endswith(suffix):
+					family = name[: -len(suffix)]
+		if family not in seen:
+			lines += [f"# HELP {family} {help_text}", f"# TYPE {family} {kind}"]
+			seen.add(family)
 		label_text = ",".join(f'{k}="{_escape(v)}"' for k, v in sorted(labels.items()))
 		lines.append(f"{name}{{{label_text}}} {value:g}")
 	return "\n".join(lines) + "\n"

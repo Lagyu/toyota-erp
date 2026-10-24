@@ -104,8 +104,10 @@ def run(profile: str = "small", seed: int | None = None, until: str | None = Non
 	try:
 		with inline_background_jobs():
 			_stages(ctx, name, state, until)
-		frappe.db.set_value("Seed Run", name, {"status": "Completed" if not until else "Paused",
-			"finished_at": now_datetime()})
+		# the validation stage leaves Validated / Validation Failed: that is the run's outcome
+		outcome = frappe.db.get_value("Seed Run", name, "status")
+		status = "Paused" if until else outcome if outcome in ("Validated", "Validation Failed") else "Completed"
+		frappe.db.set_value("Seed Run", name, {"status": status, "finished_at": now_datetime()})
 		frappe.db.commit()
 	except Exception:
 		frappe.db.rollback()

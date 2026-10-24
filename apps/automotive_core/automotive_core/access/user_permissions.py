@@ -53,3 +53,10 @@ def scoped_values(user: str, allow: str) -> list[str] | None:
 	if not perms:
 		return None
 	return [p.get("doc") for p in perms]
+
+
+def employee_scope_is_provisioned(doc, method=None) -> None:
+	"""Employee before_insert/validate: ERPNext would add a company User Permission for the
+	linked user, outside the managed sources above, narrowing group-level roles to one
+	company and bypassing provisioning (D-007). Scope comes from provisioning only."""
+	doc.create_user_permission = 0

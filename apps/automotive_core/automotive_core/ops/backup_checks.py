@@ -1,7 +1,8 @@
 """Integrity checks run on a freshly restored copy of a site (ops/backup/restore-drill.sh).
 
 They prove a backup is usable, not just present: the ledgers balance, the audit hash
-chain verifies end to end, and the core record counts are there.
+chain verifies end to end, the core record counts are there, and every stored file the
+records point to was restored with them.
 """
 
 from __future__ import annotations
@@ -31,6 +32,7 @@ def verify_restored_site(output: str | None = None) -> dict:
 	checks.append({"check": "audit hash chain", "ok": bool(chain["ok"]), "detail": chain})
 	counts = {doctype: frappe.db.count(doctype) for doctype in COUNTED if frappe.db.table_exists(doctype)}
 	checks.append({"check": "record counts", "ok": counts.get("Company", 0) > 0, "counts": counts})
+	checks.append(_attachments())
 	last = frappe.db.sql("select max(posting_date) from `tabGL Entry`")[0][0]
 	checks.append({"check": "latest posting", "ok": True, "date": str(last) if last else None})
 	result = {"ok": all(c["ok"] for c in checks), "checks": checks}
@@ -38,3 +40,24 @@ def verify_restored_site(output: str | None = None) -> dict:
 		with open(output, "w") as handle:
 			json.dump(result, handle, default=str)
 	return result
+
+
+def _attachments() -> dict:
+	"""Every public and private file referenced by a File record exists on disk."""
+	import os
+	from urllib.parse import unquote
+
+	total, missing = 0, []
+	for url in frappe.get_all("File", filters={"is_folder": 0}, pluck="file_url", limit_page_length=0):
+		url = unquote(url or "")
+		if url.startswith("/private/files/"):
+			path = frappe.get_site_path(url.lstrip("/"))
+		elif url.startswith("/files/"):
+			path = frappe.get_site_path("public", url.lstrip("/"))
+		else:
+			continue  # external links
+		total += 1
+		if not os.path.exists(path):
+			missing.append(url)
+	return {"check": "attachments restored", "ok": not missing, "files": total, "missing": len(missing),
+		"examples": missing[:5]}

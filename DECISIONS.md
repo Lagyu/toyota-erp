@@ -1,0 +1,233 @@
+# Decisions
+
+Significant technical choices, why they were made, and what they cost. Numbers are
+stable: code and documents refer to them (for example `D-021` in the group consolidation
+report). New decisions are appended; a reversed decision is marked superseded, not
+deleted.
+
+---
+
+## D-001 Build on ERPNext v16 / Frappe v16 at pinned, verified releases
+
+**Context.** The brief requires ERPNext v16 on a verified, compatible release set, with
+standard DocTypes as the source of truth and no fork.
+**Decision.** Pin Frappe v16.53.0, ERPNext v16.52.1 and frappe_docker v4.1.1 by tag *and*
+commit in `infra/versions.env`; every clone is verified against the commit
+(`scripts/lib/verify-checkout.sh`); base images are pinned by digest. Custom behaviour
+uses hooks, custom fields, patches and whitelisted methods only.
+**Consequences.** Upgrades are explicit changes to one file, rehearsed with
+`scripts/deploy/upgrade.sh`. Where ERPNext has a defect we work around it in our code and
+note it (e.g. D-022) instead of patching ERPNext.
+
+## D-002 Four domain apps plus a generator, dependencies pointing one way
+
+**Decision.** `automotive_core` ← `automotive_manufacturing` ← `automotive_supply_chain`
+← `automotive_portals`, plus `automotive_seed`. A lower app never imports a higher one;
+when it needs their behaviour it defines a hook that higher apps fill
+(`automotive_inbound_handlers`, `automotive_period_close_checks`,
+`automotive_kpi_definitions`, `automotive_metrics`).
+**Why.** The brief's provisional app split maps onto the domain dependencies (dealers need
+vehicles, vehicles need governance); one-way imports keep each app testable on its own.
+**Consequences.** Some flows cross apps through hooks rather than direct calls, which is
+slightly more indirection.
+
+## D-003 DocType schemas as code
+
+**Decision.** DocTypes, workspaces, sidebars and number cards are specified in Python
+(`apps/*/schema/*.py`, DSL in `scripts/dev/schema/`) and the JSON is generated;
+`generate.py --check` fails CI on drift.
+**Why.** Hand-edited DocType JSON drifts and is hard to review; specs are compact and
+reviewable, and permissions sit next to the fields they protect.
+**Consequences.** Never edit generated JSON; change the spec and regenerate.
+
+## D-004 ERPNext documents are the record; custom DocTypes only for missing concepts
+
+**Decision.** Items, BOMs, work orders, stock entries, purchase and sales documents,
+payments, reservations, serials, batches and all ledgers stay standard. Custom DocTypes
+(Kanban card, andon event, quality hold, Vehicle Unit, …) link to them and never hold a
+second copy of quantities, values or balances.
+**Consequences.** Every ledger is produced by ERPNext's posting code, so financial and
+stock reconciliation holds by construction and is verified after data generation.
+
+## D-005 Own approval engine instead of Frappe Workflow
+
+**Decision.** Approval Policy → Approval Request → immutable Approval Decisions, enforced
+by a wildcard `before_submit` hook. A request is bound to a SHA-256 of the fields the
+policy protects; any later change invalidates it.
+**Why.** The brief needs amount- and company-dependent steps, maker/checker, distinct
+approvers, delegation with expiry and immutable accountability across many DocTypes;
+Workflow's state machine per DocType does not express these and its states are editable.
+**Consequences.** Governed documents show an Approval menu instead of workflow actions.
+
+## D-006 Hash-chained audit log, sealed asynchronously
+
+**Decision.** Audit Events are inserted in the business transaction without a hash; a
+single sealer (MariaDB named lock) assigns chain positions and hashes later. Database
+triggers block changes to sealed rows; `verify_chain` reports the first break.
+**Why.** Hashing inside the transaction would serialise every writer on the chain head.
+**Consequences.** Recent events are unsealed for a short time (alert `ErpAuditSealingBehind`).
+
+## D-007 Row-level scope through User Permissions in strict mode
+
+**Decision.** Company and plant scope are User Permissions (strict user permissions on);
+reports and KPI queries apply the same scope through `analytics/scope.py`. Employees
+created for users do not get ERPNext's automatic company permission (it would widen
+cross-company roles).
+**Consequences.** One mechanism protects desk lists, forms, links, reports and APIs.
+
+## D-008 Portals as server-rendered Frappe pages with a small JSON API
+
+**Decision.** `/supplier-portal` and `/dealer-portal` are Frappe www pages with plain
+JavaScript modules and whitelisted API methods. The partner is resolved on the server
+from Partner User Access; portal users get only the custom portal role (ERPNext's
+Supplier and Customer roles are stripped on save).
+**Why.** No extra frontend toolchain or service; the server decides what a partner sees.
+**Consequences.** Portal screens are built by hand, accessible (tabs, keyboard, live
+regions) and responsive, but not a full SPA.
+
+## D-009 Idempotency records inside the business transaction
+
+**Decision.** State-changing portal, MES and integration methods take an
+`Idempotency-Key`; a record with a unique scope key is inserted in the same transaction
+as the effect and stores the response.
+**Consequences.** Retries are safe across crashes; a key reused for a different payload
+is refused (422).
+
+## D-010 Integration hub with signed HTTPS, inbox/outbox and a project EDI profile
+
+**Decision.** HMAC-SHA256 signatures with timestamp and nonce; an inbox that stores each
+message once and processes it as the partner's service user; an outbox written in the
+business transaction with retries, backoff and dead-lettering; a segment-based "Hinode
+EDI" profile (X12-inspired, not a standard implementation); a file-drop adapter for
+partners without live credentials.
+**Consequences.** No unconnected partner is presented as live. Mapping to a real EDI
+standard is a partner-specific adapter for later.
+
+## D-011 Deterministic MRP over stored snapshots
+
+**Decision.** A planning run collects a snapshot of demand, supply, BOMs, lead times and
+calendars, stores it, and runs a pure-Python engine (`engine/mrp.py`); outputs are
+hashed and a replay from the stored snapshot must be identical. Release goes through
+ERPNext's Production Plan.
+**Consequences.** Planning is reproducible and testable without a database; capacity
+overloads are reported as exceptions against the production line.
+
+## D-012 Vehicle Unit as the VIN-level aggregate
+
+**Decision.** VINs are reserved (Vehicle Unit, status Planned) when a vehicle work order
+is submitted; the unit carries separate production, quality, inventory, shipment and
+invoice states, kept in step by document hooks. The VIN is also the Serial No.
+**Consequences.** One record answers "where is this vehicle and what state is it in".
+
+## D-013 Genealogy captured when manufacture entries post
+
+**Decision.** Genealogy Links (consumed serial/batch → produced serial/batch) are written
+from the entry's Serial and Batch Bundles when it is submitted; outputs numbered during
+posting are read back from the stored bundle. A backfill patch repairs entries posted
+without links.
+**Consequences.** Traceability is as deep as the tracked components (vehicle →
+powertrain/sub-assembly → supplier lot).
+
+## D-014 Quality holds enforced in document validation, one per target
+
+**Decision.** An active Quality Hold blocks movements, production and shipping of what it
+targets in the validation of Stock Entry, Job Card, Work Order, Purchase Receipt,
+Delivery Note, Pick List and Sales Invoice; only segregation into quarantine/scrap and
+disposition entries pass. A second finding on a held target confirms the existing hold.
+**Consequences.** Jidoka is enforced by the server whichever screen or API is used.
+
+## D-015 Allocation: build-to-order first, then rule-based FIFO
+
+**Decision.** A released vehicle built for a sales order line serves that line; other
+vehicles serve open lines by the company's allocation rule (order date, dealer tier or
+requested date). Allocations hold the VIN with a serial-level Stock Reservation Entry.
+**Consequences.** Build-to-order vehicles cannot be taken by older orders of the same
+variant; releasing an allocation never changes inventory value.
+
+## D-016 Recorded system steps instead of broad roles
+
+**Decision.** When a validated request must change documents the requester may not edit
+(dealer change → Sales Order; disposition → purchase return; intercompany hand-offs;
+supplier quotations), the follow-up runs inside `governance.elevation.on_behalf_of`,
+which records the system actor and the requester; the documents are owned by the
+requester.
+**Why.** Granting dealers or quality staff purchasing or sales rights would break least
+privilege.
+
+## D-017 Intercompany through transfer price agreements and mapped hand-offs
+
+**Decision.** Group companies trade through ERPNext internal customers/suppliers;
+Transfer Price Agreements fix prices; the seller's order and the buyer's receipt are
+mapped from the counterpart document by `intercompany/handoff.py`, so neither side
+retypes or reads the other company's documents.
+**Consequences.** Both companies book matching events; a reconciliation compares them.
+
+## D-018 Synthetic data by simulation through the application
+
+**Decision.** The generator simulates the group day by day through the same documents and
+APIs as users, each step posted by the dataset person who owns it, under a simulated
+clock (frozen per step, strictly increasing) with one transaction per day, inline
+background jobs and resumable state.
+**Why.** The brief forbids inconsistent ledger inserts; simulation also exercises the code
+the way production will.
+**Consequences.** Generation is slow (minutes per simulated day at standard volume) but
+the result passes the same invariants as live data.
+
+## D-019 Production packaging on the official frappe_docker compose
+
+**Decision.** Use frappe_docker's compose plus our overrides (Traefik with TLS modes,
+ofelia jobs, restic backups, optional ClamAV and monitoring) and an immutable image
+built from the pins with frozen Python constraints; images are promoted unchanged.
+`pwd.yml` is never used.
+**Consequences.** Upgrades follow upstream's container model; our overrides stay small.
+
+## D-020 KPI catalogue with reconciliation checks
+
+**Decision.** Each KPI is a catalogue entry with formula, source DocTypes, authorization
+filter, refresh policy and a reconciliation function that recomputes it from source.
+Number cards are shown only to users who can read the source DocType.
+
+## D-021 Group consolidation is a management view
+
+**Context.** ERP-09 asks for group reporting across three companies in two currencies.
+**Decision.** The Group Consolidation report translates each company's GL by root type
+(balance sheet at the closing rate, profit and loss at the period's average rate),
+shows the translation difference, and identifies intercompany balances and flows. It
+does not post eliminations or maintain a consolidation ledger, and unrealised profit in
+intercompany inventory is not eliminated.
+**Why.** Statutory consolidation needs ownership structures, elimination journals and
+audit sign-off that are out of scope; a GL-derived view gives management the group
+picture without a second set of books.
+**Consequences.** Figures are traceable to GL entries; statutory group accounts remain an
+external process.
+
+## D-022 Period close through a checklist and ERPNext Accounting Periods
+
+**Decision.** A Period Close Checklist runs registered checks (core checks plus
+app-contributed ones), allows waivers of waivable checks by a group controller with a
+reason, requires approval, and on submit creates or re-enables an Accounting Period
+closing every period-closing DocType; cancelling disables it.
+**Note.** ERPNext's server-side bootstrap of closed document types mishandles its own
+list, so the checklist fills `closed_documents` explicitly.
+
+## D-023 Upstream-pinned dependency advisories are reviewed, not overridden
+
+**Decision.** Advisories in libraries whose versions Frappe/ERPNext pin (Pillow, pypdf,
+filelock, GitPython, pdfkit) are listed in `config/security/audit-allowlist.txt` with
+reasons and review dates; `scripts/ci/audit.sh` fails on any advisory not listed.
+**Why.** Overriding upstream pins risks breaking the framework; the exposure is reviewed
+per advisory and removed when upstream updates.
+
+## D-024 End-to-end tests run as dataset personas
+
+**Decision.** The Playwright suite signs in as real users of the synthetic dataset
+(passwords generated per run, never stored in the repository) and arranges journey
+preconditions through the generator's own flows; in CI it runs against a reference stack
+built from the image, with the generated dataset cached by generator version.
+**Consequences.** Tests exercise real permissions and row scopes; CI regenerates the
+dataset only when the generator changes.
+
+## D-025 Licence: GPL-3.0-only, pending the owner's decision
+
+**Decision.** The custom apps are GPL-3.0-only, compatible with ERPNext (GPL-3.0) and
+Frappe (MIT). The owner may choose differently before a first release.

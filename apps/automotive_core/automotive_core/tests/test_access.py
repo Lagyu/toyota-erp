@@ -98,6 +98,19 @@ class TestEffectiveDatedAccess(IntegrationTestCase):
 		self.assertFalse(frappe.db.exists("User Permission", {"user": "kyushu.super@hinode.example", "allow": "Plant"}))
 
 
+class TestEmployeeScope(IntegrationTestCase):
+	def test_linking_an_employee_does_not_add_company_scope(self):
+		"""Scope comes from provisioning and plant assignments (D-007): ERPNext's automatic
+		"own company" permission would confine a group-level user to one company."""
+		user = make_user("buyer.group.scope@hinode.example", ["Buyer"])
+		frappe.get_doc({"doctype": "Employee", "first_name": "Group", "last_name": "Buyer",
+			"gender": frappe.db.get_value("Gender", {}, "name"), "date_of_birth": "1985-04-01",
+			"date_of_joining": "2020-04-01", "company": AICHI, "user_id": user, "status": "Active",
+			"create_user_permission": 1}).insert(ignore_permissions=True)
+		self.assertFalse(frappe.db.exists("User Permission", {"user": user, "allow": "Company"}))
+		self.assertFalse(frappe.db.exists("User Permission", {"user": user, "allow": "Employee"}))
+
+
 class TestPartnerAccess(IntegrationTestCase):
 	@classmethod
 	def setUpClass(cls):

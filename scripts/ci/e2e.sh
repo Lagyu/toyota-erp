@@ -87,21 +87,27 @@ EOF
 	done
 	"$REPO_ROOT/scripts/deploy/new-site.sh" "$env_file" 2>&1 | tail -3
 
-	# the small dataset: keyed by the generator's source, regenerated only when it changes
-	key=$(cd "$REPO_ROOT" && git ls-files -s apps/automotive_seed | sha256sum | cut -c1-12)
+	# the small dataset: keyed by the generator's inputs, regenerated only when they change
+	# (the end-to-end fixtures in e2e.py do not shape the dataset)
+	seed=apps/automotive_seed/automotive_seed
+	key=$(cd "$REPO_ROOT" && git ls-files -s "$seed/generator" "$seed/profiles" "$seed/reference_data" \
+		"$seed/runner.py" | sha256sum | cut -c1-12)
 	cache=$REPO_ROOT/.local/reference/small-$key
 	if [[ -f $cache/database.sql.gz ]]; then
 		log "restoring the small dataset ($key)"
-		for f in database.sql.gz public.tar private.tar; do
+		for f in database.sql.gz public.tgz private.tgz; do
 			"${compose[@]}" cp "$cache/$f" "backend:/tmp/$f" >/dev/null
 		done
 		"${compose[@]}" exec -T -e DB_ROOT="$(<"$secrets/db_root_password")" backend bash -c \
-			"bench --site '$site' restore /tmp/database.sql.gz --with-public-files /tmp/public.tar \
-			--with-private-files /tmp/private.tar --db-root-password \"\$DB_ROOT\" --force >/dev/null \
-			&& rm -f /tmp/database.sql.gz /tmp/public.tar /tmp/private.tar"
-		# the dataset's encrypted fields stay readable with its own key
-		"${compose[@]}" exec -T -e KEY="$(<"$cache/encryption_key")" backend bash -c \
-			"bench --site '$site' set-config encryption_key \"\$KEY\""
+			"bench --site '$site' restore /tmp/database.sql.gz --with-public-files /tmp/public.tgz \
+			--with-private-files /tmp/private.tgz --db-root-password \"\$DB_ROOT\" --force >/dev/null \
+			&& rm -f /tmp/database.sql.gz /tmp/public.tgz /tmp/private.tgz"
+		# the dataset's encrypted fields stay readable with its own key (Frappe creates one only
+		# when a field is first encrypted)
+		if [[ -s $cache/encryption_key ]]; then
+			"${compose[@]}" exec -T -e KEY="$(<"$cache/encryption_key")" backend bash -c \
+				"bench --site '$site' set-config encryption_key \"\$KEY\""
+		fi
 		bench migrate >/dev/null
 	else
 		log "generating the small dataset (cached afterwards as $key)"
@@ -113,11 +119,12 @@ EOF
 		# trigger DEFINERs name this stack's database user: strip them so any site loads the dump
 		"${compose[@]}" exec -T backend bash -c "zcat '$(newest -database.sql.gz)' \
 			| sed -E 's#/\\*!50017 DEFINER=\`[^\`]*\`@\`[^\`]*\`\\*/ ?##g' | gzip -c" >"$cache.tmp/database.sql.gz"
-		"${compose[@]}" cp "backend:$(newest -private-files.tar)" "$cache.tmp/private.tar" >/dev/null
-		public=$("${compose[@]}" exec -T backend bash -c "ls -t $backups/*-files.tar | grep -v private | head -1")
-		"${compose[@]}" cp "backend:$public" "$cache.tmp/public.tar" >/dev/null
+		# --compress archives the files as .tgz
+		"${compose[@]}" cp "backend:$(newest -private-files.tgz)" "$cache.tmp/private.tgz" >/dev/null
+		public=$("${compose[@]}" exec -T backend bash -c "ls -t $backups/*-files.tgz | grep -v private-files | head -1")
+		"${compose[@]}" cp "backend:$public" "$cache.tmp/public.tgz" >/dev/null
 		"${compose[@]}" exec -T backend bash -c "python3 -c 'import json; \
-			print(json.load(open(\"sites/$site/site_config.json\"))[\"encryption_key\"])'" >"$cache.tmp/encryption_key"
+			print(json.load(open(\"sites/$site/site_config.json\")).get(\"encryption_key\", \"\"))'" >"$cache.tmp/encryption_key"
 		rm -rf "$cache"
 		mv "$cache.tmp" "$cache"
 	fi

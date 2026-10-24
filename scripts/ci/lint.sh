@@ -16,6 +16,9 @@ find scripts ops -name '*.sh' -print0 | xargs -0 shellcheck -x -S warning || sta
 step "schema and desk JSON are generated from the specs"
 python3 scripts/dev/schema/generate.py --check || status=1
 
+step "OpenAPI contract matches the whitelisted methods"
+python3 scripts/dev/openapi.py --check || status=1
+
 step "YAML / JSON syntax"
 python3 - <<'PY' || status=1
 import json, pathlib, sys

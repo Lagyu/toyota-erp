@@ -78,7 +78,10 @@ jobs:
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .local/reference
-          key: reference-small-${{ hashFiles('apps/automotive_seed/**') }}
+          key: >-
+            reference-small-${{ hashFiles('apps/automotive_seed/automotive_seed/generator/**',
+            'apps/automotive_seed/automotive_seed/profiles/**', 'apps/automotive_seed/automotive_seed/reference_data/**',
+            'apps/automotive_seed/automotive_seed/runner.py') }}
       - name: End-to-end journeys (reference image, small dataset)
         run: ./scripts/ci/e2e.sh "$(tail -1 .local-image-reference.txt)"
       - name: Evidence

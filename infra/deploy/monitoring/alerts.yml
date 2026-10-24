@@ -24,6 +24,27 @@ groups:
         for: 2m
         labels: { severity: critical }
 
+  - name: erp-latency
+    # server time per request (automotive_core.observability.timing); targets from the brief §7:
+    # p95 list/detail responses <= 2 s, p95 form submissions <= 4 s
+    rules:
+      - alert: ErpReadLatencyHigh
+        expr: >-
+          histogram_quantile(0.95, sum by (le, kind) (rate(erp_http_request_duration_seconds_bucket{verb="read"}[10m])))
+          > 2
+        for: 15m
+        labels: { severity: warning }
+        annotations:
+          summary: "p95 server time of {{ $labels.kind }} reads above 2 s for 15 minutes"
+      - alert: ErpWriteLatencyHigh
+        expr: >-
+          histogram_quantile(0.95, sum by (le, kind) (rate(erp_http_request_duration_seconds_bucket{verb="write"}[10m])))
+          > 4
+        for: 15m
+        labels: { severity: warning }
+        annotations:
+          summary: "p95 server time of {{ $labels.kind }} submissions above 4 s for 15 minutes"
+
   - name: erp-work
     rules:
       - alert: ErpQueueBacklog

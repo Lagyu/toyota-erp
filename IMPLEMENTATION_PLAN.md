@@ -1,112 +1,119 @@
 # Implementation Plan
 
-Dependency-ordered milestones for Toyota ERP Clone. Waves follow §9 of the
-requirements brief; a wave is "done" only when its exit gate has recorded
-evidence (see `REQUIREMENTS_TRACEABILITY.md` and `ops/evidence/`).
+Dependency-ordered milestones for the Hinode Automotive Group ERP ("Toyota ERP Clone").
+Waves follow §9 of the requirements brief; a wave is done only when its exit gate has
+recorded evidence (see [REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md)).
 
-Status legend: `[x]` done with evidence · `[~]` in progress / partial · `[ ]` not started.
+Status: `[x]` done with evidence · `[~]` in progress / partial · `[ ]` not started.
+Last updated 2026-10-24.
 
 ## Wave 0 — foundation, version lock, local and CI environment
 
-Exit gate: a fresh developer can boot ERPNext plus the custom apps reproducibly.
+Exit gate: a fresh developer can boot ERPNext plus the custom apps reproducibly. **Met.**
 
 - [x] Upstream lock (`infra/versions.env`): Frappe v16.53.0, ERPNext v16.52.1,
       frappe_docker v4.1.1, image digests; commits verified after every clone.
 - [x] Host setup script for Docker in a resource-capped slice (`scripts/host/install-docker-ubuntu.sh`).
 - [x] Development stack (`infra/dev/compose.yaml`, `scripts/dev/up.sh`, idempotent
-      `scripts/dev/bootstrap-bench.sh`): MariaDB 11.8, Redis cache + durable queue, bench.
-- [~] App skeletons: `automotive_core`, `automotive_manufacturing`,
-      `automotive_supply_chain`, `automotive_portals`, `automotive_seed`.
-- [~] Schema-as-code generator (`scripts/dev/schema/generate.py`) with `--check` for CI.
-- [ ] CI workflow (lint, unit, integration, build, smoke) runnable locally via `scripts/ci/`.
+      `scripts/dev/bootstrap-bench.sh`): MariaDB 11.8, Redis cache + durable queue, bench, worker.
+- [x] Apps `automotive_core`, `automotive_manufacturing`, `automotive_supply_chain`,
+      `automotive_portals`, `automotive_seed`.
+- [x] Schema-as-code generator (`scripts/dev/schema/generate.py`) with `--check` in CI.
+- [x] CI workflow (lint, unit, integration, audit, image, SBOM, smoke, e2e) runnable locally via `scripts/ci/`.
 
 ## Wave 1 — companies, master data, accounting, access control, seed pipeline
 
-Exit gate: core records, fiscal configuration and permission matrices verified.
+Exit gate: core records, fiscal configuration and permission matrices verified. **Met.**
 
-- [ ] Tenant bootstrap from `config/tenant/hinode.json` (3 companies, CoA, fiscal years,
-      plants, ≥15 warehouses, departments, cost centers, branches, holiday lists, shifts).
-- [ ] Plant / Production Line / Shift Pattern / Plant Assignment DocTypes; plant custom fields
-      on transactional DocTypes; User Permission based company/plant/warehouse scoping.
-- [ ] Persona role templates (16 internal + supplier/dealer), Role Profiles, Custom DocPerms,
-      privileged-role 2FA, SoD rules.
-- [ ] Approval engine (policy → request → immutable decisions, maker/checker, delegation with
-      effective dates, document-hash binding) applied to governed DocTypes.
-- [ ] Hash-chained Audit Event log; correction-reason enforcement on cancel/amend.
-- [ ] Duplicate prevention (supplier/customer tax id + fuzzy name), master data change approval.
-- [ ] Seed pipeline skeleton: profiles, deterministic RNG, resumable stages, invariant checks.
+- [x] Tenant configuration as code (`apps/automotive_core/automotive_core/setup/tenants/hinode.yaml`):
+      3 companies, chart of accounts, fiscal years, plants, ≥15 warehouses, departments, cost
+      centers, branches, holiday lists, shifts, settings, approval policies, SoD rules.
+- [x] Plant / Production Line / Shift Pattern / Plant Assignment; plant fields on transactional
+      DocTypes; company/plant User Permission scoping (strict).
+- [x] Persona role templates (16 internal + supplier/dealer), role profiles, permissions,
+      privileged two-factor authentication, SoD rules and review report, user provisioning.
+- [x] Approval engine (policy → request → immutable decisions, maker/checker, delegation,
+      document-hash binding) on governed DocTypes; approval inbox.
+- [x] Hash-chained Audit Event log; cancellation with reason.
+- [x] Duplicate prevention for suppliers/customers; verified supplier bank accounts.
+- [x] Seed pipeline: profiles, deterministic RNG, resumable stages, invariant checks.
 
 ## Wave 2 — engineering BOMs, demand/MRP, work orders, manufacturing operations
 
-Exit gate: production and material ledger transactions reconcile.
+Exit gate: production and material ledger transactions reconcile. **Met** (small dataset validation).
 
-- [ ] Vehicle models, variant attributes, compatibility rules, Vehicle Configuration.
-- [ ] BOM revision fields (revision, effectivity, supersession), scrap factors, approved substitutes.
-- [ ] ECR / ECO with impact assessment, maker/checker approval, BOM revision creation,
-      effectivity-driven BOM selection for new Work Orders, pinned history, guarded BOM Update Tool.
-- [ ] Planning Parameter Set (versioned) + Planning Run (inputs snapshot, deterministic netting,
-      shortage/exception report, capacity check) on top of Sales Forecast → MPS → Production Plan.
-- [ ] Daily Plant Schedule + Line Sequence (mixed-model leveling, takt, shift calendars,
-      capacity conflicts, rescheduling audit).
-- [ ] MES API (idempotent operation reports), Vehicle Unit with separate state machines,
-      genealogy capture from Serial and Batch Bundles, WIP / variance / OEE reports.
+- [x] Vehicle models, option rules, Vehicle Configuration, variant resolution.
+- [x] BOM revisions (revision, effectivity, supersession), guarded BOM Update Tool.
+- [x] ECR (impact assessment) → ECO (approval, new revisions, parent ripple, effectivity-driven
+      BOM selection, pinned history).
+- [x] Planning Parameter Set (versioned, approved) + Planning Run (stored snapshot, deterministic
+      engine, shortages and capacity exceptions, replay, release through Production Plan).
+- [x] Plant Schedule (mixed-model leveling, takt, audited resequencing).
+- [x] MES API (idempotent unit/batch/operation reports), Vehicle Unit states, genealogy from
+      serial/batch bundles (incl. auto-numbered outputs), WIP / OEE / variance reports.
 
 ## Wave 3 — procurement, Kanban, warehouse/logistics, supplier portal
 
-Exit gate: pull replenishment and purchase-to-receipt work end to end.
+Exit gate: pull replenishment and purchase-to-receipt work end to end. **Met** (J-02, J-06).
 
-- [ ] Supplier Onboarding, Approved Supplier List, Sourcing Decision, purchase approval matrix.
-- [ ] Supplier Delivery Schedule (versioned), PO acknowledgement / revised promise, ASN,
+- [x] Supplier Onboarding, Approved Supplier List, Sourcing Decision, purchase approval matrices.
+- [x] Supplier Delivery Schedule (versioned), acknowledgements / revised promises, ASN,
       receipt from ASN, Receipt Discrepancy, returns.
-- [ ] Kanban Loop / Card / Signal, consumption-triggered and scan-triggered signals, JIT windows,
-      stockout escalation.
-- [ ] Three-way match with tolerances + Invoice Match Exception workflow.
-- [ ] Cycle counts, inventory position views, consignment withdrawal, transport booking,
-      shipment manifest with proof of dispatch/delivery, transport exceptions.
-- [ ] Supplier portal (RFQs, quotations, orders, acknowledgements, ASNs, notices, remittances).
+- [x] Kanban Loop / Card / Signal, consumption and scan signals, call-off release, escalation.
+- [x] Three-way match with tolerances + Invoice Match Exception workflow.
+- [x] Cycle counts, inventory position, consignment, transport booking, shipment manifest
+      with proof of dispatch/delivery, transport exceptions.
+- [x] Supplier portal (RFQs, quotations, orders, acknowledgements, schedules, ASNs, receipts,
+      invoices, notices).
 
 ## Wave 4 — quality/Andon, genealogy, dealer orders and distribution
 
-Exit gate: plant-stop/release and vehicle order-to-delivery flows work.
+Exit gate: plant-stop/release and vehicle order-to-delivery flows work. **Met** (J-01, J-05, J-08, J-09).
 
-- [ ] Andon Event lifecycle, Quality Hold (jidoka) enforcement in Stock Entry, Job Card,
-      Work Order, Pick List, Delivery Note, Sales Invoice, allocation.
-- [ ] Nonconformance (extended ERPNext Non Conformance), Quality Disposition (stock effects),
-      CAPA via Quality Action, closure approval, immutable inspection history.
-- [ ] Recall impact query (lot → vehicles), genealogy tree, where-used.
-- [ ] Dealer Registration, Dealer Order (portal) → Sales Order, promise dates, allocation rules,
-      Vehicle Allocation with serial Stock Reservation Entries, change/cancel requests,
-      delivery acceptance, credit notes, warranty metadata, discount approval.
-- [ ] Dealer portal (orders, configuration, inventory, invoices, shipments, support).
+- [x] Andon lifecycle; Quality Hold enforcement in stock, production and shipping documents.
+- [x] Nonconformance with CAPA and closure rules, Quality Disposition (stock effects), inspection
+      history, re-inspection after rework.
+- [x] Recall analysis (lot → vehicles), genealogy tree, where-used.
+- [x] Dealer Registration, Dealer Order → Sales Order, promise dates, allocation rules (build to
+      order first), Vehicle Allocation with serial reservations, change/cancel requests, delivery
+      acceptance, warranty start, discount approval.
+- [x] Dealer portal (configure and order, orders, vehicles, deliveries, invoices, support).
 
 ## Wave 5 — finance, intercompany, integrations, dashboards, localization
 
-Exit gate: the ten cross-domain journeys pass.
+Exit gate: the ten cross-domain journeys pass. **Met for the journeys** (browser suite
+green on the small dataset); localization and API contracts still open.
 
-- [ ] Payment dual approval, restricted supplier bank details, period-close checklist,
-      intercompany reconciliation, consolidation views, PPV / production variance reports.
-- [ ] Intercompany flows (Kyushu → Aichi powertrains; Aichi → North America vehicles in USD)
-      with transfer price agreements and goods in transit.
-- [ ] Integration hub: inbound inbox (idempotent), transactional outbox, signed webhooks with
-      retry/backoff/replay protection, local EDI-style adapters, OpenAPI contracts.
-- [ ] KPI catalog (formula, sources, authorization filter, refresh, reconciliation) + dashboards,
-      persona workspaces, Japanese localization.
-- [ ] Ten journeys J-01..J-10 as automated integration tests and browser e2e suites.
+- [x] Payment dual approval, restricted bank details, period-close checklist, intercompany
+      reconciliation, consolidation view (D-021), PPV / production variance reports.
+- [x] Intercompany flows (Kyushu → Aichi powertrains; Aichi → North America vehicles) with
+      transfer price agreements.
+- [~] Integration hub: inbox, outbox, signed webhooks, retries, replay protection, EDI and
+      file-drop adapters, desk replay/retry — done; OpenAPI contracts and contract tests open;
+      an inventory-update message type open.
+- [~] KPI catalogue and dashboards, persona workspaces — done; Japanese localization open;
+      notification templates and preferences with auditable dispatch open.
+- [x] Ten journeys J-01..J-10 as integration tests and browser suites (`e2e/tests/`).
 
 ## Wave 6 — scale, load, hardening, CI/release automation, recovery
 
-Exit gate: all acceptance gates and operational runbooks verified.
+Exit gate: all acceptance gates and operational runbooks verified. **Open.**
 
-- [ ] `standard` dataset load with invariant validation; `small` in CI; `large` documented.
-- [ ] Immutable image build, production compose (TLS proxy, private networks, limits, health),
-      backups (encrypted, off-host, verified restore), monitoring and alerting.
+- [~] Datasets: `small` generated and validated, used by CI; `standard` not generated yet;
+      `large` defined.
+- [x] Immutable image, production compose (TLS proxy, private networks, limits, health),
+      encrypted off-host backups with verified restore drills, monitoring and alerting.
+- [~] Latency alerting (request-duration metrics) to add.
 - [ ] Load tests (50 users, 150 peak) with recorded results; slow-query/index review.
-- [ ] Install from a clean host, reboot persistence, upgrade/rollback and restore drills.
-- [ ] Security: static analysis, dependency audit, SBOM, configuration review, findings log.
-- [ ] Final traceability matrix.
+- [~] Install on a fresh stack + backup + restore drill rehearsed by `scripts/ci/smoke.sh`;
+      reboot persistence and upgrade/rollback rehearsal evidence open.
+- [~] Security: lint, dependency audit with reviewed allowlist, SBOM and image scan in CI;
+      configuration review and findings log open.
+- [~] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, traceability matrix,
+      operations runbooks.
 
 ## Working notes
 
-- Host constraint (development machine only): the ERP stack shares a box with a production
-  LLM service; everything runs in `erp.slice` (8 GB high / 10 GB max). Performance numbers from
-  this host are labelled as such and are not the reference-hardware results.
+- Development host constraint: the ERP stack shares the machine with another service;
+  everything runs in `erp.slice` (8 GB high / 10 GB max). Performance numbers from this host
+  are labelled as such and are not the reference-hardware results required by §7.

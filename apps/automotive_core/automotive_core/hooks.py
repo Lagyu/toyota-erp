@@ -84,6 +84,9 @@ doc_events = {
 		"on_cancel": "automotive_core.governance.audit.on_cancel",
 		"validate": "automotive_core.access.plant_scope.ensure_plant",
 	},
+	"Employee": {
+		"validate": "automotive_core.access.user_permissions.employee_scope_is_provisioned",
+	},
 	"User": {
 		"validate": "automotive_core.governance.sod.validate_user_roles",
 		"on_update": [
@@ -137,8 +140,16 @@ scheduler_events = {
 	],
 }
 
-before_request = ["automotive_core.observability.context.before_request"]
-after_request = ["automotive_core.observability.context.after_request"]
+before_request = [
+	"automotive_core.observability.context.before_request",
+	"automotive_core.observability.timing.before_request",
+]
+after_request = [
+	"automotive_core.observability.context.after_request",
+	"automotive_core.observability.timing.after_request",
+]
+# request latency histogram for the metrics endpoint; other apps add their work queues
+automotive_metrics = ["automotive_core.observability.timing.metrics"]
 before_job = ["automotive_core.observability.context.before_job"]
 
 # Automated tests -----------------------------------------------------------------------

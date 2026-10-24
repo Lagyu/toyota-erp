@@ -53,3 +53,28 @@ class TestHealth(IntegrationTestCase):
 				name, _, value = line.rpartition(" ")
 				float(value)
 				self.assertRegex(name, r"^erp_[a-z0-9_]+\{.*\}$")
+
+	def test_request_latency_histogram(self):
+		from automotive_core.observability import timing
+
+		def samples():
+			return {(m[0], m[2].get("le"), m[2]["kind"], m[2]["verb"]): m[3] for m in timing.metrics()}
+
+		before = samples()
+		timing.observe(0.3, "/api/method/automotive_portals.api.dealer.place_order", "POST")
+		after = samples()
+		name = "erp_http_request_duration_seconds"
+		delta = {key: after[key] - before[key] for key in after}
+		self.assertEqual(delta[(f"{name}_bucket", "0.25", "api", "write")], 0)
+		self.assertEqual(delta[(f"{name}_bucket", "0.5", "api", "write")], 1)  # cumulative buckets
+		self.assertEqual(delta[(f"{name}_bucket", "+Inf", "api", "write")], 1)
+		self.assertEqual(delta[(f"{name}_count", None, "api", "write")], 1)
+		self.assertAlmostEqual(delta[(f"{name}_sum", None, "api", "write")], 0.3, places=6)
+		self.assertEqual(delta[(f"{name}_count", None, "api", "read")], 0)
+		frappe.local.conf["automotive_metrics_token"] = "s3cret-token"
+		self._request_with({"Authorization": "Bearer s3cret-token"})
+		health.metrics()
+		body = frappe.local.response.filecontent
+		self.assertIn(f"# TYPE {name} histogram", body)
+		self.assertEqual(body.count(f"# TYPE {name} "), 1)  # one header for the family
+		self.assertIn(f'{name}_bucket{{kind="api",le="+Inf",site="{frappe.local.site}",verb="write"}}', body)

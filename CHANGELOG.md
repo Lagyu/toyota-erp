@@ -1,0 +1,103 @@
+# Changelog
+
+All notable changes. Versions follow [Semantic Versioning](https://semver.org/); the
+application image is tagged `<version>-<git sha>`. Dates are ISO 8601.
+
+## [Unreleased] — 0.1.0
+
+First functional build of the Hinode Automotive Group ERP on ERPNext v16.52.1 /
+Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
+[REQUIREMENTS_TRACEABILITY.md](REQUIREMENTS_TRACEABILITY.md).
+
+### Platform and delivery
+- Pinned, commit-verified upstream set (Frappe, ERPNext, frappe_docker, base images by
+  digest) in `infra/versions.env`.
+- Development stack (MariaDB 11.8, Redis cache + durable queue, bench, worker) with an
+  idempotent, resumable bootstrap.
+- DocType schemas as code with generated JSON and a drift check.
+- Immutable application image (production and reference flavours) with frozen Python
+  constraints; production compose on frappe_docker v4.1.1 with Traefik (Let's Encrypt or
+  file certificates), ofelia jobs, restic backups and weekly restore drills, optional
+  ClamAV and Prometheus/Alertmanager/Grafana overlays.
+- Health (`live`, `ready`) and token-protected Prometheus metrics endpoints; alert rules
+  for service health, queues, failed jobs, integration failures, audit sealing, error
+  spikes, backup age and disk space.
+- CI: lint (ruff, shellcheck, schema drift, YAML/JSON, identity boundary), unit and
+  integration tests, dependency audit with a reviewed allowlist, image builds, SBOM and
+  vulnerability scan, production-shaped smoke test with backup and restore drill, and the
+  end-to-end suite on a reference stack with a cached synthetic dataset.
+
+### Governance, access and integration (`automotive_core`)
+- Approval engine (policies, hash-bound requests, immutable decisions, maker/checker,
+  distinct approvers, delegation with expiry) enforced on submit; approval inbox.
+- Hash-chained, sealed audit trail with database-trigger protection and verification;
+  cancellation with a recorded reason; recorded system steps on a requester's behalf.
+- Persona role templates and profiles, privileged two-factor authentication, company and
+  plant row scope, partner access for supplier and dealer users, segregation-of-duties
+  rules and review report, user provisioning requests with expiry.
+- Integration hub: signed HTTPS inbound endpoint with replay protection and rate limits,
+  idempotent inbox, durable outbox with retries/backoff/dead letters, HTTPS allowlist,
+  Hinode EDI format, file-drop adapter, correlation IDs; replay and retry from the desk.
+- Period close checklist (checks, waivers, approval, accounting period closing), group
+  consolidation view, verified supplier bank accounts, KPI catalogue with reconciliation.
+
+### Manufacturing (`automotive_manufacturing`)
+- Vehicle models, option rules and configurator; BOM revisions with effectivity; ECR with
+  impact assessment and ECO with approval, new revisions and rippling parents.
+- Versioned planning parameter sets; deterministic MRP with shortage and capacity
+  exceptions, replay verification and release to production plans; leveled daily line
+  sequence with audited resequencing.
+- Vehicle Units with VINs reserved at release; MES reporting with idempotency keys;
+  Kanban loops, cards and signals; andon with jidoka holds; shift handover; WIP, OEE,
+  variance and genealogy reports.
+- Quality holds enforced across stock, production and shipping documents; inspections,
+  re-inspection after rework, nonconformance with CAPA closure rules, dispositions;
+  multi-level genealogy and recall analysis.
+
+### Supply chain (`automotive_supply_chain`)
+- Supplier onboarding, approved supplier list, sourcing decisions, purchase approval
+  matrices; blanket orders and call-offs; versioned delivery schedules; order
+  acknowledgements; ASNs; receipts from ASNs; receipt discrepancies; three-way match with
+  an exception workflow.
+- Cycle counts, consignment agreements and movements, transport bookings, shipment
+  manifests with proof of dispatch and delivery, transport exceptions.
+- Dealer registration and authorised models, dealer orders with configuration and promise
+  dates, acceptance, build-to-order then rule-based allocation with serial reservations,
+  change and cancellation requests, delivery acceptance and warranty start.
+- Intercompany transfer price agreements, mapped seller orders and buyer receipts,
+  intercompany reconciliation.
+
+### Portals (`automotive_portals`)
+- Supplier portal: overview, RFQs and quotations, orders and acknowledgements, delivery
+  schedules, ASNs with documents, receipts and discrepancies, invoices and remittances,
+  notices.
+- Dealer portal: overview, configure and order, orders and change requests, allocated
+  vehicles, deliveries and acceptance, invoices, support requests.
+- Accessible tabbed interface (keyboard navigation, live regions), deep links, tablet
+  layouts, idempotent writes.
+
+### Synthetic data (`automotive_seed`)
+- Deterministic small, standard and large profiles generated by simulating the group day
+  by day through the application, with invariant validation (ledgers, stock, payment
+  ledger, intercompany, traceability, audit chain, exactly-once integration, volumes).
+- End-to-end fixtures: one-run persona passwords and journey preconditions arranged
+  through the generator's own flows.
+
+### End-to-end acceptance
+- Playwright suite: journeys J-01 … J-10, role surfaces of 13 personas, supplier and
+  dealer portals and the shop-floor andon on desktop and tablet.
+
+### Fixed during end-to-end testing
+- Create ECO from a change request produced an invalid draft (no company, disposition or
+  quantity); quantity changes that change nothing are refused.
+- MRP runs with a capacity conflict failed to save (line reported as an item).
+- Genealogy was not recorded for outputs numbered during posting (sub-assembly batches,
+  engine and powertrain serials); backfill patch added.
+- Delivery schedules could over-order a request holding several lines of one item and
+  scheduled Kanban requests twice.
+- Operators and inspectors could not fill the andon form (create without write).
+- Purchase requests released through a production plan stayed drafts.
+- Restore drill parsed escaped `bench execute` output; portal confirmations were cleared
+  by the follow-up navigation; portal tabs ignored hash changes.
+- Allocation could give a build-to-order vehicle to an older order of the same variant.
+- ASNs were accepted against purchase orders on hold.
