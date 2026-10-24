@@ -137,7 +137,10 @@ def generate(supplier: str, plant: str) -> str:
 	start = getdate(nowdate())
 	end = add_days(start, int(settings.schedule_horizon_days or 56))
 	firm_days = int(settings.schedule_firm_days or 10)
-	lines = [r for r in _open_requests(company, plant, supplier) if getdate(r["schedule_date"]) <= end]
+	# Kanban parts are pulled by their cards and called off as cards empty; scheduling them
+	# as well would order them twice
+	lines = [r for r in _open_requests(company, plant, supplier) if getdate(r["schedule_date"]) <= end
+		and not r.get("kanban_signal")]
 	if not lines:
 		frappe.throw(_("No open requirements for {0} at {1}.").format(supplier, plant))
 	doc = frappe.get_doc({
@@ -151,7 +154,7 @@ def generate(supplier: str, plant: str) -> str:
 		"lines": [{
 			"item_code": r["item_code"], "delivery_date": r["schedule_date"], "qty": r["qty"],
 			"firm": int(getdate(r["schedule_date"]) <= add_days(start, firm_days)), "warehouse": r["warehouse"],
-			"material_request": r["mr"],
+			"material_request": r["mr"], "material_request_item": r["mri"],
 		} for r in lines],
 	})
 	doc.insert()
@@ -169,9 +172,10 @@ def on_schedule_submit(doc) -> None:
 		"docstatus": 1, "name": ("!=", doc.name), "status": ("in", ("Published", "Acknowledged"))}, pluck="name")
 	for name in previous:
 		frappe.db.set_value("Supplier Delivery Schedule", name, {"status": "Superseded", "superseded_by": doc.name})
+	# each line orders against its own request line (a request may hold several lines of one item)
 	firm = [{"item_code": ln.item_code, "qty": ln.qty, "schedule_date": ln.delivery_date, "warehouse": ln.warehouse,
-		"mr": ln.material_request, "mri": frappe.db.get_value("Material Request Item",
-			{"parent": ln.material_request, "item_code": ln.item_code}, "name") if ln.material_request else None,
+		"mr": ln.material_request, "mri": ln.material_request_item or (frappe.db.get_value("Material Request Item",
+			{"parent": ln.material_request, "item_code": ln.item_code}, "name") if ln.material_request else None),
 		"kanban_signal": frappe.db.get_value("Material Request", ln.material_request, "automotive_kanban_signal")
 			if ln.material_request else None}
 		for ln in doc.lines if ln.firm and not ln.purchase_order]

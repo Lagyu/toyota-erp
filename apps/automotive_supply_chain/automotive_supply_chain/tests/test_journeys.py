@@ -85,6 +85,32 @@ class TestKanbanSupplierJourney(JourneyTestCase):
 		self.assertEqual(flt(frappe.db.get_value("Purchase Order", po.name, "per_received")), 100)
 
 
+class TestDeliverySchedule(JourneyTestCase):
+	def test_firm_lines_order_each_request_line_once(self):
+		"""A request may hold several lines of one item (planning runs do); each firm schedule
+		line calls off against its own request line."""
+		wheel = self.cat["wheel"]
+		supplier = h.supplier("Hoshi Metalworks")
+		h.blanket_order(supplier, wheel, 118)
+		mr = frappe.get_doc({"doctype": "Material Request", "material_request_type": "Purchase", "company": AICHI,
+			"schedule_date": add_days(nowdate(), 3), "items": [
+				{"item_code": wheel, "qty": 4, "schedule_date": add_days(nowdate(), 3), "warehouse": catalog.PARTS_STORE},
+				{"item_code": wheel, "qty": 6, "schedule_date": add_days(nowdate(), 5), "warehouse": catalog.PARTS_STORE}]})
+		mr.insert(ignore_permissions=True)
+		mr.submit()
+		schedule = frappe.get_doc({"doctype": "Supplier Delivery Schedule", "supplier": supplier, "company": AICHI,
+			"plant": catalog.PLANT, "horizon_start": nowdate(), "horizon_end": add_days(nowdate(), 30), "firm_days": 10,
+			"lines": [{"item_code": wheel, "delivery_date": r.schedule_date, "qty": r.qty, "firm": 1,
+				"warehouse": r.warehouse, "material_request": mr.name, "material_request_item": r.name} for r in mr.items]})
+		schedule.insert(ignore_permissions=True)
+		schedule.submit()
+		po = frappe.get_doc("Purchase Order", frappe.db.get_value("Supplier Schedule Line", {"parent": schedule.name},
+			"purchase_order"))
+		self.assertEqual(sorted((r.material_request_item, flt(r.qty)) for r in po.items),
+			sorted((r.name, flt(r.qty)) for r in mr.items))
+		self.assertEqual(flt(frappe.db.get_value("Material Request", mr.name, "per_ordered")), 100)
+
+
 class TestInvoiceMatchAndPayment(JourneyTestCase):
 	"""J-06: supplier invoice -> PO/receipt match -> exception -> correction -> dual approval -> settlement."""
 

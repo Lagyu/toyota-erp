@@ -220,6 +220,7 @@ DOCTYPES = [
 		check("firm", "Firm", in_list_view=1),
 		link("warehouse", "Deliver To", "Warehouse"),
 		link("material_request", "Material Request", "Material Request", read_only=1),
+		data("material_request_item", "Material Request Line", read_only=1, hidden=1),
 		link("purchase_order", "Purchase Order", "Purchase Order", read_only=1, in_list_view=1),
 	]),
 	DocType(

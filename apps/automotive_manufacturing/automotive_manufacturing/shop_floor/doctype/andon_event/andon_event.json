@@ -244,7 +244,7 @@
  ],
  "icon": "siren",
  "links": [],
- "modified": "2026-10-24 07:56:38.757557",
+ "modified": "2026-10-24 12:55:51.699328",
  "modified_by": "Administrator",
  "module": "Shop Floor",
  "name": "Andon Event",
@@ -282,6 +282,11 @@
    "role": "Line Operator"
   },
   {
+   "if_owner": 1,
+   "role": "Line Operator",
+   "write": 1
+  },
+  {
    "export": 1,
    "read": 1,
    "report": 1,
@@ -294,6 +299,11 @@
    "read": 1,
    "report": 1,
    "role": "Quality Inspector"
+  },
+  {
+   "if_owner": 1,
+   "role": "Quality Inspector",
+   "write": 1
   },
   {
    "read": 1,

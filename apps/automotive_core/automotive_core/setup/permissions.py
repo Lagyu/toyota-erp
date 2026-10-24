@@ -49,6 +49,8 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	("Warehouse", "Quality Inspector", READ),
 	("Supplier", "Quality Inspector", READ),
 	("Quality Inspection Template", "Quality Manager", WRITE),
+	# Dealer support: requests raised in the dealer portal are worked by the dealer liaisons.
+	("Issue", "Dealer Liaison", WRITE),
 	# Product engineering: items, BOMs and routings (approval through ECO).
 	("Item", "Product Engineer", WRITE),
 	("Item Attribute", "Product Engineer", WRITE),

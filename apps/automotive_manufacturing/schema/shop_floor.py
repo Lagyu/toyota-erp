@@ -193,9 +193,13 @@ DOCTYPES = [
 		],
 		permissions=[
 			*FLOOR,
+			# operators and inspectors raise stops and calls and complete their own (the status
+			# moves only through the andon actions); reading covers every event of the plant
 			perm(OPERATOR, "rc"),
+			perm(OPERATOR, "w o"),
 			perm(QUALITY_MANAGER, "rw pe"),
 			perm(QUALITY_INSPECTOR, "rc pe"),
+			perm(QUALITY_INSPECTOR, "w o"),
 			*READ_ALL,
 		],
 	),
