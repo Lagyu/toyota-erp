@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Supply Chain VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 15:10+0919\n"
-"PO-Revision-Date: 2026-10-24 15:10+0919\n"
+"POT-Creation-Date: 2026-10-24 16:44+0919\n"
+"PO-Revision-Date: 2026-10-24 16:44+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -91,29 +91,29 @@ msgid "A supplier with tax id {0} already exists."
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:180
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:256
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:240
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:259
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:211
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:209
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:217
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:237
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:241
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:269
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:274
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:225
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:210
-#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:190
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:183
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:288
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:234
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:187
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:253
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:265
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:188
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:270
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:216
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:195
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:271
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:255
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:275
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:226
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:224
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:231
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:252
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:258
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:285
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:290
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:240
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:225
+#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:192
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:198
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:306
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:250
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:192
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:269
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:281
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:204
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:286
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:231
 msgid "AP Clerk"
 msgstr ""
 
@@ -238,9 +238,12 @@ msgid "Administrator"
 msgstr ""
 
 #. Name of a DocType
+#. Print Format name
 #. Label of a Sidebar Item
 #. Label of a Link in the Supplier Collaboration Workspace
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:181
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:182
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:1
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:37
 #: automotive_supply_chain/supplier_collaboration/sidebar/supplier_collaboration/supplier_collaboration.json:40
 #: automotive_supply_chain/supplier_collaboration/workspace/supplier_collaboration/supplier_collaboration.json:132
 msgid "Advance Shipping Notice"
@@ -268,7 +271,7 @@ msgid "Agreements"
 msgstr ""
 
 #. Option for the 'Mode' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:123
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:124
 msgid "Air"
 msgstr ""
 
@@ -324,8 +327,8 @@ msgstr ""
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:129
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:121
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:155
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:166
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:167
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:167
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:168
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:138
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:150
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:155
@@ -388,7 +391,7 @@ msgid "Arm's-length price between group companies; intercompany orders must use 
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:101
 msgid "Arrived"
 msgstr ""
 
@@ -401,29 +404,29 @@ msgid "As On"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:205
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:281
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:265
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:284
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:236
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:234
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:242
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:262
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:266
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:294
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:299
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:250
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:235
-#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:208
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:208
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:313
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:259
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:272
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:278
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:290
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:213
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:295
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:241
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:225
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:301
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:285
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:305
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:256
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:254
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:261
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:282
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:288
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:315
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:320
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:270
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:255
+#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:213
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:228
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:336
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:280
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:294
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:299
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:311
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:234
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:316
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:261
 msgid "Auditor"
 msgstr ""
 
@@ -434,28 +437,28 @@ msgid "Authorised Models"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:125
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:201
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:185
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:204
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:156
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:154
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:162
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:182
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:186
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:214
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:219
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:170
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:155
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:128
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:233
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:179
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:192
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:198
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:210
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:133
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:215
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:161
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:129
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:205
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:189
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:209
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:160
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:158
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:165
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:186
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:192
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:219
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:224
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:174
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:159
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:132
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:240
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:184
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:198
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:203
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:215
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:138
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:220
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:165
 msgid "Automotive Executive"
 msgstr ""
 
@@ -556,30 +559,30 @@ msgid "Box Truck"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:170
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:246
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:230
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:249
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:201
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:199
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:207
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:183
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:259
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:243
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:263
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:214
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:212
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:219
 #: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:37
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:175
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:175
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:259
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:264
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:215
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:200
-#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:212
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:173
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:203
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:154
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:160
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:174
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:186
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:107
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:191
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:143
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:178
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:179
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:273
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:278
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:228
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:213
+#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:218
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:186
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:206
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:156
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:162
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:176
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:188
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:109
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:193
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:145
 msgid "Buyer"
 msgstr ""
 
@@ -617,7 +620,9 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Advance Shipping Notice'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:89
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:112
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:51
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:101
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:44
 msgid "Cancelled"
 msgstr ""
 
@@ -640,15 +645,18 @@ msgstr ""
 #. Label of the carrier (Link) field in DocType 'Transport Booking'
 #. Label of the carrier (Link) field in DocType 'Transport Exception'
 #. Label of the carrier (Data) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:69
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:70
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:42
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:52
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:111
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:57
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:112
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:62
 msgid "Carrier"
 msgstr ""
 
 #. Label of the carrier_reference (Data) field in DocType 'Transport Booking'
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:117
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:65
 msgid "Carrier Confirmation No"
 msgstr ""
 
@@ -735,13 +743,13 @@ msgstr ""
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:50
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:64
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:43
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:47
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:48
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:49
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.js:6
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:70
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.js:6
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.py:29
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:63
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:64
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:49
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:41
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.js:6
@@ -767,6 +775,7 @@ msgstr ""
 
 #. Label of the customer (Link) field in DocType 'Shipment Manifest Item'
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:28
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:98
 msgid "Consignee"
 msgstr ""
 
@@ -934,6 +943,11 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:132
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:140
+msgid "Date / Time"
+msgstr ""
+
 #: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:39
 msgid "Days In Transit"
 msgstr ""
@@ -960,28 +974,28 @@ msgid "Dealer Code"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:118
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:194
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:178
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:191
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:149
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:149
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:232
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:252
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:256
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:284
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:289
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:240
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:225
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:198
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:303
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:249
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:262
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:268
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:280
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:203
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:285
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:231
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:121
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:197
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:181
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:194
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:152
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:152
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:249
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:270
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:276
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:303
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:308
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:258
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:243
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:216
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:324
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:268
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:282
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:287
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:299
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:222
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:304
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:249
 msgid "Dealer Liaison"
 msgstr ""
 
@@ -1037,11 +1051,11 @@ msgid "Dealer Orders to Accept"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:301
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:285
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:256
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:318
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:255
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:325
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:309
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:280
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:343
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:279
 msgid "Dealer Portal User"
 msgstr ""
 
@@ -1123,6 +1137,7 @@ msgstr ""
 #. Label of the delivery_window_end (Datetime) field in DocType 'Transport
 #. Booking'
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:96
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:77
 msgid "Deliver By"
 msgstr ""
 
@@ -1136,14 +1151,14 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Shipment Manifest Item'
 #. Option for the 'Status' (Select) field in DocType 'Transport Booking'
 #: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:113
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:107
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:108
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:60
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:112
 msgid "Delivered"
 msgstr ""
 
 #. Label of the delivered_at (Datetime) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:148
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:149
 msgid "Delivered At"
 msgstr ""
 
@@ -1152,7 +1167,7 @@ msgid "Delivered orders cannot be cancelled; use a return instead."
 msgstr ""
 
 #. Label of the delivery_status (Select) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:105
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:106
 msgid "Delivery"
 msgstr ""
 
@@ -1189,6 +1204,7 @@ msgstr ""
 #: automotive_supply_chain/dealer_operations/workspace/dealer_operations/dealer_operations.json:112
 #: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:34
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:20
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:97
 #: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:102
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:104
 msgid "Delivery Note"
@@ -1202,6 +1218,10 @@ msgstr ""
 #: automotive_supply_chain/intercompany/handoff.py:70
 #, python-brace-format
 msgid "Delivery Note {0} is not addressed to a group company."
+msgstr ""
+
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:121
+msgid "Delivery Notes"
 msgstr ""
 
 #. Label of a Sidebar Item
@@ -1226,7 +1246,8 @@ msgid "Demonstrator"
 msgstr ""
 
 #. Label of the departure (Datetime) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:81
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:82
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:63
 msgid "Departure"
 msgstr ""
 
@@ -1243,6 +1264,7 @@ msgstr ""
 
 #. Label of the destination (Data) field in DocType 'Transport Booking'
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:102
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:71
 msgid "Destination"
 msgstr ""
 
@@ -1278,12 +1300,13 @@ msgid "Discounts Above This % Need Approval"
 msgstr ""
 
 #. Description of a DocType
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:5
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:6
 msgid "Dispatch document for one load: proof of dispatch on submit, proof of delivery afterwards."
 msgstr ""
 
 #. Label of the dispatched_by (Link) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:135
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:136
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:89
 msgid "Dispatched By"
 msgstr ""
 
@@ -1322,14 +1345,18 @@ msgstr ""
 #: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:118
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:101
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:113
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:50
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:101
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:98
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:107
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:43
 msgid "Draft"
 msgstr ""
 
 #. Label of the driver_name (Data) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:97
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:98
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:81
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:128
 msgid "Driver"
 msgstr ""
 
@@ -1357,33 +1384,34 @@ msgid "Email"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:215
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:291
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:275
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:294
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:246
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:244
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:252
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:272
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:276
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:304
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:309
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:260
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:245
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:218
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:323
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:269
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:282
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:288
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:300
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:223
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:305
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:251
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:237
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:313
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:297
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:317
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:268
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:266
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:273
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:294
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:300
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:327
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:332
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:282
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:267
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:240
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:348
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:292
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:306
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:311
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:323
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:246
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:328
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:273
 msgid "Engineering Manager"
 msgstr ""
 
 #. Label of the vehicle_type (Select) field in DocType 'Transport Booking'
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:72
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:83
 msgid "Equipment"
 msgstr ""
 
@@ -1392,7 +1420,7 @@ msgstr ""
 #. Label of the exception_type (Select) field in DocType 'Transport Exception'
 #. Label of the exception_type (Select) field in DocType 'Invoice Match
 #. Exception'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:107
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:108
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:60
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:60
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:85
@@ -1410,7 +1438,8 @@ msgstr ""
 
 #. Label of the expected_arrival (Datetime) field in DocType 'Advance Shipping
 #. Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:88
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:89
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:58
 msgid "Expected Arrival"
 msgstr ""
 
@@ -1496,34 +1525,35 @@ msgstr ""
 
 #. Label of the gross_weight_kg (Float) field in DocType 'Advance Shipping
 #. Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:137
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:138
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:74
 msgid "Gross Weight (kg)"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:130
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:206
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:190
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:199
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:161
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:159
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:155
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:187
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:191
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:209
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:224
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:175
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:160
-#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:202
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:133
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:238
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:184
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:197
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:203
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:215
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:138
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:220
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:166
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:135
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:211
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:195
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:203
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:166
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:164
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:157
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:192
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:198
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:213
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:230
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:180
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:165
+#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:206
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:138
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:246
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:190
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:204
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:209
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:221
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:144
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:226
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:171
 msgid "Group Controller"
 msgstr ""
 
@@ -1584,37 +1614,37 @@ msgid "ISO 9001"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:200
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:276
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:260
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:279
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:231
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:229
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:237
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:257
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:261
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:289
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:294
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:245
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:230
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:203
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:308
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:254
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:267
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:273
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:285
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:208
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:290
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:236
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:219
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:295
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:279
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:299
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:250
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:248
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:255
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:276
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:282
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:309
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:314
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:264
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:249
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:222
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:330
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:274
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:288
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:293
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:305
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:228
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:310
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:255
 msgid "IT Operator"
 msgstr ""
 
 #. Option for the 'Delivery' (Select) field in DocType 'Shipment Manifest'
 #. Option for the 'Status' (Select) field in DocType 'Transport Booking'
 #. Option for the 'Status' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:107
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:108
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:112
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:101
 msgid "In Transit"
 msgstr ""
 
@@ -1729,6 +1759,7 @@ msgstr ""
 #: automotive_supply_chain/logistics/doctype/consignment_movement_item/consignment_movement_item.json:18
 #: automotive_supply_chain/logistics/doctype/cycle_count_line/cycle_count_line.json:21
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:36
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:99
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.js:9
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.py:17
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:77
@@ -1741,6 +1772,7 @@ msgstr ""
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_ack_line/supplier_ack_line.json:25
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding_item/supplier_onboarding_item.json:17
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_schedule_line/supplier_schedule_line.json:22
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:85
 msgid "Item"
 msgstr ""
 
@@ -1771,8 +1803,8 @@ msgstr ""
 #. Shipping Notice'
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:107
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:109
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:118
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:142
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:119
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:143
 msgid "Items"
 msgstr ""
 
@@ -1799,28 +1831,28 @@ msgid "Lead Time Weight %"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:150
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:226
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:210
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:229
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:181
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:179
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:187
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:207
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:211
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:239
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:244
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:195
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:180
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:153
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:258
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:204
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:217
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:223
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:235
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:158
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:240
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:186
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:159
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:235
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:219
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:239
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:190
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:188
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:195
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:216
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:222
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:249
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:254
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:204
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:189
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:162
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:270
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:214
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:228
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:233
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:245
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:168
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:250
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:195
 msgid "Line Operator"
 msgstr ""
 
@@ -1858,6 +1890,7 @@ msgstr ""
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:144
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:138
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:86
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:106
 msgid "Lines"
 msgstr ""
 
@@ -1878,7 +1911,7 @@ msgstr ""
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Shipment
 #. Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:113
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:114
 msgid "Load"
 msgstr ""
 
@@ -1901,28 +1934,28 @@ msgid "Logistics"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:220
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:296
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:280
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:299
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:251
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:249
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:257
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:277
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:158
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:192
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:203
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:154
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:139
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:223
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:228
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:274
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:287
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:293
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:305
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:228
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:310
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:256
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:243
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:319
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:303
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:323
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:274
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:272
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:279
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:300
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:160
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:194
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:206
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:156
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:141
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:246
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:234
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:298
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:312
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:317
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:329
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:252
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:334
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:279
 msgid "Logistics Coordinator"
 msgstr ""
 
@@ -2006,7 +2039,8 @@ msgstr ""
 
 #. Label of the transport_mode (Select) field in DocType 'Advance Shipping
 #. Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:122
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:123
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:68
 msgid "Mode"
 msgstr ""
 
@@ -2024,6 +2058,11 @@ msgstr ""
 #. Label of the movement_type (Select) field in DocType 'Consignment Movement'
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:41
 msgid "Movement"
+msgstr ""
+
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:130
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:138
+msgid "Name"
 msgstr ""
 
 #. Label of the new_configuration (Link) field in DocType 'Dealer Order Change'
@@ -2077,7 +2116,7 @@ msgid "No {0}/{1} exchange rate on {2} for transfer price {3}."
 msgstr ""
 
 #. Option for the 'Delivery' (Select) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:107
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:108
 msgid "Not Dispatched"
 msgstr ""
 
@@ -2238,7 +2277,9 @@ msgid "PPV vs Standard"
 msgstr ""
 
 #. Label of the packages (Int) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:132
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:133
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:70
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:109
 msgid "Packages"
 msgstr ""
 
@@ -2247,12 +2288,12 @@ msgid "Pair / Document"
 msgstr ""
 
 #. Option for the 'Delivery' (Select) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:107
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:108
 msgid "Partially Delivered"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:101
 msgid "Partially Received"
 msgstr ""
 
@@ -2317,40 +2358,42 @@ msgstr ""
 #. Label of the plant (Link) field in DocType 'Supplier Delivery Schedule'
 #. Label of the plant (Link) field in DocType 'Supplier Onboarding Item'
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:58
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:55
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:56
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:57
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:87
 #: automotive_supply_chain/logistics/report/inventory_position/inventory_position.js:7
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:71
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:72
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:67
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:56
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:49
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding_item/supplier_onboarding_item.json:31
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:52
 msgid "Plant"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:135
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:211
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:195
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:214
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:166
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:164
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:172
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:192
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:196
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:224
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:229
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:180
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:165
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:138
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:243
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:189
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:202
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:193
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:220
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:143
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:225
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:171
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:141
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:217
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:201
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:221
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:172
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:170
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:177
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:198
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:204
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:231
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:236
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:186
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:171
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:144
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:252
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:196
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:210
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:197
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:227
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:150
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:232
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:177
 msgid "Plant Director"
 msgstr ""
 
@@ -2429,55 +2472,55 @@ msgid "Procurement Controls"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:175
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:251
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:235
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:254
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:206
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:204
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:212
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:166
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:181
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:264
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:269
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:220
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:205
-#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:196
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:117
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:214
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:165
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:171
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:185
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:197
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:118
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:202
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:154
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:189
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:265
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:249
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:269
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:220
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:218
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:225
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:168
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:186
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:279
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:284
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:234
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:219
+#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:199
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:119
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:218
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:168
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:174
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:188
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:200
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:121
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:205
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:157
 msgid "Procurement Manager"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:210
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:286
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:270
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:289
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:241
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:239
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:247
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:267
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:271
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:299
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:304
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:255
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:240
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:213
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:318
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:264
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:277
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:283
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:295
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:218
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:300
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:246
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:231
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:307
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:291
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:311
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:262
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:260
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:267
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:288
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:294
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:321
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:326
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:276
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:261
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:234
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:342
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:286
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:300
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:305
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:317
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:240
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:322
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:267
 msgid "Product Engineer"
 msgstr ""
 
@@ -2488,54 +2531,54 @@ msgid "Production Material Item Groups (ASL Enforced)"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:140
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:216
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:200
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:219
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:171
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:169
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:177
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:197
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:201
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:229
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:234
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:185
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:170
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:143
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:248
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:194
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:207
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:213
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:205
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:148
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:230
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:176
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:147
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:223
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:207
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:227
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:178
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:176
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:183
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:204
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:210
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:237
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:242
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:192
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:177
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:150
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:258
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:202
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:216
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:221
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:209
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:156
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:238
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:183
 msgid "Production Planner"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:145
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:221
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:205
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:224
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:176
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:174
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:182
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:202
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:206
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:234
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:239
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:190
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:175
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:148
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:253
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:199
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:212
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:218
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:230
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:153
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:235
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:181
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:153
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:229
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:213
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:233
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:184
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:182
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:189
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:210
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:216
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:243
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:248
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:198
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:183
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:156
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:264
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:208
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:222
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:227
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:239
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:162
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:244
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:189
 msgid "Production Supervisor"
 msgstr ""
 
@@ -2556,13 +2599,13 @@ msgstr ""
 
 #. Label of the section_break_3 (Section Break) field in DocType 'Shipment
 #. Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:142
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:143
 msgid "Proof Of Delivery"
 msgstr ""
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Shipment
 #. Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:125
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:126
 msgid "Proof Of Dispatch"
 msgstr ""
 
@@ -2616,6 +2659,7 @@ msgstr ""
 #: automotive_supply_chain/supplier_collaboration/doctype/asn_item/asn_item.json:22
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:40
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_schedule_line/supplier_schedule_line.json:70
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:84
 #: automotive_supply_chain/supplier_collaboration/sidebar/supplier_collaboration/supplier_collaboration.json:27
 #: automotive_supply_chain/supplier_collaboration/workspace/supplier_collaboration/supplier_collaboration.json:84
 msgid "Purchase Order"
@@ -2661,7 +2705,7 @@ msgstr ""
 
 #. Label of the purchase_receipts (Small Text) field in DocType 'Advance
 #. Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:160
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:161
 msgid "Purchase Receipts"
 msgstr ""
 
@@ -2682,6 +2726,7 @@ msgstr ""
 #: automotive_supply_chain/intercompany/report/goods_in_transit/goods_in_transit.py:40
 #: automotive_supply_chain/logistics/doctype/consignment_movement_item/consignment_movement_item.json:26
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:50
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:101
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.py:23
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_schedule_line/supplier_schedule_line.json:37
 msgid "Qty"
@@ -2699,54 +2744,54 @@ msgid "Quality Alert"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:160
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:236
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:220
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:239
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:191
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:189
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:197
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:217
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:221
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:249
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:254
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:205
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:190
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:163
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:268
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:214
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:227
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:233
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:245
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:168
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:250
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:196
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:171
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:247
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:231
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:251
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:202
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:200
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:207
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:228
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:234
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:261
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:266
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:216
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:201
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:174
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:282
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:226
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:240
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:245
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:257
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:180
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:262
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:207
 msgid "Quality Inspector"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:165
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:241
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:225
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:244
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:196
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:194
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:202
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:222
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:226
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:254
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:259
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:210
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:195
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:168
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:273
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:173
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:232
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:238
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:250
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:127
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:210
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:201
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:177
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:253
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:237
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:257
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:208
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:206
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:213
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:234
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:240
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:267
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:272
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:222
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:207
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:180
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:288
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:177
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:246
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:251
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:263
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:131
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:214
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:213
 msgid "Quality Manager"
 msgstr ""
 
@@ -2786,7 +2831,7 @@ msgid "RFQ"
 msgstr ""
 
 #. Option for the 'Mode' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:123
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:124
 msgid "Rail"
 msgstr ""
 
@@ -2821,7 +2866,7 @@ msgstr ""
 
 #. Label of the section_break_3 (Section Break) field in DocType 'Advance
 #. Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:154
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:155
 msgid "Receipt"
 msgstr ""
 
@@ -2860,12 +2905,12 @@ msgid "Receive (Purchase Receipt)"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:100
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:101
 msgid "Received"
 msgstr ""
 
 #. Label of the received_by_name (Data) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:155
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:156
 msgid "Received By"
 msgstr ""
 
@@ -2879,6 +2924,10 @@ msgstr ""
 
 #: automotive_supply_chain/public/js/automotive_supply_chain.bundle.js:55
 msgid "Received by"
+msgstr ""
+
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:136
+msgid "Receiver"
 msgstr ""
 
 #: automotive_supply_chain/public/js/automotive_supply_chain.bundle.js:52
@@ -3101,7 +3150,7 @@ msgid "Risk Rating"
 msgstr ""
 
 #. Option for the 'Mode' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:123
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:124
 msgid "Road"
 msgstr ""
 
@@ -3228,28 +3277,28 @@ msgid "Sales Invoice"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:108
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:184
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:168
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:181
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:139
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:143
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:227
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:247
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:251
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:279
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:284
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:235
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:220
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:122
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:298
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:244
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:257
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:263
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:275
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:198
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:280
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:226
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:110
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:186
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:170
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:183
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:141
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:145
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:243
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:264
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:270
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:297
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:302
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:252
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:237
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:125
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:318
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:262
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:276
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:281
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:293
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:216
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:298
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:243
 msgid "Sales Manager"
 msgstr ""
 
@@ -3310,12 +3359,13 @@ msgid "Score"
 msgstr ""
 
 #. Option for the 'Mode' (Select) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:123
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:124
 msgid "Sea"
 msgstr ""
 
 #. Label of the seal_no (Data) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:87
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:88
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:69
 msgid "Seal No"
 msgstr ""
 
@@ -3351,6 +3401,7 @@ msgstr ""
 
 #. Label of the serial_nos (Small Text) field in DocType 'ASN Item'
 #: automotive_supply_chain/supplier_collaboration/doctype/asn_item/asn_item.json:64
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:88
 msgid "Serial Nos"
 msgstr ""
 
@@ -3388,11 +3439,11 @@ msgstr ""
 #: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:31
 #: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:29
 #: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:33
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:37
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:38
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:30
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:28
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:37
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:37
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:38
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:31
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:31
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:33
@@ -3409,9 +3460,12 @@ msgid "Share %"
 msgstr ""
 
 #. Name of a DocType
+#. Print Format name
 #. Label of a Sidebar Item
 #. Label of a Link in the Logistics Workspace
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:180
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:181
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:1
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:45
 #: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:53
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:84
 msgid "Shipment Manifest"
@@ -3423,12 +3477,13 @@ msgid "Shipment Manifest Item"
 msgstr ""
 
 #. Label of the ship_date (Datetime) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:81
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:82
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:56
 msgid "Shipped At"
 msgstr ""
 
 #. Label of the items (Table) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:147
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:148
 msgid "Shipped Items"
 msgstr ""
 
@@ -3438,6 +3493,7 @@ msgstr ""
 
 #. Label of the qty (Float) field in DocType 'ASN Item'
 #: automotive_supply_chain/supplier_collaboration/doctype/asn_item/asn_item.json:44
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:86
 msgid "Shipped Qty"
 msgstr ""
 
@@ -3450,13 +3506,18 @@ msgstr ""
 msgid "Shortage"
 msgstr ""
 
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:131
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:139
+msgid "Signature"
+msgstr ""
+
 #. Label of the proof_of_delivery (Attach) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:161
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:162
 msgid "Signed Delivery Receipt"
 msgstr ""
 
 #. Label of the proof_of_dispatch (Attach) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:130
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:131
 msgid "Signed Dispatch Document"
 msgstr ""
 
@@ -3526,12 +3587,14 @@ msgstr ""
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:59
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:111
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:86
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:102
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:146
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:98
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:99
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:80
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:105
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:96
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:105
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:76
 msgid "Status"
 msgstr ""
 
@@ -3630,13 +3693,14 @@ msgstr ""
 #: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:63
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.js:7
 #: automotive_supply_chain/procurement_controls/report/purchase_price_variance/purchase_price_variance.py:21
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:49
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:50
 #: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:43
 #: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:43
 #: automotive_supply_chain/supplier_collaboration/doctype/sourcing_quote/sourcing_quote.json:21
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:34
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:36
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:49
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:50
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.js:7
 #: automotive_supply_chain/supplier_collaboration/report/supplier_performance/supplier_performance.py:19
 msgid "Supplier"
@@ -3644,7 +3708,8 @@ msgstr ""
 
 #. Label of the supplier_asn_no (Data) field in DocType 'Advance Shipping
 #. Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:56
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:57
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:40
 msgid "Supplier ASN No"
 msgstr ""
 
@@ -3677,6 +3742,7 @@ msgstr ""
 
 #. Label of the supplier_lot (Data) field in DocType 'ASN Item'
 #: automotive_supply_chain/supplier_collaboration/doctype/asn_item/asn_item.json:59
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:87
 msgid "Supplier Lot"
 msgstr ""
 
@@ -3733,13 +3799,13 @@ msgid "Supplier Performance"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:281
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:333
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:278
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:291
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:309
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:232
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:261
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:305
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:360
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:303
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:317
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:334
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:257
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:285
 msgid "Supplier Portal User"
 msgstr ""
 
@@ -3794,7 +3860,7 @@ msgid "Supplier's confirmation or revised promise for a purchase order (portal o
 msgstr ""
 
 #. Description of a DocType
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:5
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:6
 msgid "Supplier's shipment notice: what was shipped (lots, serials, cards) against which orders."
 msgstr ""
 
@@ -3823,29 +3889,29 @@ msgid "Suspended"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:97
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:173
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:157
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:170
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:128
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:137
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:144
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:155
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:147
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:181
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:192
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:143
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:128
-#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:184
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:112
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:193
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:144
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:150
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:164
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:176
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:97
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:181
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:133
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:98
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:174
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:158
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:171
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:129
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:138
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:145
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:156
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:148
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:182
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:194
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:144
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:129
+#: automotive_supply_chain/procurement_controls/doctype/invoice_match_exception/invoice_match_exception.json:185
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:113
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:195
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:145
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:151
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:165
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:177
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:98
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:182
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:134
 msgid "System Manager"
 msgstr ""
 
@@ -3944,7 +4010,8 @@ msgid "Total"
 msgstr ""
 
 #. Label of the tracking_no (Data) field in DocType 'Advance Shipping Notice'
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:116
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:117
+#: automotive_supply_chain/supplier_collaboration/print_format/advance_shipping_notice/advance_shipping_notice.json:64
 msgid "Tracking / Waybill No"
 msgstr ""
 
@@ -3961,7 +4028,7 @@ msgstr ""
 #. Label of the section_break_1 (Section Break) field in DocType 'Advance
 #. Shipping Notice'
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:66
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:106
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:107
 msgid "Transport"
 msgstr ""
 
@@ -3969,8 +4036,9 @@ msgstr ""
 #. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Link in the Logistics Workspace
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:62
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:63
 #: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:131
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:59
 #: automotive_supply_chain/logistics/sidebar/logistics/logistics.json:90
 #: automotive_supply_chain/logistics/workspace/logistics/logistics.json:74
 msgid "Transport Booking"
@@ -3989,33 +4057,34 @@ msgid "Transport Exception"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:185
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:261
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:245
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:264
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:216
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:214
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:222
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:242
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:246
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:274
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:279
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:230
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:215
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:188
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:293
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:239
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:252
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:258
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:270
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:193
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:275
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:221
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:201
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:277
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:261
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:281
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:232
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:230
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:237
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:258
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:264
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:291
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:296
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:246
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:231
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:204
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:312
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:256
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:270
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:275
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:287
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:210
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:292
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:237
 msgid "Treasury Approver"
 msgstr ""
 
 #. Label of the truck_plate (Data) field in DocType 'Shipment Manifest'
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:92
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:93
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:75
 msgid "Truck / Unit No"
 msgstr ""
 
@@ -4032,10 +4101,15 @@ msgstr ""
 msgid "Unit Price"
 msgstr ""
 
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:123
+msgid "Units"
+msgstr ""
+
 #. Label of the serial_no (Data) field in DocType 'Shipment Manifest Item'
 #. Label of the serial_no (Data) field in DocType 'Transport Exception'
 #: automotive_supply_chain/logistics/doctype/shipment_manifest_item/shipment_manifest_item.json:44
 #: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:78
+#: automotive_supply_chain/logistics/print_format/shipment_manifest/shipment_manifest.json:100
 msgid "VIN / Serial"
 msgstr ""
 
@@ -4154,6 +4228,7 @@ msgstr ""
 #. Option for the 'Portal Role' (Select) field in DocType 'Supplier Onboarding
 #. Contact'
 #: automotive_supply_chain/dealer_operations/doctype/dealer_registration_contact/dealer_registration_contact.json:41
+#: automotive_supply_chain/partners.py:86
 #: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding_contact/supplier_onboarding_contact.json:42
 msgid "Viewer"
 msgstr ""
@@ -4173,28 +4248,28 @@ msgid "Warehouse"
 msgstr ""
 
 #. Name of a role
-#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:155
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:231
-#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:215
-#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:234
-#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:186
-#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:184
-#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:192
-#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:212
-#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:167
-#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:201
-#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:212
-#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:163
-#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:148
-#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:158
-#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:222
-#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:209
-#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:180
-#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:228
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:240
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:163
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:245
-#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:191
+#: automotive_supply_chain/dealer_operations/doctype/allocation_rule/allocation_rule.json:165
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order/dealer_order.json:241
+#: automotive_supply_chain/dealer_operations/doctype/dealer_order_change/dealer_order_change.json:225
+#: automotive_supply_chain/dealer_operations/doctype/dealer_registration/dealer_registration.json:245
+#: automotive_supply_chain/dealer_operations/doctype/delivery_acceptance/delivery_acceptance.json:196
+#: automotive_supply_chain/dealer_operations/doctype/vehicle_allocation/vehicle_allocation.json:194
+#: automotive_supply_chain/intercompany/doctype/transfer_price_agreement/transfer_price_agreement.json:201
+#: automotive_supply_chain/logistics/doctype/consignment_agreement/consignment_agreement.json:222
+#: automotive_supply_chain/logistics/doctype/consignment_movement/consignment_movement.json:170
+#: automotive_supply_chain/logistics/doctype/cycle_count/cycle_count.json:204
+#: automotive_supply_chain/logistics/doctype/shipment_manifest/shipment_manifest.json:216
+#: automotive_supply_chain/logistics/doctype/transport_booking/transport_booking.json:166
+#: automotive_supply_chain/logistics/doctype/transport_exception/transport_exception.json:151
+#: automotive_supply_chain/procurement_controls/doctype/supply_chain_settings/supply_chain_settings.json:168
+#: automotive_supply_chain/supplier_collaboration/doctype/advance_shipping_notice/advance_shipping_notice.json:227
+#: automotive_supply_chain/supplier_collaboration/doctype/approved_supplier_list/approved_supplier_list.json:220
+#: automotive_supply_chain/supplier_collaboration/doctype/receipt_discrepancy/receipt_discrepancy.json:184
+#: automotive_supply_chain/supplier_collaboration/doctype/sourcing_decision/sourcing_decision.json:239
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_delivery_schedule/supplier_delivery_schedule.json:251
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_notice/supplier_notice.json:174
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_onboarding/supplier_onboarding.json:256
+#: automotive_supply_chain/supplier_collaboration/doctype/supplier_order_acknowledgement/supplier_order_acknowledgement.json:201
 msgid "Warehouse Clerk"
 msgstr ""
 
@@ -4219,6 +4294,11 @@ msgstr ""
 
 #: automotive_supply_chain/partners.py:30
 msgid "You can only act for your own organisation."
+msgstr ""
+
+#: automotive_supply_chain/partners.py:85
+#, python-brace-format
+msgid "Your portal role ({0}) does not allow this."
 msgstr ""
 
 #: automotive_supply_chain/finance_checks.py:15

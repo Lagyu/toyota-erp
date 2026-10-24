@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Portals VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 15:10+0919\n"
-"PO-Revision-Date: 2026-10-24 15:10+0919\n"
+"POT-Creation-Date: 2026-10-24 16:44+0919\n"
+"PO-Revision-Date: 2026-10-24 16:44+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -16,518 +16,518 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: automotive_portals/public/js/portal/supplier.js:280
-#: automotive_portals/public/js/portal/supplier.js:433
+#: automotive_portals/public/js/portal/supplier.js:284
+#: automotive_portals/public/js/portal/supplier.js:437
 msgid "ASN"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:178
+#: automotive_portals/public/js/portal/supplier.js:182
 msgid "Accept as ordered"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:277
+#: automotive_portals/public/js/portal/dealer.js:282
 #, python-brace-format
 msgid "Accept delivery {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:179
+#: automotive_portals/public/js/portal/supplier.js:183
 msgid "Accept with revised quantities or dates"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:434
+#: automotive_portals/public/js/portal/supplier.js:438
 msgid "Accepted"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:283
+#: automotive_portals/public/js/portal/dealer.js:288
 msgid "Accepted in good condition"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:284
+#: automotive_portals/public/js/portal/dealer.js:289
 msgid "Accepted with damage"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:234
+#: automotive_portals/public/js/portal/supplier.js:238
 msgid "Acknowledge schedule"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:173
+#: automotive_portals/public/js/portal/supplier.js:177
 msgid "Acknowledge this order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:156
-#: automotive_portals/public/js/portal/supplier.js:201
+#: automotive_portals/public/js/portal/supplier.js:160
+#: automotive_portals/public/js/portal/supplier.js:205
 msgid "Acknowledgement"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:192
+#: automotive_portals/public/js/portal/supplier.js:196
 #, python-brace-format
 msgid "Acknowledgement {0} sent ({1})."
 msgstr ""
 
-#: automotive_portals/api/dealer.py:115
+#: automotive_portals/api/dealer.py:122
 msgid "Add at least one vehicle."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:404
+#: automotive_portals/public/js/portal/supplier.js:408
 msgid "Add documents"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:111
+#: automotive_portals/public/js/portal/dealer.js:116
 msgid "Add to order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:276
+#: automotive_portals/public/js/portal/supplier.js:280
 msgid "Advance shipping notices"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:144
+#: automotive_portals/public/js/portal/supplier.js:148
 msgid "All open and recent orders"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:20
+#: automotive_portals/public/js/portal/dealer.js:24
 msgid "Allocated Vehicles"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:33
+#: automotive_portals/public/js/portal/dealer.js:38
 msgid "Allocated vehicles"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:224
-#: automotive_portals/public/js/portal/dealer.js:325
-#: automotive_portals/public/js/portal/supplier.js:450
-#: automotive_portals/public/js/portal/supplier.js:464
+#: automotive_portals/public/js/portal/dealer.js:229
+#: automotive_portals/public/js/portal/dealer.js:330
+#: automotive_portals/public/js/portal/supplier.js:454
+#: automotive_portals/public/js/portal/supplier.js:468
 msgid "Amount"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:274
-#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:278
+#: automotive_portals/public/js/portal/supplier.js:322
 msgid "Announce a shipment"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:144
+#: automotive_portals/public/js/portal/supplier.js:148
 msgid "Awaiting acknowledgement"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:119
+#: automotive_portals/public/js/portal/supplier.js:123
 msgid "Back to RFQs"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:276
+#: automotive_portals/public/js/portal/dealer.js:281
 msgid "Back to deliveries"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:209
-#: automotive_portals/public/js/portal/supplier.js:196
+#: automotive_portals/public/js/portal/dealer.js:214
+#: automotive_portals/public/js/portal/supplier.js:200
 msgid "Back to orders"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:236
+#: automotive_portals/public/js/portal/supplier.js:240
 msgid "Back to schedules"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:294
-#: automotive_portals/public/js/portal/supplier.js:317
-#: automotive_portals/public/js/portal/supplier.js:380
+#: automotive_portals/public/js/portal/supplier.js:298
+#: automotive_portals/public/js/portal/supplier.js:321
+#: automotive_portals/public/js/portal/supplier.js:384
 msgid "Back to shipments"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:191
+#: automotive_portals/public/js/portal/dealer.js:196
 msgid "Cancel the order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:284
-#: automotive_portals/public/js/portal/supplier.js:327
-#: automotive_portals/public/js/portal/supplier.js:387
+#: automotive_portals/public/js/portal/supplier.js:288
+#: automotive_portals/public/js/portal/supplier.js:331
+#: automotive_portals/public/js/portal/supplier.js:391
 msgid "Carrier"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:188
-#: automotive_portals/public/js/portal/dealer.js:243
+#: automotive_portals/public/js/portal/dealer.js:193
+#: automotive_portals/public/js/portal/dealer.js:248
 msgid "Change"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:190
+#: automotive_portals/public/js/portal/dealer.js:195
 msgid "Change delivery date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:189
+#: automotive_portals/public/js/portal/dealer.js:194
 msgid "Change quantity"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:240
+#: automotive_portals/public/js/portal/dealer.js:245
 msgid "Change requests"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:206
+#: automotive_portals/public/js/portal/dealer.js:211
 #, python-brace-format
 msgid "Change {0}: {1}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:101
+#: automotive_portals/public/js/portal/dealer.js:106
 msgid "Check configuration"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:105
+#: automotive_portals/public/js/portal/dealer.js:110
 msgid "Check the configuration first."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:64
+#: automotive_portals/public/js/portal/dealer.js:69
 msgid "Choose…"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:18
+#: automotive_portals/public/js/portal/dealer.js:22
 msgid "Configure & Order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:153
+#: automotive_portals/public/js/portal/dealer.js:158
 msgid "Configure a vehicle"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:278
+#: automotive_portals/public/js/portal/dealer.js:283
 msgid "Confirm"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:167
+#: automotive_portals/public/js/portal/supplier.js:171
 #, python-brace-format
 msgid "Confirmed quantity for {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:324
+#: automotive_portals/public/js/portal/dealer.js:329
 msgid "Credit note"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:136
+#: automotive_portals/public/js/portal/dealer.js:141
 msgid "Customer order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:286
+#: automotive_portals/public/js/portal/dealer.js:291
 msgid "Damage or rejection notes"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:304
-#: automotive_portals/public/js/portal/dealer.js:323
-#: automotive_portals/public/js/portal/supplier.js:65
-#: automotive_portals/public/js/portal/supplier.js:76
-#: automotive_portals/public/js/portal/supplier.js:122
-#: automotive_portals/public/js/portal/supplier.js:152
-#: automotive_portals/public/js/portal/supplier.js:199
-#: automotive_portals/public/js/portal/supplier.js:432
-#: automotive_portals/public/js/portal/supplier.js:463
+#: automotive_portals/public/js/portal/dealer.js:309
+#: automotive_portals/public/js/portal/dealer.js:328
+#: automotive_portals/public/js/portal/supplier.js:69
+#: automotive_portals/public/js/portal/supplier.js:80
+#: automotive_portals/public/js/portal/supplier.js:126
+#: automotive_portals/public/js/portal/supplier.js:156
+#: automotive_portals/public/js/portal/supplier.js:203
+#: automotive_portals/public/js/portal/supplier.js:436
+#: automotive_portals/public/js/portal/supplier.js:467
 msgid "Date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:14
+#: automotive_portals/public/js/portal/dealer.js:17
 #: automotive_portals/www/dealer_portal.py:10
 msgid "Dealer Portal"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:164
+#: automotive_portals/public/js/portal/dealer.js:169
 msgid "Dealer orders"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:21
-#: automotive_portals/public/js/portal/dealer.js:300
+#: automotive_portals/public/js/portal/dealer.js:25
+#: automotive_portals/public/js/portal/dealer.js:305
 msgid "Deliveries"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:303
+#: automotive_portals/public/js/portal/dealer.js:308
 msgid "Delivery"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:282
+#: automotive_portals/public/js/portal/dealer.js:287
 msgid "Delivery Condition"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:20
+#: automotive_portals/public/js/portal/supplier.js:24
 msgid "Delivery Schedules"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:243
+#: automotive_portals/public/js/portal/supplier.js:247
 msgid "Delivery date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:252
+#: automotive_portals/public/js/portal/supplier.js:256
 msgid "Delivery schedules"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:295
+#: automotive_portals/public/js/portal/dealer.js:300
 #, python-brace-format
 msgid "Delivery {0} recorded as {1}."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:137
+#: automotive_portals/public/js/portal/dealer.js:142
 msgid "Demonstrator"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:291
+#: automotive_portals/public/js/portal/dealer.js:296
 msgid "Describe the damage or the reason."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:345
-#: automotive_portals/public/js/portal/supplier.js:130
-#: automotive_portals/public/js/portal/supplier.js:207
+#: automotive_portals/public/js/portal/dealer.js:351
+#: automotive_portals/public/js/portal/supplier.js:134
+#: automotive_portals/public/js/portal/supplier.js:211
 msgid "Description"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:416
+#: automotive_portals/public/js/portal/supplier.js:420
 msgid "Discrepancy"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:374
+#: automotive_portals/public/js/portal/supplier.js:378
 msgid "Documents uploaded."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:327
-#: automotive_portals/public/js/portal/supplier.js:452
+#: automotive_portals/public/js/portal/dealer.js:332
+#: automotive_portals/public/js/portal/supplier.js:456
 msgid "Due"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:121
+#: automotive_portals/public/js/portal/dealer.js:126
 msgid "Earliest delivery"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:246
+#: automotive_portals/public/js/portal/dealer.js:251
 msgid "Effect"
 msgstr ""
 
-#: automotive_portals/api/supplier.py:294
+#: automotive_portals/api/supplier.py:300
 msgid "Every quoted line needs a positive quantity and price."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:283
-#: automotive_portals/public/js/portal/supplier.js:386
-#: automotive_portals/public/js/portal/supplier.js:419
+#: automotive_portals/public/js/portal/supplier.js:287
+#: automotive_portals/public/js/portal/supplier.js:390
+#: automotive_portals/public/js/portal/supplier.js:423
 msgid "Expected"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:325
+#: automotive_portals/public/js/portal/supplier.js:329
 msgid "Expected arrival"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:245
+#: automotive_portals/public/js/portal/supplier.js:249
 msgid "Firm"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:245
+#: automotive_portals/public/js/portal/supplier.js:249
 msgid "Forecast"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:427
-#: automotive_portals/public/js/portal/supplier.js:428
+#: automotive_portals/public/js/portal/supplier.js:431
+#: automotive_portals/public/js/portal/supplier.js:432
 msgid "Goods receipts"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:259
+#: automotive_portals/public/js/portal/supplier.js:263
 msgid "Horizon"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:263
+#: automotive_portals/public/js/portal/dealer.js:268
 msgid "Inventory"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:265
-#: automotive_portals/public/js/portal/dealer.js:322
-#: automotive_portals/public/js/portal/dealer.js:324
+#: automotive_portals/public/js/portal/dealer.js:270
+#: automotive_portals/public/js/portal/dealer.js:327
+#: automotive_portals/public/js/portal/dealer.js:329
 msgid "Invoice"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:449
+#: automotive_portals/public/js/portal/supplier.js:453
 msgid "Invoice date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:444
-#: automotive_portals/public/js/portal/supplier.js:445
+#: automotive_portals/public/js/portal/supplier.js:448
+#: automotive_portals/public/js/portal/supplier.js:449
 msgid "Invoice status"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:22
+#: automotive_portals/public/js/portal/dealer.js:26
 msgid "Invoices"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:23
+#: automotive_portals/public/js/portal/supplier.js:27
 msgid "Invoices & Remittances"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:319
+#: automotive_portals/public/js/portal/dealer.js:324
 msgid "Invoices and credit notes"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:466
+#: automotive_portals/public/js/portal/supplier.js:470
 msgid "Invoices settled"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:129
-#: automotive_portals/public/js/portal/supplier.js:206
-#: automotive_portals/public/js/portal/supplier.js:242
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:394
-#: automotive_portals/public/js/portal/supplier.js:417
+#: automotive_portals/public/js/portal/supplier.js:133
+#: automotive_portals/public/js/portal/supplier.js:210
+#: automotive_portals/public/js/portal/supplier.js:246
+#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:398
+#: automotive_portals/public/js/portal/supplier.js:421
 msgid "Item"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:41
-#: automotive_portals/public/js/portal/supplier.js:42
+#: automotive_portals/public/js/portal/supplier.js:45
+#: automotive_portals/public/js/portal/supplier.js:46
 msgid "Latest notices"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:102
+#: automotive_portals/public/js/portal/supplier.js:106
 msgid "Lead time (days)"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:220
+#: automotive_portals/public/js/portal/dealer.js:225
 msgid "Line No."
 msgstr ""
 
-#: automotive_portals/public/js/portal/core.js:299
-#: automotive_portals/www/dealer-portal.html:10
-#: automotive_portals/www/supplier-portal.html:10
+#: automotive_portals/public/js/portal/core.js:302
+#: automotive_portals/www/dealer-portal.html:11
+#: automotive_portals/www/supplier-portal.html:11
 msgid "Loading…"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:397
+#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:401
 msgid "Lot"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:308
+#: automotive_portals/public/js/portal/supplier.js:312
 #, python-brace-format
 msgid "Lot for {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:490
+#: automotive_portals/public/js/portal/supplier.js:494
 msgid "Mark as read"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:453
+#: automotive_portals/public/js/portal/supplier.js:457
 msgid "Matching"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:480
+#: automotive_portals/public/js/portal/supplier.js:484
 msgid "Message"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:50
-#: automotive_portals/public/js/portal/dealer.js:117
-#: automotive_portals/public/js/portal/dealer.js:221
+#: automotive_portals/public/js/portal/dealer.js:55
+#: automotive_portals/public/js/portal/dealer.js:122
+#: automotive_portals/public/js/portal/dealer.js:226
 msgid "Model"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:132
+#: automotive_portals/public/js/portal/supplier.js:136
 msgid "Needed by"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:155
+#: automotive_portals/public/js/portal/dealer.js:160
 msgid "New Order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:196
+#: automotive_portals/public/js/portal/dealer.js:201
 msgid "New delivery date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:195
+#: automotive_portals/public/js/portal/dealer.js:200
 msgid "New quantity"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:338
+#: automotive_portals/public/js/portal/dealer.js:344
 msgid "New support request"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:248
+#: automotive_portals/public/js/portal/dealer.js:253
 msgid "No change requests."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:312
+#: automotive_portals/public/js/portal/dealer.js:317
 msgid "No deliveries yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:262
+#: automotive_portals/public/js/portal/supplier.js:266
 msgid "No delivery schedules."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:425
+#: automotive_portals/public/js/portal/supplier.js:429
 msgid "No discrepancies."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:403
+#: automotive_portals/public/js/portal/supplier.js:407
 msgid "No documents attached."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:330
+#: automotive_portals/public/js/portal/dealer.js:335
 msgid "No invoices yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:456
+#: automotive_portals/public/js/portal/supplier.js:460
 msgid "No invoices."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:47
+#: automotive_portals/public/js/portal/dealer.js:52
 msgid "No models are open for ordering."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:49
-#: automotive_portals/public/js/portal/supplier.js:492
+#: automotive_portals/public/js/portal/supplier.js:53
+#: automotive_portals/public/js/portal/supplier.js:496
 msgid "No notices."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:176
+#: automotive_portals/public/js/portal/dealer.js:181
 msgid "No orders yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:158
+#: automotive_portals/public/js/portal/supplier.js:162
 msgid "No orders."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:468
+#: automotive_portals/public/js/portal/supplier.js:472
 msgid "No payments yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:81
+#: automotive_portals/public/js/portal/supplier.js:85
 msgid "No quotations yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:437
+#: automotive_portals/public/js/portal/supplier.js:441
 msgid "No receipts yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:69
+#: automotive_portals/public/js/portal/supplier.js:73
 msgid "No requests for quotation."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:287
+#: automotive_portals/public/js/portal/supplier.js:291
 msgid "No shipments announced."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:364
+#: automotive_portals/public/js/portal/dealer.js:370
 msgid "No support requests."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:125
+#: automotive_portals/public/js/portal/dealer.js:130
 msgid "No vehicles added yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:268
+#: automotive_portals/public/js/portal/dealer.js:273
 msgid "No vehicles allocated."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:237
+#: automotive_portals/public/js/portal/dealer.js:242
 msgid "No vehicles assigned yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:64
+#: automotive_portals/public/js/portal/dealer.js:69
 msgid "None"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:344
+#: automotive_portals/public/js/portal/dealer.js:350
 msgid "Not about a specific vehicle"
 msgstr ""
 
-#: automotive_portals/api/dealer.py:26 automotive_portals/api/dealer.py:224
-#: automotive_portals/api/supplier.py:29 automotive_portals/api/supplier.py:69
-#: automotive_portals/api/supplier.py:253
+#: automotive_portals/api/dealer.py:27 automotive_portals/api/dealer.py:231
+#: automotive_portals/api/supplier.py:30 automotive_portals/api/supplier.py:75
+#: automotive_portals/api/supplier.py:259
 msgid "Not found."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:40
+#: automotive_portals/public/js/portal/dealer.js:45
 msgid "Nothing outstanding."
 msgstr ""
 
@@ -535,305 +535,305 @@ msgstr ""
 msgid "Nothing to show yet."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:24
-#: automotive_portals/public/js/portal/supplier.js:475
+#: automotive_portals/public/js/portal/supplier.js:28
+#: automotive_portals/public/js/portal/supplier.js:479
 msgid "Notices"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Open"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:36
+#: automotive_portals/public/js/portal/supplier.js:40
 msgid "Open RFQs"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:38
+#: automotive_portals/public/js/portal/supplier.js:42
 msgid "Open discrepancies"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:35
+#: automotive_portals/public/js/portal/dealer.js:40
 msgid "Open invoices"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:312
-#: automotive_portals/public/js/portal/supplier.js:313
+#: automotive_portals/public/js/portal/supplier.js:316
+#: automotive_portals/public/js/portal/supplier.js:317
 msgid "Open order lines"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:32
-#: automotive_portals/public/js/portal/supplier.js:34
+#: automotive_portals/public/js/portal/dealer.js:37
+#: automotive_portals/public/js/portal/supplier.js:38
 msgid "Open orders"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:36
+#: automotive_portals/public/js/portal/dealer.js:41
 msgid "Open support requests"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:360
+#: automotive_portals/public/js/portal/dealer.js:366
 msgid "Opened On"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:168
+#: automotive_portals/public/js/portal/dealer.js:173
 msgid "Order No."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:192
+#: automotive_portals/public/js/portal/dealer.js:197
 msgid "Order line"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:203
+#: automotive_portals/public/js/portal/supplier.js:207
 msgid "Order lines"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:135
+#: automotive_portals/public/js/portal/dealer.js:140
 msgid "Order type"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:210
-#: automotive_portals/public/js/portal/supplier.js:197
+#: automotive_portals/public/js/portal/dealer.js:215
+#: automotive_portals/public/js/portal/supplier.js:201
 #, python-brace-format
 msgid "Order {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:148
+#: automotive_portals/public/js/portal/dealer.js:153
 #, python-brace-format
 msgid "Order {0} placed ({1})."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:208
+#: automotive_portals/public/js/portal/supplier.js:212
 msgid "Ordered"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:217
+#: automotive_portals/public/js/portal/dealer.js:222
 msgid "Ordered vehicles"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:19
-#: automotive_portals/public/js/portal/supplier.js:19
+#: automotive_portals/public/js/portal/dealer.js:23
+#: automotive_portals/public/js/portal/supplier.js:23
 msgid "Orders"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:33
+#: automotive_portals/public/js/portal/supplier.js:37
 msgid "Orders awaiting acknowledgement"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:326
-#: automotive_portals/public/js/portal/supplier.js:451
+#: automotive_portals/public/js/portal/dealer.js:331
+#: automotive_portals/public/js/portal/supplier.js:455
 msgid "Outstanding"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:38
+#: automotive_portals/public/js/portal/dealer.js:43
 msgid "Outstanding balance"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:17
-#: automotive_portals/public/js/portal/supplier.js:17
+#: automotive_portals/public/js/portal/dealer.js:21
+#: automotive_portals/public/js/portal/supplier.js:21
 msgid "Overview"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:329
+#: automotive_portals/public/js/portal/supplier.js:333
 msgid "Packages"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:462
+#: automotive_portals/public/js/portal/supplier.js:466
 msgid "Payment"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:130
+#: automotive_portals/public/js/portal/dealer.js:135
 msgid "Place order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:129
+#: automotive_portals/public/js/portal/dealer.js:134
 msgid "Place the order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:257
+#: automotive_portals/public/js/portal/supplier.js:261
 msgid "Plant"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:120
-#: automotive_portals/public/js/portal/supplier.js:209
+#: automotive_portals/public/js/portal/dealer.js:125
+#: automotive_portals/public/js/portal/supplier.js:213
 msgid "Price"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:361
+#: automotive_portals/public/js/portal/dealer.js:367
 msgid "Priority"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:233
+#: automotive_portals/public/js/portal/dealer.js:238
 msgid "Production"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:172
-#: automotive_portals/public/js/portal/dealer.js:214
-#: automotive_portals/public/js/portal/supplier.js:211
+#: automotive_portals/public/js/portal/dealer.js:177
+#: automotive_portals/public/js/portal/dealer.js:219
+#: automotive_portals/public/js/portal/supplier.js:215
 msgid "Promised"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:169
+#: automotive_portals/public/js/portal/supplier.js:173
 #, python-brace-format
 msgid "Promised date for {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:151
-#: automotive_portals/public/js/portal/supplier.js:246
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:393
+#: automotive_portals/public/js/portal/supplier.js:155
+#: automotive_portals/public/js/portal/supplier.js:250
+#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:397
 msgid "Purchase Order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:147
+#: automotive_portals/public/js/portal/supplier.js:151
 msgid "Purchase orders"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:234
+#: automotive_portals/public/js/portal/dealer.js:239
 msgid "Quality"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:53
-#: automotive_portals/public/js/portal/dealer.js:119
-#: automotive_portals/public/js/portal/dealer.js:223
-#: automotive_portals/public/js/portal/supplier.js:131
-#: automotive_portals/public/js/portal/supplier.js:244
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/dealer.js:58
+#: automotive_portals/public/js/portal/dealer.js:124
+#: automotive_portals/public/js/portal/dealer.js:228
+#: automotive_portals/public/js/portal/supplier.js:135
+#: automotive_portals/public/js/portal/supplier.js:248
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Quantity"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:92
-#: automotive_portals/public/js/portal/supplier.js:306
+#: automotive_portals/public/js/portal/supplier.js:96
+#: automotive_portals/public/js/portal/supplier.js:310
 #, python-brace-format
 msgid "Quantity for {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:75
+#: automotive_portals/public/js/portal/supplier.js:79
 msgid "Quotation"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:115
+#: automotive_portals/public/js/portal/supplier.js:119
 #, python-brace-format
 msgid "Quotation {0} submitted."
 msgstr ""
 
-#: automotive_portals/api/supplier.py:291
+#: automotive_portals/api/supplier.py:297
 msgid "Quote at least one line."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:64
+#: automotive_portals/public/js/portal/supplier.js:68
 msgid "RFQ"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:18
+#: automotive_portals/public/js/portal/supplier.js:22
 msgid "RFQs & Quotations"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:482
+#: automotive_portals/public/js/portal/supplier.js:486
 msgid "Read"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:197
+#: automotive_portals/public/js/portal/dealer.js:202
 msgid "Reason"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:431
+#: automotive_portals/public/js/portal/supplier.js:435
 msgid "Receipt"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:412
-#: automotive_portals/public/js/portal/supplier.js:413
+#: automotive_portals/public/js/portal/supplier.js:416
+#: automotive_portals/public/js/portal/supplier.js:417
 msgid "Receipt discrepancies"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:22
+#: automotive_portals/public/js/portal/supplier.js:26
 msgid "Receipts & Discrepancies"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:47
-#: automotive_portals/public/js/portal/supplier.js:155
-#: automotive_portals/public/js/portal/supplier.js:212
-#: automotive_portals/public/js/portal/supplier.js:396
-#: automotive_portals/public/js/portal/supplier.js:420
-#: automotive_portals/public/js/portal/supplier.js:481
+#: automotive_portals/public/js/portal/supplier.js:51
+#: automotive_portals/public/js/portal/supplier.js:159
+#: automotive_portals/public/js/portal/supplier.js:216
+#: automotive_portals/public/js/portal/supplier.js:400
+#: automotive_portals/public/js/portal/supplier.js:424
+#: automotive_portals/public/js/portal/supplier.js:485
 msgid "Received"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:310
+#: automotive_portals/public/js/portal/dealer.js:315
 msgid "Record acceptance"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:465
+#: automotive_portals/public/js/portal/supplier.js:469
 msgid "Reference"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:180
+#: automotive_portals/public/js/portal/supplier.js:184
 msgid "Reject"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:285
-#: automotive_portals/public/js/portal/supplier.js:421
-#: automotive_portals/public/js/portal/supplier.js:435
+#: automotive_portals/public/js/portal/dealer.js:290
+#: automotive_portals/public/js/portal/supplier.js:425
+#: automotive_portals/public/js/portal/supplier.js:439
 msgid "Rejected"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:103
+#: automotive_portals/public/js/portal/supplier.js:107
 msgid "Remarks"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:458
-#: automotive_portals/public/js/portal/supplier.js:459
+#: automotive_portals/public/js/portal/supplier.js:462
+#: automotive_portals/public/js/portal/supplier.js:463
 msgid "Remittance advice"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:122
-#: automotive_portals/public/js/portal/dealer.js:123
+#: automotive_portals/public/js/portal/dealer.js:127
+#: automotive_portals/public/js/portal/dealer.js:128
 msgid "Remove"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:358
+#: automotive_portals/public/js/portal/dealer.js:364
 msgid "Request"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:184
+#: automotive_portals/public/js/portal/dealer.js:189
 msgid "Request a change"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:120
+#: automotive_portals/public/js/portal/supplier.js:124
 #, python-brace-format
 msgid "Request {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:171
+#: automotive_portals/public/js/portal/dealer.js:176
 msgid "Requested Delivery"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:134
+#: automotive_portals/public/js/portal/dealer.js:139
 msgid "Requested delivery date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:126
+#: automotive_portals/public/js/portal/supplier.js:130
 msgid "Requested items"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:59
-#: automotive_portals/public/js/portal/supplier.js:60
+#: automotive_portals/public/js/portal/supplier.js:63
+#: automotive_portals/public/js/portal/supplier.js:64
 msgid "Requests for quotation"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:66
-#: automotive_portals/public/js/portal/supplier.js:123
-#: automotive_portals/public/js/portal/supplier.js:210
+#: automotive_portals/public/js/portal/supplier.js:70
+#: automotive_portals/public/js/portal/supplier.js:127
+#: automotive_portals/public/js/portal/supplier.js:214
 msgid "Required by"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:287
+#: automotive_portals/public/js/portal/dealer.js:292
 msgid "Required when a vehicle is damaged or rejected."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:423
+#: automotive_portals/public/js/portal/supplier.js:427
 msgid "Resolution"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:177
+#: automotive_portals/public/js/portal/supplier.js:181
 msgid "Response"
 msgstr ""
 
@@ -841,45 +841,45 @@ msgstr ""
 msgid "Saved."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:256
+#: automotive_portals/public/js/portal/supplier.js:260
 msgid "Schedule"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:239
+#: automotive_portals/public/js/portal/supplier.js:243
 msgid "Schedule lines"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:237
+#: automotive_portals/public/js/portal/supplier.js:241
 #, python-brace-format
 msgid "Schedule {0} (version {1})"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:228
+#: automotive_portals/public/js/portal/supplier.js:232
 #, python-brace-format
 msgid "Schedule {0} acknowledged."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:35
+#: automotive_portals/public/js/portal/supplier.js:39
 msgid "Schedules to acknowledge"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:336
+#: automotive_portals/public/js/portal/supplier.js:340
 msgid "Select at least one order line to ship."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:319
+#: automotive_portals/public/js/portal/supplier.js:323
 msgid "Send ASN"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:174
+#: automotive_portals/public/js/portal/supplier.js:178
 msgid "Send acknowledgement"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:185
+#: automotive_portals/public/js/portal/dealer.js:190
 msgid "Send change request"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:339
+#: automotive_portals/public/js/portal/dealer.js:345
 msgid "Send request"
 msgstr ""
 
@@ -887,125 +887,125 @@ msgstr ""
 msgid "Sending…"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Serial numbers"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:310
+#: automotive_portals/public/js/portal/supplier.js:314
 #, python-brace-format
 msgid "Serial numbers for {0}, one per line"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Ship"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:324
+#: automotive_portals/public/js/portal/supplier.js:328
 msgid "Ship date"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:301
+#: automotive_portals/public/js/portal/supplier.js:305
 #, python-brace-format
 msgid "Ship {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:235
-#: automotive_portals/public/js/portal/dealer.js:264
+#: automotive_portals/public/js/portal/dealer.js:240
+#: automotive_portals/public/js/portal/dealer.js:269
 msgid "Shipment"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:400
+#: automotive_portals/public/js/portal/supplier.js:404
 msgid "Shipment documents"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:331
+#: automotive_portals/public/js/portal/supplier.js:335
 msgid "Shipment documents (packing list, certificates)"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:381
+#: automotive_portals/public/js/portal/supplier.js:385
 #, python-brace-format
 msgid "Shipment {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:350
+#: automotive_portals/public/js/portal/supplier.js:354
 #, python-brace-format
 msgid "Shipment {0} announced."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:21
+#: automotive_portals/public/js/portal/supplier.js:25
 msgid "Shipments (ASN)"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:37
+#: automotive_portals/public/js/portal/supplier.js:41
 msgid "Shipments in transit"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:282
-#: automotive_portals/public/js/portal/supplier.js:385
-#: automotive_portals/public/js/portal/supplier.js:395
+#: automotive_portals/public/js/portal/supplier.js:286
+#: automotive_portals/public/js/portal/supplier.js:389
+#: automotive_portals/public/js/portal/supplier.js:399
 msgid "Shipped"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:390
+#: automotive_portals/public/js/portal/supplier.js:394
 msgid "Shipped lines"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:143
+#: automotive_portals/public/js/portal/supplier.js:147
 msgid "Show"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:153
+#: automotive_portals/public/js/portal/supplier.js:157
 msgid "Standard"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:174
-#: automotive_portals/public/js/portal/dealer.js:213
-#: automotive_portals/public/js/portal/dealer.js:245
-#: automotive_portals/public/js/portal/dealer.js:328
-#: automotive_portals/public/js/portal/dealer.js:362
-#: automotive_portals/public/js/portal/supplier.js:79
-#: automotive_portals/public/js/portal/supplier.js:260
-#: automotive_portals/public/js/portal/supplier.js:285
-#: automotive_portals/public/js/portal/supplier.js:384
-#: automotive_portals/public/js/portal/supplier.js:422
-#: automotive_portals/public/js/portal/supplier.js:454
+#: automotive_portals/public/js/portal/dealer.js:179
+#: automotive_portals/public/js/portal/dealer.js:218
+#: automotive_portals/public/js/portal/dealer.js:250
+#: automotive_portals/public/js/portal/dealer.js:333
+#: automotive_portals/public/js/portal/dealer.js:368
+#: automotive_portals/public/js/portal/supplier.js:83
+#: automotive_portals/public/js/portal/supplier.js:264
+#: automotive_portals/public/js/portal/supplier.js:289
+#: automotive_portals/public/js/portal/supplier.js:388
+#: automotive_portals/public/js/portal/supplier.js:426
+#: automotive_portals/public/js/portal/supplier.js:458
 msgid "Status"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:136
+#: automotive_portals/public/js/portal/dealer.js:141
 msgid "Stock order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:342
-#: automotive_portals/public/js/portal/dealer.js:359
-#: automotive_portals/public/js/portal/supplier.js:45
-#: automotive_portals/public/js/portal/supplier.js:478
+#: automotive_portals/public/js/portal/dealer.js:348
+#: automotive_portals/public/js/portal/dealer.js:365
+#: automotive_portals/public/js/portal/supplier.js:49
+#: automotive_portals/public/js/portal/supplier.js:482
 msgid "Subject"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:97
+#: automotive_portals/public/js/portal/supplier.js:101
 msgid "Submit quotation"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:96
+#: automotive_portals/public/js/portal/supplier.js:100
 msgid "Submit your quotation"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:14
+#: automotive_portals/public/js/portal/supplier.js:17
 #: automotive_portals/www/supplier_portal.py:10
 msgid "Supplier Portal"
 msgstr ""
 
-#: automotive_portals/api/supplier.py:298
+#: automotive_portals/api/supplier.py:304
 #, python-brace-format
 msgid "Supplier quotation for {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:23
+#: automotive_portals/public/js/portal/dealer.js:27
 msgid "Support"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:351
+#: automotive_portals/public/js/portal/dealer.js:357
 #, python-brace-format
 msgid "Support request {0} created."
 msgstr ""
@@ -1019,15 +1019,15 @@ msgstr ""
 msgid "The server could not be reached. Check your connection and retry."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:295
+#: automotive_portals/public/js/portal/supplier.js:299
 msgid "There are no open order lines to ship."
 msgstr ""
 
-#: automotive_portals/api/dealer.py:92
+#: automotive_portals/api/dealer.py:99
 msgid "This combination is not offered."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:90
+#: automotive_portals/public/js/portal/dealer.js:95
 msgid "This configuration cannot be built:"
 msgstr ""
 
@@ -1036,104 +1036,104 @@ msgstr ""
 msgid "This portal is only available to {0} users."
 msgstr ""
 
-#: automotive_portals/www/dealer-portal.html:9
-#: automotive_portals/www/supplier-portal.html:9
+#: automotive_portals/www/dealer-portal.html:10
+#: automotive_portals/www/supplier-portal.html:10
 msgid "This portal needs JavaScript."
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:173
-#: automotive_portals/public/js/portal/dealer.js:215
-#: automotive_portals/public/js/portal/supplier.js:78
-#: automotive_portals/public/js/portal/supplier.js:154
-#: automotive_portals/public/js/portal/supplier.js:200
+#: automotive_portals/public/js/portal/dealer.js:178
+#: automotive_portals/public/js/portal/dealer.js:220
+#: automotive_portals/public/js/portal/supplier.js:82
+#: automotive_portals/public/js/portal/supplier.js:158
+#: automotive_portals/public/js/portal/supplier.js:204
 msgid "Total"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:328
-#: automotive_portals/public/js/portal/supplier.js:388
+#: automotive_portals/public/js/portal/supplier.js:332
+#: automotive_portals/public/js/portal/supplier.js:392
 msgid "Tracking / waybill number"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:306
+#: automotive_portals/public/js/portal/dealer.js:311
 msgid "Transport"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:170
-#: automotive_portals/public/js/portal/dealer.js:244
-#: automotive_portals/public/js/portal/dealer.js:324
-#: automotive_portals/public/js/portal/supplier.js:46
-#: automotive_portals/public/js/portal/supplier.js:153
-#: automotive_portals/public/js/portal/supplier.js:418
-#: automotive_portals/public/js/portal/supplier.js:479
+#: automotive_portals/public/js/portal/dealer.js:175
+#: automotive_portals/public/js/portal/dealer.js:249
+#: automotive_portals/public/js/portal/dealer.js:329
+#: automotive_portals/public/js/portal/supplier.js:50
+#: automotive_portals/public/js/portal/supplier.js:157
+#: automotive_portals/public/js/portal/supplier.js:422
+#: automotive_portals/public/js/portal/supplier.js:483
 msgid "Type"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:90
+#: automotive_portals/public/js/portal/supplier.js:94
 #, python-brace-format
 msgid "Unit price for {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:39
+#: automotive_portals/public/js/portal/supplier.js:43
 msgid "Unread notices"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:379
+#: automotive_portals/public/js/portal/supplier.js:383
 msgid "Upload"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:231
-#: automotive_portals/public/js/portal/dealer.js:261
+#: automotive_portals/public/js/portal/dealer.js:236
+#: automotive_portals/public/js/portal/dealer.js:266
 msgid "VIN"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:97
+#: automotive_portals/public/js/portal/dealer.js:102
 #, python-brace-format
 msgid "Valid configuration {0}: {1} each, earliest delivery {2}."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:77
-#: automotive_portals/public/js/portal/supplier.js:101
+#: automotive_portals/public/js/portal/supplier.js:81
+#: automotive_portals/public/js/portal/supplier.js:105
 msgid "Valid till"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:118
-#: automotive_portals/public/js/portal/dealer.js:222
-#: automotive_portals/public/js/portal/dealer.js:232
-#: automotive_portals/public/js/portal/dealer.js:262
+#: automotive_portals/public/js/portal/dealer.js:123
+#: automotive_portals/public/js/portal/dealer.js:227
+#: automotive_portals/public/js/portal/dealer.js:237
+#: automotive_portals/public/js/portal/dealer.js:267
 msgid "Variant"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:343
+#: automotive_portals/public/js/portal/dealer.js:349
 msgid "Vehicle (optional)"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:228
-#: automotive_portals/public/js/portal/dealer.js:305
+#: automotive_portals/public/js/portal/dealer.js:233
+#: automotive_portals/public/js/portal/dealer.js:310
 msgid "Vehicles"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:258
+#: automotive_portals/public/js/portal/dealer.js:263
 msgid "Vehicles allocated to you"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:34
+#: automotive_portals/public/js/portal/dealer.js:39
 msgid "Vehicles in delivery"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:114
+#: automotive_portals/public/js/portal/dealer.js:119
 msgid "Vehicles in this order"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:281
+#: automotive_portals/public/js/portal/dealer.js:286
 #, python-brace-format
 msgid "Vehicles: {0}"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:258
+#: automotive_portals/public/js/portal/supplier.js:262
 msgid "Version"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:266
+#: automotive_portals/public/js/portal/dealer.js:271
 msgid "Warranty start"
 msgstr ""
 
@@ -1141,45 +1141,45 @@ msgstr ""
 msgid "You do not have access to this record."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:95
+#: automotive_portals/public/js/portal/supplier.js:99
 msgid "You have quoted on this request."
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:281
-#: automotive_portals/public/js/portal/supplier.js:322
-#: automotive_portals/public/js/portal/supplier.js:383
+#: automotive_portals/public/js/portal/supplier.js:285
+#: automotive_portals/public/js/portal/supplier.js:326
+#: automotive_portals/public/js/portal/supplier.js:387
 msgid "Your ASN number"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:307
+#: automotive_portals/public/js/portal/dealer.js:312
 msgid "Your acceptance"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:448
+#: automotive_portals/public/js/portal/supplier.js:452
 msgid "Your invoice"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:133
+#: automotive_portals/public/js/portal/dealer.js:138
 msgid "Your order reference"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:67
+#: automotive_portals/public/js/portal/supplier.js:71
 msgid "Your quotation"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:71
-#: automotive_portals/public/js/portal/supplier.js:72
+#: automotive_portals/public/js/portal/supplier.js:75
+#: automotive_portals/public/js/portal/supplier.js:76
 msgid "Your quotations"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:169
-#: automotive_portals/public/js/portal/dealer.js:212
-#: automotive_portals/public/js/portal/supplier.js:181
+#: automotive_portals/public/js/portal/dealer.js:174
+#: automotive_portals/public/js/portal/dealer.js:217
+#: automotive_portals/public/js/portal/supplier.js:185
 msgid "Your reference"
 msgstr ""
 
-#: automotive_portals/public/js/portal/dealer.js:354
-#: automotive_portals/public/js/portal/dealer.js:355
+#: automotive_portals/public/js/portal/dealer.js:360
+#: automotive_portals/public/js/portal/dealer.js:361
 msgid "Your support requests"
 msgstr ""
 
@@ -1191,7 +1191,7 @@ msgstr ""
 msgid "supplier"
 msgstr ""
 
-#: automotive_portals/public/js/portal/supplier.js:365
+#: automotive_portals/public/js/portal/supplier.js:369
 #, python-brace-format
 msgid "{0} could not be uploaded."
 msgstr ""

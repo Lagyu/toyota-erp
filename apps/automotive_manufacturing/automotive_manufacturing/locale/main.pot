@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Manufacturing VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 15:10+0919\n"
-"PO-Revision-Date: 2026-10-24 15:10+0919\n"
+"POT-Creation-Date: 2026-10-24 16:44+0919\n"
+"PO-Revision-Date: 2026-10-24 16:44+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -98,31 +98,31 @@ msgid "A {0} hold needs the {1}."
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:253
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:300
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:201
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:230
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:212
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:308
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:367
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:212
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:163
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:294
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:305
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:366
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:152
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:181
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:295
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:288
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:286
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:202
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:239
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:317
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:268
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:316
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:218
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:245
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:227
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:323
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:383
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:228
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:177
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:310
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:321
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:384
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:168
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:199
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:312
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:306
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:301
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:215
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:254
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:332
 msgid "AP Clerk"
 msgstr ""
 
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:168
 msgid "Accepted"
 msgstr ""
 
@@ -243,7 +243,7 @@ msgstr ""
 msgid "An attribute is selected twice."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:175
+#: automotive_manufacturing/product_engineering/change_control.py:177
 msgid "An engineering change cannot take effect in the past."
 msgstr ""
 
@@ -386,26 +386,26 @@ msgid "Attribute"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:278
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:325
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:226
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:255
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:237
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:333
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:392
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:237
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:103
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:319
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:330
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:391
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:177
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:206
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:320
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:313
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:311
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:227
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:264
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:342
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:298
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:346
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:248
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:275
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:257
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:353
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:413
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:258
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:105
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:340
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:351
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:414
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:198
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:229
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:342
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:336
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:331
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:245
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:284
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:362
 msgid "Auditor"
 msgstr ""
 
@@ -414,26 +414,26 @@ msgid "Authorise Restart"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:198
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:245
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:146
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:175
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:157
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:253
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:312
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:157
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:108
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:239
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:250
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:311
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:97
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:126
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:240
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:233
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:231
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:147
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:184
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:262
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:202
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:250
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:152
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:179
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:161
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:257
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:317
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:162
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:111
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:244
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:255
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:318
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:102
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:133
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:246
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:240
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:235
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:149
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:188
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:266
 msgid "Automotive Executive"
 msgstr ""
 
@@ -535,6 +535,14 @@ msgstr ""
 msgid "Bucket"
 msgstr ""
 
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:80
+msgid "Build"
+msgstr ""
+
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:83
+msgid "Build Date"
+msgstr ""
+
 #: automotive_manufacturing/traceability/report/vehicle_genealogy/vehicle_genealogy.py:26
 msgid "Build Entry"
 msgstr ""
@@ -542,12 +550,13 @@ msgstr ""
 #. Label of the default_plant (Link) field in DocType 'Vehicle Model'
 #. Label of the plant (Link) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:78
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:95
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:96
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:85
 msgid "Build Plant"
 msgstr ""
 
 #. Label of the build_sequence (Int) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:115
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:116
 msgid "Build Sequence"
 msgstr ""
 
@@ -556,12 +565,12 @@ msgstr ""
 #: automotive_manufacturing/production_planning/doctype/plant_schedule_slot/plant_schedule_slot.json:80
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:24
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.py:23
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:135
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:136
 msgid "Built"
 msgstr ""
 
 #. Label of the built_at (Datetime) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:120
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:121
 msgid "Built At"
 msgstr ""
 
@@ -600,26 +609,26 @@ msgid "Built Units"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:243
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:290
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:191
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:220
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:202
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:298
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:307
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:202
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:153
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:284
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:295
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:356
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:142
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:171
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:285
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:224
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:276
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:192
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:229
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:307
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:256
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:304
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:206
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:233
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:215
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:311
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:311
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:216
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:165
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:298
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:309
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:372
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:156
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:187
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:300
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:229
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:289
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:203
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:242
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:320
 msgid "Buyer"
 msgstr ""
 
@@ -684,12 +693,13 @@ msgid "Capacity shortages: the overloaded line (no item)"
 msgstr ""
 
 #. Label of the card_id (Data) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:24
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:25
 msgid "Card ID"
 msgstr ""
 
 #. Label of the card_no (Int) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:41
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:42
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:53
 msgid "Card No"
 msgstr ""
 
@@ -775,6 +785,10 @@ msgstr ""
 msgid "Choice Required"
 msgstr ""
 
+#: automotive_manufacturing/product_engineering/change_control.py:88
+msgid "Choose the change request to convert."
+msgstr ""
+
 #: automotive_manufacturing/quality_control/dispositions.py:25
 msgid "Choose the destination warehouse."
 msgstr ""
@@ -815,7 +829,7 @@ msgstr ""
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:65
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:6
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.js:6
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:87
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:88
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.js:15
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.py:23
 msgid "Company"
@@ -871,7 +885,8 @@ msgstr ""
 #. Model'
 #. Label of the configuration (Link) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:115
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:76
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:77
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:69
 msgid "Configuration"
 msgstr ""
 
@@ -915,6 +930,7 @@ msgstr ""
 
 #. Label of the container_qty (Float) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:133
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:71
 msgid "Container Qty"
 msgstr ""
 
@@ -968,7 +984,7 @@ msgid "Created Document"
 msgstr ""
 
 #. Option for the 'Invoicing' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:176
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:177
 msgid "Credited"
 msgstr ""
 
@@ -989,12 +1005,12 @@ msgid "Current BOM"
 msgstr ""
 
 #. Label of the current_signal (Link) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:69
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:70
 msgid "Current Signal"
 msgstr ""
 
 #. Label of the current_warehouse (Link) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:182
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:183
 msgid "Current Warehouse"
 msgstr ""
 
@@ -1033,39 +1049,39 @@ msgstr ""
 #. Label of the dealer (Link) field in DocType 'Recall Affected Unit'
 #. Label of the dealer (Link) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/traceability/doctype/recall_affected_unit/recall_affected_unit.json:56
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:209
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:210
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.py:26
 msgid "Dealer"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:268
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:315
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:135
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:245
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:227
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:323
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:382
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:227
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:178
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:309
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:320
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:381
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:167
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:196
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:310
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:303
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:301
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:217
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:254
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:332
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:286
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:334
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:139
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:263
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:245
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:341
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:401
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:246
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:195
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:328
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:339
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:402
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:186
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:217
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:330
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:324
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:319
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:233
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:272
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:350
 msgid "Dealer Liaison"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:141
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:274
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:256
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:146
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:298
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:280
 msgid "Dealer Portal User"
 msgstr ""
 
@@ -1087,8 +1103,8 @@ msgstr ""
 
 #. Option for the 'Inventory' (Select) field in DocType 'Vehicle Unit'
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:154
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:155
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:168
 #: automotive_manufacturing/traceability/recall.py:56
 msgid "Delivered"
 msgstr ""
@@ -1155,7 +1171,7 @@ msgid "Discontinued"
 msgstr ""
 
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:168
 msgid "Dispatched"
 msgstr ""
 
@@ -1294,26 +1310,26 @@ msgid "Engineering Change Request"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:191
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:229
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:236
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:169
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:151
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:343
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:402
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:247
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:198
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:329
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:340
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:401
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:187
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:216
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:330
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:323
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:321
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:237
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:178
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:352
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:194
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:232
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:260
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:172
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:154
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:365
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:425
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:270
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:219
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:352
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:363
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:426
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:210
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:241
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:354
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:348
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:343
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:257
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:181
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:374
 msgid "Engineering Manager"
 msgstr ""
 
@@ -1384,7 +1400,8 @@ msgid "Field Issue"
 msgstr ""
 
 #. Label of the final_inspection (Link) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:189
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:190
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:96
 msgid "Final Inspection"
 msgstr ""
 
@@ -1443,7 +1460,7 @@ msgid "Fulfilment"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:63
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:64
 msgid "Full"
 msgstr ""
 
@@ -1470,26 +1487,26 @@ msgid "Give suspect batches, serials or a supplier."
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:203
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:250
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:151
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:180
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:162
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:258
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:317
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:162
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:113
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:244
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:255
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:316
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:102
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:131
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:245
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:238
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:236
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:152
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:189
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:267
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:208
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:256
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:158
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:185
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:167
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:263
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:323
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:168
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:117
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:250
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:261
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:324
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:108
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:139
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:252
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:246
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:241
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:155
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:194
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:272
 msgid "Group Controller"
 msgstr ""
 
@@ -1543,26 +1560,26 @@ msgid "Horizon must be between 1 and 400 days."
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:273
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:320
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:221
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:250
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:232
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:328
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:387
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:232
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:183
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:314
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:325
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:386
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:172
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:201
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:315
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:308
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:306
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:222
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:259
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:337
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:292
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:340
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:242
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:269
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:251
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:347
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:407
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:252
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:201
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:334
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:345
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:408
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:192
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:223
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:336
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:330
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:325
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:239
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:278
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:356
 msgid "IT Operator"
 msgstr ""
 
@@ -1607,19 +1624,19 @@ msgid "Implemented At"
 msgstr ""
 
 #. Option for the 'Production' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:135
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:136
 msgid "In Production"
 msgstr ""
 
 #. Option for the 'Inventory' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:154
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:155
 msgid "In Stock"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Kanban Card'
 #. Option for the 'Inventory' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:63
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:154
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:64
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:155
 msgid "In Transit"
 msgstr ""
 
@@ -1653,9 +1670,17 @@ msgstr ""
 msgid "Inspection"
 msgstr ""
 
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:107
+msgid "Inspection Date"
+msgstr ""
+
 #. Label of a Link in the Quality Control Workspace
 #: automotive_manufacturing/quality_control/workspace/quality_control/quality_control.json:36
 msgid "Inspection Template"
+msgstr ""
+
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:105
+msgid "Inspector"
 msgstr ""
 
 #. Option for the 'Supply Type' (Select) field in DocType 'Kanban Loop'
@@ -1678,18 +1703,18 @@ msgid "Invalid decision."
 msgstr ""
 
 #. Label of the inventory_status (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:153
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:154
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.py:24
 msgid "Inventory"
 msgstr ""
 
 #. Option for the 'Invoicing' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:176
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:177
 msgid "Invoiced"
 msgstr ""
 
 #. Label of the invoice_status (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:175
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:176
 msgid "Invoicing"
 msgstr ""
 
@@ -1722,9 +1747,10 @@ msgstr ""
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:53
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:74
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:164
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:48
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:49
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:49
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:65
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:67
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.py:20
 #: automotive_manufacturing/traceability/doctype/recall_affected_unit/recall_affected_unit.json:27
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.py:22
@@ -1804,10 +1830,13 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the kanban_card (Link) field in DocType 'Kanban Signal'
+#. Print Format name
 #. Label of a Sidebar Item
 #. Label of a Link in the Shop Floor Workspace
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:85
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:86
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:57
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:1
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:50
 #: automotive_manufacturing/shop_floor/sidebar/shop_floor/shop_floor.json:102
 #: automotive_manufacturing/shop_floor/workspace/shop_floor/shop_floor.json:112
 msgid "Kanban Card"
@@ -1853,7 +1882,7 @@ msgid "Label"
 msgstr ""
 
 #. Label of the last_scan_at (Datetime) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:76
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:77
 msgid "Last Scan"
 msgstr ""
 
@@ -1904,31 +1933,32 @@ msgid "Line / Work Order"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:223
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:270
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:171
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:200
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:182
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:278
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:337
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:182
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:133
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:264
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:275
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:282
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:122
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:116
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:265
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:228
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:256
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:172
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:209
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:287
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:232
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:280
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:182
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:209
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:191
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:287
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:347
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:192
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:141
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:274
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:285
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:286
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:132
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:121
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:276
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:234
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:265
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:179
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:218
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:296
 msgid "Line Operator"
 msgstr ""
 
 #. Label of the line_side_warehouse (Link) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:98
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:86
 msgid "Line Side Warehouse"
 msgstr ""
 
@@ -1966,43 +1996,44 @@ msgid "Location"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:293
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:340
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:241
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:270
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:252
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:348
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:407
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:252
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:203
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:334
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:345
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:406
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:192
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:221
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:335
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:328
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:326
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:242
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:279
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:357
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:316
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:364
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:266
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:293
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:275
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:371
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:431
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:276
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:225
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:358
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:369
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:432
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:216
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:247
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:360
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:354
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:349
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:263
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:302
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:380
 msgid "Logistics Coordinator"
 msgstr ""
 
 #. Label of the kanban_loop (Link) field in DocType 'Kanban Card'
 #. Label of the kanban_loop (Link) field in DocType 'Kanban Signal'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:34
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:35
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:49
 msgid "Loop"
 msgstr ""
 
 #. Label of the loop_code (Data) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:40
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:63
 msgid "Loop Code"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:63
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:64
 msgid "Lost"
 msgstr ""
 
@@ -2105,7 +2136,7 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:105
+#: automotive_manufacturing/product_engineering/change_control.py:107
 msgid "Name the current BOM of at least one affected item first."
 msgstr ""
 
@@ -2166,17 +2197,17 @@ msgid "Nonconformance"
 msgstr ""
 
 #. Option for the 'Inventory' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:154
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:155
 msgid "Not In Stock"
 msgstr ""
 
 #. Option for the 'Invoicing' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:176
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:177
 msgid "Not Invoiced"
 msgstr ""
 
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:168
 msgid "Not Shipped"
 msgstr ""
 
@@ -2238,7 +2269,7 @@ msgid "On Hand (Affected Items)"
 msgstr ""
 
 #. Option for the 'Quality Release' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:145
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:146
 msgid "On Hold"
 msgstr ""
 
@@ -2263,7 +2294,7 @@ msgid "One per line."
 msgstr ""
 
 #. Description of a DocType
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:5
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:6
 msgid "One physical vehicle (or serialized assembly) with independent production, quality, inventory, shipment and invoicing states."
 msgstr ""
 
@@ -2298,7 +2329,7 @@ msgstr ""
 msgid "Only submitted (approved) parameter versions can be used."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:90
+#: automotive_manufacturing/product_engineering/change_control.py:92
 msgid "Only submitted change requests can be converted."
 msgstr ""
 
@@ -2410,7 +2441,7 @@ msgid "Overdue since {0}"
 msgstr ""
 
 #. Option for the 'Invoicing' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:176
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:177
 msgid "Paid"
 msgstr ""
 
@@ -2456,7 +2487,7 @@ msgid "Pegged Demand"
 msgstr ""
 
 #. Option for the 'Quality Release' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:145
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:146
 msgid "Pending Inspection"
 msgstr ""
 
@@ -2475,7 +2506,7 @@ msgstr ""
 #: automotive_manufacturing/production_planning/doctype/plant_schedule_slot/plant_schedule_slot.json:80
 #: automotive_manufacturing/production_planning/report/production_variance/production_variance.py:23
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.py:22
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:135
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:136
 msgid "Planned"
 msgstr ""
 
@@ -2582,26 +2613,26 @@ msgid "Plant"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:208
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:255
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:156
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:185
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:167
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:246
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:300
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:151
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:118
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:233
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:260
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:276
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:83
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:111
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:221
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:211
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:226
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:157
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:194
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:272
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:214
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:262
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:164
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:191
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:173
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:249
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:303
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:155
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:123
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:237
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:267
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:279
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:86
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:115
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:224
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:214
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:229
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:161
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:200
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:278
 msgid "Plant Director"
 msgstr ""
 
@@ -2648,7 +2679,7 @@ msgid "Previous Version"
 msgstr ""
 
 #. Description of the 'Card ID' (Data) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:20
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:21
 msgid "Printed as a barcode; scanning an emptied card raises a signal."
 msgstr ""
 
@@ -2665,50 +2696,50 @@ msgid "Process"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:248
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:295
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:196
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:225
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:207
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:303
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:362
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:207
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:158
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:289
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:300
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:361
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:147
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:176
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:290
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:283
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:281
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:197
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:234
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:312
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:262
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:310
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:212
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:239
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:221
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:317
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:377
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:222
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:171
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:304
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:315
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:378
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:162
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:193
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:306
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:300
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:295
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:209
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:248
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:326
 msgid "Procurement Manager"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:180
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:218
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:119
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:159
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:141
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:338
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:397
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:242
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:193
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:324
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:335
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:396
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:182
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:211
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:325
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:318
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:316
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:232
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:269
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:347
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:182
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:220
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:121
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:161
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:143
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:359
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:419
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:264
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:213
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:346
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:357
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:420
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:204
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:235
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:348
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:342
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:337
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:251
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:290
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:368
 msgid "Product Engineer"
 msgstr ""
 
@@ -2721,11 +2752,12 @@ msgstr ""
 
 #. Label of the product_family (Select) field in DocType 'Vehicle Model'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:50
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:63
 msgid "Product Family"
 msgstr ""
 
 #. Label of the production_status (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:134
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:135
 msgid "Production"
 msgstr ""
 
@@ -2760,10 +2792,12 @@ msgstr ""
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:66
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:72
 #: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:58
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:91
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.js:8
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.py:21
 #: automotive_manufacturing/shop_floor/report/wip_by_line/wip_by_line.js:8
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:102
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:103
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:89
 msgid "Production Line"
 msgstr ""
 
@@ -2775,26 +2809,26 @@ msgid "Production Plan"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:213
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:260
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:161
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:190
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:172
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:235
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:292
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:136
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:123
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:254
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:265
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:326
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:112
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:141
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:229
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:248
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:246
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:162
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:199
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:256
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:220
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:268
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:170
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:197
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:179
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:237
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:294
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:138
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:129
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:262
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:273
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:336
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:120
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:151
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:233
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:258
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:253
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:167
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:206
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:259
 msgid "Production Planner"
 msgstr ""
 
@@ -2806,26 +2840,26 @@ msgid "Production Planning"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:218
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:265
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:166
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:195
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:177
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:273
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:332
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:143
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:128
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:259
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:244
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:268
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:75
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:103
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:213
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:203
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:218
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:167
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:204
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:282
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:226
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:274
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:176
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:203
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:185
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:281
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:341
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:146
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:135
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:268
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:248
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:270
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:77
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:106
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:215
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:205
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:220
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:173
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:212
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:290
 msgid "Production Supervisor"
 msgstr ""
 
@@ -2982,59 +3016,61 @@ msgstr ""
 #. Label of a Link in the Quality Control Workspace
 #: automotive_manufacturing/quality_control/sidebar/quality_control/quality_control.json:27
 #: automotive_manufacturing/quality_control/workspace/quality_control/quality_control.json:26
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:111
 msgid "Quality Inspection"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:233
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:280
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:181
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:210
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:192
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:288
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:347
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:192
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:143
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:225
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:235
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:301
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:132
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:161
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:275
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:268
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:266
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:182
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:219
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:297
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:244
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:292
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:194
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:221
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:203
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:299
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:359
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:204
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:153
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:228
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:238
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:307
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:144
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:175
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:288
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:282
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:277
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:191
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:230
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:308
 msgid "Quality Inspector"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:238
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:238
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:186
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:215
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:197
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:293
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:352
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:197
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:148
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:216
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:226
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:293
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:91
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:166
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:280
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:273
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:271
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:187
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:170
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:302
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:250
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:242
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:200
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:227
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:209
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:305
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:365
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:210
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:159
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:218
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:228
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:298
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:95
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:181
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:294
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:288
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:283
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:197
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:172
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:314
 msgid "Quality Manager"
 msgstr ""
 
 #. Label of the quality_status (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:144
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:145
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:101
 msgid "Quality Release"
 msgstr ""
 
@@ -3102,7 +3138,7 @@ msgid "Readings outside acceptance criteria."
 msgstr ""
 
 #. Option for the 'Shipment' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:168
 msgid "Ready To Ship"
 msgstr ""
 
@@ -3184,7 +3220,7 @@ msgstr ""
 #. Option for the 'Quality Release' (Select) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:89
 #: automotive_manufacturing/production_planning/doctype/planning_run_proposal/planning_run_proposal.json:107
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:145
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:146
 msgid "Rejected"
 msgstr ""
 
@@ -3257,7 +3293,7 @@ msgstr ""
 #: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:56
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:127
 #: automotive_manufacturing/shop_floor/report/oee_by_line/oee_by_line.py:26
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:145
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:146
 msgid "Released"
 msgstr ""
 
@@ -3389,7 +3425,7 @@ msgid "Resequencing a released schedule needs a reason."
 msgstr ""
 
 #. Option for the 'Inventory' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:154
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:155
 msgid "Reserved"
 msgstr ""
 
@@ -3411,6 +3447,7 @@ msgstr ""
 #. Label of the section_break_1 (Section Break) field in DocType 'Recall
 #. Campaign'
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:118
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:99
 msgid "Result"
 msgstr ""
 
@@ -3438,7 +3475,7 @@ msgstr ""
 msgid "Revision"
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:284
+#: automotive_manufacturing/product_engineering/change_control.py:286
 #, python-brace-format
 msgid "Revision used by Work Order {0}; issue a new ECO instead of cancelling."
 msgstr ""
@@ -3456,32 +3493,32 @@ msgstr ""
 msgid "Rework Work Order"
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:172
+#: automotive_manufacturing/product_engineering/change_control.py:174
 #, python-brace-format
 msgid "Row {0}: BOM {1} already uses {2} of {3}; enter the new quantity."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:158
+#: automotive_manufacturing/product_engineering/change_control.py:160
 #, python-brace-format
 msgid "Row {0}: BOM {1} is already superseded by {2}."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:156
+#: automotive_manufacturing/product_engineering/change_control.py:158
 #, python-brace-format
 msgid "Row {0}: BOM {1} is not an active released BOM."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:166
+#: automotive_manufacturing/product_engineering/change_control.py:168
 #, python-brace-format
 msgid "Row {0}: choose the component to add."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:164
+#: automotive_manufacturing/product_engineering/change_control.py:166
 #, python-brace-format
 msgid "Row {0}: choose the new component."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:168
+#: automotive_manufacturing/product_engineering/change_control.py:170
 #, python-brace-format
 msgid "Row {0}: quantity must be positive."
 msgstr ""
@@ -3497,7 +3534,7 @@ msgstr ""
 msgid "Row {0}: {1}"
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:162
+#: automotive_manufacturing/product_engineering/change_control.py:164
 #, python-brace-format
 msgid "Row {0}: {1} is not in BOM {2}."
 msgstr ""
@@ -3552,36 +3589,36 @@ msgid "Safety Stock"
 msgstr ""
 
 #. Label of the section_break_2 (Section Break) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:196
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:197
 msgid "Sales & Warranty"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:263
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:310
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:127
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:240
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:222
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:318
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:377
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:222
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:173
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:304
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:315
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:376
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:162
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:191
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:305
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:298
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:296
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:212
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:249
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:327
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:280
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:328
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:130
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:257
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:239
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:335
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:395
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:240
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:189
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:322
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:333
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:396
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:180
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:211
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:324
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:318
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:313
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:227
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:266
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:344
 msgid "Sales Manager"
 msgstr ""
 
 #. Label of the sales_order (Link) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:201
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:202
 msgid "Sales Order"
 msgstr ""
 
@@ -3640,7 +3677,7 @@ msgid "Scrap Qty"
 msgstr ""
 
 #. Option for the 'Production' (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:135
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:136
 msgid "Scrapped"
 msgstr ""
 
@@ -3681,7 +3718,7 @@ msgstr ""
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:53
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:88
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:176
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:52
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:53
 #: automotive_manufacturing/traceability/report/vehicle_genealogy/vehicle_genealogy.py:19
 #: automotive_manufacturing/traceability/workspace/traceability/traceability.json:36
 msgid "Serial No"
@@ -3757,7 +3794,7 @@ msgid "Shift {0} is not in pattern {1}."
 msgstr ""
 
 #. Label of the shipment_status (Select) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:166
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:167
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.py:25
 msgid "Shipment"
 msgstr ""
@@ -3804,7 +3841,7 @@ msgid "Signal (Card Emptied)"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Kanban Card'
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:63
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:64
 msgid "Signaled"
 msgstr ""
 
@@ -3835,6 +3872,7 @@ msgstr ""
 
 #. Label of the source_warehouse (Link) field in DocType 'Kanban Loop'
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:106
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:81
 msgid "Source Warehouse"
 msgstr ""
 
@@ -3849,6 +3887,10 @@ msgstr ""
 #. Label of the start_of_production (Date) field in DocType 'Vehicle Model'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:92
 msgid "Start of Production"
+msgstr ""
+
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:120
+msgid "Starts on delivery acceptance"
 msgstr ""
 
 #. Label of the workstation (Link) field in DocType 'Andon Event'
@@ -3881,12 +3923,12 @@ msgstr ""
 #: automotive_manufacturing/production_planning/doctype/plant_schedule_slot/plant_schedule_slot.json:79
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:126
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:114
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:62
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:63
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:88
 #: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:113
 #: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:100
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:93
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:126
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:127
 msgid "Status"
 msgstr ""
 
@@ -3955,6 +3997,7 @@ msgstr ""
 #: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:117
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:80
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:114
+#: automotive_manufacturing/shop_floor/print_format/kanban_card/kanban_card.json:76
 #: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:90
 #: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:71
 #: automotive_manufacturing/traceability/report/affected_vehicles/affected_vehicles.js:14
@@ -4011,26 +4054,26 @@ msgid "Synthetic component recall: finds every unit built from the suspect lots/
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:171
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:207
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:111
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:150
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:132
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:224
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:284
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:128
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:97
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:205
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:215
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:260
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:67
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:95
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:205
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:195
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:208
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:142
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:162
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:249
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:172
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:208
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:112
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:151
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:133
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:225
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:285
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:129
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:98
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:206
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:216
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:261
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:68
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:97
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:206
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:196
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:209
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:143
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:163
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:251
 msgid "System Manager"
 msgstr ""
 
@@ -4049,7 +4092,7 @@ msgstr ""
 msgid "Template item {0} must have variants enabled."
 msgstr ""
 
-#: automotive_manufacturing/product_engineering/change_control.py:210
+#: automotive_manufacturing/product_engineering/change_control.py:212
 #, python-brace-format
 msgid "The change would leave BOM {0} without components."
 msgstr ""
@@ -4116,26 +4159,26 @@ msgid "Transfer Entry"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:258
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:305
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:206
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:235
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:217
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:313
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:372
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:217
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:168
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:299
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:310
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:371
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:157
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:186
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:300
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:293
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:291
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:207
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:244
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:322
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:274
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:322
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:224
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:251
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:233
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:329
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:389
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:234
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:183
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:316
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:327
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:390
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:174
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:205
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:318
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:312
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:307
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:221
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:260
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:338
 msgid "Treasury Approver"
 msgstr ""
 
@@ -4196,10 +4239,14 @@ msgstr ""
 msgid "Used In"
 msgstr ""
 
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:54
+msgid "VIN"
+msgstr ""
+
 #. Label of the unit_serial_no (Data) field in DocType 'Recall Affected Unit'
 #. Label of the vin (Data) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/traceability/doctype/recall_affected_unit/recall_affected_unit.json:20
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:44
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:45
 msgid "VIN / Serial"
 msgstr ""
 
@@ -4245,14 +4292,25 @@ msgstr ""
 
 #. Label of the item_code (Link) field in DocType 'Plant Schedule Slot'
 #: automotive_manufacturing/production_planning/doctype/plant_schedule_slot/plant_schedule_slot.json:37
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:67
 msgid "Variant"
 msgstr ""
 
 #. Label of the variant_item (Link) field in DocType 'Vehicle Configuration'
 #. Label of the variant_item (Link) field in DocType 'Vehicle Unit'
 #: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:53
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:69
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:70
 msgid "Variant Item"
+msgstr ""
+
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:58
+msgid "Vehicle"
+msgstr ""
+
+#. Print Format name
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:1
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:49
+msgid "Vehicle Certificate"
 msgstr ""
 
 #. Name of a DocType
@@ -4295,7 +4353,8 @@ msgstr ""
 #: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:40
 #: automotive_manufacturing/product_engineering/sidebar/product_engineering/product_engineering.json:27
 #: automotive_manufacturing/product_engineering/workspace/product_engineering/product_engineering.json:26
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:61
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:62
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:61
 msgid "Vehicle Model"
 msgstr ""
 
@@ -4321,7 +4380,7 @@ msgstr ""
 #. Label of a Link in the Traceability Workspace
 #: automotive_manufacturing/production_planning/doctype/plant_schedule_slot/plant_schedule_slot.json:70
 #: automotive_manufacturing/traceability/doctype/recall_affected_unit/recall_affected_unit.json:42
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:241
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:242
 #: automotive_manufacturing/traceability/sidebar/traceability/traceability.json:27
 #: automotive_manufacturing/traceability/workspace/traceability/traceability.json:26
 msgid "Vehicle Unit"
@@ -4368,27 +4427,31 @@ msgid "Warehouse"
 msgstr ""
 
 #. Name of a role
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:228
-#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:275
-#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:176
-#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:205
-#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:187
-#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:283
-#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:342
-#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:187
-#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:138
-#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:269
-#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:280
-#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:341
-#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:127
-#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:121
-#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:235
-#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:218
-#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:261
-#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:177
-#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:214
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:292
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_order/engineering_change_order.json:238
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json:286
+#: automotive_manufacturing/product_engineering/doctype/vehicle_configuration/vehicle_configuration.json:188
+#: automotive_manufacturing/product_engineering/doctype/vehicle_model/vehicle_model.json:215
+#: automotive_manufacturing/product_engineering/doctype/vehicle_option_rule/vehicle_option_rule.json:197
+#: automotive_manufacturing/production_planning/doctype/planning_parameter_set/planning_parameter_set.json:293
+#: automotive_manufacturing/production_planning/doctype/planning_run/planning_run.json:353
+#: automotive_manufacturing/production_planning/doctype/plant_schedule/plant_schedule.json:198
+#: automotive_manufacturing/production_planning/doctype/plant_schedule_change/plant_schedule_change.json:147
+#: automotive_manufacturing/quality_control/doctype/quality_disposition/quality_disposition.json:280
+#: automotive_manufacturing/quality_control/doctype/quality_hold/quality_hold.json:291
+#: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:354
+#: automotive_manufacturing/shop_floor/doctype/andon_reason_code/andon_reason_code.json:138
+#: automotive_manufacturing/shop_floor/doctype/kanban_card/kanban_card.json:127
+#: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.json:240
+#: automotive_manufacturing/shop_floor/doctype/kanban_signal/kanban_signal.json:222
+#: automotive_manufacturing/shop_floor/doctype/shift_handover/shift_handover.json:271
+#: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:185
+#: automotive_manufacturing/traceability/doctype/recall_campaign/recall_campaign.json:224
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:302
 msgid "Warehouse Clerk"
+msgstr ""
+
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:116
+msgid "Warranty"
 msgstr ""
 
 #. Label of the warranty_months (Int) field in DocType 'Vehicle Model'
@@ -4397,17 +4460,20 @@ msgid "Warranty (Months)"
 msgstr ""
 
 #. Label of the warranty_end_date (Date) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:226
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:227
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:121
 msgid "Warranty End"
 msgstr ""
 
 #. Label of the warranty_reference (Data) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:232
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:233
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:125
 msgid "Warranty Reference"
 msgstr ""
 
 #. Label of the warranty_start_date (Date) field in DocType 'Vehicle Unit'
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:220
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:221
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:119
 msgid "Warranty Start"
 msgstr ""
 
@@ -4465,7 +4531,8 @@ msgstr ""
 #: automotive_manufacturing/shop_floor/doctype/andon_event/andon_event.json:152
 #: automotive_manufacturing/shop_floor/workspace/shop_floor/shop_floor.json:26
 #: automotive_manufacturing/traceability/doctype/genealogy_link/genealogy_link.json:111
-#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:108
+#: automotive_manufacturing/traceability/doctype/vehicle_unit/vehicle_unit.json:109
+#: automotive_manufacturing/traceability/print_format/vehicle_certificate/vehicle_certificate.json:91
 msgid "Work Order"
 msgstr ""
 

@@ -6,6 +6,10 @@ Runs with the bench's Python inside the development container:
 	cd ~/dev/frappe-bench/sites && ../env/bin/python /workspace/scripts/dev/i18n.py pot
 	... i18n.py po ja          # create or update locale/ja.po from the template
 	... i18n.py stats ja       # translated / total per app
+	... i18n.py fill ja        # untranslated entries from the other apps' catalogues
+	... i18n.py check ja       # every string in the code has a translation (CI)
+
+scripts/dev/i18n-host.sh runs the same commands without the containers.
 
 ``pot`` is Frappe's own extraction (``frappe.gettext.translate.generate_pot``: the same
 Babel extractors for Python, JavaScript, DocType/workspace JSON and templates) with a plain
@@ -68,15 +72,11 @@ def _init() -> None:
 	frappe.init(site=os.environ.get("SITE", "test.localhost"), sites_path=".")
 
 
-def pot() -> None:
+def _extract(app: str):
+	"""The app's message catalogue from its source (and, for the core app, the upstream
+	strings it translates for the whole site)."""
 	from babel.messages.extract import extract_from_dir
-	from frappe.gettext.translate import (
-		PYTHON_KEYWORDS,
-		_get_ignored_strings,
-		get_method_map,
-		new_catalog,
-		write_catalog,
-	)
+	from frappe.gettext.translate import PYTHON_KEYWORDS, _get_ignored_strings, get_method_map, new_catalog
 	from frappe.utils import get_bench_path
 
 	def directory_filter(dirpath) -> bool:
@@ -84,20 +84,86 @@ def pot() -> None:
 		name = os.path.basename(path)
 		return not (name.startswith((".", "_")) or any(skip in path for skip in SKIP))
 
-	default_map = get_method_map("frappe")
+	catalog = new_catalog(app)
+	ignored = _get_ignored_strings(app)
+	# the app's directory in the bench (a link to this repository), or I18N_APPS_DIR (the
+	# repository's apps/ when the bench's links do not resolve, as on the host)
+	apps_dir = os.environ.get("I18N_APPS_DIR") or os.path.join(get_bench_path(), "apps")
+	for filename, lineno, message, comments, context in extract_from_dir(
+		os.path.join(apps_dir, app), get_method_map(app) + get_method_map("frappe"),
+		directory_filter=directory_filter, keywords=PYTHON_KEYWORDS,
+	):
+		if message and (message, context) not in ignored:
+			catalog.add(message, locations=[(filename, lineno)], auto_comments=comments, context=context)
+	if app == "automotive_core":
+		_add_upstream(catalog)
+	return catalog
+
+
+def pot() -> None:
+	from frappe.gettext.translate import write_catalog
+
 	for app in APPS:
-		catalog = new_catalog(app)
-		ignored = _get_ignored_strings(app)
-		# walk the app through its link in the bench: extractors expect paths inside the bench
-		for filename, lineno, message, comments, context in extract_from_dir(
-			os.path.join(get_bench_path(), "apps", app), get_method_map(app) + default_map,
-			directory_filter=directory_filter, keywords=PYTHON_KEYWORDS,
-		):
-			if message and (message, context) not in ignored:
-				catalog.add(message, locations=[(filename, lineno)], auto_comments=comments, context=context)
-		if app == "automotive_core":
-			_add_upstream(catalog)
+		catalog = _extract(app)
 		print(f"{app}: {len(catalog)} messages -> {write_catalog(app, catalog)}")
+
+
+def _translations(locale: str) -> dict:
+	"""(msgid, context) -> translation across the custom apps' catalogues: Frappe merges
+	every app's catalogue into one dictionary per language."""
+	from frappe.gettext.translate import get_catalog
+
+	known = {}
+	for app in APPS:
+		for message in get_catalog(app, locale):
+			if message.id and message.string and (not isinstance(message.string, tuple) or all(message.string)):
+				known.setdefault((message.id, message.context), message.string)
+	return known
+
+
+def check(locale: str) -> None:
+	"""Fail when a string in the code has no translation in any of the catalogues: the
+	catalogue checks in lint.sh only see strings someone has already extracted."""
+	known = _translations(locale)
+	missing = 0
+	for app in APPS:
+		for message in _extract(app):
+			# a string with a context falls back to its plain translation, as Frappe does
+			if not message.id or (message.id, message.context) in known or (message.id, None) in known:
+				continue
+			missing += 1
+			where = ", ".join(f"{path}:{line}" for path, line in message.locations[:2])
+			print(f"{app}: untranslated {message.id!r}" + (f" [{message.context}]" if message.context else "")
+				+ f" ({where})")
+	if missing:
+		print(f"{missing} string(s) without a {locale} translation: i18n.py pot, po {locale}, fill {locale}, then translate")
+		sys.exit(1)
+	print(f"{locale}: every extracted string is translated")
+
+
+def fill(locale: str) -> None:
+	"""Fill each app's untranslated entries from the other catalogues (one translation per
+	string, as the glossary requires); what remains needs a translator."""
+	from frappe.gettext.translate import get_catalog, write_catalog
+
+	known = _translations(locale)
+	for app in APPS:
+		catalog = get_catalog(app, locale)
+		filled = left = 0
+		for message in catalog:
+			if not message.id or message.string:
+				continue
+			value = known.get((message.id, message.context))
+			if value is None and message.context:
+				value = known.get((message.id, None))
+			if value is None:
+				left += 1
+				continue
+			message.string = value
+			message.flags.discard("fuzzy")
+			filled += 1
+		write_catalog(app, catalog, locale)
+		print(f"{app}: filled {filled}, {left} to translate")
 
 
 def _add_upstream(catalog) -> None:
@@ -142,4 +208,4 @@ def stats(locale: str) -> None:
 if __name__ == "__main__":
 	_init()
 	command, *args = sys.argv[1:] or ["pot"]
-	{"pot": pot, "po": po, "stats": stats}[command](*args)
+	{"pot": pot, "po": po, "stats": stats, "fill": fill, "check": check}[command](*args)

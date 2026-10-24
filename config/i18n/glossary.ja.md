@@ -10,6 +10,17 @@ entities, product and company names (Hinode …), item and document codes, and t
 abbreviations ASN, BOM, CAPA, ECO, ECR, EDI, KPI, MES, MRP, OEE, OTIF, VIN, WIP, API, HMAC
 (a Japanese gloss in parentheses is fine on first use in a sentence).
 
+Updating the catalogues (`i18n.py` runs in the bench container, `scripts/dev/i18n-host.sh`
+runs the same commands on the host from the bootstrapped bench's sources):
+
+1. `i18n.py pot` extracts the strings: Python, JavaScript, DocType and workspace JSON,
+   templates and print formats.
+2. `i18n.py po ja` merges them into each app's `ja.po`; `i18n.py fill ja` copies the
+   translations another app's catalogue already has (Frappe keeps one per string).
+3. Translate what remains with this glossary. `i18n.py check ja` must then report every
+   string translated: CI runs it in the integration job, and `scripts/ci/lint.sh` checks
+   completeness, placeholders and tags.
+
 | English | 日本語 |
 |---|---|
 | Approval / Approve / Reject | 承認 / 承認する / 却下する |

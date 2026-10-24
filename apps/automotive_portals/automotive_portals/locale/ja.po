@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Portals VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 15:10+0919\n"
+"POT-Creation-Date: 2026-10-24 16:44+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -16,520 +16,520 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
-#: automotive_portals/public/js/portal/supplier.js:280
-#: automotive_portals/public/js/portal/supplier.js:433
+#: automotive_portals/public/js/portal/supplier.js:284
+#: automotive_portals/public/js/portal/supplier.js:437
 msgid "ASN"
 msgstr "ASN"
 
-#: automotive_portals/public/js/portal/supplier.js:178
+#: automotive_portals/public/js/portal/supplier.js:182
 msgid "Accept as ordered"
 msgstr "注文どおり受け入れる"
 
-#: automotive_portals/public/js/portal/dealer.js:277
+#: automotive_portals/public/js/portal/dealer.js:282
 #, python-brace-format
 msgid "Accept delivery {0}"
 msgstr "{0}の納車受領"
 
-#: automotive_portals/public/js/portal/supplier.js:179
+#: automotive_portals/public/js/portal/supplier.js:183
 msgid "Accept with revised quantities or dates"
 msgstr "数量または納期を変更して受け入れる"
 
-#: automotive_portals/public/js/portal/supplier.js:434
+#: automotive_portals/public/js/portal/supplier.js:438
 msgid "Accepted"
 msgstr "受理"
 
-#: automotive_portals/public/js/portal/dealer.js:283
+#: automotive_portals/public/js/portal/dealer.js:288
 msgid "Accepted in good condition"
 msgstr "良好な状態で受領"
 
-#: automotive_portals/public/js/portal/dealer.js:284
+#: automotive_portals/public/js/portal/dealer.js:289
 msgid "Accepted with damage"
 msgstr "損傷ありで受領"
 
-#: automotive_portals/public/js/portal/supplier.js:234
+#: automotive_portals/public/js/portal/supplier.js:238
 msgid "Acknowledge schedule"
 msgstr "受領を確認"
 
-#: automotive_portals/public/js/portal/supplier.js:173
+#: automotive_portals/public/js/portal/supplier.js:177
 msgid "Acknowledge this order"
 msgstr "この注文への回答"
 
-#: automotive_portals/public/js/portal/supplier.js:156
-#: automotive_portals/public/js/portal/supplier.js:201
+#: automotive_portals/public/js/portal/supplier.js:160
+#: automotive_portals/public/js/portal/supplier.js:205
 msgid "Acknowledgement"
 msgstr "注文請書"
 
-#: automotive_portals/public/js/portal/supplier.js:192
+#: automotive_portals/public/js/portal/supplier.js:196
 #, python-brace-format
 msgid "Acknowledgement {0} sent ({1})."
 msgstr "注文請書{0}を送信しました（回答：{1}）。"
 
-#: automotive_portals/api/dealer.py:115
+#: automotive_portals/api/dealer.py:122
 msgid "Add at least one vehicle."
 msgstr "車両を1台以上追加してください。"
 
-#: automotive_portals/public/js/portal/supplier.js:404
+#: automotive_portals/public/js/portal/supplier.js:408
 msgid "Add documents"
 msgstr "書類を追加"
 
-#: automotive_portals/public/js/portal/dealer.js:111
+#: automotive_portals/public/js/portal/dealer.js:116
 msgid "Add to order"
 msgstr "注文に追加"
 
-#: automotive_portals/public/js/portal/supplier.js:276
+#: automotive_portals/public/js/portal/supplier.js:280
 msgid "Advance shipping notices"
 msgstr "出荷事前通知（ASN）"
 
-#: automotive_portals/public/js/portal/supplier.js:144
+#: automotive_portals/public/js/portal/supplier.js:148
 msgid "All open and recent orders"
 msgstr "未完了の注文と最近の注文"
 
-#: automotive_portals/public/js/portal/dealer.js:20
+#: automotive_portals/public/js/portal/dealer.js:24
 msgid "Allocated Vehicles"
 msgstr "引当車両"
 
-#: automotive_portals/public/js/portal/dealer.js:33
+#: automotive_portals/public/js/portal/dealer.js:38
 msgid "Allocated vehicles"
 msgstr "引当車両"
 
-#: automotive_portals/public/js/portal/dealer.js:224
-#: automotive_portals/public/js/portal/dealer.js:325
-#: automotive_portals/public/js/portal/supplier.js:450
-#: automotive_portals/public/js/portal/supplier.js:464
+#: automotive_portals/public/js/portal/dealer.js:229
+#: automotive_portals/public/js/portal/dealer.js:330
+#: automotive_portals/public/js/portal/supplier.js:454
+#: automotive_portals/public/js/portal/supplier.js:468
 msgid "Amount"
 msgstr "金額"
 
-#: automotive_portals/public/js/portal/supplier.js:274
-#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:278
+#: automotive_portals/public/js/portal/supplier.js:322
 msgid "Announce a shipment"
 msgstr "出荷を通知"
 
-#: automotive_portals/public/js/portal/supplier.js:144
+#: automotive_portals/public/js/portal/supplier.js:148
 msgid "Awaiting acknowledgement"
 msgstr "注文請書待ち"
 
-#: automotive_portals/public/js/portal/supplier.js:119
+#: automotive_portals/public/js/portal/supplier.js:123
 msgid "Back to RFQs"
 msgstr "見積依頼一覧に戻る"
 
-#: automotive_portals/public/js/portal/dealer.js:276
+#: automotive_portals/public/js/portal/dealer.js:281
 msgid "Back to deliveries"
 msgstr "納車一覧に戻る"
 
-#: automotive_portals/public/js/portal/dealer.js:209
-#: automotive_portals/public/js/portal/supplier.js:196
+#: automotive_portals/public/js/portal/dealer.js:214
+#: automotive_portals/public/js/portal/supplier.js:200
 msgid "Back to orders"
 msgstr "注文一覧に戻る"
 
-#: automotive_portals/public/js/portal/supplier.js:236
+#: automotive_portals/public/js/portal/supplier.js:240
 msgid "Back to schedules"
 msgstr "納入計画一覧に戻る"
 
-#: automotive_portals/public/js/portal/supplier.js:294
-#: automotive_portals/public/js/portal/supplier.js:317
-#: automotive_portals/public/js/portal/supplier.js:380
+#: automotive_portals/public/js/portal/supplier.js:298
+#: automotive_portals/public/js/portal/supplier.js:321
+#: automotive_portals/public/js/portal/supplier.js:384
 msgid "Back to shipments"
 msgstr "出荷一覧に戻る"
 
-#: automotive_portals/public/js/portal/dealer.js:191
+#: automotive_portals/public/js/portal/dealer.js:196
 msgid "Cancel the order"
 msgstr "注文の取消"
 
-#: automotive_portals/public/js/portal/supplier.js:284
-#: automotive_portals/public/js/portal/supplier.js:327
-#: automotive_portals/public/js/portal/supplier.js:387
+#: automotive_portals/public/js/portal/supplier.js:288
+#: automotive_portals/public/js/portal/supplier.js:331
+#: automotive_portals/public/js/portal/supplier.js:391
 msgid "Carrier"
 msgstr "運送会社"
 
-#: automotive_portals/public/js/portal/dealer.js:188
-#: automotive_portals/public/js/portal/dealer.js:243
+#: automotive_portals/public/js/portal/dealer.js:193
+#: automotive_portals/public/js/portal/dealer.js:248
 msgid "Change"
 msgstr "変更"
 
-#: automotive_portals/public/js/portal/dealer.js:190
+#: automotive_portals/public/js/portal/dealer.js:195
 msgid "Change delivery date"
 msgstr "納期の変更"
 
-#: automotive_portals/public/js/portal/dealer.js:189
+#: automotive_portals/public/js/portal/dealer.js:194
 msgid "Change quantity"
 msgstr "数量の変更"
 
-#: automotive_portals/public/js/portal/dealer.js:240
+#: automotive_portals/public/js/portal/dealer.js:245
 msgid "Change requests"
 msgstr "変更依頼"
 
-#: automotive_portals/public/js/portal/dealer.js:206
+#: automotive_portals/public/js/portal/dealer.js:211
 #, python-brace-format
 msgid "Change {0}: {1}"
 msgstr "変更依頼{0}：{1}"
 
-#: automotive_portals/public/js/portal/dealer.js:101
+#: automotive_portals/public/js/portal/dealer.js:106
 msgid "Check configuration"
 msgstr "仕様構成を確認"
 
-#: automotive_portals/public/js/portal/dealer.js:105
+#: automotive_portals/public/js/portal/dealer.js:110
 msgid "Check the configuration first."
 msgstr "先に仕様構成を確認してください。"
 
-#: automotive_portals/public/js/portal/dealer.js:64
+#: automotive_portals/public/js/portal/dealer.js:69
 msgid "Choose…"
 msgstr "選択してください…"
 
-#: automotive_portals/public/js/portal/dealer.js:18
+#: automotive_portals/public/js/portal/dealer.js:22
 msgid "Configure & Order"
 msgstr "仕様選択・注文"
 
-#: automotive_portals/public/js/portal/dealer.js:153
+#: automotive_portals/public/js/portal/dealer.js:158
 msgid "Configure a vehicle"
 msgstr "車両の仕様を選択"
 
-#: automotive_portals/public/js/portal/dealer.js:278
+#: automotive_portals/public/js/portal/dealer.js:283
 msgid "Confirm"
 msgstr "確認"
 
-#: automotive_portals/public/js/portal/supplier.js:167
+#: automotive_portals/public/js/portal/supplier.js:171
 #, python-brace-format
 msgid "Confirmed quantity for {0}"
 msgstr "{0}の回答数量"
 
-#: automotive_portals/public/js/portal/dealer.js:324
+#: automotive_portals/public/js/portal/dealer.js:329
 msgid "Credit note"
 msgstr "クレジットノート"
 
-#: automotive_portals/public/js/portal/dealer.js:136
+#: automotive_portals/public/js/portal/dealer.js:141
 msgid "Customer order"
 msgstr "顧客注文"
 
-#: automotive_portals/public/js/portal/dealer.js:286
+#: automotive_portals/public/js/portal/dealer.js:291
 msgid "Damage or rejection notes"
 msgstr "損傷または却下の詳細"
 
-#: automotive_portals/public/js/portal/dealer.js:304
-#: automotive_portals/public/js/portal/dealer.js:323
-#: automotive_portals/public/js/portal/supplier.js:65
-#: automotive_portals/public/js/portal/supplier.js:76
-#: automotive_portals/public/js/portal/supplier.js:122
-#: automotive_portals/public/js/portal/supplier.js:152
-#: automotive_portals/public/js/portal/supplier.js:199
-#: automotive_portals/public/js/portal/supplier.js:432
-#: automotive_portals/public/js/portal/supplier.js:463
+#: automotive_portals/public/js/portal/dealer.js:309
+#: automotive_portals/public/js/portal/dealer.js:328
+#: automotive_portals/public/js/portal/supplier.js:69
+#: automotive_portals/public/js/portal/supplier.js:80
+#: automotive_portals/public/js/portal/supplier.js:126
+#: automotive_portals/public/js/portal/supplier.js:156
+#: automotive_portals/public/js/portal/supplier.js:203
+#: automotive_portals/public/js/portal/supplier.js:436
+#: automotive_portals/public/js/portal/supplier.js:467
 msgid "Date"
 msgstr "日付"
 
-#: automotive_portals/public/js/portal/dealer.js:14
+#: automotive_portals/public/js/portal/dealer.js:17
 #: automotive_portals/www/dealer_portal.py:10
 msgid "Dealer Portal"
 msgstr "ディーラーポータル"
 
-#: automotive_portals/public/js/portal/dealer.js:164
+#: automotive_portals/public/js/portal/dealer.js:169
 msgid "Dealer orders"
 msgstr "販売店注文"
 
-#: automotive_portals/public/js/portal/dealer.js:21
-#: automotive_portals/public/js/portal/dealer.js:300
+#: automotive_portals/public/js/portal/dealer.js:25
+#: automotive_portals/public/js/portal/dealer.js:305
 msgid "Deliveries"
 msgstr "納車"
 
-#: automotive_portals/public/js/portal/dealer.js:303
+#: automotive_portals/public/js/portal/dealer.js:308
 msgid "Delivery"
 msgstr "納品"
 
-#: automotive_portals/public/js/portal/dealer.js:282
+#: automotive_portals/public/js/portal/dealer.js:287
 msgid "Delivery Condition"
 msgstr "納車時の状態"
 
-#: automotive_portals/public/js/portal/supplier.js:20
+#: automotive_portals/public/js/portal/supplier.js:24
 msgid "Delivery Schedules"
 msgstr "納入計画"
 
-#: automotive_portals/public/js/portal/supplier.js:243
+#: automotive_portals/public/js/portal/supplier.js:247
 msgid "Delivery date"
 msgstr "納入日"
 
-#: automotive_portals/public/js/portal/supplier.js:252
+#: automotive_portals/public/js/portal/supplier.js:256
 msgid "Delivery schedules"
 msgstr "納入計画一覧"
 
-#: automotive_portals/public/js/portal/dealer.js:295
+#: automotive_portals/public/js/portal/dealer.js:300
 #, python-brace-format
 msgid "Delivery {0} recorded as {1}."
 msgstr "{0}の納車受領を「{1}」として記録しました。"
 
-#: automotive_portals/public/js/portal/dealer.js:137
+#: automotive_portals/public/js/portal/dealer.js:142
 msgid "Demonstrator"
 msgstr "試乗車"
 
-#: automotive_portals/public/js/portal/dealer.js:291
+#: automotive_portals/public/js/portal/dealer.js:296
 msgid "Describe the damage or the reason."
 msgstr "損傷の内容または却下の理由を入力してください。"
 
-#: automotive_portals/public/js/portal/dealer.js:345
-#: automotive_portals/public/js/portal/supplier.js:130
-#: automotive_portals/public/js/portal/supplier.js:207
+#: automotive_portals/public/js/portal/dealer.js:351
+#: automotive_portals/public/js/portal/supplier.js:134
+#: automotive_portals/public/js/portal/supplier.js:211
 msgid "Description"
 msgstr "説明"
 
-#: automotive_portals/public/js/portal/supplier.js:416
+#: automotive_portals/public/js/portal/supplier.js:420
 msgid "Discrepancy"
 msgstr "差異"
 
-#: automotive_portals/public/js/portal/supplier.js:374
+#: automotive_portals/public/js/portal/supplier.js:378
 msgid "Documents uploaded."
 msgstr "書類をアップロードしました。"
 
-#: automotive_portals/public/js/portal/dealer.js:327
-#: automotive_portals/public/js/portal/supplier.js:452
+#: automotive_portals/public/js/portal/dealer.js:332
+#: automotive_portals/public/js/portal/supplier.js:456
 msgid "Due"
 msgstr "支払期日"
 
-#: automotive_portals/public/js/portal/dealer.js:121
+#: automotive_portals/public/js/portal/dealer.js:126
 msgid "Earliest delivery"
 msgstr "最短納期"
 
-#: automotive_portals/public/js/portal/dealer.js:246
+#: automotive_portals/public/js/portal/dealer.js:251
 msgid "Effect"
 msgstr "結果"
 
-#: automotive_portals/api/supplier.py:294
+#: automotive_portals/api/supplier.py:300
 msgid "Every quoted line needs a positive quantity and price."
 msgstr "見積対象の各明細には、0より大きい数量と価格が必要です。"
 
-#: automotive_portals/public/js/portal/supplier.js:283
-#: automotive_portals/public/js/portal/supplier.js:386
-#: automotive_portals/public/js/portal/supplier.js:419
+#: automotive_portals/public/js/portal/supplier.js:287
+#: automotive_portals/public/js/portal/supplier.js:390
+#: automotive_portals/public/js/portal/supplier.js:423
 msgid "Expected"
 msgstr "予定"
 
-#: automotive_portals/public/js/portal/supplier.js:325
+#: automotive_portals/public/js/portal/supplier.js:329
 msgid "Expected arrival"
 msgstr "到着予定日"
 
-#: automotive_portals/public/js/portal/supplier.js:245
+#: automotive_portals/public/js/portal/supplier.js:249
 msgid "Firm"
 msgstr "確定"
 
-#: automotive_portals/public/js/portal/supplier.js:245
+#: automotive_portals/public/js/portal/supplier.js:249
 msgid "Forecast"
 msgstr "内示"
 
-#: automotive_portals/public/js/portal/supplier.js:427
-#: automotive_portals/public/js/portal/supplier.js:428
+#: automotive_portals/public/js/portal/supplier.js:431
+#: automotive_portals/public/js/portal/supplier.js:432
 msgid "Goods receipts"
 msgstr "入荷実績"
 
-#: automotive_portals/public/js/portal/supplier.js:259
+#: automotive_portals/public/js/portal/supplier.js:263
 msgid "Horizon"
 msgstr "対象期間"
 
-#: automotive_portals/public/js/portal/dealer.js:263
+#: automotive_portals/public/js/portal/dealer.js:268
 msgid "Inventory"
 msgstr "在庫"
 
-#: automotive_portals/public/js/portal/dealer.js:265
-#: automotive_portals/public/js/portal/dealer.js:322
-#: automotive_portals/public/js/portal/dealer.js:324
+#: automotive_portals/public/js/portal/dealer.js:270
+#: automotive_portals/public/js/portal/dealer.js:327
+#: automotive_portals/public/js/portal/dealer.js:329
 msgid "Invoice"
 msgstr "請求書"
 
-#: automotive_portals/public/js/portal/supplier.js:449
+#: automotive_portals/public/js/portal/supplier.js:453
 msgid "Invoice date"
 msgstr "請求日"
 
-#: automotive_portals/public/js/portal/supplier.js:444
-#: automotive_portals/public/js/portal/supplier.js:445
+#: automotive_portals/public/js/portal/supplier.js:448
+#: automotive_portals/public/js/portal/supplier.js:449
 msgid "Invoice status"
 msgstr "請求書の状況"
 
-#: automotive_portals/public/js/portal/dealer.js:22
+#: automotive_portals/public/js/portal/dealer.js:26
 msgid "Invoices"
 msgstr "請求書"
 
-#: automotive_portals/public/js/portal/supplier.js:23
+#: automotive_portals/public/js/portal/supplier.js:27
 msgid "Invoices & Remittances"
 msgstr "請求書・送金通知"
 
-#: automotive_portals/public/js/portal/dealer.js:319
+#: automotive_portals/public/js/portal/dealer.js:324
 msgid "Invoices and credit notes"
 msgstr "請求書・クレジットノート"
 
-#: automotive_portals/public/js/portal/supplier.js:466
+#: automotive_portals/public/js/portal/supplier.js:470
 msgid "Invoices settled"
 msgstr "支払対象の請求書"
 
-#: automotive_portals/public/js/portal/supplier.js:129
-#: automotive_portals/public/js/portal/supplier.js:206
-#: automotive_portals/public/js/portal/supplier.js:242
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:394
-#: automotive_portals/public/js/portal/supplier.js:417
+#: automotive_portals/public/js/portal/supplier.js:133
+#: automotive_portals/public/js/portal/supplier.js:210
+#: automotive_portals/public/js/portal/supplier.js:246
+#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:398
+#: automotive_portals/public/js/portal/supplier.js:421
 msgid "Item"
 msgstr "品目"
 
-#: automotive_portals/public/js/portal/supplier.js:41
-#: automotive_portals/public/js/portal/supplier.js:42
+#: automotive_portals/public/js/portal/supplier.js:45
+#: automotive_portals/public/js/portal/supplier.js:46
 msgid "Latest notices"
 msgstr "最新のお知らせ"
 
-#: automotive_portals/public/js/portal/supplier.js:102
+#: automotive_portals/public/js/portal/supplier.js:106
 msgid "Lead time (days)"
 msgstr "リードタイム（日数）"
 
-#: automotive_portals/public/js/portal/dealer.js:220
+#: automotive_portals/public/js/portal/dealer.js:225
 msgid "Line No."
 msgstr "行番号"
 
-#: automotive_portals/public/js/portal/core.js:299
-#: automotive_portals/www/dealer-portal.html:10
-#: automotive_portals/www/supplier-portal.html:10
+#: automotive_portals/public/js/portal/core.js:302
+#: automotive_portals/www/dealer-portal.html:11
+#: automotive_portals/www/supplier-portal.html:11
 msgid "Loading…"
 msgstr "読み込み中…"
 
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:397
+#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:401
 msgid "Lot"
 msgstr "ロット"
 
-#: automotive_portals/public/js/portal/supplier.js:308
+#: automotive_portals/public/js/portal/supplier.js:312
 #, python-brace-format
 msgid "Lot for {0}"
 msgstr "{0}のロット"
 
-#: automotive_portals/public/js/portal/supplier.js:490
+#: automotive_portals/public/js/portal/supplier.js:494
 msgid "Mark as read"
 msgstr "既読にする"
 
-#: automotive_portals/public/js/portal/supplier.js:453
+#: automotive_portals/public/js/portal/supplier.js:457
 msgid "Matching"
 msgstr "照合"
 
-#: automotive_portals/public/js/portal/supplier.js:480
+#: automotive_portals/public/js/portal/supplier.js:484
 msgid "Message"
 msgstr "メッセージ"
 
-#: automotive_portals/public/js/portal/dealer.js:50
-#: automotive_portals/public/js/portal/dealer.js:117
-#: automotive_portals/public/js/portal/dealer.js:221
+#: automotive_portals/public/js/portal/dealer.js:55
+#: automotive_portals/public/js/portal/dealer.js:122
+#: automotive_portals/public/js/portal/dealer.js:226
 msgid "Model"
 msgstr "車種"
 
-#: automotive_portals/public/js/portal/supplier.js:132
+#: automotive_portals/public/js/portal/supplier.js:136
 msgid "Needed by"
 msgstr "必要日"
 
-#: automotive_portals/public/js/portal/dealer.js:155
+#: automotive_portals/public/js/portal/dealer.js:160
 msgid "New Order"
 msgstr "新規注文"
 
-#: automotive_portals/public/js/portal/dealer.js:196
+#: automotive_portals/public/js/portal/dealer.js:201
 msgid "New delivery date"
 msgstr "変更後の納期"
 
-#: automotive_portals/public/js/portal/dealer.js:195
+#: automotive_portals/public/js/portal/dealer.js:200
 msgid "New quantity"
 msgstr "変更後の数量"
 
-#: automotive_portals/public/js/portal/dealer.js:338
+#: automotive_portals/public/js/portal/dealer.js:344
 msgid "New support request"
 msgstr "新規サポート依頼"
 
-#: automotive_portals/public/js/portal/dealer.js:248
+#: automotive_portals/public/js/portal/dealer.js:253
 msgid "No change requests."
 msgstr "変更依頼はありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:312
+#: automotive_portals/public/js/portal/dealer.js:317
 msgid "No deliveries yet."
 msgstr "納車はまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:262
+#: automotive_portals/public/js/portal/supplier.js:266
 msgid "No delivery schedules."
 msgstr "納入計画はありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:425
+#: automotive_portals/public/js/portal/supplier.js:429
 msgid "No discrepancies."
 msgstr "入荷差異はありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:403
+#: automotive_portals/public/js/portal/supplier.js:407
 msgid "No documents attached."
 msgstr "添付書類はありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:330
+#: automotive_portals/public/js/portal/dealer.js:335
 msgid "No invoices yet."
 msgstr "請求書はまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:456
+#: automotive_portals/public/js/portal/supplier.js:460
 msgid "No invoices."
 msgstr "請求書はありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:47
+#: automotive_portals/public/js/portal/dealer.js:52
 msgid "No models are open for ordering."
 msgstr "現在ご注文いただける車種はありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:49
-#: automotive_portals/public/js/portal/supplier.js:492
+#: automotive_portals/public/js/portal/supplier.js:53
+#: automotive_portals/public/js/portal/supplier.js:496
 msgid "No notices."
 msgstr "お知らせはありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:176
+#: automotive_portals/public/js/portal/dealer.js:181
 msgid "No orders yet."
 msgstr "注文はまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:158
+#: automotive_portals/public/js/portal/supplier.js:162
 msgid "No orders."
 msgstr "注文はありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:468
+#: automotive_portals/public/js/portal/supplier.js:472
 msgid "No payments yet."
 msgstr "支払いはまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:81
+#: automotive_portals/public/js/portal/supplier.js:85
 msgid "No quotations yet."
 msgstr "見積はまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:437
+#: automotive_portals/public/js/portal/supplier.js:441
 msgid "No receipts yet."
 msgstr "入荷実績はまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:69
+#: automotive_portals/public/js/portal/supplier.js:73
 msgid "No requests for quotation."
 msgstr "見積依頼はありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:287
+#: automotive_portals/public/js/portal/supplier.js:291
 msgid "No shipments announced."
 msgstr "通知済みの出荷はありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:364
+#: automotive_portals/public/js/portal/dealer.js:370
 msgid "No support requests."
 msgstr "サポート依頼はありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:125
+#: automotive_portals/public/js/portal/dealer.js:130
 msgid "No vehicles added yet."
 msgstr "車両はまだ追加されていません。"
 
-#: automotive_portals/public/js/portal/dealer.js:268
+#: automotive_portals/public/js/portal/dealer.js:273
 msgid "No vehicles allocated."
 msgstr "引き当てられた車両はありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:237
+#: automotive_portals/public/js/portal/dealer.js:242
 msgid "No vehicles assigned yet."
 msgstr "割り当てられた車両はまだありません。"
 
-#: automotive_portals/public/js/portal/dealer.js:64
+#: automotive_portals/public/js/portal/dealer.js:69
 msgid "None"
 msgstr "なし"
 
-#: automotive_portals/public/js/portal/dealer.js:344
+#: automotive_portals/public/js/portal/dealer.js:350
 msgid "Not about a specific vehicle"
 msgstr "特定の車両を指定しない"
 
-#: automotive_portals/api/dealer.py:26 automotive_portals/api/dealer.py:224
-#: automotive_portals/api/supplier.py:29 automotive_portals/api/supplier.py:69
-#: automotive_portals/api/supplier.py:253
+#: automotive_portals/api/dealer.py:27 automotive_portals/api/dealer.py:231
+#: automotive_portals/api/supplier.py:30 automotive_portals/api/supplier.py:75
+#: automotive_portals/api/supplier.py:259
 msgid "Not found."
 msgstr "見つかりませんでした。"
 
-#: automotive_portals/public/js/portal/dealer.js:40
+#: automotive_portals/public/js/portal/dealer.js:45
 msgid "Nothing outstanding."
 msgstr "未払いの残高はありません。"
 
@@ -537,305 +537,305 @@ msgstr "未払いの残高はありません。"
 msgid "Nothing to show yet."
 msgstr "表示する内容はまだありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:24
-#: automotive_portals/public/js/portal/supplier.js:475
+#: automotive_portals/public/js/portal/supplier.js:28
+#: automotive_portals/public/js/portal/supplier.js:479
 msgid "Notices"
 msgstr "お知らせ"
 
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Open"
 msgstr "オープン"
 
-#: automotive_portals/public/js/portal/supplier.js:36
+#: automotive_portals/public/js/portal/supplier.js:40
 msgid "Open RFQs"
 msgstr "未回答の見積依頼"
 
-#: automotive_portals/public/js/portal/supplier.js:38
+#: automotive_portals/public/js/portal/supplier.js:42
 msgid "Open discrepancies"
 msgstr "未解決の入荷差異"
 
-#: automotive_portals/public/js/portal/dealer.js:35
+#: automotive_portals/public/js/portal/dealer.js:40
 msgid "Open invoices"
 msgstr "未払いの請求書"
 
-#: automotive_portals/public/js/portal/supplier.js:312
-#: automotive_portals/public/js/portal/supplier.js:313
+#: automotive_portals/public/js/portal/supplier.js:316
+#: automotive_portals/public/js/portal/supplier.js:317
 msgid "Open order lines"
 msgstr "未完了の注文明細"
 
-#: automotive_portals/public/js/portal/dealer.js:32
-#: automotive_portals/public/js/portal/supplier.js:34
+#: automotive_portals/public/js/portal/dealer.js:37
+#: automotive_portals/public/js/portal/supplier.js:38
 msgid "Open orders"
 msgstr "未完了の注文"
 
-#: automotive_portals/public/js/portal/dealer.js:36
+#: automotive_portals/public/js/portal/dealer.js:41
 msgid "Open support requests"
 msgstr "対応中のサポート依頼"
 
-#: automotive_portals/public/js/portal/dealer.js:360
+#: automotive_portals/public/js/portal/dealer.js:366
 msgid "Opened On"
 msgstr "受付日"
 
-#: automotive_portals/public/js/portal/dealer.js:168
+#: automotive_portals/public/js/portal/dealer.js:173
 msgid "Order No."
 msgstr "注文番号"
 
-#: automotive_portals/public/js/portal/dealer.js:192
+#: automotive_portals/public/js/portal/dealer.js:197
 msgid "Order line"
 msgstr "注文明細"
 
-#: automotive_portals/public/js/portal/supplier.js:203
+#: automotive_portals/public/js/portal/supplier.js:207
 msgid "Order lines"
 msgstr "注文明細"
 
-#: automotive_portals/public/js/portal/dealer.js:135
+#: automotive_portals/public/js/portal/dealer.js:140
 msgid "Order type"
 msgstr "注文種別"
 
-#: automotive_portals/public/js/portal/dealer.js:210
-#: automotive_portals/public/js/portal/supplier.js:197
+#: automotive_portals/public/js/portal/dealer.js:215
+#: automotive_portals/public/js/portal/supplier.js:201
 #, python-brace-format
 msgid "Order {0}"
 msgstr "注文{0}"
 
-#: automotive_portals/public/js/portal/dealer.js:148
+#: automotive_portals/public/js/portal/dealer.js:153
 #, python-brace-format
 msgid "Order {0} placed ({1})."
 msgstr "ご注文{0}を受け付けました（合計{1}）。"
 
-#: automotive_portals/public/js/portal/supplier.js:208
+#: automotive_portals/public/js/portal/supplier.js:212
 msgid "Ordered"
 msgstr "発注済み"
 
-#: automotive_portals/public/js/portal/dealer.js:217
+#: automotive_portals/public/js/portal/dealer.js:222
 msgid "Ordered vehicles"
 msgstr "注文車両"
 
-#: automotive_portals/public/js/portal/dealer.js:19
-#: automotive_portals/public/js/portal/supplier.js:19
+#: automotive_portals/public/js/portal/dealer.js:23
+#: automotive_portals/public/js/portal/supplier.js:23
 msgid "Orders"
 msgstr "注文"
 
-#: automotive_portals/public/js/portal/supplier.js:33
+#: automotive_portals/public/js/portal/supplier.js:37
 msgid "Orders awaiting acknowledgement"
 msgstr "注文請書待ちの注文"
 
-#: automotive_portals/public/js/portal/dealer.js:326
-#: automotive_portals/public/js/portal/supplier.js:451
+#: automotive_portals/public/js/portal/dealer.js:331
+#: automotive_portals/public/js/portal/supplier.js:455
 msgid "Outstanding"
 msgstr "未払額"
 
-#: automotive_portals/public/js/portal/dealer.js:38
+#: automotive_portals/public/js/portal/dealer.js:43
 msgid "Outstanding balance"
 msgstr "未払残高"
 
-#: automotive_portals/public/js/portal/dealer.js:17
-#: automotive_portals/public/js/portal/supplier.js:17
+#: automotive_portals/public/js/portal/dealer.js:21
+#: automotive_portals/public/js/portal/supplier.js:21
 msgid "Overview"
 msgstr "概要"
 
-#: automotive_portals/public/js/portal/supplier.js:329
+#: automotive_portals/public/js/portal/supplier.js:333
 msgid "Packages"
 msgstr "梱包数"
 
-#: automotive_portals/public/js/portal/supplier.js:462
+#: automotive_portals/public/js/portal/supplier.js:466
 msgid "Payment"
 msgstr "支払"
 
-#: automotive_portals/public/js/portal/dealer.js:130
+#: automotive_portals/public/js/portal/dealer.js:135
 msgid "Place order"
 msgstr "注文する"
 
-#: automotive_portals/public/js/portal/dealer.js:129
+#: automotive_portals/public/js/portal/dealer.js:134
 msgid "Place the order"
 msgstr "注文の確定"
 
-#: automotive_portals/public/js/portal/supplier.js:257
+#: automotive_portals/public/js/portal/supplier.js:261
 msgid "Plant"
 msgstr "工場"
 
-#: automotive_portals/public/js/portal/dealer.js:120
-#: automotive_portals/public/js/portal/supplier.js:209
+#: automotive_portals/public/js/portal/dealer.js:125
+#: automotive_portals/public/js/portal/supplier.js:213
 msgid "Price"
 msgstr "価格"
 
-#: automotive_portals/public/js/portal/dealer.js:361
+#: automotive_portals/public/js/portal/dealer.js:367
 msgid "Priority"
 msgstr "優先度"
 
-#: automotive_portals/public/js/portal/dealer.js:233
+#: automotive_portals/public/js/portal/dealer.js:238
 msgid "Production"
 msgstr "生産"
 
-#: automotive_portals/public/js/portal/dealer.js:172
-#: automotive_portals/public/js/portal/dealer.js:214
-#: automotive_portals/public/js/portal/supplier.js:211
+#: automotive_portals/public/js/portal/dealer.js:177
+#: automotive_portals/public/js/portal/dealer.js:219
+#: automotive_portals/public/js/portal/supplier.js:215
 msgid "Promised"
 msgstr "回答納期"
 
-#: automotive_portals/public/js/portal/supplier.js:169
+#: automotive_portals/public/js/portal/supplier.js:173
 #, python-brace-format
 msgid "Promised date for {0}"
 msgstr "{0}の回答納期"
 
-#: automotive_portals/public/js/portal/supplier.js:151
-#: automotive_portals/public/js/portal/supplier.js:246
-#: automotive_portals/public/js/portal/supplier.js:314
-#: automotive_portals/public/js/portal/supplier.js:393
+#: automotive_portals/public/js/portal/supplier.js:155
+#: automotive_portals/public/js/portal/supplier.js:250
+#: automotive_portals/public/js/portal/supplier.js:318
+#: automotive_portals/public/js/portal/supplier.js:397
 msgid "Purchase Order"
 msgstr "発注"
 
-#: automotive_portals/public/js/portal/supplier.js:147
+#: automotive_portals/public/js/portal/supplier.js:151
 msgid "Purchase orders"
 msgstr "発注一覧"
 
-#: automotive_portals/public/js/portal/dealer.js:234
+#: automotive_portals/public/js/portal/dealer.js:239
 msgid "Quality"
 msgstr "品質"
 
-#: automotive_portals/public/js/portal/dealer.js:53
-#: automotive_portals/public/js/portal/dealer.js:119
-#: automotive_portals/public/js/portal/dealer.js:223
-#: automotive_portals/public/js/portal/supplier.js:131
-#: automotive_portals/public/js/portal/supplier.js:244
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/dealer.js:58
+#: automotive_portals/public/js/portal/dealer.js:124
+#: automotive_portals/public/js/portal/dealer.js:228
+#: automotive_portals/public/js/portal/supplier.js:135
+#: automotive_portals/public/js/portal/supplier.js:248
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Quantity"
 msgstr "数量"
 
-#: automotive_portals/public/js/portal/supplier.js:92
-#: automotive_portals/public/js/portal/supplier.js:306
+#: automotive_portals/public/js/portal/supplier.js:96
+#: automotive_portals/public/js/portal/supplier.js:310
 #, python-brace-format
 msgid "Quantity for {0}"
 msgstr "{0}の数量"
 
-#: automotive_portals/public/js/portal/supplier.js:75
+#: automotive_portals/public/js/portal/supplier.js:79
 msgid "Quotation"
 msgstr "見積"
 
-#: automotive_portals/public/js/portal/supplier.js:115
+#: automotive_portals/public/js/portal/supplier.js:119
 #, python-brace-format
 msgid "Quotation {0} submitted."
 msgstr "見積{0}を提出しました。"
 
-#: automotive_portals/api/supplier.py:291
+#: automotive_portals/api/supplier.py:297
 msgid "Quote at least one line."
 msgstr "1件以上の明細に見積を入力してください。"
 
-#: automotive_portals/public/js/portal/supplier.js:64
+#: automotive_portals/public/js/portal/supplier.js:68
 msgid "RFQ"
 msgstr "見積依頼 (RFQ)"
 
-#: automotive_portals/public/js/portal/supplier.js:18
+#: automotive_portals/public/js/portal/supplier.js:22
 msgid "RFQs & Quotations"
 msgstr "見積依頼・見積"
 
-#: automotive_portals/public/js/portal/supplier.js:482
+#: automotive_portals/public/js/portal/supplier.js:486
 msgid "Read"
 msgstr "閲覧"
 
-#: automotive_portals/public/js/portal/dealer.js:197
+#: automotive_portals/public/js/portal/dealer.js:202
 msgid "Reason"
 msgstr "理由"
 
-#: automotive_portals/public/js/portal/supplier.js:431
+#: automotive_portals/public/js/portal/supplier.js:435
 msgid "Receipt"
 msgstr "入荷"
 
-#: automotive_portals/public/js/portal/supplier.js:412
-#: automotive_portals/public/js/portal/supplier.js:413
+#: automotive_portals/public/js/portal/supplier.js:416
+#: automotive_portals/public/js/portal/supplier.js:417
 msgid "Receipt discrepancies"
 msgstr "入荷差異"
 
-#: automotive_portals/public/js/portal/supplier.js:22
+#: automotive_portals/public/js/portal/supplier.js:26
 msgid "Receipts & Discrepancies"
 msgstr "入荷・差異"
 
-#: automotive_portals/public/js/portal/supplier.js:47
-#: automotive_portals/public/js/portal/supplier.js:155
-#: automotive_portals/public/js/portal/supplier.js:212
-#: automotive_portals/public/js/portal/supplier.js:396
-#: automotive_portals/public/js/portal/supplier.js:420
-#: automotive_portals/public/js/portal/supplier.js:481
+#: automotive_portals/public/js/portal/supplier.js:51
+#: automotive_portals/public/js/portal/supplier.js:159
+#: automotive_portals/public/js/portal/supplier.js:216
+#: automotive_portals/public/js/portal/supplier.js:400
+#: automotive_portals/public/js/portal/supplier.js:424
+#: automotive_portals/public/js/portal/supplier.js:485
 msgid "Received"
 msgstr "入荷済み"
 
-#: automotive_portals/public/js/portal/dealer.js:310
+#: automotive_portals/public/js/portal/dealer.js:315
 msgid "Record acceptance"
 msgstr "納車受領を記録"
 
-#: automotive_portals/public/js/portal/supplier.js:465
+#: automotive_portals/public/js/portal/supplier.js:469
 msgid "Reference"
 msgstr "参照"
 
-#: automotive_portals/public/js/portal/supplier.js:180
+#: automotive_portals/public/js/portal/supplier.js:184
 msgid "Reject"
 msgstr "却下する"
 
-#: automotive_portals/public/js/portal/dealer.js:285
-#: automotive_portals/public/js/portal/supplier.js:421
-#: automotive_portals/public/js/portal/supplier.js:435
+#: automotive_portals/public/js/portal/dealer.js:290
+#: automotive_portals/public/js/portal/supplier.js:425
+#: automotive_portals/public/js/portal/supplier.js:439
 msgid "Rejected"
 msgstr "却下済み"
 
-#: automotive_portals/public/js/portal/supplier.js:103
+#: automotive_portals/public/js/portal/supplier.js:107
 msgid "Remarks"
 msgstr "備考"
 
-#: automotive_portals/public/js/portal/supplier.js:458
-#: automotive_portals/public/js/portal/supplier.js:459
+#: automotive_portals/public/js/portal/supplier.js:462
+#: automotive_portals/public/js/portal/supplier.js:463
 msgid "Remittance advice"
 msgstr "送金通知"
 
-#: automotive_portals/public/js/portal/dealer.js:122
-#: automotive_portals/public/js/portal/dealer.js:123
+#: automotive_portals/public/js/portal/dealer.js:127
+#: automotive_portals/public/js/portal/dealer.js:128
 msgid "Remove"
 msgstr "削除"
 
-#: automotive_portals/public/js/portal/dealer.js:358
+#: automotive_portals/public/js/portal/dealer.js:364
 msgid "Request"
 msgstr "依頼"
 
-#: automotive_portals/public/js/portal/dealer.js:184
+#: automotive_portals/public/js/portal/dealer.js:189
 msgid "Request a change"
 msgstr "変更の依頼"
 
-#: automotive_portals/public/js/portal/supplier.js:120
+#: automotive_portals/public/js/portal/supplier.js:124
 #, python-brace-format
 msgid "Request {0}"
 msgstr "見積依頼{0}"
 
-#: automotive_portals/public/js/portal/dealer.js:171
+#: automotive_portals/public/js/portal/dealer.js:176
 msgid "Requested Delivery"
 msgstr "希望納期"
 
-#: automotive_portals/public/js/portal/dealer.js:134
+#: automotive_portals/public/js/portal/dealer.js:139
 msgid "Requested delivery date"
 msgstr "希望納期"
 
-#: automotive_portals/public/js/portal/supplier.js:126
+#: automotive_portals/public/js/portal/supplier.js:130
 msgid "Requested items"
 msgstr "依頼品目"
 
-#: automotive_portals/public/js/portal/supplier.js:59
-#: automotive_portals/public/js/portal/supplier.js:60
+#: automotive_portals/public/js/portal/supplier.js:63
+#: automotive_portals/public/js/portal/supplier.js:64
 msgid "Requests for quotation"
 msgstr "見積依頼一覧"
 
-#: automotive_portals/public/js/portal/supplier.js:66
-#: automotive_portals/public/js/portal/supplier.js:123
-#: automotive_portals/public/js/portal/supplier.js:210
+#: automotive_portals/public/js/portal/supplier.js:70
+#: automotive_portals/public/js/portal/supplier.js:127
+#: automotive_portals/public/js/portal/supplier.js:214
 msgid "Required by"
 msgstr "希望納期"
 
-#: automotive_portals/public/js/portal/dealer.js:287
+#: automotive_portals/public/js/portal/dealer.js:292
 msgid "Required when a vehicle is damaged or rejected."
 msgstr "車両に損傷がある場合や却下する場合は必須です。"
 
-#: automotive_portals/public/js/portal/supplier.js:423
+#: automotive_portals/public/js/portal/supplier.js:427
 msgid "Resolution"
 msgstr "対応内容"
 
-#: automotive_portals/public/js/portal/supplier.js:177
+#: automotive_portals/public/js/portal/supplier.js:181
 msgid "Response"
 msgstr "回答"
 
@@ -843,45 +843,45 @@ msgstr "回答"
 msgid "Saved."
 msgstr "保存しました。"
 
-#: automotive_portals/public/js/portal/supplier.js:256
+#: automotive_portals/public/js/portal/supplier.js:260
 msgid "Schedule"
 msgstr "納入計画"
 
-#: automotive_portals/public/js/portal/supplier.js:239
+#: automotive_portals/public/js/portal/supplier.js:243
 msgid "Schedule lines"
 msgstr "納入計画明細"
 
-#: automotive_portals/public/js/portal/supplier.js:237
+#: automotive_portals/public/js/portal/supplier.js:241
 #, python-brace-format
 msgid "Schedule {0} (version {1})"
 msgstr "納入計画{0}（バージョン{1}）"
 
-#: automotive_portals/public/js/portal/supplier.js:228
+#: automotive_portals/public/js/portal/supplier.js:232
 #, python-brace-format
 msgid "Schedule {0} acknowledged."
 msgstr "納入計画{0}の受領を確認しました。"
 
-#: automotive_portals/public/js/portal/supplier.js:35
+#: automotive_portals/public/js/portal/supplier.js:39
 msgid "Schedules to acknowledge"
 msgstr "受領確認待ちの納入計画"
 
-#: automotive_portals/public/js/portal/supplier.js:336
+#: automotive_portals/public/js/portal/supplier.js:340
 msgid "Select at least one order line to ship."
 msgstr "出荷する注文明細を1件以上選択してください。"
 
-#: automotive_portals/public/js/portal/supplier.js:319
+#: automotive_portals/public/js/portal/supplier.js:323
 msgid "Send ASN"
 msgstr "ASNを送信"
 
-#: automotive_portals/public/js/portal/supplier.js:174
+#: automotive_portals/public/js/portal/supplier.js:178
 msgid "Send acknowledgement"
 msgstr "注文請書を送信"
 
-#: automotive_portals/public/js/portal/dealer.js:185
+#: automotive_portals/public/js/portal/dealer.js:190
 msgid "Send change request"
 msgstr "変更依頼を送信"
 
-#: automotive_portals/public/js/portal/dealer.js:339
+#: automotive_portals/public/js/portal/dealer.js:345
 msgid "Send request"
 msgstr "依頼を送信"
 
@@ -889,125 +889,125 @@ msgstr "依頼を送信"
 msgid "Sending…"
 msgstr "送信中…"
 
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Serial numbers"
 msgstr "シリアル番号"
 
-#: automotive_portals/public/js/portal/supplier.js:310
+#: automotive_portals/public/js/portal/supplier.js:314
 #, python-brace-format
 msgid "Serial numbers for {0}, one per line"
 msgstr "{0}のシリアル番号（1行に1つ）"
 
-#: automotive_portals/public/js/portal/supplier.js:314
+#: automotive_portals/public/js/portal/supplier.js:318
 msgid "Ship"
 msgstr "出荷"
 
-#: automotive_portals/public/js/portal/supplier.js:324
+#: automotive_portals/public/js/portal/supplier.js:328
 msgid "Ship date"
 msgstr "出荷日"
 
-#: automotive_portals/public/js/portal/supplier.js:301
+#: automotive_portals/public/js/portal/supplier.js:305
 #, python-brace-format
 msgid "Ship {0}"
 msgstr "{0}を出荷"
 
-#: automotive_portals/public/js/portal/dealer.js:235
-#: automotive_portals/public/js/portal/dealer.js:264
+#: automotive_portals/public/js/portal/dealer.js:240
+#: automotive_portals/public/js/portal/dealer.js:269
 msgid "Shipment"
 msgstr "出荷"
 
-#: automotive_portals/public/js/portal/supplier.js:400
+#: automotive_portals/public/js/portal/supplier.js:404
 msgid "Shipment documents"
 msgstr "出荷書類"
 
-#: automotive_portals/public/js/portal/supplier.js:331
+#: automotive_portals/public/js/portal/supplier.js:335
 msgid "Shipment documents (packing list, certificates)"
 msgstr "出荷書類（パッキングリスト、証明書など）"
 
-#: automotive_portals/public/js/portal/supplier.js:381
+#: automotive_portals/public/js/portal/supplier.js:385
 #, python-brace-format
 msgid "Shipment {0}"
 msgstr "出荷{0}"
 
-#: automotive_portals/public/js/portal/supplier.js:350
+#: automotive_portals/public/js/portal/supplier.js:354
 #, python-brace-format
 msgid "Shipment {0} announced."
 msgstr "出荷{0}を通知しました。"
 
-#: automotive_portals/public/js/portal/supplier.js:21
+#: automotive_portals/public/js/portal/supplier.js:25
 msgid "Shipments (ASN)"
 msgstr "出荷（ASN）"
 
-#: automotive_portals/public/js/portal/supplier.js:37
+#: automotive_portals/public/js/portal/supplier.js:41
 msgid "Shipments in transit"
 msgstr "輸送中の出荷"
 
-#: automotive_portals/public/js/portal/supplier.js:282
-#: automotive_portals/public/js/portal/supplier.js:385
-#: automotive_portals/public/js/portal/supplier.js:395
+#: automotive_portals/public/js/portal/supplier.js:286
+#: automotive_portals/public/js/portal/supplier.js:389
+#: automotive_portals/public/js/portal/supplier.js:399
 msgid "Shipped"
 msgstr "出荷済み"
 
-#: automotive_portals/public/js/portal/supplier.js:390
+#: automotive_portals/public/js/portal/supplier.js:394
 msgid "Shipped lines"
 msgstr "出荷明細"
 
-#: automotive_portals/public/js/portal/supplier.js:143
+#: automotive_portals/public/js/portal/supplier.js:147
 msgid "Show"
 msgstr "表示"
 
-#: automotive_portals/public/js/portal/supplier.js:153
+#: automotive_portals/public/js/portal/supplier.js:157
 msgid "Standard"
 msgstr "標準"
 
-#: automotive_portals/public/js/portal/dealer.js:174
-#: automotive_portals/public/js/portal/dealer.js:213
-#: automotive_portals/public/js/portal/dealer.js:245
-#: automotive_portals/public/js/portal/dealer.js:328
-#: automotive_portals/public/js/portal/dealer.js:362
-#: automotive_portals/public/js/portal/supplier.js:79
-#: automotive_portals/public/js/portal/supplier.js:260
-#: automotive_portals/public/js/portal/supplier.js:285
-#: automotive_portals/public/js/portal/supplier.js:384
-#: automotive_portals/public/js/portal/supplier.js:422
-#: automotive_portals/public/js/portal/supplier.js:454
+#: automotive_portals/public/js/portal/dealer.js:179
+#: automotive_portals/public/js/portal/dealer.js:218
+#: automotive_portals/public/js/portal/dealer.js:250
+#: automotive_portals/public/js/portal/dealer.js:333
+#: automotive_portals/public/js/portal/dealer.js:368
+#: automotive_portals/public/js/portal/supplier.js:83
+#: automotive_portals/public/js/portal/supplier.js:264
+#: automotive_portals/public/js/portal/supplier.js:289
+#: automotive_portals/public/js/portal/supplier.js:388
+#: automotive_portals/public/js/portal/supplier.js:426
+#: automotive_portals/public/js/portal/supplier.js:458
 msgid "Status"
 msgstr "ステータス"
 
-#: automotive_portals/public/js/portal/dealer.js:136
+#: automotive_portals/public/js/portal/dealer.js:141
 msgid "Stock order"
 msgstr "在庫注文"
 
-#: automotive_portals/public/js/portal/dealer.js:342
-#: automotive_portals/public/js/portal/dealer.js:359
-#: automotive_portals/public/js/portal/supplier.js:45
-#: automotive_portals/public/js/portal/supplier.js:478
+#: automotive_portals/public/js/portal/dealer.js:348
+#: automotive_portals/public/js/portal/dealer.js:365
+#: automotive_portals/public/js/portal/supplier.js:49
+#: automotive_portals/public/js/portal/supplier.js:482
 msgid "Subject"
 msgstr "件名"
 
-#: automotive_portals/public/js/portal/supplier.js:97
+#: automotive_portals/public/js/portal/supplier.js:101
 msgid "Submit quotation"
 msgstr "見積を提出"
 
-#: automotive_portals/public/js/portal/supplier.js:96
+#: automotive_portals/public/js/portal/supplier.js:100
 msgid "Submit your quotation"
 msgstr "見積の提出"
 
-#: automotive_portals/public/js/portal/supplier.js:14
+#: automotive_portals/public/js/portal/supplier.js:17
 #: automotive_portals/www/supplier_portal.py:10
 msgid "Supplier Portal"
 msgstr "サプライヤーポータル"
 
-#: automotive_portals/api/supplier.py:298
+#: automotive_portals/api/supplier.py:304
 #, python-brace-format
 msgid "Supplier quotation for {0}"
 msgstr "{0}に対する仕入先見積"
 
-#: automotive_portals/public/js/portal/dealer.js:23
+#: automotive_portals/public/js/portal/dealer.js:27
 msgid "Support"
 msgstr "サポート"
 
-#: automotive_portals/public/js/portal/dealer.js:351
+#: automotive_portals/public/js/portal/dealer.js:357
 #, python-brace-format
 msgid "Support request {0} created."
 msgstr "サポート依頼{0}を受け付けました。"
@@ -1021,15 +1021,15 @@ msgstr "リクエストに失敗しました（{0}）。"
 msgid "The server could not be reached. Check your connection and retry."
 msgstr "サーバーに接続できませんでした。接続を確認して、もう一度お試しください。"
 
-#: automotive_portals/public/js/portal/supplier.js:295
+#: automotive_portals/public/js/portal/supplier.js:299
 msgid "There are no open order lines to ship."
 msgstr "出荷対象となる未完了の注文明細はありません。"
 
-#: automotive_portals/api/dealer.py:92
+#: automotive_portals/api/dealer.py:99
 msgid "This combination is not offered."
 msgstr "この組み合わせはご用意していません。"
 
-#: automotive_portals/public/js/portal/dealer.js:90
+#: automotive_portals/public/js/portal/dealer.js:95
 msgid "This configuration cannot be built:"
 msgstr "この仕様構成は生産できません："
 
@@ -1038,104 +1038,104 @@ msgstr "この仕様構成は生産できません："
 msgid "This portal is only available to {0} users."
 msgstr "このポータルは{0}のユーザーのみご利用いただけます。"
 
-#: automotive_portals/www/dealer-portal.html:9
-#: automotive_portals/www/supplier-portal.html:9
+#: automotive_portals/www/dealer-portal.html:10
+#: automotive_portals/www/supplier-portal.html:10
 msgid "This portal needs JavaScript."
 msgstr "このポータルのご利用にはJavaScriptが必要です。"
 
-#: automotive_portals/public/js/portal/dealer.js:173
-#: automotive_portals/public/js/portal/dealer.js:215
-#: automotive_portals/public/js/portal/supplier.js:78
-#: automotive_portals/public/js/portal/supplier.js:154
-#: automotive_portals/public/js/portal/supplier.js:200
+#: automotive_portals/public/js/portal/dealer.js:178
+#: automotive_portals/public/js/portal/dealer.js:220
+#: automotive_portals/public/js/portal/supplier.js:82
+#: automotive_portals/public/js/portal/supplier.js:158
+#: automotive_portals/public/js/portal/supplier.js:204
 msgid "Total"
 msgstr "合計"
 
-#: automotive_portals/public/js/portal/supplier.js:328
-#: automotive_portals/public/js/portal/supplier.js:388
+#: automotive_portals/public/js/portal/supplier.js:332
+#: automotive_portals/public/js/portal/supplier.js:392
 msgid "Tracking / waybill number"
 msgstr "追跡番号／送り状番号"
 
-#: automotive_portals/public/js/portal/dealer.js:306
+#: automotive_portals/public/js/portal/dealer.js:311
 msgid "Transport"
 msgstr "輸送"
 
-#: automotive_portals/public/js/portal/dealer.js:170
-#: automotive_portals/public/js/portal/dealer.js:244
-#: automotive_portals/public/js/portal/dealer.js:324
-#: automotive_portals/public/js/portal/supplier.js:46
-#: automotive_portals/public/js/portal/supplier.js:153
-#: automotive_portals/public/js/portal/supplier.js:418
-#: automotive_portals/public/js/portal/supplier.js:479
+#: automotive_portals/public/js/portal/dealer.js:175
+#: automotive_portals/public/js/portal/dealer.js:249
+#: automotive_portals/public/js/portal/dealer.js:329
+#: automotive_portals/public/js/portal/supplier.js:50
+#: automotive_portals/public/js/portal/supplier.js:157
+#: automotive_portals/public/js/portal/supplier.js:422
+#: automotive_portals/public/js/portal/supplier.js:483
 msgid "Type"
 msgstr "種別"
 
-#: automotive_portals/public/js/portal/supplier.js:90
+#: automotive_portals/public/js/portal/supplier.js:94
 #, python-brace-format
 msgid "Unit price for {0}"
 msgstr "{0}の単価"
 
-#: automotive_portals/public/js/portal/supplier.js:39
+#: automotive_portals/public/js/portal/supplier.js:43
 msgid "Unread notices"
 msgstr "未読のお知らせ"
 
-#: automotive_portals/public/js/portal/supplier.js:379
+#: automotive_portals/public/js/portal/supplier.js:383
 msgid "Upload"
 msgstr "アップロード"
 
-#: automotive_portals/public/js/portal/dealer.js:231
-#: automotive_portals/public/js/portal/dealer.js:261
+#: automotive_portals/public/js/portal/dealer.js:236
+#: automotive_portals/public/js/portal/dealer.js:266
 msgid "VIN"
 msgstr "VIN（車台番号）"
 
-#: automotive_portals/public/js/portal/dealer.js:97
+#: automotive_portals/public/js/portal/dealer.js:102
 #, python-brace-format
 msgid "Valid configuration {0}: {1} each, earliest delivery {2}."
 msgstr "有効な仕様構成です：{0}（1台あたり{1}、最短納期{2}）。"
 
-#: automotive_portals/public/js/portal/supplier.js:77
-#: automotive_portals/public/js/portal/supplier.js:101
+#: automotive_portals/public/js/portal/supplier.js:81
+#: automotive_portals/public/js/portal/supplier.js:105
 msgid "Valid till"
 msgstr "有効期限"
 
-#: automotive_portals/public/js/portal/dealer.js:118
-#: automotive_portals/public/js/portal/dealer.js:222
-#: automotive_portals/public/js/portal/dealer.js:232
-#: automotive_portals/public/js/portal/dealer.js:262
+#: automotive_portals/public/js/portal/dealer.js:123
+#: automotive_portals/public/js/portal/dealer.js:227
+#: automotive_portals/public/js/portal/dealer.js:237
+#: automotive_portals/public/js/portal/dealer.js:267
 msgid "Variant"
 msgstr "仕様バリアント"
 
-#: automotive_portals/public/js/portal/dealer.js:343
+#: automotive_portals/public/js/portal/dealer.js:349
 msgid "Vehicle (optional)"
 msgstr "車両（任意）"
 
-#: automotive_portals/public/js/portal/dealer.js:228
-#: automotive_portals/public/js/portal/dealer.js:305
+#: automotive_portals/public/js/portal/dealer.js:233
+#: automotive_portals/public/js/portal/dealer.js:310
 msgid "Vehicles"
 msgstr "車両"
 
-#: automotive_portals/public/js/portal/dealer.js:258
+#: automotive_portals/public/js/portal/dealer.js:263
 msgid "Vehicles allocated to you"
 msgstr "貴社に引き当てられた車両"
 
-#: automotive_portals/public/js/portal/dealer.js:34
+#: automotive_portals/public/js/portal/dealer.js:39
 msgid "Vehicles in delivery"
 msgstr "納車手続き中の車両"
 
-#: automotive_portals/public/js/portal/dealer.js:114
+#: automotive_portals/public/js/portal/dealer.js:119
 msgid "Vehicles in this order"
 msgstr "この注文の車両"
 
-#: automotive_portals/public/js/portal/dealer.js:281
+#: automotive_portals/public/js/portal/dealer.js:286
 #, python-brace-format
 msgid "Vehicles: {0}"
 msgstr "車両：{0}"
 
-#: automotive_portals/public/js/portal/supplier.js:258
+#: automotive_portals/public/js/portal/supplier.js:262
 msgid "Version"
 msgstr "バージョン"
 
-#: automotive_portals/public/js/portal/dealer.js:266
+#: automotive_portals/public/js/portal/dealer.js:271
 msgid "Warranty start"
 msgstr "保証開始日"
 
@@ -1143,45 +1143,45 @@ msgstr "保証開始日"
 msgid "You do not have access to this record."
 msgstr "このデータにアクセスする権限がありません。"
 
-#: automotive_portals/public/js/portal/supplier.js:95
+#: automotive_portals/public/js/portal/supplier.js:99
 msgid "You have quoted on this request."
 msgstr "この見積依頼には見積を提出済みです。"
 
-#: automotive_portals/public/js/portal/supplier.js:281
-#: automotive_portals/public/js/portal/supplier.js:322
-#: automotive_portals/public/js/portal/supplier.js:383
+#: automotive_portals/public/js/portal/supplier.js:285
+#: automotive_portals/public/js/portal/supplier.js:326
+#: automotive_portals/public/js/portal/supplier.js:387
 msgid "Your ASN number"
 msgstr "貴社ASN番号"
 
-#: automotive_portals/public/js/portal/dealer.js:307
+#: automotive_portals/public/js/portal/dealer.js:312
 msgid "Your acceptance"
 msgstr "納車受領"
 
-#: automotive_portals/public/js/portal/supplier.js:448
+#: automotive_portals/public/js/portal/supplier.js:452
 msgid "Your invoice"
 msgstr "貴社請求書番号"
 
-#: automotive_portals/public/js/portal/dealer.js:133
+#: automotive_portals/public/js/portal/dealer.js:138
 msgid "Your order reference"
 msgstr "貴社注文番号"
 
-#: automotive_portals/public/js/portal/supplier.js:67
+#: automotive_portals/public/js/portal/supplier.js:71
 msgid "Your quotation"
 msgstr "貴社の見積"
 
-#: automotive_portals/public/js/portal/supplier.js:71
-#: automotive_portals/public/js/portal/supplier.js:72
+#: automotive_portals/public/js/portal/supplier.js:75
+#: automotive_portals/public/js/portal/supplier.js:76
 msgid "Your quotations"
 msgstr "貴社の見積一覧"
 
-#: automotive_portals/public/js/portal/dealer.js:169
-#: automotive_portals/public/js/portal/dealer.js:212
-#: automotive_portals/public/js/portal/supplier.js:181
+#: automotive_portals/public/js/portal/dealer.js:174
+#: automotive_portals/public/js/portal/dealer.js:217
+#: automotive_portals/public/js/portal/supplier.js:185
 msgid "Your reference"
 msgstr "貴社管理番号"
 
-#: automotive_portals/public/js/portal/dealer.js:354
-#: automotive_portals/public/js/portal/dealer.js:355
+#: automotive_portals/public/js/portal/dealer.js:360
+#: automotive_portals/public/js/portal/dealer.js:361
 msgid "Your support requests"
 msgstr "貴社のサポート依頼"
 
@@ -1193,7 +1193,7 @@ msgstr "販売店"
 msgid "supplier"
 msgstr "仕入先"
 
-#: automotive_portals/public/js/portal/supplier.js:365
+#: automotive_portals/public/js/portal/supplier.js:369
 #, python-brace-format
 msgid "{0} could not be uploaded."
 msgstr "{0}をアップロードできませんでした。"

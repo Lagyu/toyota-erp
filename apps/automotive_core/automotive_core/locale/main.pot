@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 15:10+0919\n"
-"PO-Revision-Date: 2026-10-24 15:10+0919\n"
+"POT-Creation-Date: 2026-10-24 16:44+0919\n"
+"PO-Revision-Date: 2026-10-24 16:44+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -771,16 +771,16 @@ msgid "AMC Expiry Date"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:223
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:206
-#: automotive_core/automotive_setup/doctype/plant/plant.json:326
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:262
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:227
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:208
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:297
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:258
-#: automotive_core/governance/doctype/approval_request/approval_request.json:249
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:146
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:237
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:220
+#: automotive_core/automotive_setup/doctype/plant/plant.json:338
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:275
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:241
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:223
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:313
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:275
+#: automotive_core/governance/doctype/approval_request/approval_request.json:264
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:161
 msgid "AP Clerk"
 msgstr ""
 
@@ -4306,28 +4306,28 @@ msgid "Audit Events cannot be deleted."
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:248
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:146
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:231
-#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:163
-#: automotive_core/automotive_setup/doctype/plant/plant.json:351
-#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:190
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:287
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:252
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:167
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:156
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:182
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:206
-#: automotive_core/governance/doctype/approval_request/approval_request.json:184
-#: automotive_core/governance/doctype/audit_event/audit_event.json:160
-#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:144
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:63
-#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:99
-#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:216
-#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:127
-#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:207
-#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:194
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:234
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:267
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:148
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:232
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:166
+#: automotive_core/automotive_setup/doctype/plant/plant.json:368
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:192
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:305
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:271
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:170
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:158
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:185
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:210
+#: automotive_core/governance/doctype/approval_request/approval_request.json:186
+#: automotive_core/governance/doctype/audit_event/audit_event.json:162
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:147
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:66
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:103
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:220
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:130
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:210
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:197
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:237
 msgid "Auditor"
 msgstr ""
 
@@ -4452,17 +4452,17 @@ msgid "Automatically applied a filter for recent data. You can disable this beha
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:168
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:151
-#: automotive_core/automotive_setup/doctype/plant/plant.json:271
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:207
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:172
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:172
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:160
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:189
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:210
-#: automotive_core/governance/doctype/approval_request/approval_request.json:189
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:69
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:171
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:154
+#: automotive_core/automotive_setup/doctype/plant/plant.json:272
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:209
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:175
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:176
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:163
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:193
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:215
+#: automotive_core/governance/doctype/approval_request/approval_request.json:192
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:73
 msgid "Automotive Executive"
 msgstr ""
 
@@ -5669,16 +5669,16 @@ msgid "Buy & Sell"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:213
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:196
-#: automotive_core/automotive_setup/doctype/plant/plant.json:316
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:252
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:217
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:204
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:288
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:254
-#: automotive_core/governance/doctype/approval_request/approval_request.json:244
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:132
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:225
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:208
+#: automotive_core/automotive_setup/doctype/plant/plant.json:326
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:263
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:229
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:218
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:303
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:270
+#: automotive_core/governance/doctype/approval_request/approval_request.json:258
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:145
 msgid "Buyer"
 msgstr ""
 
@@ -9800,18 +9800,18 @@ msgid "Dealer (Customer)"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:238
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:221
-#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:156
-#: automotive_core/automotive_setup/doctype/plant/plant.json:341
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:277
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:242
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:212
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:306
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:262
-#: automotive_core/governance/doctype/approval_request/approval_request.json:254
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:167
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:242
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:255
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:238
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:158
+#: automotive_core/automotive_setup/doctype/plant/plant.json:356
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:293
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:259
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:228
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:323
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:280
+#: automotive_core/governance/doctype/approval_request/approval_request.json:270
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:185
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:247
 msgid "Dealer Liaison"
 msgstr ""
 
@@ -12774,16 +12774,16 @@ msgid "Engineering"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:258
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:236
-#: automotive_core/automotive_setup/doctype/plant/plant.json:361
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:297
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:262
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:188
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:252
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:238
-#: automotive_core/governance/doctype/approval_request/approval_request.json:224
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:181
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:279
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:256
+#: automotive_core/automotive_setup/doctype/plant/plant.json:380
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:317
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:283
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:198
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:263
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:250
+#: automotive_core/governance/doctype/approval_request/approval_request.json:234
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:201
 msgid "Engineering Manager"
 msgstr ""
 
@@ -15678,18 +15678,18 @@ msgid "Group Consolidation"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:173
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:156
-#: automotive_core/automotive_setup/doctype/plant/plant.json:276
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:212
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:177
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:159
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:164
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:198
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:199
-#: automotive_core/governance/doctype/approval_request/approval_request.json:194
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:76
-#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:92
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:177
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:160
+#: automotive_core/automotive_setup/doctype/plant/plant.json:278
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:215
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:181
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:161
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:168
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:203
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:202
+#: automotive_core/governance/doctype/approval_request/approval_request.json:198
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:81
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:95
 msgid "Group Controller"
 msgstr ""
 
@@ -16240,28 +16240,28 @@ msgid "IP Address"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:162
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:226
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:164
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:244
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:226
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:139
 #: automotive_core/automotive_setup/doctype/plant/plant.json:264
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:174
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:193
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:149
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:192
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:174
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:192
-#: automotive_core/governance/doctype/approval_request/approval_request.json:229
-#: automotive_core/governance/doctype/audit_event/audit_event.json:165
-#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:138
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:57
-#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:85
-#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:200
-#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:120
-#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:200
-#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:54
-#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:187
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:227
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:203
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:176
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:194
+#: automotive_core/governance/doctype/approval_request/approval_request.json:240
+#: automotive_core/governance/doctype/audit_event/audit_event.json:168
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:140
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:59
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:87
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:202
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:122
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:202
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:56
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:189
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:229
 msgid "IT Operator"
 msgstr ""
 
@@ -20521,12 +20521,12 @@ msgid "Line Name"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:193
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:176
-#: automotive_core/automotive_setup/doctype/plant/plant.json:296
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:232
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:197
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:104
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:201
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:184
+#: automotive_core/automotive_setup/doctype/plant/plant.json:302
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:239
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:205
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:113
 msgid "Line Operator"
 msgstr ""
 
@@ -20952,16 +20952,16 @@ msgid "Logistics"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:263
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:241
-#: automotive_core/automotive_setup/doctype/plant/plant.json:366
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:302
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:267
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:228
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:342
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:278
-#: automotive_core/governance/doctype/approval_request/approval_request.json:274
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:188
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:285
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:262
+#: automotive_core/automotive_setup/doctype/plant/plant.json:386
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:323
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:289
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:248
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:363
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:300
+#: automotive_core/governance/doctype/approval_request/approval_request.json:294
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:209
 msgid "Logistics Coordinator"
 msgstr ""
 
@@ -23763,7 +23763,7 @@ msgstr ""
 msgid "No documents found."
 msgstr ""
 
-#: automotive_core/governance/notifications.py:130
+#: automotive_core/governance/notifications.py:136
 msgid "No e-mail address, or the address unsubscribed"
 msgstr ""
 
@@ -27346,19 +27346,19 @@ msgid "Plant Code"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:178
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:161
-#: automotive_core/automotive_setup/doctype/plant/plant.json:281
-#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:183
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:201
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:158
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:177
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:168
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:207
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:218
-#: automotive_core/governance/doctype/approval_request/approval_request.json:199
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:83
-#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:209
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:183
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:166
+#: automotive_core/automotive_setup/doctype/plant/plant.json:284
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:184
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:202
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:159
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:182
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:173
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:213
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:225
+#: automotive_core/governance/doctype/approval_request/approval_request.json:204
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:89
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:212
 msgid "Plant Director"
 msgstr ""
 
@@ -29353,19 +29353,19 @@ msgid "Procurement"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:218
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:201
-#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:148
-#: automotive_core/automotive_setup/doctype/plant/plant.json:321
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:257
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:222
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:182
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:172
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:216
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:222
-#: automotive_core/governance/doctype/approval_request/approval_request.json:204
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:139
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:238
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:231
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:214
+#: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:149
+#: automotive_core/automotive_setup/doctype/plant/plant.json:332
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:269
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:235
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:188
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:178
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:223
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:230
+#: automotive_core/governance/doctype/approval_request/approval_request.json:210
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:153
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:242
 msgid "Procurement Manager"
 msgstr ""
 
@@ -29438,16 +29438,16 @@ msgid "Product Discount Scheme"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:253
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:231
-#: automotive_core/automotive_setup/doctype/plant/plant.json:356
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:292
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:257
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:216
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:315
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:266
-#: automotive_core/governance/doctype/approval_request/approval_request.json:259
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:174
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:273
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:250
+#: automotive_core/automotive_setup/doctype/plant/plant.json:374
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:311
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:277
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:233
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:333
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:285
+#: automotive_core/governance/doctype/approval_request/approval_request.json:276
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:193
 msgid "Product Engineer"
 msgstr ""
 
@@ -29584,30 +29584,30 @@ msgid "Production Plan Summary"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:183
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:166
-#: automotive_core/automotive_setup/doctype/plant/plant.json:286
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:222
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:166
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:200
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:279
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:250
-#: automotive_core/governance/doctype/approval_request/approval_request.json:239
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:90
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:189
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:172
+#: automotive_core/automotive_setup/doctype/plant/plant.json:290
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:227
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:168
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:213
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:293
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:265
+#: automotive_core/governance/doctype/approval_request/approval_request.json:252
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:97
 msgid "Production Planner"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:188
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:171
-#: automotive_core/automotive_setup/doctype/plant/plant.json:291
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:227
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:192
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:196
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:270
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:246
-#: automotive_core/governance/doctype/approval_request/approval_request.json:234
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:97
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:195
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:178
+#: automotive_core/automotive_setup/doctype/plant/plant.json:296
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:233
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:199
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:208
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:283
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:260
+#: automotive_core/governance/doctype/approval_request/approval_request.json:246
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:105
 msgid "Production Supervisor"
 msgstr ""
 
@@ -30465,16 +30465,16 @@ msgid "Quality Inspection(s)"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:203
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:186
-#: automotive_core/automotive_setup/doctype/plant/plant.json:306
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:242
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:207
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:220
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:324
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:270
-#: automotive_core/governance/doctype/approval_request/approval_request.json:264
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:118
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:213
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:196
+#: automotive_core/automotive_setup/doctype/plant/plant.json:314
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:251
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:217
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:238
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:343
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:290
+#: automotive_core/governance/doctype/approval_request/approval_request.json:282
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:129
 msgid "Quality Inspector"
 msgstr ""
 
@@ -30483,16 +30483,16 @@ msgid "Quality Management"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:208
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:191
-#: automotive_core/automotive_setup/doctype/plant/plant.json:311
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:247
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:212
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:180
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:234
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:230
-#: automotive_core/governance/doctype/approval_request/approval_request.json:214
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:125
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:219
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:202
+#: automotive_core/automotive_setup/doctype/plant/plant.json:320
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:257
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:223
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:188
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:243
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:240
+#: automotive_core/governance/doctype/approval_request/approval_request.json:222
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:137
 msgid "Quality Manager"
 msgstr ""
 
@@ -34737,17 +34737,17 @@ msgid "Sales Invoice {0} must be deleted before cancelling this Sales Order"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:233
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:216
-#: automotive_core/automotive_setup/doctype/plant/plant.json:336
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:272
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:237
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:187
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:184
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:243
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:234
-#: automotive_core/governance/doctype/approval_request/approval_request.json:219
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:160
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:249
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:232
+#: automotive_core/automotive_setup/doctype/plant/plant.json:350
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:287
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:253
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:194
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:193
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:253
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:245
+#: automotive_core/governance/doctype/approval_request/approval_request.json:228
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:177
 msgid "Sales Manager"
 msgstr ""
 
@@ -39977,29 +39977,29 @@ msgid "System In Use"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:154
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:140
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:155
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:141
 #: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:220
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:126
 #: automotive_core/automotive_setup/doctype/plant/plant.json:251
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:161
 #: automotive_core/automotive_setup/doctype/production_line/production_line.json:180
 #: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:136
-#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:148
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:150
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:163
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:184
-#: automotive_core/governance/doctype/approval_request/approval_request.json:178
-#: automotive_core/governance/doctype/audit_event/audit_event.json:154
-#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:132
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:50
-#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:77
-#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:189
-#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:114
-#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:194
-#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:50
-#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:181
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:219
+#: automotive_core/finance_controls/doctype/period_close_checklist/period_close_checklist.json:149
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:151
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:164
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:185
+#: automotive_core/governance/doctype/approval_request/approval_request.json:179
+#: automotive_core/governance/doctype/audit_event/audit_event.json:155
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:133
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:51
+#: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:78
+#: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:190
+#: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:115
+#: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:195
+#: automotive_core/integration_hub/doctype/integration_nonce/integration_nonce.json:51
+#: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:182
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.json:220
 msgid "System Manager"
 msgstr ""
 
@@ -43045,16 +43045,16 @@ msgid "Travel Expenses"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:228
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:211
-#: automotive_core/automotive_setup/doctype/plant/plant.json:331
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:267
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:232
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:176
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:225
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:226
-#: automotive_core/governance/doctype/approval_request/approval_request.json:209
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:153
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:243
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:226
+#: automotive_core/automotive_setup/doctype/plant/plant.json:344
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:281
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:247
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:183
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:233
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:235
+#: automotive_core/governance/doctype/approval_request/approval_request.json:216
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:169
 msgid "Treasury Approver"
 msgstr ""
 
@@ -43590,7 +43590,7 @@ msgid "Unknown inbound message types: {0}"
 msgstr ""
 
 #: automotive_core/governance/notifications.py:102
-#: automotive_core/governance/notifications.py:170
+#: automotive_core/governance/notifications.py:176
 #, python-brace-format
 msgid "Unknown notification event {0}"
 msgstr ""
@@ -45085,16 +45085,16 @@ msgid "Warehouse"
 msgstr ""
 
 #. Name of a role
-#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:198
-#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:181
-#: automotive_core/automotive_setup/doctype/plant/plant.json:301
-#: automotive_core/automotive_setup/doctype/production_line/production_line.json:237
-#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:202
-#: automotive_core/governance/doctype/approval_decision/approval_decision.json:224
-#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:333
-#: automotive_core/governance/doctype/approval_policy/approval_policy.json:274
-#: automotive_core/governance/doctype/approval_request/approval_request.json:269
-#: automotive_core/governance/doctype/notification_preference/notification_preference.json:111
+#: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:207
+#: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:190
+#: automotive_core/automotive_setup/doctype/plant/plant.json:308
+#: automotive_core/automotive_setup/doctype/production_line/production_line.json:245
+#: automotive_core/automotive_setup/doctype/shift_pattern/shift_pattern.json:211
+#: automotive_core/governance/doctype/approval_decision/approval_decision.json:243
+#: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:353
+#: automotive_core/governance/doctype/approval_policy/approval_policy.json:295
+#: automotive_core/governance/doctype/approval_request/approval_request.json:288
+#: automotive_core/governance/doctype/notification_preference/notification_preference.json:121
 msgid "Warehouse Clerk"
 msgstr ""
 
