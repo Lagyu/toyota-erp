@@ -4,6 +4,7 @@ script reports run through Frappe's report runner and refuse out-of-scope compan
 from __future__ import annotations
 
 import json
+from unittest.mock import patch
 
 import frappe
 from frappe.desk.query_report import run
@@ -93,3 +94,46 @@ class TestDesk(IntegrationTestCase):
 		page = frappe.get_doc("Page", "approval-inbox")
 		self.assertEqual(page.module, "Governance")
 		self.assertIn("Treasury Approver", {r.role for r in page.roles})
+
+
+def _remove_prepared_report(name: str, user: str) -> None:
+	"""The worker commits its status: what the test wrote stays unless removed."""
+	frappe.db.delete("Notification Log", {"for_user": user, "document_type": "Report"})
+	for file_name in frappe.get_all("File", filters={"attached_to_doctype": "Prepared Report", "attached_to_name": name},
+			pluck="name"):
+		frappe.delete_doc("File", file_name, force=1, ignore_permissions=True)
+	frappe.delete_doc_if_exists("Prepared Report", name, force=1)
+	frappe.db.commit()
+
+
+class TestPreparedReports(IntegrationTestCase):
+	def test_a_slow_report_runs_in_the_background_as_a_prepared_report(self):
+		"""PRF-4: Frappe turns a script report into a prepared report once a run inside a request
+		takes more than 15 s, and no report of the apps turns that off. A prepared report waits on
+		the long queue with a stored status; the worker keeps the result for the user who asked for
+		it and notifies them (deleting a queued or running one stops its job)."""
+		from frappe.core.doctype.prepared_report.prepared_report import generate_report, make_prepared_report
+		from frappe.desk.query_report import get_prepared_report_result
+
+		modules = frappe.get_all("Module Def", filters={"app_name": ("like", "automotive_%")}, pluck="name")
+		reports = frappe.get_all("Report", filters={"module": ("in", modules), "report_type": "Script Report"},
+			fields=["name", "disable_prepared_report_automation"])
+		self.assertGreaterEqual(len(reports), 14)
+		self.assertEqual([r.name for r in reports if r.disable_prepared_report_automation], [])
+
+		auditor = make_user("auditor.prepared@hinode.example", ["Auditor"])
+		# the job is recorded, not handed to the test bench's worker: the test runs it itself
+		with as_user(auditor), patch("frappe.core.doctype.prepared_report.prepared_report.enqueue") as enqueue:
+			name = make_prepared_report("Segregation of Duties Review", {})["name"]
+		self.addCleanup(_remove_prepared_report, name, auditor)
+		self.assertEqual(frappe.db.get_value("Prepared Report", name, "status"), "Queued")
+		self.assertEqual((enqueue.call_args.kwargs["queue"], enqueue.call_args.kwargs["prepared_report"]), ("long", name))
+		with as_user(auditor):
+			generate_report(name)  # what the long-queue worker runs
+			result = get_prepared_report_result(frappe.get_doc("Report", "Segregation of Duties Review"), {}, name,
+				auditor)
+		self.assertEqual(result["doc"].status, "Completed")
+		self.assertTrue(result["columns"])
+		self.assertIsInstance(result["result"], list)
+		self.assertTrue(frappe.db.exists("Notification Log", {"for_user": auditor, "document_type": "Report",
+			"document_name": "Segregation of Duties Review"}))
