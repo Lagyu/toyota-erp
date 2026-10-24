@@ -41,11 +41,13 @@ apps/                 custom Frappe apps
   automotive_portals/         supplier and dealer portals
   automotive_seed/            deterministic synthetic data generator (never in production images)
   */schema/                   DocType specifications (JSON is generated from these)
-e2e/                  Playwright business acceptance suite (journeys, roles, portals, shop floor)
+e2e/                  Playwright business acceptance suite (journeys, roles, portals, shop floor,
+                      navigation, accessibility, Japanese UI)
+integration_tests/    API contract tests: the running API against the committed OpenAPI document
 infra/                pinned versions, image build, production compose overrides, monitoring
 scripts/              development, CI, image, deployment, seed and host scripts
-ops/                  backup and restore drill scripts, operations runbooks
-config/               safe configuration (security review allowlist)
+ops/                  backup and restore drill scripts, operations runbooks, security findings
+config/               safe configuration (security review allowlist), Japanese glossary
 seed/                 pointer to the synthetic data profiles
 .github/workflows/    CI
 ```
@@ -72,7 +74,7 @@ The bootstrap installs Frappe and ERPNext at the pinned commits, links the custo
 creates a development site and a test site. Then:
 
 ```bash
-./scripts/ci/lint.sh                         # ruff, shellcheck, schema drift, YAML/JSON, identity check
+./scripts/ci/lint.sh                         # ruff, shellcheck, schema drift, translations, YAML/JSON, identity
 ./scripts/dev/test-all.sh                    # integration tests of every app on test.localhost
 ./scripts/dev/compose.sh exec -T bench bash -lc '/workspace/scripts/seed/reset-site.sh small.localhost'
 ./scripts/dev/compose.sh exec -d bench bash -lc '/workspace/scripts/seed/run.sh small.localhost small'
@@ -84,9 +86,9 @@ The small profile (15 simulated days) takes about 35 minutes; progress is in the
 browser suite:
 
 ```bash
-./scripts/dev/compose.sh exec -d bench bash -lc \
-  'cd ~/dev/frappe-bench && bench --site small.localhost serve --port 8000'
+./scripts/dev/serve.sh            # every dev site on port 18000, by host name
 ./scripts/ci/e2e.sh --url http://small.localhost:18000 --site small.localhost
+./scripts/ci/contract.sh --url http://127.0.0.1:18000 --site small.localhost   # API vs OpenAPI
 ```
 
 Every persona of the dataset can sign in with a password generated for the run (kept in

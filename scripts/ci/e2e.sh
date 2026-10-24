@@ -7,7 +7,8 @@
 #       a reference stack from a reference image (CI): new site, the small dataset (restored
 #       from .local/reference/ when the generator is unchanged, else generated once and
 #       cached; migrations bring a cached dataset forward), scheduler off so background
-#       jobs cannot race the journeys, then the suite; torn down unless --keep
+#       jobs cannot race the journeys, then the API contract tests and the suite; torn down
+#       unless --keep
 # Persona passwords (automotive_seed.e2e.prepare_users) and journey preconditions
 # (automotive_seed.e2e.prepare_journeys) are generated for the run and kept in
 # .local/e2e/{credentials,fixtures}.json (0600); reports in .local/e2e/.
@@ -155,10 +156,14 @@ fi
 # signing secret): both files are 0600 and mounted read-only into the Playwright container
 prepare prepare_users credentials
 prepare prepare_journeys fixtures
+if [[ -n $image ]]; then
+	# the API against its OpenAPI document (integration_tests/), as the stack's administrator
+	"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password"
+fi
 log "running Playwright against $url ($site)"
 docker_cmd run --rm --network host -u "$(id -u):$(id -g)" -e HOME=/tmp -e CI="${CI:-}" \
 	-e E2E_BASE_URL="$url" -e E2E_CREDENTIALS=/creds/credentials.json -e E2E_FIXTURES=/creds/fixtures.json \
 	-e E2E_REPORT_DIR=/report \
 	-v "$REPO_ROOT/e2e:/e2e" -v "$out:/creds:ro" -v "$out:/report" -w /e2e "$PLAYWRIGHT_IMAGE" \
-	bash -lc 'test -d node_modules/@playwright/test || npm ci --no-audit --no-fund >/dev/null; npx playwright test "$@"' \
+	bash -lc 'test -d node_modules/@axe-core/playwright || npm ci --no-audit --no-fund >/dev/null; npx playwright test "$@"' \
 	e2e "${pw_args[@]}"

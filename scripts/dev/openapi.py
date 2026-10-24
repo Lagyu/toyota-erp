@@ -150,6 +150,7 @@ def _operation(module: str, fn: ast.FunctionDef, deco: ast.expr, names: dict) ->
 			"200": {"description": "OK", "content": {"application/json": {"schema": {
 				"type": "object", "properties": {"message": _return_schema(fn)}}}}},
 			"403": {"$ref": "#/components/responses/Forbidden"},
+			"404": {"$ref": "#/components/responses/NotFound"},
 			"417": {"$ref": "#/components/responses/ValidationError"},
 		},
 	}
@@ -303,6 +304,7 @@ def build() -> dict:
 			},
 			"responses": {
 				"Forbidden": {"description": "Not permitted for this user, role or partner"},
+				"NotFound": {"description": "A document the request names does not exist"},
 				"ValidationError": {"description": "Business rule violated; the reason is in `_server_messages`"},
 				"InProgress": {"description": "The same Idempotency-Key is being processed"},
 				"IdempotencyConflict": {"description": "Idempotency-Key reused for a different request"},

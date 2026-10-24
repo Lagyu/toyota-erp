@@ -84,6 +84,8 @@ def assess_impact(name: str) -> dict:
 def make_eco(source_name: str | None = None, ecr: str | None = None):
 	"""Mapper (Create > ECO on a submitted change request): an unsaved ECO with one quantity
 	change per affected BOM line, prefilled with today's quantity for the engineer to set."""
+	if not (source_name or ecr):
+		frappe.throw(_("Choose the change request to convert."))
 	request = frappe.get_doc("Engineering Change Request", source_name or ecr)
 	request.check_permission("read")
 	if request.docstatus != 1 or request.status not in ("Under Review", "Approved"):
