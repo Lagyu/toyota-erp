@@ -3,8 +3,9 @@
 Desk rights of each internal persona (its role profile in
 `apps/automotive_core/automotive_core/setup/roles.py`) on the key DocTypes, at permission
 level 0 (GATE-4). Rights: **r** read, **w** write, **c** create, **s** submit, **x** cancel;
-**-** none. They come from the standard ERPNext/Frappe permissions of the persona's roles
-plus the automotive grants (`automotive_core.setup.permissions`).
+**-** none; after a slash, rights on the user's own documents only (`rc/w`: reads and creates,
+and edits what they created). They come from the standard ERPNext/Frappe permissions of the
+persona's roles plus the automotive grants (`automotive_core.setup.permissions`).
 
 Row-level scope narrows these rights further: company and plant User Permissions from
 provisioning and plant assignments (`automotive_core.access`), partner scope in the portals,
@@ -39,7 +40,7 @@ this table: change both together.
 | Engineering Change Order | r | r | r | r | r | rwcsx | r | rwcsx | r | r | r | r | rwcs | r | r | r | r | r | r | r |
 | Approval Policy | r | r | r | r | r | r | rw | rwc | - | r | r | r | r | r | r | r | r | r | r | r |
 | Approval Request | r | r | r | r | r | r | r | r | - | r | r | r | r | r | r | r | r | r | r | r |
-| Andon Event | r | r | r | r | r | r | r | rwc | rwc | r | rwc | r | r | r | rwc | rwc | rw | r | r | r |
+| Andon Event | r | r | r | r | r | r | r | rwc | rc/w | r | rwc | r | r | r | rwc | rc/w | rw | r | r | r |
 | Kanban Card | r | r | r | r | r | r | r | rwc | r | r | rwc | r | r | r | rwc | r | r | r | r | r |
 | Vehicle Unit | r | r | r | r | r | r | r | rw | r | r | r | r | r | rw | r | r | r | r | r | r |
 | Shipment Manifest | r | r | r | r | r | r | r | rwcsx | r | rwcsx | r | r | r | r | r | r | r | r | r | rwcs |

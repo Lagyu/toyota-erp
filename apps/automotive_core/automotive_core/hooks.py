@@ -108,12 +108,15 @@ doc_events = {
 	},
 	"Supplier": {
 		"validate": "automotive_core.access.master_data.validate_supplier",
+		"on_update": "automotive_core.access.master_data.record_accepted_similarity",
 	},
 	"Customer": {
 		"validate": "automotive_core.access.master_data.validate_customer",
+		"on_update": "automotive_core.access.master_data.record_accepted_similarity",
 	},
 	"Item": {
 		"validate": "automotive_core.access.master_data.validate_item",
+		"on_update": "automotive_core.access.master_data.record_accepted_similarity",
 	},
 }
 

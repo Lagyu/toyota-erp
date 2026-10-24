@@ -48,7 +48,7 @@ class TestStorage(IntegrationTestCase):
 		# put-away: the forward store up to its capacity, the rest into reserve storage
 		receipt = self._entry("Material Receipt", 25, putaway=True)
 		self.assertEqual(sorted((r.t_warehouse, flt(r.qty)) for r in receipt.items),
-			[(catalog.PARTS_STORE, 10), (RESERVE, 15)])
+			sorted([(catalog.PARTS_STORE, 10), (RESERVE, 15)]))
 		self.assertTrue(all(r.putaway_rule for r in receipt.items))
 		self.assertTrue(storage.putaway_applies(frappe._dict(company=AICHI,
 			items=[frappe._dict(item_code=PART, warehouse=catalog.PARTS_STORE)])))

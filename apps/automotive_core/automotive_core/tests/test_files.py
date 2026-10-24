@@ -13,7 +13,24 @@ from automotive_core.files.policy import AttachmentRejectedError
 from automotive_core.tests.utils import as_user, make_user
 
 READER = "files.reader@hinode.example"
-PDF = b"%PDF-1.4\n1 0 obj << /Type /Catalog >> endobj\ntrailer << /Root 1 0 R >>\n%%EOF\n"
+
+
+def _pdf() -> bytes:
+	"""A valid one-page PDF (Frappe parses uploaded PDFs: a sketch of one is refused)."""
+	objects = [b"<< /Type /Catalog /Pages 2 0 R >>", b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+		b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>"]
+	out, offsets = bytearray(b"%PDF-1.4\n"), []
+	for number, body in enumerate(objects, start=1):
+		offsets.append(len(out))
+		out += f"{number} 0 obj\n".encode() + body + b"\nendobj\n"
+	xref = len(out)
+	out += f"xref\n0 {len(objects) + 1}\n0000000000 65535 f \n".encode()
+	out += b"".join(f"{offset:010d} 00000 n \n".encode() for offset in offsets)
+	out += f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\nstartxref\n{xref}\n%%EOF\n".encode()
+	return bytes(out)
+
+
+PDF = _pdf()
 
 
 class TestAttachmentPolicy(IntegrationTestCase):

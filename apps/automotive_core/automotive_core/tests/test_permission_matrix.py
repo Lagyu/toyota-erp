@@ -7,6 +7,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import frappe
+from frappe.permissions import get_role_permissions
 from frappe.tests import IntegrationTestCase
 from frappe.utils import nowdate
 
@@ -42,8 +43,12 @@ class TestPermissionMatrix(IntegrationTestCase):
 		wrong = []
 		for doctype, documented in matrix.items():
 			for persona, rights in documented.items():
-				actual = "".join(code for ptype, code in RIGHTS
-					if frappe.has_permission(doctype, ptype, user=users[persona])) or "-"
+				user = users[persona]
+				granted = "".join(code for ptype, code in RIGHTS if frappe.has_permission(doctype, ptype, user=user)) or "-"
+				# rights the roles grant only on documents the user created ("if owner")
+				own = get_role_permissions(frappe.get_meta(doctype), user=user, is_owner=True)
+				owned = "".join(code for ptype, code in RIGHTS if own.get("if_owner", {}).get(ptype) and code not in granted)
+				actual = f"{granted}/{owned}" if owned else granted
 				if actual != rights:
 					wrong.append(f"{doctype} / {persona}: documented {rights}, actual {actual}")
 		self.assertEqual(wrong, [])

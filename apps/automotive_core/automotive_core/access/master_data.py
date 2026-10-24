@@ -63,12 +63,24 @@ def _check(doc, name_field: str, label: str) -> None:
 		score = fuzz.token_sort_ratio(target, normalise_name(row.get(name_field)))
 		if score >= SIMILARITY_THRESHOLD:
 			if doc.flags.get("accept_similar_name"):
-				audit.record("master_data.similar_name_accepted", doctype, doc.name,
-					{"similar_to": row.name, "score": score})
+				_accept_similar(doc, row.name, score)
 				return
 			raise DuplicateMasterDataError(
 				_("{0} name is too similar to existing {1} ({2}%).").format(label, row.name, int(score))
 			)
+
+
+def _accept_similar(doc, similar_to: str, score: float) -> None:
+	"""A reviewed near-duplicate, recorded in the audit chain once the document is saved: the
+	audit event links to it, so a new document has to exist first."""
+	doc.flags.automotive_similar_name = {"similar_to": similar_to, "score": score}
+
+
+def record_accepted_similarity(doc, method=None) -> None:
+	"""on_update of partners and items: the audit record of an accepted near-duplicate."""
+	similar = doc.flags.pop("automotive_similar_name", None)
+	if similar:
+		audit.record("master_data.similar_name_accepted", doc.doctype, doc.name, similar)
 
 
 def validate_supplier(doc, method=None) -> None:
@@ -98,7 +110,7 @@ def validate_item(doc, method=None) -> None:
 	if not clash:
 		return
 	if doc.flags.get("accept_similar_name"):
-		audit.record("master_data.similar_name_accepted", doc.doctype, doc.name, {"similar_to": clash, "score": 100})
+		_accept_similar(doc, clash, 100)
 		return
 	raise DuplicateMasterDataError(_("Item {0} in {1} already has the name {2}.").format(clash, doc.item_group,
 		doc.item_name))
