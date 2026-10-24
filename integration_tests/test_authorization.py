@@ -4,8 +4,8 @@
   operator who holds none of them, and a partner portal user;
 - every partner-portal method (``x-party``) refuses the other kind of partner: a dealer on the
   supplier portal's methods, a supplier on the dealer portal's;
-- the plant boundary: a Kyushu logistics coordinator's lists hold no Aichi stock entries, and
-  one asked for by name is refused.
+- the plant boundary: a Kyushu logistics coordinator's lists hold no Aichi stock entries, one
+  asked for by name is refused, and an export of them is refused or empty.
 
 Each call carries placeholder arguments of the documented types and an Idempotency-Key, so the
 refusal is the method's own check and not a missing argument. A refusal is a 403, or a 404 for
@@ -16,9 +16,12 @@ scripts/ci/contract.sh with the run's personas (INTEGRATION_CREDENTIALS); skippe
 from __future__ import annotations
 
 import ast
+import csv
+import io
 import json
 import os
 import unittest
+import urllib.parse
 import uuid
 from pathlib import Path
 
@@ -132,6 +135,29 @@ class TestAuthorization(unittest.TestCase):
 		status, data = kyushu.request("GET", "/api/method/frappe.client.get",
 			params={"doctype": "Stock Entry", "name": entry})
 		self.assertEqual(status, 403, str(data)[:200])
+	def test_an_export_holds_only_the_user_s_own_plant(self):
+		"""Report-view exports run the same permission query as the lists: a Kyushu user exporting
+		Aichi stock entries gets no row (or no export at all without the export right)."""
+		def export(client: Client):
+			body = urllib.parse.urlencode({"doctype": "Stock Entry", "file_format_type": "CSV", "title": "Stock Entry",
+				"fields": json.dumps(["`tabStock Entry`.`name`", "`tabStock Entry`.`automotive_plant`"]),
+				"filters": json.dumps({"automotive_plant": "AICHI-VA"})}).encode()
+			status, data = client.request("POST", "/api/method/frappe.desk.reportview.export_query", body=body,
+				headers={"Content-Type": "application/x-www-form-urlencoded"})
+			rows = list(csv.reader(io.StringIO(data))) if status == 200 and isinstance(data, str) else []
+			return status, rows[1:]
+
+		admin = Client()
+		admin.login(os.environ.get("INTEGRATION_USER", "Administrator"), os.environ["INTEGRATION_PASSWORD"])
+		admin.csrf("/desk")
+		status, rows = export(admin)
+		self.assertEqual(status, 200)
+		if not rows:
+			self.skipTest("no Aichi stock entry in this dataset")
+		status, rows = export(self.clients["kyushu_logistics"])
+		self.assertIn(status, (200, 403))
+		self.assertEqual(rows, [])
+
 
 if __name__ == "__main__":
 	unittest.main()
