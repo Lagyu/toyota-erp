@@ -9,7 +9,8 @@
 #   database.sql.gz public.tgz private.tgz encryption_key   the site, restorable anywhere
 #   status.json      automotive_seed.runner.status: stage, simulated date, counts, validation
 #   generator.log    the generator's output
-# Exit status: 0 when the run is paused or validated, 1 when it failed or its validation did.
+# Exit status: 0 when the run is paused or validated, or was stopped here in the middle of a
+# day (status still Running: the next segment resumes it); 1 when it failed or its validation did.
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 # shellcheck source=scripts/lib/stack.sh
@@ -51,7 +52,7 @@ log "generating $run for up to $minutes minutes"
 "${stack_compose[@]}" exec -T backend bench --site "$stack_site" execute automotive_seed.runner.run \
 	--kwargs "{'profile': '$profile'}" >"$out/generator.log" 2>&1 &
 generator=$!
-deadline=$((SECONDS + minutes * 60))
+deadline=$((SECONDS + minutes * 60)) stopped=0
 while kill -0 "$generator" 2>/dev/null && ((SECONDS < deadline)); do sleep 30; done
 if kill -0 "$generator" 2>/dev/null; then
 	log "budget spent: stopping at the end of the current simulated day"
@@ -64,6 +65,7 @@ if kill -0 "$generator" 2>/dev/null; then
 	if kill -0 "$generator" 2>/dev/null; then
 		log "the day did not finish in the grace period: stopping the generator"
 		"${stack_compose[@]}" exec -T backend python3 -c "$KILL_GENERATOR_PY" || true
+		stopped=1
 	fi
 fi
 wait "$generator" || log "generator exited with status $? (see generator.log)"
@@ -77,5 +79,8 @@ ls -la "$out" | tail -n +2
 
 case ${status%% *} in
 	Paused | Validated) exit 0 ;;
+	# the process stopped above could not record a pause: its day rolled back, and the
+	# next segment's run resumes from the last committed day
+	Running) exit $((stopped == 0)) ;;
 	*) exit 1 ;;
 esac

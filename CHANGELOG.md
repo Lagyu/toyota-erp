@@ -224,6 +224,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   write and read of a File. It now answers True and refuses only reading a file that is not yet
   clean while scanning is required; a test attaches and reads files as a desk user. Found by the
   production rehearsal's upload through ClamAV.
+- A dataset segment that stopped the generator in the middle of a day (`grace_minutes` 0)
+  failed the chain: the stopped process cannot record its pause, and `dataset.sh` took the run's
+  status, still Running, for a failure. The next segment now resumes it.
 - The upgrade's rollback snapshot could be pruned by a later backup the same day: it carried
   the nightly backups' tags, and their retention keeps one snapshot a day. `upgrade.sh` tags it
   `pre-upgrade`, its own retention group.
