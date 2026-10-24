@@ -53,8 +53,9 @@ as drafts (leave *Submit After Import* off) and go through it.
 
 **Who.** Importing needs the DocType's *Import* right. ERPNext gives it to System Manager and
 its master-manager roles (Item Manager for items, Purchase Master Manager for suppliers, Sales
-Master Manager for customers); the persona role profiles do not hold them. For a migration,
-grant the role through a User Provisioning Request with an expiry
+Master Manager for customers). Of the personas only IT Operator holds it, through System
+Manager; the business personas do not. For a migration by a business user, grant the
+master-manager role through a User Provisioning Request with an expiry
 ([access-review.md](access-review.md#provisioning-internal-users)) and let it lapse.
 
 **Practice.** Import into a staging site first and check the result there (counts, a few
