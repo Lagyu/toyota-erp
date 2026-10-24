@@ -15,7 +15,9 @@ COUNTED = ("Company", "User", "Item", "BOM", "Work Order", "Purchase Order", "Sa
 	"Stock Ledger Entry", "Audit Event", "Vehicle Unit")
 
 
-def verify_restored_site() -> str:
+def verify_restored_site(output: str | None = None) -> dict:
+	"""Returns the check results; with ``output`` (an absolute path) also writes them there
+	as JSON, which the drill script reads instead of parsing ``bench execute`` output."""
 	frappe.only_for("System Manager")
 	checks = []
 	for company in frappe.get_all("Company", pluck="name"):
@@ -31,4 +33,8 @@ def verify_restored_site() -> str:
 	checks.append({"check": "record counts", "ok": counts.get("Company", 0) > 0, "counts": counts})
 	last = frappe.db.sql("select max(posting_date) from `tabGL Entry`")[0][0]
 	checks.append({"check": "latest posting", "ok": True, "date": str(last) if last else None})
-	return json.dumps({"ok": all(c["ok"] for c in checks), "checks": checks}, default=str)
+	result = {"ok": all(c["ok"] for c in checks), "checks": checks}
+	if output:
+		with open(output, "w") as handle:
+			json.dump(result, handle, default=str)
+	return result

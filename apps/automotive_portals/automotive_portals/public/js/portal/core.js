@@ -286,7 +286,8 @@ export function shell(root, { title, party, tabs }) {
 		h("header", { class: "hp-header" }, h("h1", {}, title), h("p", { class: "hp-party" }, party)),
 		list, alertRegion, panel));
 
-	async function select(key, params = {}) {
+	// a navigation clears the alert region unless it follows a success the user should see
+	async function select(key, params = {}, { keepNotice = false } = {}) {
 		const index = tabs.findIndex((tab) => tab.key === key);
 		const tab = tabs[index >= 0 ? index : 0];
 		buttons.forEach((b, i) => {
@@ -296,7 +297,7 @@ export function shell(root, { title, party, tabs }) {
 		});
 		panel.setAttribute("aria-labelledby", `hp-tab-${tab.key}`);
 		clear(panel).appendChild(h("p", { class: "hp-loading" }, __("Loading…")));
-		notice(alertRegion, null);
+		if (!keepNotice) notice(alertRegion, null);
 		if (window.location.hash.slice(1) !== tab.key) history.replaceState(null, "", `#${tab.key}`);
 		try {
 			const content = await tab.render({ ...params, go: select, alert: alertRegion });

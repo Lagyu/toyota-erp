@@ -55,6 +55,12 @@ def _user_with(role: str, plant: str | None) -> str | None:
 
 
 def _partner(party_type: str) -> str | None:
+	if party_type == "Supplier":  # a just-in-time supplier: the Kanban journey needs one
+		rows = frappe.db.sql("""select pua.user from `tabPartner User Access` pua
+			join `tabKanban Loop` kl on kl.supplier = pua.supplier and kl.status = 'Active'
+			where pua.status = 'Active' and pua.party_type = 'Supplier' order by pua.user limit 1""", pluck=True)
+		if rows:
+			return rows[0]
 	return frappe.db.get_value("Partner User Access", {"party_type": party_type, "status": "Active"}, "user",
 		order_by="user asc")
 

@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../../../../../../../tmp/tmp-48387-eWNA40kpWYQT/automotive_core/automotive_core/public/css/automotive_core.bundle.css"],
-  "sourcesContent": ["/* Desk styling shared by the Hinode ERP apps. Plant-floor screens use large\n   touch targets so they are usable on tablets (ERP-12). */\n.automotive-touch .btn {\n\tmin-height: 44px;\n\tmin-width: 44px;\n\tfont-size: var(--text-md);\n}\n\n.automotive-state-badge {\n\tdisplay: inline-block;\n\tpadding: 2px 8px;\n\tborder-radius: var(--border-radius-sm);\n\tfont-size: var(--text-xs);\n\tbackground: var(--bg-gray);\n\tcolor: var(--text-color);\n}\n"],
-  "mappings": "AAEA,uBACC,gBACA,eACA,yBAGD,wBACC,qBATD,gBAWC,sCACA,yBACA,0BACA",
-  "names": []
-}

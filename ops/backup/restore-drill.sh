@@ -36,9 +36,22 @@ bench --site "$scratch" restore "$work/restore.sql.gz" --with-public-files "$pub
 	--with-private-files "$private" --db-root-password "$(<"${DB_ROOT_PASSWORD_FILE:?}")" --force >/dev/null
 bench --site "$scratch" migrate >/dev/null
 
-result=$(bench --site "$scratch" execute automotive_core.ops.backup_checks.verify_restored_site)
+bench --site "$scratch" execute automotive_core.ops.backup_checks.verify_restored_site \
+	--kwargs "{'output': '$work/checks.json'}" >/dev/null
 finished=$(date -u +%s)
-printf '{"snapshot": "%s", "source_site": "%s", "restore_seconds": %d, "checks": %s}\n' \
-	"$snapshot" "$site" "$((finished - started))" "$result" >"$evidence_dir/$(date -u +%Y%m%dT%H%M%SZ).json"
-python3 -c 'import json,sys; sys.exit(0 if json.loads(sys.argv[1])["ok"] else 1)' "$result"
-log "restore drill passed in $((finished - started))s"
+evidence="$evidence_dir/$(date -u +%Y%m%dT%H%M%SZ).json"
+python3 - "$work/checks.json" "$evidence" "$snapshot" "$site" "$((finished - started))" <<'PY'
+import json
+import sys
+
+checks_path, evidence_path, snapshot, site, seconds = sys.argv[1:]
+with open(checks_path) as handle:
+	checks = json.load(handle)
+with open(evidence_path, "w") as handle:
+	json.dump({"snapshot": snapshot, "source_site": site, "restore_seconds": int(seconds), "checks": checks},
+		handle, indent=1)
+for check in checks["checks"]:
+	print(("ok  " if check["ok"] else "FAIL") + " " + check["check"])
+sys.exit(0 if checks["ok"] else 1)
+PY
+log "restore drill passed in $((finished - started))s (evidence ${evidence#sites/})"

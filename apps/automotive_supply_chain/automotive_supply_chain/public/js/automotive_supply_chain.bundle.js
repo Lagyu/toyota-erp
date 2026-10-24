@@ -88,3 +88,19 @@ frappe.ui.form.on("Receipt Discrepancy", {
 		}
 	},
 });
+
+frappe.ui.form.on("Kanban Signal", {
+	refresh(frm) {
+		// purchasing has been asked (material request) but no call-off order exists yet
+		if (frm.doc.material_request && !frm.doc.purchase_order && ["Open", "Ordered", "Escalated"].includes(frm.doc.status)) {
+			frm.add_custom_button(__("Release Call-Offs Now"), () =>
+				frappe
+					.call({ method: "automotive_supply_chain.supplier_collaboration.schedules.release_calloffs_now", freeze: true })
+					.then((r) => {
+						frappe.show_alert({ message: __("{0} call-off order(s) released", [(r.message || []).length]), indicator: "green" });
+						frm.reload_doc();
+					})
+			);
+		}
+	},
+});

@@ -101,6 +101,14 @@ def make_calloff(company: str, supplier: str, plant: str, lines: list[dict], sch
 	return po.name
 
 
+@frappe.whitelist(methods=["POST"])
+def release_calloffs_now() -> list[str]:
+	"""Buyer action: release open Kanban call-offs immediately instead of waiting for the
+	five-minute scheduler run (same function, same rules)."""
+	frappe.only_for(("Buyer", "Procurement Manager", "System Manager"))
+	return release_kanban_calloffs()
+
+
 def release_kanban_calloffs() -> list[str]:
 	"""Every few minutes: one call-off PO per (company, plant, supplier) for open Kanban requests."""
 	created = []

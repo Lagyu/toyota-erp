@@ -111,7 +111,7 @@ async function rfqDetail(name, go, alert) {
 				lines: rfq.items.map((item) => ({ row: item.row, qty: data.get(`qty-${item.row}`),
 					rate: data.get(`rate-${item.row}`) })),
 			}, key);
-			setTimeout(() => go("rfqs", { name: rfq.name }), 0);
+			setTimeout(() => go("rfqs", { name: rfq.name }, { keepNotice: true }), 0);
 			return __("Quotation {0} submitted.", [result.supplier_quotation]);
 		},
 	});
@@ -188,7 +188,7 @@ async function orderDetail(name, go, alert) {
 			}));
 			const result = await api.post(`${M}acknowledge`, { purchase_order: po.name, response,
 				supplier_reference: data.get("supplier_reference") || null, lines }, key);
-			setTimeout(() => go("orders", { name: po.name }), 0);
+			setTimeout(() => go("orders", { name: po.name }, { keepNotice: true }), 0);
 			return __("Acknowledgement {0} sent ({1}).", [result.acknowledgement, __(result.ack_type)]);
 		},
 	}) : null;
@@ -226,7 +226,7 @@ async function schedules({ go, name, alert }) {
 				try {
 					await api.post(`${M}acknowledge_schedule`, { name: s.name });
 					notice(alert, __("Schedule {0} acknowledged.", [s.name]), "success");
-					go("schedules", { name: s.name });
+					go("schedules", { name: s.name }, { keepNotice: true });
 				} catch (err) {
 					e.target.disabled = false;
 					notice(alert, err.message, "error");
@@ -346,7 +346,7 @@ async function asnForm(go, alert) {
 			}, key);
 			const files = data.getAll("documents").filter((f) => f && f.size);
 			for (const file of files) await upload(file, result.asn);
-			setTimeout(() => go("shipments", { name: result.asn }), 0);
+			setTimeout(() => go("shipments", { name: result.asn }, { keepNotice: true }), 0);
 			return __("Shipment {0} announced.", [result.asn]);
 		},
 	}));

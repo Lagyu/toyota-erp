@@ -144,7 +144,7 @@ async function configure({ go, alert }) {
 				lines: cart.map((line) => ({ vehicle_model: line.vehicle_model, selections: line.selections, qty: line.qty })),
 			}, key);
 			cart.length = 0;
-			setTimeout(() => go("orders", { name: r.dealer_order }), 0);
+			setTimeout(() => go("orders", { name: r.dealer_order }, { keepNotice: true }), 0);
 			return __("Order {0} placed ({1}).", [r.dealer_order, fmtMoney(r.total, r.currency)]);
 		},
 	}) : null;
@@ -202,7 +202,7 @@ async function orderDetail(name, go, alert) {
 				new_qty: data.get("new_qty") || null, new_delivery_date: data.get("new_delivery_date") || null,
 				reason: data.get("reason"),
 			}, key);
-			setTimeout(() => go("orders", { name: o.name }), 0);
+			setTimeout(() => go("orders", { name: o.name }, { keepNotice: true }), 0);
 			return __("Change {0}: {1}", [r.change, r.effect || __(r.status)]);
 		},
 	}) : null;
@@ -291,7 +291,7 @@ async function deliveries({ go, alert, accept }) {
 				if (condition !== "Accepted" && !data.get("damage_notes")) throw new Error(__("Describe the damage or the reason."));
 				const r = await api.post(`${M}accept_delivery`, { delivery_note: accept, condition,
 					damage_notes: data.get("damage_notes") || null }, key);
-				setTimeout(() => go("deliveries"), 0);
+				setTimeout(() => go("deliveries", {}, { keepNotice: true }), 0);
 				return __("Delivery {0} recorded as {1}.", [accept, __(r.condition)]);
 			},
 		}));
@@ -347,7 +347,7 @@ async function support({ go, alert }) {
 			onSubmit: async (data, key) => {
 				const r = await api.post(`${M}create_support_request`, { subject: data.get("subject"),
 					description: data.get("description"), vehicle: data.get("vehicle") || null }, key);
-				setTimeout(() => go("support"), 0);
+				setTimeout(() => go("support", {}, { keepNotice: true }), 0);
 				return __("Support request {0} created.", [r.issue]);
 			},
 		}),

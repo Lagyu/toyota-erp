@@ -32,4 +32,5 @@ date -u +%FT%TZ >"$dir/last-success.txt"
 # keep three days of local copies for quick restores; the repository holds the rest
 find "$dir" -maxdepth 1 -type f \( -name '*.sql.gz' -o -name '*.tar' -o -name '*.tgz' -o -name '*.json' \) \
 	-mtime +3 -delete
-log "done: $(restic snapshots --host "$site" --latest 1 --compact | tail -2 | head -1)"
+log "done: snapshot $(restic snapshots --host "$site" --latest 1 --json | python3 -c \
+	'import json, sys; s = json.load(sys.stdin)[-1]; print(s["short_id"], s["time"][:19])')"

@@ -7,16 +7,36 @@ export async function openDesk(page: Page, route = "/desk") {
 	await page.waitForFunction(() => (window as any).frappe?.boot?.user, null, { timeout: 60_000 });
 }
 
-/** frappe.call as the signed-in user; returns r.message or throws the server message. */
+/** POST /api/method/<method> as the signed-in user (session cookie + CSRF token);
+ * returns `message` or throws with the server's error text. */
 export async function call<T = any>(page: Page, method: string, args: Record<string, unknown> = {}): Promise<T> {
-	return page.evaluate(
+	const result = await page.evaluate(
 		async ({ method, args }) => {
 			const frappe = (window as any).frappe;
-			const r = await frappe.call({ method, args, freeze: false, error_handlers: {} });
-			return r.message;
+			const res = await fetch(`/api/method/${method}`, {
+				method: "POST",
+				credentials: "same-origin",
+				headers: {
+					Accept: "application/json",
+					"Content-Type": "application/json",
+					"X-Frappe-CSRF-Token": frappe?.csrf_token ?? "",
+				},
+				body: JSON.stringify(args),
+			});
+			const body = await res.json().catch(() => ({}));
+			if (res.ok) return { ok: true, message: body.message };
+			let text = body.exception || body.exc_type || "";
+			try {
+				text = JSON.parse(body._server_messages || "[]").map((m: string) => JSON.parse(m).message).join(" ") || text;
+			} catch {
+				/* keep exc_type */
+			}
+			return { ok: false, error: `${method}: HTTP ${res.status} ${text}` };
 		},
 		{ method, args }
 	);
+	if (!result.ok) throw new Error(result.error);
+	return result.message as T;
 }
 
 export async function getDoc<T = any>(page: Page, doctype: string, name: string): Promise<T> {
