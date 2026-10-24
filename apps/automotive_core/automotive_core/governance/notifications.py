@@ -40,6 +40,7 @@ class Event:
 EVENTS = {
 	"approval.requested": Event("Approval requested", email=True, mandatory=True),
 	"approval.decided": Event("Approval decided", email=True),
+	"approval.escalated": Event("Approval escalated", email=True, mandatory=True),
 	"kanban.overdue": Event("Kanban signal overdue", email=False),
 	"quality.hold_raised": Event("Quality hold raised", email=True),
 	"integration.dead_letter": Event("Integration message dead-lettered", email=True),

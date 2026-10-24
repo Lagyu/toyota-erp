@@ -13,7 +13,10 @@
   "decided_by",
   "on_behalf_of",
   "decided_at",
-  "decision"
+  "decision",
+  "escalate_after_hours",
+  "escalated_at",
+  "escalated_to"
  ],
  "fields": [
   {
@@ -81,11 +84,29 @@
    "label": "Decision",
    "options": "Approval Decision",
    "read_only": 1
+  },
+  {
+   "fieldname": "escalate_after_hours",
+   "fieldtype": "Int",
+   "label": "Escalate After (Hours)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "escalated_at",
+   "fieldtype": "Datetime",
+   "label": "Escalated At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "escalated_to",
+   "fieldtype": "Small Text",
+   "label": "Escalated To",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-10-24 07:18:49.078600",
+ "modified": "2026-10-24 17:11:47.613748",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Approval Request Step",

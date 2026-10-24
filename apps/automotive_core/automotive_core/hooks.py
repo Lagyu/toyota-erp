@@ -137,6 +137,7 @@ scheduler_events = {
 	},
 	"hourly": [
 		"automotive_core.governance.delegation.refresh_statuses",
+		"automotive_core.governance.approvals.escalate_overdue",
 		"automotive_core.automotive_setup.access_sync.refresh_assignments",
 	],
 	"daily": [

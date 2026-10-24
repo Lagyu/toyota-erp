@@ -78,7 +78,8 @@ DOCTYPES = [
 			data("clamd_host", "ClamAV (clamd) Host"),
 			int_("clamd_port", "ClamAV (clamd) Port", default="3310"),
 			int_("default_retention_days", "Default Attachment Retention (Days)", default="0",
-				description="0 keeps attachments forever."),
+				description="For DocTypes without a rule below; the system's own records (users, letter heads, "
+				"print formats, web pages) keep theirs. 0 keeps attachments forever."),
 			section("Per-DocType Rules"),
 			table("attachment_rules", "Attachment Rules", "Attachment Policy Rule"),
 			tab("Taxes"),

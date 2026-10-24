@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:09+0919\n"
+"POT-Creation-Date: 2026-10-24 17:13+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -301,12 +301,6 @@ msgstr "0を指定すると上限なしになります。"
 msgid "0 = no upper bound."
 msgstr "0を指定すると上限なしになります。"
 
-#. Description of the 'Default Attachment Retention (Days)' (Int) field in
-#. DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:179
-msgid "0 keeps attachments forever."
-msgstr "0を指定すると添付ファイルを無期限に保存します。"
-
 #: frappe/public/js/frappe/form/grid_row.js:891
 msgid "1 = True & 0 = False"
 msgstr "1 = チェックあり、0 = チェックなし"
@@ -567,7 +561,7 @@ msgstr "購入した物品やサービスに対する仕入先からの請求書
 msgid "A bill to a customer for what you sold."
 msgstr "販売した物品やサービスに対する顧客への請求書です。"
 
-#: automotive_core/governance/approvals.py:355
+#: automotive_core/governance/approvals.py:356
 msgid "A comment is required when rejecting."
 msgstr "却下する場合はコメントが必要です。"
 
@@ -3583,16 +3577,16 @@ msgid "Approval Request"
 msgstr "承認依頼"
 
 #. Name of a DocType
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:91
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:112
 msgid "Approval Request Step"
 msgstr "承認依頼ステップ"
 
-#: automotive_core/governance/approvals.py:353
+#: automotive_core/governance/approvals.py:354
 #, python-brace-format
 msgid "Approval Request {0} has no pending step."
 msgstr "承認依頼{0}には処理待ちのステップがありません。"
 
-#: automotive_core/governance/approvals.py:350
+#: automotive_core/governance/approvals.py:351
 #, python-brace-format
 msgid "Approval Request {0} is {1}, not Pending."
 msgstr "承認依頼{0}のステータスは「処理待ち」ではなく「{1}」です。"
@@ -3614,6 +3608,11 @@ msgstr "1つのドキュメントタイプに対する承認マトリクスで�
 #, python-brace-format
 msgid "Approval needed: {0} {1} (step {2}: {3})"
 msgstr "承認が必要です: {0} {1}（ステップ{2}: {3}）"
+
+#: automotive_core/templates/emails/approval_escalated.subject.html:1
+#, python-brace-format
+msgid "Approval overdue: {0} {1} (step {2}: {3})"
+msgstr "承認期限超過: {0} {1}（ステップ{2}: {3}）"
 
 #: automotive_core/public/js/automotive_core.bundle.js:24
 #, python-brace-format
@@ -3643,7 +3642,7 @@ msgstr "{0}を承認する"
 #. Option for the 'Status' (Select) field in DocType 'Approval Request'
 #. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_request/approval_request.json:88
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 msgid "Approved"
 msgstr "承認済み"
 
@@ -3660,9 +3659,13 @@ msgstr "承認済みです（{0}）。ドキュメントを提出できます。
 #. Label of the approver_role (Link) field in DocType 'Approval Policy Step'
 #. Label of the approver_role (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:34
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:37
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:40
 msgid "Approver Role"
 msgstr "承認者ロール"
+
+#: automotive_core/templates/emails/approval_escalated.html:2
+msgid "Approvers of the step: please decide. Next level: please follow up."
+msgstr "このステップの承認者は判断してください。上位の担当者はフォローアップしてください。"
 
 #. Label of the apps (Data) field in DocType 'Recorder Event'
 #. Option for the 'Desktop Page' (Select) field in DocType 'Desktop Settings'
@@ -9928,14 +9931,14 @@ msgstr "売掛金"
 #. Label of the decided_at (Datetime) field in DocType 'Approval Decision'
 #. Label of the decided_at (Datetime) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:109
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:75
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:78
 msgid "Decided At"
 msgstr "判断日時"
 
 #. Label of the decided_by (Link) field in DocType 'Approval Decision'
 #. Label of the decided_by (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:87
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:61
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:64
 msgid "Decided By"
 msgstr "判断者"
 
@@ -9950,12 +9953,12 @@ msgstr "小数点記号は1文字で指定してください。"
 #. Label of the decision (Select) field in DocType 'Approval Decision'
 #. Label of the decision (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:74
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:81
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:84
 #: automotive_core/governance/page/approval_inbox/approval_inbox.js:52
 msgid "Decision"
 msgstr "判断"
 
-#: automotive_core/governance/approvals.py:346
+#: automotive_core/governance/approvals.py:347
 msgid "Decision must be Approve or Reject."
 msgstr "判断は「承認する」または「却下する」のいずれかにしてください。"
 
@@ -12116,7 +12119,7 @@ msgstr "ESC"
 msgid "Each Step Needs A Different Approver"
 msgstr "ステップごとに異なる承認者が必要"
 
-#: automotive_core/governance/approvals.py:340
+#: automotive_core/governance/approvals.py:341
 #, python-brace-format
 msgid "Each step of {0} must be approved by a different person."
 msgstr "{0}の各ステップは、それぞれ別の人が承認する必要があります。"
@@ -12996,9 +12999,23 @@ msgstr "エラー：{0}は必須フィールドです。"
 
 #. Label of the escalate_after_hours (Int) field in DocType 'Approval Policy
 #. Step'
+#. Label of the escalate_after_hours (Int) field in DocType 'Approval Request
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:55
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:91
 msgid "Escalate After (Hours)"
 msgstr "エスカレーションまで（時間）"
+
+#. Label of the escalated_at (Datetime) field in DocType 'Approval Request
+#. Step'
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:97
+msgid "Escalated At"
+msgstr "エスカレーション日時"
+
+#. Label of the escalated_to (Small Text) field in DocType 'Approval Request
+#. Step'
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:103
+msgid "Escalated To"
+msgstr "エスカレーション先"
 
 #: erpnext/accounts/doctype/pricing_rule/pricing_rule.js:87
 msgid "Even if there are multiple Pricing Rules with highest priority, then following internal priorities are applied:"
@@ -14557,6 +14574,12 @@ msgstr "「製品バンドル」品目の場合、倉庫、シリアル番号、
 #: erpnext/accounts/doctype/journal_entry/journal_entry.json:574
 msgid "For All Stock Asset Accounts"
 msgstr "すべての棚卸資産勘定科目を対象にする"
+
+#. Description of the 'Default Attachment Retention (Days)' (Int) field in
+#. DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:179
+msgid "For DocTypes without a rule below; the system's own records (users, letter heads, print formats, web pages) keep theirs. 0 keeps attachments forever."
+msgstr "下のルールがないDocTypeに適用されます。システム自身のレコード（ユーザー、レターヘッド、印刷フォーマット、Webページ）の添付ファイルは保持されます。0の場合は無期限に保持します。"
 
 #: frappe/core/doctype/user_permission/user_permission_list.js:155
 msgid "For Document Type"
@@ -23806,7 +23829,7 @@ msgstr "タグ「{0}」が付いたドキュメントは見つかりませんで
 msgid "No documents found."
 msgstr "ドキュメントが見つかりません。"
 
-#: automotive_core/governance/notifications.py:136
+#: automotive_core/governance/notifications.py:137
 msgid "No e-mail address, or the address unsubscribed"
 msgstr "メールアドレスがないか、配信停止されています"
 
@@ -24659,7 +24682,7 @@ msgstr "請求書日付と前払日の古い方"
 #. Label of the on_behalf_of (Link) field in DocType 'Approval Request Step'
 #. Label of the on_behalf_of (Link) field in DocType 'Audit Event'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:95
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:68
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:71
 #: automotive_core/governance/doctype/audit_event/audit_event.json:80
 msgid "On Behalf Of"
 msgstr "代理元"
@@ -24872,7 +24895,7 @@ msgstr "作業指示{1}に対して作成できる{0}伝票は1つだけです�
 msgid "Only own"
 msgstr "作成者のみ"
 
-#: automotive_core/governance/approvals.py:281
+#: automotive_core/governance/approvals.py:282
 msgid "Only pending requests can be withdrawn."
 msgstr "取り下げられるのは処理待ちの依頼のみです。"
 
@@ -24896,7 +24919,7 @@ msgstr "標準のドキュメントタイプを削除できるのは管理者（
 msgid "Only the delegator or an IT Operator can create this delegation."
 msgstr "この権限委任を作成できるのは、委任者またはIT運用担当者のみです。"
 
-#: automotive_core/governance/approvals.py:283
+#: automotive_core/governance/approvals.py:284
 msgid "Only the requester can withdraw an approval request."
 msgstr "承認依頼を取り下げられるのは依頼者のみです。"
 
@@ -25028,6 +25051,7 @@ msgid "Open the app dock"
 msgstr "アプリドックを開く"
 
 #: automotive_core/templates/emails/approval_decided.html:2
+#: automotive_core/templates/emails/approval_escalated.html:3
 #: automotive_core/templates/emails/approval_requested.html:3
 msgid "Open the approval request"
 msgstr "承認依頼を開く"
@@ -26875,7 +26899,7 @@ msgstr "未払給与"
 #. Message'
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
 #: automotive_core/governance/doctype/approval_request/approval_request.json:88
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
 msgid "Pending"
 msgstr "処理待ち"
@@ -31764,7 +31788,7 @@ msgstr "{0}を却下する"
 #. Option for the 'Status' (Select) field in DocType 'Integration Inbound
 #. Message'
 #: automotive_core/governance/doctype/approval_request/approval_request.json:88
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
 msgid "Rejected"
@@ -37852,7 +37876,7 @@ msgid "Skip every row that has one of these values. Skipped rows are not importe
 msgstr "これらの値のいずれかを含む行をすべてスキップします。スキップした行はインポートされません。"
 
 #. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 msgid "Skipped"
 msgstr "スキップ"
 
@@ -38149,7 +38173,7 @@ msgstr "採番シリーズ{0}では、'-'、'#'、'.'、'/'、'{{' and '}}' 以�
 #. Label of the approver_user (Link) field in DocType 'Approval Policy Step'
 #. Label of the approver_user (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:48
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:44
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:47
 msgid "Specific Approver"
 msgstr "指定承認者"
 
@@ -38416,7 +38440,7 @@ msgstr "統計の期間"
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:36
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:89
 #: automotive_core/governance/doctype/approval_request/approval_request.json:87
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:53
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:56
 #: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:69
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:114
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:65
@@ -38450,7 +38474,7 @@ msgstr "不合格の測定値が1つ以上あるため、ステータスを不�
 #. Label of the step_no (Int) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:67
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:20
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:23
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:26
 #: automotive_core/governance/page/approval_inbox/approval_inbox.js:51
 msgid "Step"
 msgstr "ステップ"
@@ -38458,7 +38482,7 @@ msgstr "ステップ"
 #. Label of the step_name (Data) field in DocType 'Approval Policy Step'
 #. Label of the step_name (Data) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:27
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:30
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:33
 msgid "Step Name"
 msgstr "ステップ名"
 
@@ -41013,6 +41037,11 @@ msgstr "{0}には在庫元帳エントリが存在するため、勘定科目タ
 msgid "The application has been updated to a new version, please refresh this page"
 msgstr "アプリケーションが新しいバージョンに更新されました。このページを再読み込みしてください。"
 
+#: automotive_core/templates/emails/approval_escalated.html:1
+#, python-brace-format
+msgid "The approval of {0} {1} has waited {2} hours at step {3}: {4}."
+msgstr "{0} {1} の承認がステップ{3}: {4} で {2} 時間待機しています。"
+
 #: frappe/public/js/frappe/views/interaction.js:328
 msgid "The attachments could not be correctly linked to the new document"
 msgstr "添付ファイルを新しいドキュメントに正しくリンクできませんでした。"
@@ -41067,11 +41096,11 @@ msgstr "その品目の既定のBOMが自動的に取得されます。BOMは変
 msgid "The dock as this arrangement leaves it."
 msgstr "この配置を適用した場合のドックです。"
 
-#: automotive_core/governance/approvals.py:366
+#: automotive_core/governance/approvals.py:367
 msgid "The document changed after approval was requested."
 msgstr "承認依頼後にドキュメントが変更されました。"
 
-#: automotive_core/governance/approvals.py:367
+#: automotive_core/governance/approvals.py:368
 msgid "The document changed; a new approval request is needed."
 msgstr "ドキュメントが変更されました。新しい承認依頼が必要です。"
 
@@ -41198,7 +41227,7 @@ msgstr "{0}のレイアウトは新しいビルダー用に書き換えられま
 msgid "The link you trying to login is invalid or expired."
 msgstr "ログインしようとしたリンクは無効か、有効期限が切れています。"
 
-#: automotive_core/governance/approvals.py:335
+#: automotive_core/governance/approvals.py:336
 #, python-brace-format
 msgid "The maker of {0} cannot approve it (maker/checker)."
 msgstr "{0}の作成者は承認できません（作成者と承認者の分離）。"
@@ -43214,7 +43243,7 @@ msgstr "より快適にご利用いただくには、{0}をお試しください
 msgid "Tuesday"
 msgstr "火曜日"
 
-#: automotive_core/governance/notifications.py:113
+#: automotive_core/governance/notifications.py:114
 msgid "Turned off in the recipient's notification preferences"
 msgstr "受信者の通知設定でオフになっています"
 
@@ -43670,8 +43699,8 @@ msgstr "不明な列：{0}"
 msgid "Unknown inbound message types: {0}"
 msgstr "不明な受信メッセージタイプです: {0}"
 
-#: automotive_core/governance/notifications.py:102
-#: automotive_core/governance/notifications.py:176
+#: automotive_core/governance/notifications.py:103
+#: automotive_core/governance/notifications.py:177
 #, python-brace-format
 msgid "Unknown notification event {0}"
 msgstr "不明な通知イベント{0}です。"
@@ -46325,7 +46354,7 @@ msgstr "{}ワークフローに設定された条件により、更新は許可�
 msgid "You are not allowed to update this onboarding step"
 msgstr "このオンボーディングステップを更新する権限がありません。"
 
-#: automotive_core/governance/approvals.py:326
+#: automotive_core/governance/approvals.py:327
 #, python-brace-format
 msgid "You are not authorised to approve step {0} ({1}) of {2}."
 msgstr "{2}のステップ{0}（{1}）を承認する権限がありません。"
@@ -46669,6 +46698,7 @@ msgid "You need write permission on {0} {1} to rename"
 msgstr "名前を変更するには、{0} {1}に対する書き込み権限が必要です。"
 
 #: automotive_core/templates/emails/approval_decided.html:3
+#: automotive_core/templates/emails/approval_escalated.html:4
 #: automotive_core/templates/emails/approval_requested.html:4
 #: automotive_core/templates/emails/automotive_footer.html:2
 #: automotive_core/templates/emails/integration_dead_letter.html:4
@@ -46848,6 +46878,14 @@ msgstr "アプリの既定で非表示"
 #: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
 msgid "approval.decided"
 msgstr "承認の判断"
+
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "approval.escalated"
+msgstr "承認のエスカレーション"
 
 #. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
 #. Option for the 'Event' (Select) field in DocType 'Notification Preference
@@ -48171,7 +48209,7 @@ msgstr "{0} は必須です。{1} から {2} への為替レートのレコー�
 msgid "{0} is mandatory. Maybe Currency Exchange record is not created for {1} to {2}."
 msgstr "{0}は必須です。{1}から{2}への通貨換算レコードが作成されていない可能性があります。"
 
-#: automotive_core/governance/approvals.py:360
+#: automotive_core/governance/approvals.py:361
 #, python-brace-format
 msgid "{0} is no longer a draft."
 msgstr "{0}はすでに下書きではありません。"
@@ -48855,7 +48893,7 @@ msgstr "{0} {1}に「{2}」は指定できません。次のいずれかを指�
 msgid "{0} {1} cannot be updated. If you need to make changes, we recommend canceling the existing entry and creating a new one."
 msgstr "{0} {1}は更新できません。変更が必要な場合は、既存の伝票を取り消して新しく作成することをお勧めします。"
 
-#: automotive_core/governance/approvals.py:442
+#: automotive_core/governance/approvals.py:443
 #, python-brace-format
 msgid "{0} {1} changed after it was approved ({2}); request approval again."
 msgstr "{0} {1}は承認後に変更されました（{2}）。再度承認を依頼してください。"
@@ -48976,7 +49014,7 @@ msgstr "{0} {1}は保留中です。"
 msgid "{0} {1} must be submitted"
 msgstr "{0} {1}を提出する必要があります。"
 
-#: automotive_core/governance/approvals.py:436
+#: automotive_core/governance/approvals.py:437
 #, python-brace-format
 msgid "{0} {1} needs approval under policy {2} before it can be submitted."
 msgstr "{0} {1}を提出するには、ポリシー{2}に基づく承認が必要です。"

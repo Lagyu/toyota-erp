@@ -3,6 +3,8 @@ document-hash binding and submit enforcement (ERP-05/09/10)."""
 
 from __future__ import annotations
 
+import datetime as dt
+
 import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, nowdate
@@ -16,6 +18,7 @@ PM1 = "pm1.approvals@hinode.example"
 PM2 = "pm2.approvals@hinode.example"
 DIRECTOR = "director.approvals@hinode.example"
 DELEGATE = "delegate.approvals@hinode.example"
+CONTROLLER = "controller.approvals@hinode.example"
 
 
 class TestApprovals(IntegrationTestCase):
@@ -27,6 +30,7 @@ class TestApprovals(IntegrationTestCase):
 		make_user(PM2, ["Procurement Manager"])
 		make_user(DIRECTOR, ["Plant Director"])
 		make_user(DELEGATE, ["Production Planner"])
+		make_user(CONTROLLER, ["Group Controller"])
 		make_policy("Test Voucher Matrix", [(1, "Procurement Manager", 0), (2, "Plant Director", 1_000_000)])
 		approvals.clear_policy_cache()
 
@@ -50,6 +54,35 @@ class TestApprovals(IntegrationTestCase):
 		decision = frappe.get_all("Approval Decision", filters={"approval_request": req["name"]},
 			fields=["decided_by", "decision", "document_hash"])
 		self.assertEqual(decision[0].decided_by, PM1)
+
+	def test_overdue_steps_escalate_once_to_the_next_level(self):
+		"""A step pending past its escalation time (24 h from the policy) reminds its approvers
+		and alerts the next step's approvers; after the last step, the group controllers."""
+		doc = make_voucher(BUYER, 5_000_000)
+		req = self.request(doc)["name"]
+		requested_at = frappe.utils.get_datetime(frappe.db.get_value("Approval Request", req, "requested_at"))
+		self.assertNotIn(req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=23)))
+		self.assertIn(req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=25)))
+		self.assertNotIn(req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=30)))  # once per step
+
+		def step(no):
+			return frappe.get_all("Approval Request Step", filters={"parent": req, "step_no": no},
+				fields=["escalate_after_hours", "escalated_at", "escalated_to", "decided_at"])[0]
+
+		first = step(1)
+		self.assertEqual(first.escalate_after_hours, 24)
+		self.assertTrue(first.escalated_at)
+		self.assertIn(DIRECTOR, first.escalated_to.split("\n"))  # the next step's approvers
+		self.assertTrue(frappe.db.exists("Notification Dispatch", {"event": "approval.escalated", "recipient": PM1,
+			"reference_name": req, "channel": "In-App"}))
+		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "approval.escalated", "reference_name": doc.name}))
+
+		# the last step's clock starts at the decision before it, and escalates to group control
+		self.decide(req, PM1)
+		decided_at = frappe.utils.get_datetime(step(1).decided_at)
+		self.assertNotIn(req, approvals.escalate_overdue(decided_at + dt.timedelta(hours=20)))
+		self.assertIn(req, approvals.escalate_overdue(decided_at + dt.timedelta(hours=25)))
+		self.assertIn(CONTROLLER, step(2).escalated_to.split("\n"))
 
 	def test_submit_without_approval_is_refused(self):
 		doc = make_voucher(BUYER, 50_000)

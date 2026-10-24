@@ -26,8 +26,8 @@ from roles import *
 
 MODULE = "Governance"
 # notification events (automotive_core.governance.notifications.EVENTS)
-NOTIFICATION_EVENTS = ["approval.requested", "approval.decided", "kanban.overdue", "quality.hold_raised",
-	"integration.dead_letter"]
+NOTIFICATION_EVENTS = ["approval.requested", "approval.decided", "approval.escalated", "kanban.overdue",
+	"quality.hold_raised", "integration.dead_letter"]
 APPROVERS = [
 	EXECUTIVE, CONTROLLER, PLANT_DIRECTOR, PROCUREMENT_MANAGER, TREASURY, QUALITY_MANAGER,
 	SALES_MANAGER, ENGINEERING_MANAGER, IT_OPERATOR, SUPERVISOR, PLANNER, BUYER, AP_CLERK,
@@ -142,6 +142,9 @@ DOCTYPES = [
 			link("on_behalf_of", "On Behalf Of", "User", read_only=1),
 			datetime("decided_at", "Decided At", read_only=1),
 			link("decision", "Decision", "Approval Decision", read_only=1),
+			int_("escalate_after_hours", "Escalate After (Hours)", read_only=1),
+			datetime("escalated_at", "Escalated At", read_only=1),
+			small_text("escalated_to", "Escalated To", read_only=1),
 		],
 	),
 	DocType(

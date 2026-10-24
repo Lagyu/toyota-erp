@@ -146,24 +146,37 @@ def has_permission(doc, ptype=None, user=None, debug=False):
 	return None
 
 
+# the default period never purges the system's own attachments, nor master data's
+KEPT_DOCTYPES = SYSTEM_ATTACHMENT_DOCTYPES | {"Company", "Print Heading", "Web Form", "Email Template", "Workspace",
+	"Address Template"}
+
+
+def _purge(filters: list, days: int, label: str) -> int:
+	cutoff = add_days(nowdate(), -cint(days))
+	names = frappe.get_all("File", filters=[*filters, ["creation", "<", cutoff], ["is_folder", "=", 0]],
+		pluck="name", limit=1000)
+	for name in names:
+		frappe.delete_doc("File", name, ignore_permissions=True, force=True)
+	if names:
+		audit.record("file.retention_purge", "DocType", label if frappe.db.exists("DocType", label) else None,
+			{"deleted": len(names), "cutoff": str(cutoff), "rule": label})
+	return len(names)
+
+
 def apply_retention() -> int:
-	"""Daily: delete attachments older than their DocType's retention period."""
-	deleted = 0
-	for rule in _settings().attachment_rules or []:
-		if not cint(rule.retention_days):
-			continue
-		cutoff = add_days(nowdate(), -cint(rule.retention_days))
-		names = frappe.get_all(
-			"File",
-			filters={"attached_to_doctype": rule.reference_doctype, "creation": ("<", cutoff), "is_folder": 0},
-			pluck="name",
-			limit=1000,
-		)
-		for name in names:
-			frappe.delete_doc("File", name, ignore_permissions=True, force=True)
-			deleted += 1
-		if names:
-			audit.record("file.retention_purge", "DocType", rule.reference_doctype,
-				{"deleted": len(names), "cutoff": str(cutoff)})
+	"""Daily: delete attachments older than their DocType's retention period; DocTypes without
+	a rule follow the default period (Automotive Settings; 0 keeps them), except the
+	system's own records (KEPT_DOCTYPES)."""
+	settings = _settings()
+	deleted, ruled = 0, set()
+	for rule in settings.attachment_rules or []:
+		ruled.add(rule.reference_doctype)
+		if cint(rule.retention_days):
+			deleted += _purge([["attached_to_doctype", "=", rule.reference_doctype]], rule.retention_days,
+				rule.reference_doctype)
+	if cint(settings.default_retention_days):
+		deleted += _purge([["attached_to_doctype", "is", "set"],
+			["attached_to_doctype", "not in", sorted(ruled | set(KEPT_DOCTYPES))]],
+			settings.default_retention_days, "default")
 	commit()
 	return deleted

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:09+0919\n"
-"PO-Revision-Date: 2026-10-24 17:09+0919\n"
+"POT-Creation-Date: 2026-10-24 17:13+0919\n"
+"PO-Revision-Date: 2026-10-24 17:13+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -293,12 +293,6 @@ msgstr ""
 msgid "0 = no upper bound."
 msgstr ""
 
-#. Description of the 'Default Attachment Retention (Days)' (Int) field in
-#. DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:179
-msgid "0 keeps attachments forever."
-msgstr ""
-
 #: frappe/public/js/frappe/form/grid_row.js:891
 msgid "1 = True & 0 = False"
 msgstr ""
@@ -536,7 +530,7 @@ msgstr ""
 msgid "A bill to a customer for what you sold."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:355
+#: automotive_core/governance/approvals.py:356
 msgid "A comment is required when rejecting."
 msgstr ""
 
@@ -3553,16 +3547,16 @@ msgid "Approval Request"
 msgstr ""
 
 #. Name of a DocType
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:91
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:112
 msgid "Approval Request Step"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:353
+#: automotive_core/governance/approvals.py:354
 #, python-brace-format
 msgid "Approval Request {0} has no pending step."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:350
+#: automotive_core/governance/approvals.py:351
 #, python-brace-format
 msgid "Approval Request {0} is {1}, not Pending."
 msgstr ""
@@ -3583,6 +3577,11 @@ msgstr ""
 #: automotive_core/templates/emails/approval_requested.subject.html:1
 #, python-brace-format
 msgid "Approval needed: {0} {1} (step {2}: {3})"
+msgstr ""
+
+#: automotive_core/templates/emails/approval_escalated.subject.html:1
+#, python-brace-format
+msgid "Approval overdue: {0} {1} (step {2}: {3})"
 msgstr ""
 
 #: automotive_core/public/js/automotive_core.bundle.js:24
@@ -3613,7 +3612,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Approval Request'
 #. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_request/approval_request.json:88
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 msgid "Approved"
 msgstr ""
 
@@ -3630,8 +3629,12 @@ msgstr ""
 #. Label of the approver_role (Link) field in DocType 'Approval Policy Step'
 #. Label of the approver_role (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:34
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:37
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:40
 msgid "Approver Role"
+msgstr ""
+
+#: automotive_core/templates/emails/approval_escalated.html:2
+msgid "Approvers of the step: please decide. Next level: please follow up."
 msgstr ""
 
 #. Label of the apps (Data) field in DocType 'Recorder Event'
@@ -9900,14 +9903,14 @@ msgstr ""
 #. Label of the decided_at (Datetime) field in DocType 'Approval Decision'
 #. Label of the decided_at (Datetime) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:109
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:75
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:78
 msgid "Decided At"
 msgstr ""
 
 #. Label of the decided_by (Link) field in DocType 'Approval Decision'
 #. Label of the decided_by (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:87
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:61
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:64
 msgid "Decided By"
 msgstr ""
 
@@ -9922,12 +9925,12 @@ msgstr ""
 #. Label of the decision (Select) field in DocType 'Approval Decision'
 #. Label of the decision (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:74
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:81
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:84
 #: automotive_core/governance/page/approval_inbox/approval_inbox.js:52
 msgid "Decision"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:346
+#: automotive_core/governance/approvals.py:347
 msgid "Decision must be Approve or Reject."
 msgstr ""
 
@@ -12090,7 +12093,7 @@ msgstr ""
 msgid "Each Step Needs A Different Approver"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:340
+#: automotive_core/governance/approvals.py:341
 #, python-brace-format
 msgid "Each step of {0} must be approved by a different person."
 msgstr ""
@@ -12967,8 +12970,23 @@ msgstr ""
 
 #. Label of the escalate_after_hours (Int) field in DocType 'Approval Policy
 #. Step'
+#. Label of the escalate_after_hours (Int) field in DocType 'Approval Request
+#. Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:55
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:91
 msgid "Escalate After (Hours)"
+msgstr ""
+
+#. Label of the escalated_at (Datetime) field in DocType 'Approval Request
+#. Step'
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:97
+msgid "Escalated At"
+msgstr ""
+
+#. Label of the escalated_to (Small Text) field in DocType 'Approval Request
+#. Step'
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:103
+msgid "Escalated To"
 msgstr ""
 
 #: erpnext/accounts/doctype/pricing_rule/pricing_rule.js:87
@@ -14526,6 +14544,12 @@ msgstr ""
 #. Entry'
 #: erpnext/accounts/doctype/journal_entry/journal_entry.json:574
 msgid "For All Stock Asset Accounts"
+msgstr ""
+
+#. Description of the 'Default Attachment Retention (Days)' (Int) field in
+#. DocType 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:179
+msgid "For DocTypes without a rule below; the system's own records (users, letter heads, print formats, web pages) keep theirs. 0 keeps attachments forever."
 msgstr ""
 
 #: frappe/core/doctype/user_permission/user_permission_list.js:155
@@ -23768,7 +23792,7 @@ msgstr ""
 msgid "No documents found."
 msgstr ""
 
-#: automotive_core/governance/notifications.py:136
+#: automotive_core/governance/notifications.py:137
 msgid "No e-mail address, or the address unsubscribed"
 msgstr ""
 
@@ -24621,7 +24645,7 @@ msgstr ""
 #. Label of the on_behalf_of (Link) field in DocType 'Approval Request Step'
 #. Label of the on_behalf_of (Link) field in DocType 'Audit Event'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:95
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:68
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:71
 #: automotive_core/governance/doctype/audit_event/audit_event.json:80
 msgid "On Behalf Of"
 msgstr ""
@@ -24832,7 +24856,7 @@ msgstr ""
 msgid "Only own"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:281
+#: automotive_core/governance/approvals.py:282
 msgid "Only pending requests can be withdrawn."
 msgstr ""
 
@@ -24856,7 +24880,7 @@ msgstr ""
 msgid "Only the delegator or an IT Operator can create this delegation."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:283
+#: automotive_core/governance/approvals.py:284
 msgid "Only the requester can withdraw an approval request."
 msgstr ""
 
@@ -24988,6 +25012,7 @@ msgid "Open the app dock"
 msgstr ""
 
 #: automotive_core/templates/emails/approval_decided.html:2
+#: automotive_core/templates/emails/approval_escalated.html:3
 #: automotive_core/templates/emails/approval_requested.html:3
 msgid "Open the approval request"
 msgstr ""
@@ -26836,7 +26861,7 @@ msgstr ""
 #. Message'
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:37
 #: automotive_core/governance/doctype/approval_request/approval_request.json:88
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 #: automotive_core/integration_hub/doctype/integration_outbound_message/integration_outbound_message.json:102
 msgid "Pending"
 msgstr ""
@@ -31725,7 +31750,7 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Integration Inbound
 #. Message'
 #: automotive_core/governance/doctype/approval_request/approval_request.json:88
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:116
 #: automotive_core/integration_hub/doctype/integration_inbound_message/integration_inbound_message.json:98
 msgid "Rejected"
@@ -37785,7 +37810,7 @@ msgid "Skip every row that has one of these values. Skipped rows are not importe
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Approval Request Step'
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:54
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:57
 msgid "Skipped"
 msgstr ""
 
@@ -38082,7 +38107,7 @@ msgstr ""
 #. Label of the approver_user (Link) field in DocType 'Approval Policy Step'
 #. Label of the approver_user (Link) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:48
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:44
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:47
 msgid "Specific Approver"
 msgstr ""
 
@@ -38349,7 +38374,7 @@ msgstr ""
 #: automotive_core/finance_controls/doctype/period_close_task/period_close_task.json:36
 #: automotive_core/governance/doctype/approval_delegation/approval_delegation.json:89
 #: automotive_core/governance/doctype/approval_request/approval_request.json:87
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:53
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:56
 #: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:69
 #: automotive_core/governance/doctype/user_provisioning_request/user_provisioning_request.json:114
 #: automotive_core/integration_hub/doctype/idempotency_record/idempotency_record.json:65
@@ -38383,7 +38408,7 @@ msgstr ""
 #. Label of the step_no (Int) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_decision/approval_decision.json:67
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:20
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:23
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:26
 #: automotive_core/governance/page/approval_inbox/approval_inbox.js:51
 msgid "Step"
 msgstr ""
@@ -38391,7 +38416,7 @@ msgstr ""
 #. Label of the step_name (Data) field in DocType 'Approval Policy Step'
 #. Label of the step_name (Data) field in DocType 'Approval Request Step'
 #: automotive_core/governance/doctype/approval_policy_step/approval_policy_step.json:27
-#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:30
+#: automotive_core/governance/doctype/approval_request_step/approval_request_step.json:33
 msgid "Step Name"
 msgstr ""
 
@@ -40947,6 +40972,11 @@ msgstr ""
 msgid "The application has been updated to a new version, please refresh this page"
 msgstr ""
 
+#: automotive_core/templates/emails/approval_escalated.html:1
+#, python-brace-format
+msgid "The approval of {0} {1} has waited {2} hours at step {3}: {4}."
+msgstr ""
+
 #: frappe/public/js/frappe/views/interaction.js:328
 msgid "The attachments could not be correctly linked to the new document"
 msgstr ""
@@ -41001,11 +41031,11 @@ msgstr ""
 msgid "The dock as this arrangement leaves it."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:366
+#: automotive_core/governance/approvals.py:367
 msgid "The document changed after approval was requested."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:367
+#: automotive_core/governance/approvals.py:368
 msgid "The document changed; a new approval request is needed."
 msgstr ""
 
@@ -41132,7 +41162,7 @@ msgstr ""
 msgid "The link you trying to login is invalid or expired."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:335
+#: automotive_core/governance/approvals.py:336
 #, python-brace-format
 msgid "The maker of {0} cannot approve it (maker/checker)."
 msgstr ""
@@ -43148,7 +43178,7 @@ msgstr ""
 msgid "Tuesday"
 msgstr ""
 
-#: automotive_core/governance/notifications.py:113
+#: automotive_core/governance/notifications.py:114
 msgid "Turned off in the recipient's notification preferences"
 msgstr ""
 
@@ -43604,8 +43634,8 @@ msgstr ""
 msgid "Unknown inbound message types: {0}"
 msgstr ""
 
-#: automotive_core/governance/notifications.py:102
-#: automotive_core/governance/notifications.py:176
+#: automotive_core/governance/notifications.py:103
+#: automotive_core/governance/notifications.py:177
 #, python-brace-format
 msgid "Unknown notification event {0}"
 msgstr ""
@@ -46259,7 +46289,7 @@ msgstr ""
 msgid "You are not allowed to update this onboarding step"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:326
+#: automotive_core/governance/approvals.py:327
 #, python-brace-format
 msgid "You are not authorised to approve step {0} ({1}) of {2}."
 msgstr ""
@@ -46603,6 +46633,7 @@ msgid "You need write permission on {0} {1} to rename"
 msgstr ""
 
 #: automotive_core/templates/emails/approval_decided.html:3
+#: automotive_core/templates/emails/approval_escalated.html:4
 #: automotive_core/templates/emails/approval_requested.html:4
 #: automotive_core/templates/emails/automotive_footer.html:2
 #: automotive_core/templates/emails/integration_dead_letter.html:4
@@ -46781,6 +46812,14 @@ msgstr ""
 #: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
 #: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
 msgid "approval.decided"
+msgstr ""
+
+#. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
+#. Option for the 'Event' (Select) field in DocType 'Notification Preference
+#. Event'
+#: automotive_core/governance/doctype/notification_dispatch/notification_dispatch.json:41
+#: automotive_core/governance/doctype/notification_preference_event/notification_preference_event.json:18
+msgid "approval.escalated"
 msgstr ""
 
 #. Option for the 'Event' (Select) field in DocType 'Notification Dispatch'
@@ -48105,7 +48144,7 @@ msgstr ""
 msgid "{0} is mandatory. Maybe Currency Exchange record is not created for {1} to {2}."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:360
+#: automotive_core/governance/approvals.py:361
 #, python-brace-format
 msgid "{0} is no longer a draft."
 msgstr ""
@@ -48789,7 +48828,7 @@ msgstr ""
 msgid "{0} {1} cannot be updated. If you need to make changes, we recommend canceling the existing entry and creating a new one."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:442
+#: automotive_core/governance/approvals.py:443
 #, python-brace-format
 msgid "{0} {1} changed after it was approved ({2}); request approval again."
 msgstr ""
@@ -48910,7 +48949,7 @@ msgstr ""
 msgid "{0} {1} must be submitted"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:436
+#: automotive_core/governance/approvals.py:437
 #, python-brace-format
 msgid "{0} {1} needs approval under policy {2} before it can be submitted."
 msgstr ""

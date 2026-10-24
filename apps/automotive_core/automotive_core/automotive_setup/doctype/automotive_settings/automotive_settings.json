@@ -176,7 +176,7 @@
   },
   {
    "default": "0",
-   "description": "0 keeps attachments forever.",
+   "description": "For DocTypes without a rule below; the system's own records (users, letter heads, print formats, web pages) keep theirs. 0 keeps attachments forever.",
    "fieldname": "default_retention_days",
    "fieldtype": "Int",
    "label": "Default Attachment Retention (Days)"
@@ -208,7 +208,7 @@
  "icon": "settings",
  "issingle": 1,
  "links": [],
- "modified": "2026-10-24 16:23:33.995322",
+ "modified": "2026-10-24 17:12:51.799857",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Automotive Settings",

@@ -22,7 +22,7 @@ from typing import Any
 
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate, now_datetime, nowdate
+from frappe.utils import cint, flt, get_datetime, getdate, now_datetime, nowdate
 
 from automotive_core.governance import audit
 from automotive_core.utils import canonical_json, sha256_hex
@@ -230,6 +230,7 @@ def request_approval(doctype: str, name: str, remarks: str | None = None) -> dic
 				"step_name": s.step_name,
 				"approver_role": s.approver_role,
 				"approver_user": s.approver_user,
+				"escalate_after_hours": s.escalate_after_hours,
 				"status": "Pending",
 			},
 		)
@@ -522,6 +523,49 @@ def _notify_requester(req) -> None:
 	from automotive_core.governance.notifications import notify
 
 	notify("approval.decided", [req.requested_by], "Approval Request", req.name)
+
+
+# after the last step, an overdue approval goes to group finance control
+ESCALATION_ROLE = "Group Controller"
+
+
+def _step_started(req, step):
+	"""When a step became current: the request, or the decision of the step before it."""
+	earlier = [s.decided_at for s in req.steps if s.step_no < step.step_no and s.decided_at]
+	return max(earlier) if earlier else req.requested_at
+
+
+def escalate_overdue(now=None) -> list[str]:
+	"""Hourly: a pending step waiting longer than its escalation time (copied from the policy
+	when the approval was requested) is escalated once. Its approvers are reminded, and the
+	next level is alerted: the next step's approvers, or the group controllers after the last
+	step. The step records when and to whom; the audit chain records the escalation."""
+	from automotive_core.governance.notifications import notify
+
+	now = get_datetime(now or now_datetime())
+	escalated = []
+	for name in frappe.get_all("Approval Request", filters={"status": "Pending"}, pluck="name", order_by="requested_at"):
+		req = frappe.get_doc("Approval Request", name)
+		step = _current_step(req)
+		if not step or step.escalated_at or cint(step.escalate_after_hours) <= 0:
+			continue
+		waited = (now - get_datetime(_step_started(req, step))).total_seconds() / 3600
+		if waited < cint(step.escalate_after_hours):
+			continue
+		later = [s for s in sorted(req.steps, key=lambda s: s.step_no) if s.step_no > step.step_no and s.status == "Pending"]
+		if later:
+			above = [later[0].approver_user] if later[0].approver_user else _users_with_role(later[0].approver_role, req.company)
+		else:
+			above = _users_with_role(ESCALATION_ROLE, req.company)
+		approvers = [step.approver_user] if step.approver_user else _users_with_role(step.approver_role, req.company)
+		frappe.db.set_value("Approval Request Step", step.name, {"escalated_at": now,
+			"escalated_to": "\n".join(above)}, update_modified=False)
+		notify("approval.escalated", sorted(set(approvers) | set(above)), "Approval Request", req.name,
+			step_no=step.step_no, step_name=step.step_name, hours=int(waited))
+		audit.record("approval.escalated", req.reference_doctype, req.reference_name,
+			{"request": req.name, "step": step.step_no, "hours": int(waited), "escalated_to": above}, company=req.company)
+		escalated.append(req.name)
+	return escalated
 
 
 def _users_with_role(role: str, company: str | None) -> list[str]:

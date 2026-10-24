@@ -38,7 +38,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Event",
-   "options": "approval.requested\napproval.decided\nkanban.overdue\nquality.hold_raised\nintegration.dead_letter",
+   "options": "approval.requested\napproval.decided\napproval.escalated\nkanban.overdue\nquality.hold_raised\nintegration.dead_letter",
    "read_only": 1,
    "reqd": 1
   },
@@ -118,7 +118,7 @@
  ],
  "icon": "send",
  "links": [],
- "modified": "2026-10-24 16:23:34.003334",
+ "modified": "2026-10-24 17:11:47.615825",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Notification Dispatch",

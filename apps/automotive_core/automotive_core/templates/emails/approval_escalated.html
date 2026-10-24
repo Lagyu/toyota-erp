@@ -1,0 +1,4 @@
+<p>{{ _("The approval of {0} {1} has waited {2} hours at step {3}: {4}.").format(_(doc.reference_doctype), doc.reference_name, hours, step_no, step_name) }}</p>
+<p>{{ _("Approvers of the step: please decide. Next level: please follow up.") }}</p>
+<p><a href="{{ link }}">{{ _("Open the approval request") }}</a></p>
+{% include "automotive_core/templates/emails/automotive_footer.html" %}
