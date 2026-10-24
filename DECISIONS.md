@@ -231,3 +231,57 @@ dataset only when the generator changes.
 
 **Decision.** The custom apps are GPL-3.0-only, compatible with ERPNext (GPL-3.0) and
 Frappe (MIT). The owner may choose differently before a first release.
+
+## D-026 Container and browser tests run on hosted CI runners
+
+**Decision.** The development machine's memory belongs to other work, so everything that
+needs containers or a browser runs on GitHub-hosted runners of the public repository: the
+integration tests on the pinned bench, images, scan, smoke test, the browser suite and the
+API tests (`ci.yml`), the synthetic datasets (`dataset.yml`), load tests (`perf.yml`) and
+the production rehearsal (`rehearsal.yml`). Lint and the translation tooling
+(`scripts/dev/i18n-host.sh`) run locally without containers.
+**Consequences.** Every check is reproducible from a commit by anyone; feedback takes a CI
+run. Main's runs queue instead of cancelling each other, so each commit keeps its result.
+
+## D-027 Long dataset runs as chained, resumable segments
+
+**Decision.** A hosted job may run for six hours; the standard profile takes longer. The
+dataset workflow chains segments: each restores the previous export, generates for a time
+budget, stops at the end of a simulated day through the Seed Run's stop request (the runner
+resumes from the last committed day) and exports again; the last one validates.
+**Consequences.** The standard dataset is an artifact of a recorded run, with its counts
+and validation, and the performance tests load it from there.
+
+## D-028 Forward and reserve storage, replenished on on-hand stock
+
+**Decision.** Put-away uses ERPNext Putaway Rules (forward store up to a part's capacity,
+then reserve storage with unlimited capacity, because ERPNext drops a received quantity
+that fits no rule). Forward-store reorder rules are ERPNext Item Reorder rows of type
+Transfer, but the daily replenishment compares on-hand stock: ERPNext's own reorder job
+uses projected quantity, which counts open purchase orders into the store and would leave
+the forward store empty while the stock sits in reserve. Auto indent stays off.
+**Consequences.** Every move is a standard document (Material Request, Pick List, Stock
+Entry); MRP nets reserve storage like any other plant warehouse.
+
+## D-029 Read implies print
+
+**Decision.** The schema DSL grants print with read (permission level 0). A print format
+shows only fields the role can read, and the desk offers Print only with the print right.
+**Consequences.** Every role that can open a document can print it; e-mail and export stay
+explicit rights.
+
+## D-030 A small runtime image, and accepted findings that need an owner decision
+
+**Decision.** The runtime image keeps only the realtime server's Node packages (the direct
+dependencies keep their licence files for Frappe's attribution page) and no package
+installer. The image scan fails on any fixable critical finding not accepted in
+`config/security/image-allowlist.txt` by package and installed version, with a finding ID of
+`ops/security/findings.md`; a release build also needs the owner's decision on each.
+**Consequences.** Upstream-pinned findings (Pillow) do not block CI, but do block a release
+until the owner accepts them; an upgrade of the package ends the acceptance by itself.
+
+## D-031 The permission design is a checked table
+
+**Decision.** `ops/security/permission-matrix.md` documents each persona's rights on the key
+DocTypes, and an integration test fails on any difference from the live permission tables.
+**Consequences.** A role change is a reviewed change of the documented matrix.

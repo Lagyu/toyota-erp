@@ -82,38 +82,49 @@ Exit gate: plant-stop/release and vehicle order-to-delivery flows work. **Met** 
 ## Wave 5 — finance, intercompany, integrations, dashboards, localization
 
 Exit gate: the ten cross-domain journeys pass. **Met for the journeys** (browser suite
-green on the small dataset); localization and API contracts still open.
+green on the small dataset, local reference stack); a green run on hosted CI is pending.
 
 - [x] Payment dual approval, restricted bank details, period-close checklist, intercompany
       reconciliation, consolidation view (D-021), PPV / production variance reports.
 - [x] Intercompany flows (Kyushu → Aichi powertrains; Aichi → North America vehicles) with
-      transfer price agreements.
-- [~] Integration hub: inbox, outbox, signed webhooks, retries, replay protection, EDI and
-      file-drop adapters, desk replay/retry — done; OpenAPI contracts and contract tests open;
-      an inventory-update message type open.
-- [~] KPI catalogue and dashboards, persona workspaces — done; Japanese localization open;
-      notification templates and preferences with auditable dispatch open.
+      transfer price agreements; goods in transit; landed costs on imported vehicles.
+- [x] Taxes by party tax category (Tax Rules, zero-rated export, resale exemption, import).
+- [x] Bank statements from a bank partner reconciled with payments and journals.
+- [x] Integration hub: inbox, outbox, signed webhooks, retries, replay protection, EDI and
+      file-drop adapters, desk replay/retry; OpenAPI contract with contract tests against the
+      running API, and concurrency tests (one Idempotency-Key, simultaneous redeliveries,
+      simultaneous submits).
+- [x] KPI catalogue and dashboards, persona workspaces; notifications with templates in the
+      recipient's language, preferences and auditable dispatch; approval escalation.
+- [x] Japanese and English: complete catalogues for the custom apps and the upstream strings
+      of the desk and the standard documents; a check fails CI on any untranslated string.
+- [x] Print formats for manifests, ASNs, kanban cards and vehicle certificates.
 - [x] Ten journeys J-01..J-10 as integration tests and browser suites (`e2e/tests/`).
 
 ## Wave 6 — scale, load, hardening, CI/release automation, recovery
 
 Exit gate: all acceptance gates and operational runbooks verified. **Open.**
 
-- [~] Datasets: `small` generated and validated, used by CI; `standard` not generated yet;
-      `large` defined.
-- [x] Immutable image, production compose (TLS proxy, private networks, limits, health),
-      encrypted off-host backups with verified restore drills, monitoring and alerting.
+- [~] Datasets: `small` generated and validated in CI; `standard` generated on hosted runners
+      in chained segments (`dataset.yml`, D-027): first run in progress; `large` defined.
+- [x] Immutable image (runtime without the asset toolchain or package installers),
+      production compose (TLS proxy, private networks, limits, health), encrypted off-host
+      backups with verified restore drills, monitoring and alerting.
 - [~] Latency alerting (request-duration metrics) to add.
-- [ ] Load tests (50 users, 150 peak) with recorded results; slow-query/index review.
-- [~] Install on a fresh stack + backup + restore drill rehearsed by `scripts/ci/smoke.sh`;
-      reboot persistence and upgrade/rollback rehearsal evidence open.
-- [~] Security: lint, dependency audit with reviewed allowlist, SBOM and image scan in CI;
-      configuration review and findings log open.
-- [~] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, traceability matrix,
-      operations runbooks.
+- [~] Load tests: scenarios, runner and workflow ready (`perf/`, `perf.yml`); results await the
+      standard dataset; slow-query/index review after them.
+- [~] Production rehearsal on a fresh runner (`rehearsal.yml`): install by the runbook with
+      TLS, monitoring and S3 backups, upgrade from a previous release, HTTPS checks, simulated
+      reboot, backup and restore drill: first run in progress.
+- [~] Security: lint, dependency audit and image scan with reviewed allowlists, SBOM, findings
+      log, configuration review, permission matrix checked by tests; owner decisions on the
+      accepted findings open (C-02, C-03, C-08, V-02, V-03c/d/g, V-05).
+- [~] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, operations runbooks,
+      performance procedure; traceability matrix to refresh with the hosted CI results.
 
 ## Working notes
 
-- Development host constraint: the ERP stack shares the machine with another service;
-  everything runs in `erp.slice` (8 GB high / 10 GB max). Performance numbers from this host
-  are labelled as such and are not the reference-hardware results required by §7.
+- Containers and browsers run only on GitHub-hosted runners (D-026): the development machine's
+  memory belongs to other work. Lint and translation tooling run locally.
+- Performance results come from a hosted runner (4 vCPU, 16 GB, stack and load generator on
+  one machine), not the brief's reference hardware; they are labelled as such.
