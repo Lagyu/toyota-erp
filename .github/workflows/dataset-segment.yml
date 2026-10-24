@@ -12,6 +12,8 @@ on:
       image: { type: string, required: true }
       # the first segment continues this run's export instead of starting a new dataset
       resume_run: { type: string, required: false, default: "" }
+      # minutes a segment waits for the simulated day to end before it stops the generator
+      grace_minutes: { type: number, required: false, default: 45 }
     outputs:
       done:
         description: "true once the run reached validation (no further segment needed)"
@@ -57,6 +59,7 @@ jobs:
           MINUTES: ${{ inputs.minutes }}
           INDEX: ${{ inputs.index }}
           RESUME: ${{ inputs.resume_run }}
+          GRACE_MINUTES: ${{ inputs.grace_minutes }}
         run: |
           previous=()
           if ((INDEX > 1)) || [[ -n $RESUME ]]; then previous=(.local/dataset-in); fi

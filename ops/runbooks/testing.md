@@ -190,6 +190,7 @@ Other workflows, started by hand (`gh workflow run …`):
 |---|---|
 | `rehearsal.yml` | the production install from the runbook, an upgrade from 25 commits earlier, a simulated reboot, the off-host backup with binary log shipping and a drill with point-in-time recovery, TLS headers and cookie flags, the socket-free cron service, the monitoring targets ([install-fresh-host.md](install-fresh-host.md)) |
 | `dataset.yml` | the standard dataset, generated in chained 4-hour segments (up to 18; `resume_run` continues a run that stopped) and validated ([seed-reference-data.md](seed-reference-data.md)) |
+| `dataset-compare.yml` | two dataset runs of one profile compared document by document (their fingerprints): an uninterrupted run against one stopped in the middle of days ([seed-reference-data.md](seed-reference-data.md#pause-and-resume)) |
 | `perf.yml` | the load tests on that dataset ([ops/performance/README.md](../performance/README.md)) |
 
 ## Not covered by automated tests yet

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # One time-boxed segment of a synthetic dataset run on a reference stack (CI).
-#   dataset.sh IMAGE:TAG PROFILE MINUTES OUT_DIR [IN_DIR]
+#   dataset.sh IMAGE:TAG PROFILE MINUTES OUT_DIR [IN_DIR]      (GRACE_MINUTES, default 45)
 # A hosted CI job may run for 6 hours and the standard profile takes longer, so
 # .github/workflows/dataset.yml chains segments. Each one restores the previous segment's
 # export (IN_DIR), generates until the profile is complete or MINUTES have passed, stops at
@@ -57,8 +57,9 @@ if kill -0 "$generator" 2>/dev/null; then
 	log "budget spent: stopping at the end of the current simulated day"
 	stack_bench execute automotive_seed.runner.request_stop --kwargs "{'run': '$run'}" >/dev/null
 	# a simulated day takes minutes; past this the process is stopped, and the day it was on
-	# (one transaction) rolls back and is generated again by the next segment
-	grace=$((SECONDS + 45 * 60))
+	# (one transaction) rolls back and is generated again by the next segment. GRACE_MINUTES=0
+	# stops it at once, in the middle of a day (the interruption check of dataset.yml)
+	grace=$((SECONDS + ${GRACE_MINUTES:-45} * 60))
 	while kill -0 "$generator" 2>/dev/null && ((SECONDS < grace)); do sleep 15; done
 	if kill -0 "$generator" 2>/dev/null; then
 		log "the day did not finish in the grace period: stopping the generator"

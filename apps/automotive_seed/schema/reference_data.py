@@ -9,6 +9,7 @@ from dsl import (
 	date,
 	datetime,
 	int_,
+	long_text,
 	perm,
 	section,
 	select,
@@ -46,6 +47,8 @@ DOCTYPES = [
 			datetime("started_at", "Started At", read_only=1),
 			datetime("finished_at", "Finished At", read_only=1),
 			check("stop_requested", "Stop Requested", read_only=1),
+			# the simulation's own state of the last whole simulated day, committed with that day
+			long_text("simulation_state", "Simulation State", read_only=1, hidden=1),
 			section("Stages"),
 			table("stages", "Stages", "Seed Run Stage", read_only=1),
 			section("Counts"),

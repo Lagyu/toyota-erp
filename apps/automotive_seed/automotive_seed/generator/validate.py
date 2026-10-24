@@ -226,6 +226,92 @@ def targets(results: list, profile: dict) -> None:
 		_check(results, f"volume {key} >= {minimum}", have.get(key, 0) >= minimum, have.get(key))
 
 
+# The documents a run generates, by fields that the profile and seed decide: names from naming
+# series (not hash names), simulated dates, quantities and amounts; never wall-clock times. Two
+# runs of one profile and seed on the same code, interrupted or not, give the same digest.
+FINGERPRINT = {
+	"Item": ("name", "item_group", "variant_of", "stock_uom", "has_serial_no", "has_batch_no"),
+	"BOM": ("name", "item", "is_active", "is_default", "quantity", "total_cost"),
+	"Work Order": ("name", "production_item", "qty", "produced_qty", "status", "bom_no", "sales_order"),
+	"Job Card": ("name", "work_order", "operation", "for_quantity", "total_completed_qty", "docstatus"),
+	"Stock Entry": (
+		"name",
+		"stock_entry_type",
+		"posting_date",
+		"work_order",
+		"total_outgoing_value",
+		"docstatus",
+	),
+	"Stock Ledger Entry": (
+		"voucher_type",
+		"voucher_no",
+		"item_code",
+		"warehouse",
+		"posting_date",
+		"posting_time",
+		"actual_qty",
+		"valuation_rate",
+		"stock_value_difference",
+		"is_cancelled",
+	),
+	"GL Entry": ("voucher_type", "voucher_no", "account", "posting_date", "debit", "credit", "is_cancelled"),
+	"Purchase Order": ("name", "supplier", "company", "transaction_date", "grand_total", "status"),
+	"Purchase Receipt": ("name", "supplier", "posting_date", "grand_total", "docstatus"),
+	"Purchase Invoice": (
+		"name",
+		"supplier",
+		"posting_date",
+		"grand_total",
+		"outstanding_amount",
+		"docstatus",
+	),
+	"Sales Order": ("name", "customer", "company", "transaction_date", "grand_total", "status"),
+	"Delivery Note": ("name", "customer", "posting_date", "grand_total", "docstatus"),
+	"Sales Invoice": ("name", "customer", "posting_date", "grand_total", "outstanding_amount", "docstatus"),
+	"Payment Entry": ("name", "payment_type", "party", "posting_date", "paid_amount", "docstatus"),
+	"Quality Inspection": ("name", "item_code", "reference_type", "reference_name", "status", "docstatus"),
+	"Dealer Order": ("name", "dealer", "status"),
+	"Advance Shipping Notice": ("name", "supplier", "status"),
+	"Engineering Change Order": ("name", "implementation_status"),
+	"Period Closing Voucher": ("name", "company", "fiscal_year", "docstatus"),
+}
+
+
+def fingerprint() -> dict:
+	"""Per DocType: the count and a SHA-256 of its rows in a fixed order (amounts to 6 places),
+	and one digest over all of them."""
+	import hashlib
+
+	out = {}
+	overall = hashlib.sha256()
+	for doctype, wanted in sorted(FINGERPRINT.items()):
+		if not frappe.db.exists("DocType", doctype):
+			continue
+		meta = frappe.get_meta(doctype)
+		fields = [f for f in wanted if f in ("name", "docstatus") or meta.has_field(f)]
+		digest, count, start = hashlib.sha256(), 0, 0
+		while True:
+			rows = frappe.get_all(
+				doctype,
+				fields=list(fields),
+				order_by=", ".join(fields),
+				limit_start=start,
+				limit_page_length=20_000,
+				as_list=True,
+			)
+			for row in rows:
+				digest.update(
+					"\x1f".join(f"{v:.6f}" if isinstance(v, float) else str(v) for v in row).encode() + b"\n"
+				)
+			count += len(rows)
+			start += len(rows)
+			if len(rows) < 20_000:
+				break
+		out[doctype] = {"count": count, "sha256": digest.hexdigest()}
+		overall.update(f"{doctype}:{count}:{out[doctype]['sha256']}\n".encode())
+	return {"sha256": overall.hexdigest(), "doctypes": out}
+
+
 def run(ctx=None, state=None) -> dict:
 	results: list = []
 	for fn in (trial_balance, stock_vs_gl, bins_vs_ledger, receivables, intercompany, traceability, controls):
@@ -235,4 +321,4 @@ def run(ctx=None, state=None) -> dict:
 			_check(results, fn.__name__, False, f"{type(exc).__name__}: {exc}")
 	if ctx:
 		targets(results, ctx.profile)
-	return {"ok": all(r["ok"] for r in results), "checks": results}
+	return {"ok": all(r["ok"] for r in results), "checks": results, "fingerprint": fingerprint()}

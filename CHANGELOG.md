@@ -157,6 +157,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   glossary; lint checks completeness, placeholders and tags.
 
 ### Synthetic data (`automotive_seed`)
+- A run stopped at any moment resumes at the end of the last whole day: the day's documents,
+  the date reached and the simulation's state commit together (the state file used to be
+  written after the commit, the date after the reposts). The validation records a fingerprint
+  of the generated documents; `dataset-compare.yml` compares two runs, and `dataset.yml`'s
+  `grace_minutes: 0` stops segments in the middle of days (DV-1, DV-4).
 - The reference catalogue offers a powertrain choice (Hybrid or Petrol on the H1 and the H3, the
   petrol powertrain built on Kyushu's P180 line with its own routing) and an optional-equipment
   package (Tech: camera and radar sensor kit, premium audio), with their compatibility rules

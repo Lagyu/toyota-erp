@@ -24,6 +24,10 @@ on:
         description: Run ID of an earlier dataset run whose last export to continue (empty = a new dataset)
         type: string
         default: ""
+      grace_minutes:
+        description: Minutes a segment waits for the simulated day to end before it stops the generator (0 = in the middle of a day)
+        type: number
+        default: 45
 
 permissions:
   contents: read
@@ -70,6 +74,7 @@ jobs:
       index: 1
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
       resume_run: ${{ inputs.resume_run }}
   s02:
@@ -80,6 +85,7 @@ jobs:
       index: 2
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s03:
     needs: [image, s02]
@@ -89,6 +95,7 @@ jobs:
       index: 3
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s04:
     needs: [image, s03]
@@ -98,6 +105,7 @@ jobs:
       index: 4
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s05:
     needs: [image, s04]
@@ -107,6 +115,7 @@ jobs:
       index: 5
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s06:
     needs: [image, s05]
@@ -116,6 +125,7 @@ jobs:
       index: 6
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s07:
     needs: [image, s06]
@@ -125,6 +135,7 @@ jobs:
       index: 7
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s08:
     needs: [image, s07]
@@ -134,6 +145,7 @@ jobs:
       index: 8
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s09:
     needs: [image, s08]
@@ -143,6 +155,7 @@ jobs:
       index: 9
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s10:
     needs: [image, s09]
@@ -152,6 +165,7 @@ jobs:
       index: 10
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s11:
     needs: [image, s10]
@@ -161,6 +175,7 @@ jobs:
       index: 11
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s12:
     needs: [image, s11]
@@ -170,6 +185,7 @@ jobs:
       index: 12
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s13:
     needs: [image, s12]
@@ -179,6 +195,7 @@ jobs:
       index: 13
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s14:
     needs: [image, s13]
@@ -188,6 +205,7 @@ jobs:
       index: 14
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s15:
     needs: [image, s14]
@@ -197,6 +215,7 @@ jobs:
       index: 15
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s16:
     needs: [image, s15]
@@ -206,6 +225,7 @@ jobs:
       index: 16
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s17:
     needs: [image, s16]
@@ -215,6 +235,7 @@ jobs:
       index: 17
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
   s18:
     needs: [image, s17]
@@ -224,6 +245,7 @@ jobs:
       index: 18
       profile: ${{ inputs.profile }}
       minutes: ${{ fromJSON(inputs.minutes) }}
+      grace_minutes: ${{ fromJSON(inputs.grace_minutes) }}
       image: ${{ needs.image.outputs.image }}
 
   # green only when a segment finished the run and its validation passed

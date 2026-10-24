@@ -92,6 +92,15 @@ A detached process stops when the backend container is restarted or recreated, f
 
 A run that has not reached the validation stage always ends as **Paused**, whether stopped by a date or a request. *Finished At* is set only when the run completes.
 
+**Interrupted runs.** A run killed at any moment (a crash, a container restart, a CI segment out
+of time) resumes at the end of the last whole simulated day: each day's documents, the date it
+reached and the simulation's own state commit together, and a setup stage interrupted half way
+is run again. The validation records a **fingerprint** of the generated documents (per DocType,
+fields the profile and seed decide: names from naming series, simulated dates, quantities and
+amounts). Two runs of one profile and seed on the same code give the same fingerprint, however
+often they were interrupted: `dataset.yml` with `minutes` small and `grace_minutes: 0` stops a
+run in the middle of days, and `dataset-compare.yml` compares two runs' fingerprints.
+
 ### Failure
 
 If a stage raises, the transaction of the day in flight is rolled back. The Seed Run gets status **Failed** with the traceback in *Error*, and the command prints the exception. Fix the cause (often configuration or capacity, e.g. disk or database limits), then rerun to resume.

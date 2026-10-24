@@ -1,0 +1,58 @@
+# Reproducibility (requirements §5, DV-1, DV-4): two dataset runs of one profile and seed on the
+# same code compared document by document (the fingerprint each validation records). Run one
+# dataset uninterrupted and one stopped in the middle of days (dataset.yml with small segments
+# and grace_minutes 0), then compare them here (scripts/ci/compare_datasets.py).
+name: dataset compare
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Dataset profile of both runs
+        type: choice
+        options: [closing, small, standard, large]
+        default: closing
+      run_a:
+        description: Run ID of the first dataset run
+        type: string
+        required: true
+      run_b:
+        description: Run ID of the second dataset run
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read  # the two runs' exports
+
+jobs:
+  compare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: The first run's export
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}"
+          path: .local/a
+          run-id: ${{ inputs.run_a }}
+          github-token: ${{ github.token }}
+      - name: The second run's export
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}"
+          path: .local/b
+          run-id: ${{ inputs.run_b }}
+          github-token: ${{ github.token }}
+      - name: Compare
+        env:
+          RUN_A: ${{ inputs.run_a }}
+          RUN_B: ${{ inputs.run_b }}
+        run: |
+          set -o pipefail
+          rc=0
+          python3 scripts/ci/compare_datasets.py .local/a/status.json .local/b/status.json \
+            --labels "run $RUN_A" "run $RUN_B" | tee .local/compare.md || rc=$?
+          cat .local/compare.md >>"$GITHUB_STEP_SUMMARY"
+          exit "$rc"

@@ -245,8 +245,12 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		from automotive_seed.generator import simulation
 
 		stop_at = getdate(until) if until else ctx.end
-		last = frappe.db.get_value("Seed Run", name, "simulated_date")
+		last, saved = frappe.db.get_value("Seed Run", name, ["simulated_date", "simulation_state"])
 		day = add_days(getdate(last), 1) if last else ctx.start
+		if saved:
+			# the state committed with the last whole day: the file can be a day ahead or behind
+			# when a run was stopped between the two
+			state["sim"] = json.loads(saved)
 		sim = simulation.Simulation(ctx, state)
 		with ctx.auto_tick():
 			_simulate(ctx, sim, name, state, day, stop_at)
@@ -256,11 +260,18 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		while day <= min(stop_at, ctx.end):
 			with _atomic_day():
 				sim.run_day(day)
+			# the day's documents, the date reached and the simulation's state commit together:
+			# a run stopped at any moment resumes at the end of a whole day
+			ctx.save_progress(
+				simulated_date=day,
+				stage=f"history {day}",
+				simulation_state=json.dumps(state["sim"], default=str, sort_keys=True),
+			)
 			frappe.db.commit()
 			with ctx.step(23, 30):
+				# queued reposts stay queued in the database: a run stopped here finishes them the
+				# next day
 				_repost_pending()
-			ctx.save_progress(simulated_date=day, stage=f"history {day}")
-			frappe.db.commit()
 			save_state(name, state)
 			if frappe.db.get_value("Seed Run", name, "stop_requested"):
 				frappe.db.set_value("Seed Run", name, {"stop_requested": 0})
