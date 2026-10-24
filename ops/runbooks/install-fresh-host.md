@@ -353,7 +353,7 @@ Keep the output of both as installation evidence (brief §8.2 gate 6). No script
   2. Open Grafana through an SSH tunnel.
 
   See [monitoring.md](monitoring.md). The production rehearsal (`rehearsal.yml`) runs the overlay and checks that every Prometheus target is up; check them on your host too after enabling it.
-- **Outgoing email.** Configure an Email Account in the desk for welcome mails, password resets and notifications. No script does this.
+- **Outgoing email.** Configure an Email Account in the desk for welcome mails, password resets and notifications. No script does this. On production it is needed before any privileged user (two-factor roles, IT Operator included) logs in for the first time: Frappe e-mails them the link to their authenticator QR code, and their login fails until it can ([security-operations.md](security-operations.md#privileged-mfa)).
 - **Administrator and users.**
   - On production, privileged roles (including System Manager, held by Administrator) must use an OTP app. Enrol at the first login.
   - Then provision users as in [access-review.md](access-review.md).

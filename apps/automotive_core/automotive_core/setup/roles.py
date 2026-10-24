@@ -68,6 +68,16 @@ def ensure_roles() -> None:
 		_ensure_role(role, desk_access=1)
 	for role in PORTAL_ROLES:
 		_ensure_role(role, desk_access=0)
+	two_factor_for_privileged_roles()
+
+
+def two_factor_for_privileged_roles() -> None:
+	"""OTP for the privileged roles only. Turning two-factor authentication on in System
+	Settings also flags Frappe's "All" role, which every user has: line operators on shared
+	tablets and partner portal users would all need an OTP app. Undone on every migrate and
+	after the production settings (setup/tenant.py)."""
+	if frappe.db.get_value("Role", "All", "two_factor_auth"):
+		frappe.db.set_value("Role", "All", "two_factor_auth", 0, update_modified=False)
 	for role in PRIVILEGED_ROLES:
 		if frappe.db.exists("Role", role):
 			frappe.db.set_value("Role", role, "two_factor_auth", 1, update_modified=False)

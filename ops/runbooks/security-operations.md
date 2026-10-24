@@ -117,12 +117,13 @@ restic supports several keys per repository.
   - System Settings → *Enable Two Factor Auth* = 1, method **OTP App**;
   - *Session Expiry* `08:00`;
   - login by mobile number or user name disabled.
-- **Who must use OTP.** Frappe requires the OTP for every user holding at least one flagged role. That includes Administrator, who holds System Manager.
+- **Who must use OTP.** Frappe requires the OTP for every user holding at least one flagged role. That includes Administrator, who holds System Manager. Turning 2FA on in System Settings also makes Frappe flag its *All* role, which every user has (line operators on shared tablets, partner portal users); `automotive_core` clears that flag after the production settings and on every migrate (`two_factor_for_privileged_roles`), so the flag stays on the five roles above.
+- **First login of a privileged user** (method OTP App): Frappe e-mails the link to the QR code for the authenticator app, and the login fails with "Please setup default outgoing Email Account" until an outgoing Email Account exists. Configure it at install, before privileged users log in ([install-fresh-host.md](install-fresh-host.md)).
 - **Staging and reference sites** do not get 2FA from the tenant setup. Enable it in System Settings if they hold sensitive data.
 - **All environments:** password policy on (minimum score 3) and *Apply Strict User Permissions*.
 - **Verify on production:**
   - System Settings shows 2FA enabled with method OTP App.
-  - Each of the five roles has *Two Factor Authentication* ticked.
+  - Each of the five roles has *Two Factor Authentication* ticked, and the role *All* has it unticked.
   - A login as a privileged user asks for the OTP.
 - **Recovery:** a System Manager uses **Reset OTP Secret** on the User form ([access-review.md](access-review.md#account-recovery)).
 - **Host-level access bypasses the web login:** `bench` commands, `bench mariadb`, Docker. Treat host access as privileged access: SSH keys, a small admin group, auditing on the host.

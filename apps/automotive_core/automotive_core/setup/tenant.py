@@ -72,6 +72,10 @@ def apply(tenant: str = "hinode", dry_run: bool = False, environment: str | None
 	_singles(definition.get("settings", {}), log)
 	if environment == "production":
 		_singles(definition.get("production_settings", {}), log)
+		if not dry_run:
+			from automotive_core.setup.roles import two_factor_for_privileged_roles
+
+			two_factor_for_privileged_roles()  # enabling 2FA just flagged the "All" role
 	for company in companies:
 		_company(company, log)
 	_fiscal_years(definition, log)
