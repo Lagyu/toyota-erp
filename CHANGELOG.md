@@ -141,6 +141,15 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The North America export picked the same vehicles for two open orders; master data of
   the synthetic dataset was dated after the history that uses it.
 
+### Operations
+- Dataset workflow: the standard profile generated on hosted runners in chained,
+  resumable segments; the validated export is kept for the performance tests.
+- Load tests (`perf/`, `scripts/perf/run.sh`, `perf.yml`): desk personas, partner portals
+  and background MRP runs against the standard dataset, 50-user steady and 150-user peak
+  phases, p95 checked against the targets (`ops/performance/README.md`).
+- Permission matrix (`ops/security/permission-matrix.md`), checked against the live
+  permission tables by the integration tests.
+
 ### Security
 - Findings log with the image scan (SBOM, Trivy) and a configuration review
   (`ops/security/findings.md`); Content-Security-Policy header; the runtime image applies

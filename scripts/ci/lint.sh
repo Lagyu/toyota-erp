@@ -8,7 +8,7 @@ status=0
 step() { printf '\n== %s\n' "$*"; }
 
 step "ruff"
-ruff check apps scripts integration_tests || status=1
+ruff check apps scripts integration_tests perf || status=1
 
 step "shellcheck"
 find scripts ops -name '*.sh' -print0 | xargs -0 shellcheck -x -S warning || status=1

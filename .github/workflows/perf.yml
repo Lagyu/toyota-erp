@@ -1,0 +1,86 @@
+# Load tests (GATE-7; PRF-2: 50 users plus background jobs, PRF-3: a 150-user peak) on a
+# dataset export of the dataset workflow: a reference stack built from this commit, the
+# dataset migrated to it, and Locust, all on one hosted runner. Each phase's results name
+# the hardware they ran on; the procedure and the recorded results: ops/performance/README.md.
+name: perf
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Dataset profile
+        type: choice
+        options: [standard, small, large]
+        default: standard
+      dataset_run:
+        description: Run ID of the dataset workflow to load (empty = the latest successful one with this profile)
+        type: string
+        default: ""
+      phases:
+        description: Phases, name:users:duration separated by spaces
+        type: string
+        default: "steady:50:20m peak:150:10m"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: perf
+  cancel-in-progress: false
+
+jobs:
+  load:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - name: Choose the dataset
+        id: source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PROFILE: ${{ inputs.profile }}
+          RUN: ${{ inputs.dataset_run }}
+        run: |
+          if [[ -z $RUN ]]; then
+            for id in $(gh run list -R "$GITHUB_REPOSITORY" --workflow dataset.yml --status success --limit 30 \
+                --json databaseId -q '.[].databaseId'); do
+              if gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id/artifacts" -q '.artifacts[].name' \
+                  | grep -qx "dataset-$PROFILE"; then RUN=$id; break; fi
+            done
+          fi
+          [[ -n $RUN ]] || { echo "no successful dataset run with dataset-$PROFILE"; exit 1; }
+          echo "run=$RUN" >>"$GITHUB_OUTPUT"
+          echo "Dataset: run $RUN, artifact dataset-$PROFILE" >>"$GITHUB_STEP_SUMMARY"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dataset-${{ inputs.profile }}
+          path: .local/dataset
+          run-id: ${{ steps.source.outputs.run }}
+          github-token: ${{ github.token }}
+      - name: Build the reference image
+        run: ./scripts/image/build.sh --reference | tee .local-image-reference.txt
+      - name: Load test
+        env:
+          PHASES: ${{ inputs.phases }}
+        run: |
+          read -ra phases <<<"$PHASES"
+          ./scripts/perf/run.sh "$(tail -1 .local-image-reference.txt)" .local/dataset "${phases[@]}"
+      - name: Results summary
+        if: always()
+        run: |
+          for f in perf/results/raw/*/*/summary.txt; do
+            [[ -f $f ]] || continue
+            { echo "### ${f%/summary.txt}"; echo '```'; cat "$f"; echo '```'; } >>"$GITHUB_STEP_SUMMARY"
+          done
+      - name: Results
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: perf-results
+          path: perf/results/raw/
+          retention-days: 90

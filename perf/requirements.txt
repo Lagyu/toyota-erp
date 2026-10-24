@@ -1,0 +1,2 @@
+# Load-test tooling, installed by scripts/perf/run.sh into .local/perf-venv (not part of any image)
+locust==2.47.0
