@@ -8,6 +8,8 @@ name: rehearsal
 on:
   workflow_dispatch:
     inputs:
+      # releases from d7662a7 up to (not including) 0062cc2 cannot start: their one-shot
+      # configurator restarts after it exits (the first start fails after 15 minutes)
       previous:
         description: Git ref of the previous release (empty = 25 commits before this one)
         type: string

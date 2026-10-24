@@ -52,6 +52,17 @@ finish() {
 }
 compose() { "$REPO_ROOT/scripts/deploy/compose.sh" "$ENV" "$@"; }
 prev_compose() { "$prev/scripts/deploy/compose.sh" "$ENV" "$@"; }
+COMPOSE_UP_TIMEOUT=900
+# compose up of the previous release, ended after COMPOSE_UP_TIMEOUT seconds; on failure the
+# services' states and the one-shot configurator's log follow compose's output
+prev_compose_up() {
+	timeout "$COMPOSE_UP_TIMEOUT" "$prev/scripts/deploy/compose.sh" "$ENV" up -d "$@" && return 0
+	local status=$?
+	echo "== compose up ended with status $status"
+	prev_compose ps -a --format '{{.Service}} {{.State}} {{.Status}}' || true
+	prev_compose logs --no-color --tail 40 configurator || true
+	return "$status"
+}
 bench() { compose exec -T backend bench --site "$SITE" "$@"; }
 set_env() { # KEY=VALUE ...: replace or append lines of the environment file
 	python3 - "$ENV" "$@" <<'PY'
@@ -138,7 +149,11 @@ fi
 
 # 2. the previous release -----------------------------------------------------------------
 step "First start of the previous release (step 7)"
-prev_compose up -d --quiet-pull >"$out/first-start.log" 2>&1 || fatal "compose up (see first-start.log)"
+# bounded: a release whose one-shot configurator restarts after it exits (d7662a7 up to 0062cc2)
+# leaves its dependants waiting for ever
+if ! prev_compose_up --quiet-pull >"$out/first-start.log" 2>&1; then
+	fatal "compose up failed or did not finish within $COMPOSE_UP_TIMEOUT s (see first-start.log)"
+fi
 for _ in $(seq 1 60); do prev_compose exec -T db healthcheck.sh --connect >/dev/null 2>&1 && break; sleep 5; done
 # the S3 store on the stack's outbound network, as an off-host repository would be reached
 docker_cmd run -d --name rehearsal-s3 --restart unless-stopped --network hinode_egress --network-alias s3 \
@@ -377,7 +392,7 @@ no_replay=()
 if grep -q -- '--no-replay' "$prev/scripts/deploy/restore.sh"; then no_replay=(--no-replay); fi
 set_env "CUSTOM_TAG=${prev_image##*:}"
 restored=ok
-if [[ -z $snap ]] || ! prev_compose up -d --remove-orphans >"$out/rollback.log" 2>&1; then
+if [[ -z $snap ]] || ! prev_compose_up --remove-orphans >"$out/rollback.log" 2>&1; then
 	restored=""
 elif ! "$prev/scripts/deploy/restore.sh" "$ENV" "$snap" "${no_replay[@]}" <<<"$SITE" >>"$out/rollback.log" 2>&1; then
 	# releases before wait_ready smoke-test at once after maintenance mode off, inside Frappe's
