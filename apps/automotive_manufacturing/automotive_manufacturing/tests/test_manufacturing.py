@@ -10,7 +10,7 @@ import json
 
 import frappe
 from frappe.tests import IntegrationTestCase
-from frappe.utils import add_days, add_to_date, cint, flt, now_datetime, nowdate
+from frappe.utils import add_days, add_to_date, cint, flt, getdate, now_datetime, nowdate
 
 from automotive_core.governance import approvals
 from automotive_core.integration_hub import inbound
@@ -617,6 +617,48 @@ class TestKanbanEscalation(ManufacturingTestCase):
 
 
 class TestPlanning(ManufacturingTestCase):
+	def test_the_master_production_schedule_is_the_forecast_firm_orders_consume(self):
+		"""ERP-03.1: with forecasts included, the native Master Production Schedule adds demand; firm
+		orders consume it week by week, so a week asks for the larger of forecast and orders, not
+		their sum. Without consumption the forecast is added in full; without forecasts it is not."""
+		from automotive_manufacturing.production_planning import snapshot
+
+		cat = self.cat
+		variant = cat["variants"][("Base", "FWD")]
+		start = getdate(add_days(nowdate(), 7))
+		monday = start - datetime.timedelta(days=start.weekday())
+		week1, week2 = monday + datetime.timedelta(days=1), monday + datetime.timedelta(days=8)
+		customer = "Forecast Test Dealer"
+		if not frappe.db.exists("Customer", customer):
+			frappe.get_doc({"doctype": "Customer", "customer_name": customer,
+				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
+		order = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": customer,
+			"transaction_date": nowdate(), "delivery_date": week1, "items": [{"item_code": variant, "qty": 2,
+				"rate": 2_000_000, "warehouse": catalog.FG, "delivery_date": week1}]})
+		order.insert(ignore_permissions=True)
+		order.submit()
+		mps = frappe.get_doc({"doctype": "Master Production Schedule", "company": AICHI, "posting_date": nowdate(),
+			"from_date": nowdate(), "items": [
+				{"item_code": variant, "warehouse": catalog.FG, "delivery_date": week1, "planned_qty": 5, "uom": "Nos"},
+				{"item_code": variant, "warehouse": catalog.FG, "delivery_date": week2, "planned_qty": 3, "uom": "Nos"}]})
+		mps.insert(ignore_permissions=True)
+		run = frappe._dict(as_of=nowdate(), company=AICHI, plant=catalog.PLANT, master_production_schedule=mps.name)
+
+		def demand(**params):
+			rows = [d for d in snapshot.collect(run, frappe._dict(horizon_days=28, **params))["demand"]
+				if d["item_code"] == variant]
+			firm = sum(d["qty"] for d in rows if d["source"].startswith("SO:")
+				and getdate(d["date"]).isocalendar()[1] == week1.isocalendar()[1])
+			return firm, sorted((d["date"], d["qty"]) for d in rows if d["source"] == f"MPS:{mps.name}")
+
+		firm, forecast = demand(include_forecast=1, consume_forecast=1)
+		self.assertGreaterEqual(firm, 2)
+		self.assertEqual(forecast, [(str(week1), max(5 - firm, 0)), (str(week2), 3)] if firm < 5 else
+			[(str(week2), 3)])
+		self.assertEqual(demand(include_forecast=1, consume_forecast=0)[1], [(str(week1), 5), (str(week2), 3)])
+		self.assertEqual(demand(include_forecast=0, consume_forecast=1)[1], [])
+
 	def test_planning_run_is_reproducible_and_releases_native_documents(self):
 		from automotive_manufacturing.production_planning import planning_run
 
