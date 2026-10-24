@@ -59,6 +59,7 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 | [database.md](runbooks/database.md) | MariaDB settings, immutability triggers and unique keys, DEFINERs in dumps, binary logs, safe access |
 | [security-operations.md](runbooks/security-operations.md) | Secrets and rotation, privileged MFA, dependency audit and allowlist, SBOM, file uploads and ClamAV, outbound allowlist, TLS/headers, least privilege |
 | [access-review.md](runbooks/access-review.md) | Personas and role profiles, row-level scope, SoD rules and review report, provisioning and deprovisioning, plant and partner access, delegation, periodic review, account recovery |
+| [master-data.md](runbooks/master-data.md) | Duplicate rules for items, suppliers and customers, lifecycle and history, bulk import with Data Import, exports |
 | [period-close.md](runbooks/period-close.md) | Period Close Checklist (checks, waivers, approval, closing and re-opening an Accounting Period), group consolidation, FX revaluation |
 | [integration-operations.md](runbooks/integration-operations.md) | Partners, HMAC signing, inbound endpoint and statuses, retries, Replay / Retry Delivery, reconciliation, file drop, Hinode EDI |
 | [seed-reference-data.md](runbooks/seed-reference-data.md) | Synthetic data on reference and staging sites only: profiles, running, resuming, validating, e2e fixtures |
