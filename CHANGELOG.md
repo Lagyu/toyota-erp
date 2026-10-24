@@ -215,6 +215,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   write and read of a File. It now answers True and refuses only reading a file that is not yet
   clean while scanning is required; a test attaches and reads files as a desk user. Found by the
   production rehearsal's upload through ClamAV.
+- Private files were served before their virus scan, infected ones included: Frappe's
+  `/private/files/` route asks `File.is_downloadable`, which skips the permission hooks. The
+  scan gate now applies there too (finding C-12).
 
 ### Operations
 - Point-in-time recovery: the binary logs and new uploads are shipped off the host every 5

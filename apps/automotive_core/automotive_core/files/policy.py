@@ -49,9 +49,10 @@ class AttachmentRejectedError(frappe.ValidationError):
 
 
 class AutomotiveFile(File):
-	"""Frappe's File, refusing unreadable content cleanly: Frappe parses an uploaded PDF
-	(looking for JavaScript) before any validation, and a file that only claims to be a PDF
-	made the parser fail with a server error instead of a refusal."""
+	"""Frappe's File, refusing unreadable content cleanly (Frappe parses an uploaded PDF, looking
+	for JavaScript, before any validation, and a file that only claims to be a PDF made the
+	parser fail with a server error instead of a refusal), and serving a private file only once
+	the virus scan allows it."""
 
 	def before_insert(self):
 		try:
@@ -64,6 +65,12 @@ class AutomotiveFile(File):
 					_extension(self.file_name or self.file_url) or "?"
 				)
 			) from exc
+
+	def is_downloadable(self):
+		"""Frappe's private file route (/private/files/...) asks only the File's own rule (owner,
+		sharing, the attached document), not the has_permission hooks: the scan gate is added
+		here, so a file that is not clean is not served while scanning is required."""
+		return super().is_downloadable() and has_permission(self, "read")
 
 
 def _settings():

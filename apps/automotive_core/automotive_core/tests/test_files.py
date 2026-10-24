@@ -5,6 +5,7 @@ and retention."""
 from __future__ import annotations
 
 import frappe
+from frappe.core.doctype.file.utils import find_file_by_url
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, now_datetime
 
@@ -141,9 +142,15 @@ class TestAttachmentPolicy(IntegrationTestCase):
 				frappe.db.get_value("File", doc.name, "automotive_scan_status"), "Scanner Not Configured"
 			)
 			self.assertFalse(frappe.has_permission("File", "read", doc=doc.name, user=READER))
+			# the private file route serves only what find_file_by_url returns
+			self.assertIsNone(find_file_by_url(doc.file_url))
+		frappe.db.set_value("File", doc.name, "automotive_scan_status", "Infected")
+		with as_user(READER):
+			self.assertIsNone(find_file_by_url(doc.file_url))
 		frappe.db.set_value("File", doc.name, "automotive_scan_status", "Clean")
 		with as_user(READER):
 			self.assertTrue(frappe.has_permission("File", "read", doc=doc.name, user=READER))
+			self.assertEqual(find_file_by_url(doc.file_url).name, doc.name)
 		# with scanning off nothing is held back
 		self._settings(virus_scan_mode="Disabled")
 		with as_user(READER):
