@@ -31,6 +31,11 @@ read -r -p "This replaces ALL data of $site with snapshot $snapshot. Type the si
 	bench --site "$SITE_NAME" restore "$work/restore.sql.gz" \
 		--with-public-files "$public" --with-private-files "$private" \
 		--db-root-password "$(cat "$DB_ROOT_PASSWORD_FILE")" --force
+	# on a new host the site has a key of its own: take the source key so secrets decrypt
+	config=$(find "$work" -name "*-site_config_backup.json" | head -1)
+	if [ -n "$config" ]; then
+		python3 /opt/hinode/ops/backup/adopt_encryption_key.py "$config" "sites/$SITE_NAME/site_config.json"
+	fi
 	rm -rf "$work"'
 "${compose[@]}" exec -T backend bench --site "$site" migrate
 "${compose[@]}" exec -T backend bench --site "$site" set-maintenance-mode off

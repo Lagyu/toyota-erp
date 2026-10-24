@@ -22,7 +22,8 @@ from frappe.utils import cint, get_datetime, now_datetime
 
 from automotive_core.utils import hook_list
 
-BACKUP_MARKER = ("private", "backups", "last-success.txt")
+# outside private/backups: bench backup prunes that directory by age (keep_backups_for_hours)
+BACKUP_MARKER = ("private", "ops", "backup-last-success.txt")
 
 
 def _respond(payload: dict, status: int) -> dict:

@@ -96,12 +96,13 @@ services:
     cpus: 1
     labels:
       ofelia.enabled: "true"
+      # schedules are UTC (seconds first): 17:30 UTC = 02:30 JST, 19:30 UTC Saturday = Sunday 04:30 JST
       # nightly encrypted backup to the off-host restic repository
-      ofelia.job-exec.backup.schedule: "${BACKUP_SCHEDULE:-0 30 2 * * *}"
+      ofelia.job-exec.backup.schedule: "${BACKUP_SCHEDULE:-0 30 17 * * *}"
       ofelia.job-exec.backup.command: "bash /opt/hinode/ops/backup/backup.sh"
       ofelia.job-exec.backup.user: "frappe"
-      # weekly restore drill into a scratch site (evidence in sites/<site>/private/backups/drills/)
-      ofelia.job-exec.restore-drill.schedule: "${RESTORE_DRILL_SCHEDULE:-0 30 4 * * 0}"
+      # weekly restore drill into a scratch site (evidence in sites/<site>/private/ops/drills/)
+      ofelia.job-exec.restore-drill.schedule: "${RESTORE_DRILL_SCHEDULE:-0 30 19 * * 6}"
       ofelia.job-exec.restore-drill.command: "bash /opt/hinode/ops/backup/restore-drill.sh"
       ofelia.job-exec.restore-drill.user: "frappe"
     environment:

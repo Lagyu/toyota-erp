@@ -12,6 +12,8 @@ from __future__ import annotations
 from datetime import date, datetime
 
 import frappe
+from frappe import _
+from frappe.utils import flt
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from automotive_core.integration_hub.inbound import InboundRejected
@@ -76,6 +78,19 @@ class DealerOrderChangeMessage(Strict):
 	new_delivery_date: date | None = None
 	new_selections: dict[str, str] | None = None
 	reason: str
+
+
+class InventoryCountLine(Strict):
+	item_code: str
+	counted_qty: float = Field(ge=0)
+	batch_no: str | None = None
+
+
+class InventoryAdjustmentMessage(Strict):
+	count_reference: str = Field(min_length=1, max_length=100)
+	counted_at: datetime
+	warehouse: str | None = None
+	lines: list[InventoryCountLine] = Field(min_length=1)
 
 
 def _parse(model, data):
@@ -163,4 +178,49 @@ def dealer_order_change(message, partner, data):
 	doc = frappe.get_doc(values)
 	doc.insert()
 	doc.submit()
+	return doc.doctype, doc.name
+
+
+def inventory_adjustment(message, partner, data):
+	"""A supplier's count of the consignment (VMI) stock it owns at our plant. It becomes a
+	Cycle Count for review — expected and counted quantity per item and batch — never a direct
+	stock change: a warehouse clerk compares and posts it. Created as a recorded system step
+	(the partner has no desk rights); the partner's count reference makes resends idempotent."""
+	from erpnext.stock.doctype.batch.batch import get_batch_qty
+
+	from automotive_core.governance.elevation import on_behalf_of
+
+	msg = _parse(InventoryAdjustmentMessage, data)
+	supplier = _party("Supplier")
+	reference = f"{partner.name}:{msg.count_reference}"
+	existing = frappe.db.get_value("Cycle Count", {"partner_reference": reference, "docstatus": ("<", 2)}, "name")
+	if existing:
+		return "Cycle Count", existing
+	agreements = {a.consignment_warehouse: a for a in frappe.get_all("Consignment Agreement",
+		filters={"supplier": supplier, "docstatus": 1, "status": "Active"},
+		fields=["name", "company", "consignment_warehouse"])}
+	agreement = agreements.get(msg.warehouse) if msg.warehouse else (
+		next(iter(agreements.values())) if len(agreements) == 1 else None)
+	if not agreement:
+		raise InboundRejected(f"no active consignment agreement of {supplier} for warehouse {msg.warehouse or '(none given)'}")
+	warehouse = agreement.consignment_warehouse
+	covered = set(frappe.get_all("Consignment Agreement Item", filters={"parent": agreement.name}, pluck="item_code"))
+	for line in msg.lines:
+		if line.item_code not in covered:
+			raise InboundRejected(f"{line.item_code} is not consigned under {agreement.name}")
+		if frappe.get_cached_value("Item", line.item_code, "has_serial_no"):
+			raise InboundRejected(f"{line.item_code} is serialised: count it by receipt, not by quantity")
+		if frappe.get_cached_value("Item", line.item_code, "has_batch_no") and not line.batch_no:
+			raise InboundRejected(f"{line.item_code} is counted by batch: give batch_no")
+	with on_behalf_of(_("Inventory report {0} from {1}").format(msg.count_reference, supplier),
+			"Integration Inbound Message", message.name):
+		# our own records of the supplier's stock: read with system rights, not the partner's
+		lines = [{"item_code": line.item_code, "batch_no": line.batch_no, "counted_qty": line.counted_qty,
+			"expected_qty": flt(get_batch_qty(batch_no=line.batch_no, warehouse=warehouse)) if line.batch_no
+				else flt(frappe.db.get_value("Bin", {"item_code": line.item_code, "warehouse": warehouse}, "actual_qty"))}
+			for line in msg.lines]
+		doc = frappe.get_doc({"doctype": "Cycle Count", "company": agreement.company, "warehouse": warehouse,
+			"count_date": msg.counted_at.date(), "count_class": "Full", "source": "Partner Report",
+			"supplier": supplier, "partner_reference": reference, "lines": lines})
+		doc.insert()
 	return doc.doctype, doc.name

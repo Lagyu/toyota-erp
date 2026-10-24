@@ -18,7 +18,7 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --providers.docker.network=${COMPOSE_PROJECT_NAME:-hinode}_edge
-      - --providers.file.filename=/etc/traefik/dynamic.yaml
+      - --providers.file.directory=/etc/traefik/dynamic
       - --providers.file.watch=true
       - --entrypoints.web.address=:80
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
@@ -38,6 +38,7 @@ services:
       options: { max-size: 20m, max-file: "5" }
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/dynamic.yaml:/etc/traefik/dynamic.yaml:ro
+      - ./traefik/dynamic.yaml:/etc/traefik/dynamic/dynamic.yaml:ro
+      - ./traefik/certificates.yaml:/etc/traefik/dynamic/certificates.yaml:ro
       - ${TLS_CERT_DIR:?set TLS_CERT_DIR}:/certs:ro
     mem_limit: 256m

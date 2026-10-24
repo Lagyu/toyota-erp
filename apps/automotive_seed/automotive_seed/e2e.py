@@ -16,8 +16,10 @@ from __future__ import annotations
 
 import contextlib
 import datetime as dt
+import functools
 import json
 import os
+import traceback
 
 import frappe
 from frappe.utils import flt, now_datetime, nowdate
@@ -53,6 +55,20 @@ PERSONAS = {
 PLANT = "AICHI-VA"
 
 
+def _cli(fn):
+	"""``bench execute`` swallows a function's exception and retries the path with ``eval``,
+	reporting a misleading NameError: print the real traceback and exit non-zero instead."""
+	@functools.wraps(fn)
+	def wrapper(*args, **kwargs):
+		try:
+			return fn(*args, **kwargs)
+		except Exception:
+			traceback.print_exc()
+			raise SystemExit(1) from None
+
+	return wrapper
+
+
 def _write(output: str, payload: str) -> None:
 	fd = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
 	with os.fdopen(fd, "w") as handle:
@@ -82,6 +98,7 @@ def _partner(party_type: str) -> str | None:
 		order_by="user asc")
 
 
+@_cli
 def prepare_users(password: str | None = None, output: str | None = None) -> str:
 	"""Returns the credentials JSON, or writes it to ``output`` (mode 0600) and returns a
 	summary without the password."""
@@ -118,6 +135,7 @@ def prepare_users(password: str | None = None, output: str | None = None) -> str
 # ---------------------------------------------------------------------------------------
 
 
+@_cli
 def prepare_journeys(output: str | None = None) -> str | dict:
 	"""Preconditions for the browser journeys, arranged at the current time through the
 	dataset's own flows (never direct ledger writes):

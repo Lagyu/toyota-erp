@@ -45,11 +45,25 @@ def delegated_roles(delegate: str, on_date=None) -> list[DelegatedRole]:
 	for row in _active_rows(delegate, on_date):
 		if not _delegator_still_holds(row.delegator, row.approver_role):
 			continue
+		# a role gained since the delegation was granted can make it a conflict: it then grants nothing
+		if any(r.enforcement == "Block" for r in sod_conflicts(delegate, row.approver_role)):
+			continue
 		result.append(
 			DelegatedRole(row.name, row.delegator, row.approver_role, row.scope_company, row.reference_doctype,
 				flt(row.max_amount))
 		)
 	return result
+
+
+def sod_conflicts(delegate: str, role: str) -> list[dict]:
+	"""Segregation-of-duties rules that the delegated role would break for the delegate:
+	authority received by delegation counts like a role held (a Buyer must not approve
+	payments as an acting Treasury Approver)."""
+	from automotive_core.governance.sod import conflicts
+
+	held = set(frappe.get_roles(delegate))
+	return [r for r in conflicts(held | {role}) if role in (r.role_a, r.role_b)
+		and not (r.role_a in held and r.role_b in held)]
 
 
 def _delegator_still_holds(delegator: str, role: str) -> bool:
@@ -102,6 +116,16 @@ def validate(doc) -> None:
 		frappe.throw(_("{0} does not hold the role {1} and cannot delegate it.").format(doc.delegator, doc.approver_role))
 	if not frappe.db.get_value("User", doc.delegate, "enabled"):
 		frappe.throw(_("Delegate {0} is not an active user.").format(doc.delegate))
+	found = sod_conflicts(doc.delegate, doc.approver_role)
+	blocking = [r for r in found if r.enforcement == "Block"]
+	if blocking:
+		from automotive_core.governance.sod import SegregationOfDutiesError
+
+		raise SegregationOfDutiesError(_("Segregation of duties: {0} may not act as {1} ({2}).").format(
+			doc.delegate, doc.approver_role, "; ".join(f"{r.role_a} + {r.role_b}" for r in blocking)))
+	for rule in found:
+		frappe.msgprint(_("Segregation of duties warning ({0}): {1} would hold {2} and {3}.").format(
+			rule.name, doc.delegate, rule.role_a, rule.role_b), indicator="orange", alert=True)
 	user = frappe.session.user
 	privileged = {"System Manager", "IT Operator"} & set(frappe.get_roles(user))
 	if user != doc.delegator and not privileged:

@@ -28,7 +28,7 @@ files=(
 	-f "$fd/overrides/compose.redis.yaml"
 )
 case ${TLS_MODE:-files} in
-	letsencrypt) files+=(-f "$fd/overrides/compose.https.yaml") ;;
+	letsencrypt) files+=(-f "$deploy/compose.tls-letsencrypt.yaml") ;;
 	files) files+=(-f "$deploy/compose.tls-files.yaml") ;;
 	none) files+=(-f "$fd/overrides/compose.noproxy.yaml") ;;
 	*) die "TLS_MODE must be letsencrypt, files or none" ;;

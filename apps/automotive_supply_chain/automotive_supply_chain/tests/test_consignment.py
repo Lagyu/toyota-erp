@@ -3,11 +3,14 @@ obligation at withdrawal, agreement limits, returns and cancellation."""
 
 from __future__ import annotations
 
+import json
+
 import frappe
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, nowdate
 
 from automotive_core.governance.cancellation import cancel_with_reason
+from automotive_core.integration_hub import inbound
 from automotive_core.tests.utils import AICHI, as_user
 from automotive_manufacturing.tests import catalog
 from automotive_supply_chain.tests import helpers as h
@@ -78,3 +81,48 @@ class TestConsignment(IntegrationTestCase):
 			self.assertEqual(frappe.db.get_value(doctype, name, "docstatus"), 2, doctype)
 		self.assertEqual(flt(self._bin(CONSIGNMENT).actual_qty), 35)
 		self.assertEqual(flt(self._bin(catalog.PARTS_STORE).actual_qty), before_store)
+
+	def test_supplier_count_report_becomes_a_cycle_count_for_review(self):
+		"""Inbound inventory update (ERP-11): the supplier's own count of its consignment stock."""
+		from erpnext.stock.doctype.batch.batch import get_batch_qty
+
+		self._move("Receipt Into Consignment", 20)
+		batches = sorted((b for b in get_batch_qty(warehouse=CONSIGNMENT, item_code=self.wheel) if flt(b["qty"]) > 0),
+			key=lambda b: b["batch_no"])
+		batch, expected = batches[-1]["batch_no"], flt(batches[-1]["qty"])
+		service = h.portal_user("vmi@kaze-wheels.example", "Supplier", self.supplier)
+		frappe.get_doc({"doctype": "Integration Partner", "partner_code": "KAZE-VMI", "partner_name": self.supplier,
+			"partner_type": "Supplier", "party_type": "Supplier", "party": self.supplier, "adapter": "Local File Drop",
+			"allowed_message_types": "inventory_adjustment", "service_user": service}).insert(ignore_permissions=True)
+
+		def report(message_id, reference, lines):
+			frappe.flags.automotive_pending_inbound = []
+			accepted = inbound.accept("KAZE-VMI", json.dumps({"message_id": message_id,
+				"message_type": "inventory_adjustment", "data": {"count_reference": reference,
+				"counted_at": f"{nowdate()} 07:00:00", "lines": lines}}))
+			inbound.run_pending_inline()
+			return frappe.get_doc("Integration Inbound Message", accepted["inbound_id"])
+
+		first = report("KAZE-CNT-1", "CNT-0001", [{"item_code": self.wheel, "batch_no": batch, "counted_qty": expected - 2}])
+		self.assertEqual((first.status, first.result_doctype), ("Processed", "Cycle Count"), first.last_error)
+		count = frappe.get_doc("Cycle Count", first.result_name)
+		self.assertEqual((count.docstatus, count.source, count.supplier, count.warehouse),
+			(0, "Partner Report", self.supplier, CONSIGNMENT))
+		line = count.lines[0]
+		self.assertEqual((flt(line.expected_qty), flt(line.counted_qty), flt(line.variance_qty)),
+			(expected, expected - 2, -2))
+		# the same report resent under a new message id answers with the same count
+		self.assertEqual(report("KAZE-CNT-1b", "CNT-0001", [{"item_code": self.wheel, "batch_no": batch,
+			"counted_qty": expected - 2}]).result_name, count.name)
+		# a part outside the agreement, or a batch part without its batch, is refused
+		self.assertEqual(report("KAZE-CNT-2", "CNT-0002", [{"item_code": self.cat["foam"], "counted_qty": 1}]).status,
+			"Rejected")
+		self.assertEqual(report("KAZE-CNT-3", "CNT-0003", [{"item_code": self.wheel, "counted_qty": 1}]).status,
+			"Rejected")
+		# the clerk posts the reviewed count: the consignment stock follows it, still at zero value
+		with as_user(h.WAREHOUSE):
+			count.reload()
+			count.submit()
+		self.assertEqual(flt(get_batch_qty(batch_no=batch, warehouse=CONSIGNMENT)), expected - 2)
+		self.assertEqual(flt(self._bin(CONSIGNMENT).stock_value), 0)
+		self.assertEqual(frappe.db.get_value("Cycle Count", count.name, "status"), "Posted")

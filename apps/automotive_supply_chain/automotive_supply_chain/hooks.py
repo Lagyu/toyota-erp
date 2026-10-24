@@ -26,6 +26,7 @@ automotive_inbound_handlers = {
 	"po_acknowledgement": "automotive_supply_chain.integrations.handlers.po_acknowledgement",
 	"dealer_order": "automotive_supply_chain.integrations.handlers.dealer_order",
 	"dealer_order_change": "automotive_supply_chain.integrations.handlers.dealer_order_change",
+	"inventory_adjustment": "automotive_supply_chain.integrations.handlers.inventory_adjustment",
 }
 automotive_kpi_definitions = ["automotive_supply_chain.analytics.kpis.DEFINITIONS"]
 

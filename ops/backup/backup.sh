@@ -5,7 +5,8 @@
 #   1. bench backup --with-files (database dump, public + private files, site config)
 #   2. restic backup (client-side AES-256 encryption; the key never leaves this host)
 #   3. retention (daily/weekly/monthly) and a 5% read-back integrity check
-#   4. marker for the erp_backup_last_success_timestamp_seconds metric
+#   4. marker for the erp_backup_last_success_timestamp_seconds metric (in private/ops: bench
+#      backup deletes everything in private/backups older than keep_backups_for_hours)
 # Environment: SITE_NAME, RESTIC_REPOSITORY, RESTIC_PASSWORD_FILE, RESTIC_KEEP_*,
 # and the repository's credentials (e.g. AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY).
 set -euo pipefail
@@ -23,12 +24,15 @@ log "backup set: ${set_files[*]##*/}"
 
 restic cat config >/dev/null 2>&1 || { log "initialising repository"; restic init; }
 restic backup --quiet --host "$site" --tag "site:$site" --tag "${BACKUP_TAG:-nightly}" "${set_files[@]}"
-restic forget --quiet --host "$site" --tag "site:$site" --prune \
+# group by host and tags: every snapshot holds differently named files, so restic's default
+# grouping (host, paths) would make each snapshot its own group and never forget any
+restic forget --quiet --host "$site" --tag "site:$site" --group-by host,tags --prune \
 	--keep-daily "${RESTIC_KEEP_DAILY:-14}" --keep-weekly "${RESTIC_KEEP_WEEKLY:-8}" \
 	--keep-monthly "${RESTIC_KEEP_MONTHLY:-12}"
 restic check --read-data-subset=5% --quiet
 
-date -u +%FT%TZ >"$dir/last-success.txt"
+mkdir -p "sites/$site/private/ops"
+date -u +%FT%TZ >"sites/$site/private/ops/backup-last-success.txt"
 # keep three days of local copies for quick restores; the repository holds the rest
 find "$dir" -maxdepth 1 -type f \( -name '*.sql.gz' -o -name '*.tar' -o -name '*.tgz' -o -name '*.json' \) \
 	-mtime +3 -delete

@@ -188,6 +188,33 @@ class TestApprovals(IntegrationTestCase):
 				"approver_role": "Treasury Approver", "from_date": nowdate(), "to_date": nowdate(),
 				"reason": "role not held"}).insert()
 
+	def test_delegation_cannot_break_segregation_of_duties(self):
+		from automotive_core.governance.delegation import delegated_roles
+		from automotive_core.governance.sod import SegregationOfDutiesError
+
+		treasurer = make_user("treasury.sod@hinode.example", ["Treasury Approver"])
+		if not frappe.db.exists("Segregation of Duties Rule", {"role_a": "Buyer", "role_b": "Treasury Approver"}):
+			frappe.get_doc({"doctype": "Segregation of Duties Rule", "rule_name": "Buyer vs Treasury Approver (test)",
+				"role_a": "Buyer", "role_b": "Treasury Approver", "enforcement": "Block", "is_active": 1,
+				"rationale": "Who orders must not release the payment."}).insert(ignore_permissions=True)
+		with as_user(treasurer), self.assertRaises(SegregationOfDutiesError):
+			frappe.get_doc({"doctype": "Approval Delegation", "delegator": treasurer, "delegate": BUYER,
+				"approver_role": "Treasury Approver", "from_date": nowdate(), "to_date": nowdate(),
+				"reason": "holiday cover"}).insert()
+		# granted to someone without the conflict, then the delegate gains the conflicting role: no authority
+		cover = make_user("cover.sod@hinode.example", ["Production Planner"])
+		with as_user(treasurer):
+			granted = frappe.get_doc({"doctype": "Approval Delegation", "delegator": treasurer, "delegate": cover,
+				"approver_role": "Treasury Approver", "from_date": nowdate(), "to_date": nowdate(),
+				"reason": "holiday cover"}).insert()
+			granted.submit()
+		self.assertEqual([d.role for d in delegated_roles(cover)], ["Treasury Approver"])
+		user = frappe.get_doc("User", cover)
+		user.append("roles", {"role": "Buyer"})
+		user.flags.ignore_permissions = True
+		user.save()
+		self.assertEqual(delegated_roles(cover), [])
+
 	def test_inbox_lists_only_actionable_requests(self):
 		doc = make_voucher(BUYER, 3_000_000)
 		req = self.request(doc)

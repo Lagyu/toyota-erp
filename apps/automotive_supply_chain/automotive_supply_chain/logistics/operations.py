@@ -7,6 +7,7 @@ from frappe import _
 from frappe.utils import flt, now_datetime
 
 from automotive_core.governance import audit
+from automotive_core.governance.elevation import on_behalf_of
 from automotive_core.integration_hub import outbox
 from automotive_supply_chain.dealer_operations.fulfilment import vehicles_of
 
@@ -126,17 +127,30 @@ def validate_count(doc) -> None:
 	doc.status = "Counted" if counted else "Draft"
 
 
+def _reconciliation_row(doc, line, consignment: bool) -> dict:
+	row = {"item_code": line.item_code, "warehouse": doc.warehouse, "qty": line.counted_qty,
+		"valuation_rate": flt(frappe.db.get_value("Bin", {"item_code": line.item_code, "warehouse": doc.warehouse},
+			"valuation_rate")) or None}
+	if consignment:  # supplier-owned stock is carried at zero value
+		row.update({"valuation_rate": 0, "allow_zero_valuation_rate": 1})
+	if line.batch_no:  # the counted quantity of that batch in the warehouse
+		row.update({"use_serial_batch_fields": 1, "batch_no": line.batch_no})
+	return row
+
+
 def on_count_submit(doc) -> None:
 	variances = [ln for ln in doc.lines if abs(flt(ln.variance_qty)) > 1e-9]
+	consignment = frappe.get_cached_value("Warehouse", doc.warehouse, "automotive_warehouse_role") == "Consignment"
 	reco = None
 	if variances:
-		recon = frappe.get_doc({"doctype": "Stock Reconciliation", "company": doc.company, "purpose":
-			"Stock Reconciliation", "items": [{"item_code": ln.item_code, "warehouse": doc.warehouse,
-			"qty": ln.counted_qty, "valuation_rate": flt(frappe.db.get_value("Bin", {"item_code": ln.item_code,
-			"warehouse": doc.warehouse}, "valuation_rate")) or None} for ln in variances]})
-		recon.flags.ignore_permissions = True
-		recon.insert()
-		recon.submit()
+		# the reviewed count is the authority: the reconciliation posts as a recorded system step
+		# (counters do not hold Stock Reconciliation rights; ERPNext checks them while validating)
+		with on_behalf_of(_("Stock reconciliation for count {0}").format(doc.name), doc.doctype, doc.name) as requester:
+			recon = frappe.get_doc({"doctype": "Stock Reconciliation", "company": doc.company, "purpose":
+				"Stock Reconciliation", "items": [_reconciliation_row(doc, ln, consignment) for ln in variances]})
+			recon.insert()
+			recon.submit()
+			recon.db_set("owner", requester, update_modified=False)
 		reco = recon.name
 	doc.db_set({"status": "Posted", "stock_reconciliation": reco})
 	audit.record("inventory.cycle_count_posted", doc.doctype, doc.name, {"warehouse": doc.warehouse,

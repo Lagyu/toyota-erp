@@ -1,4 +1,6 @@
-# Traefik dynamic configuration for compose.tls-files.yaml.
+# Traefik dynamic configuration shared by both TLS modes (compose.tls-files.yaml and
+# compose.tls-letsencrypt.yaml): TLS options and the security headers. File certificates
+# are in certificates.yaml (TLS_MODE=files only).
 tls:
   options:
     default:
@@ -11,14 +13,6 @@ tls:
         - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
         - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-  certificates:
-    - certFile: /certs/fullchain.pem
-      keyFile: /certs/privkey.pem
-  stores:
-    default:
-      defaultCertificate:
-        certFile: /certs/fullchain.pem
-        keyFile: /certs/privkey.pem
 
 http:
   middlewares:

@@ -44,9 +44,15 @@ def guard() -> None:
 
 
 def _state_path(run: str) -> Path:
-	path = Path(frappe.get_site_path("private", "seed"))
+	"""The generator's state (roster, catalogue structure, pending work) is kept with the
+	site's private files, so backups — and datasets restored from them — carry it."""
+	path = Path(frappe.get_site_path("private", "files", "seed"))
 	path.mkdir(parents=True, exist_ok=True)
-	return path / f"{run}-state.json"
+	target = path / f"{run}-state.json"
+	legacy = Path(frappe.get_site_path("private", "seed", f"{run}-state.json"))
+	if not target.exists() and legacy.exists():
+		legacy.replace(target)
+	return target
 
 
 def load_state(run: str) -> dict:
@@ -104,10 +110,12 @@ def run(profile: str = "small", seed: int | None = None, until: str | None = Non
 	try:
 		with inline_background_jobs():
 			_stages(ctx, name, state, until)
-		# the validation stage leaves Validated / Validation Failed: that is the run's outcome
+		# a run that reached validation ends with its outcome (Validated / Validation Failed);
+		# one that stopped earlier (until date, stop request) is Paused and resumes on the next run
 		outcome = frappe.db.get_value("Seed Run", name, "status")
-		status = "Paused" if until else outcome if outcome in ("Validated", "Validation Failed") else "Completed"
-		frappe.db.set_value("Seed Run", name, {"status": status, "finished_at": now_datetime()})
+		finished = "validation" in _done(name)
+		status = outcome if finished and outcome in ("Validated", "Validation Failed") else "Paused"
+		frappe.db.set_value("Seed Run", name, {"status": status, "finished_at": now_datetime() if finished else None})
 		frappe.db.commit()
 	except Exception:
 		frappe.db.rollback()

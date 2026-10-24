@@ -95,12 +95,14 @@ EOF
 	cache=$REPO_ROOT/.local/reference/small-$key
 	if [[ -f $cache/database.sql.gz ]]; then
 		log "restoring the small dataset ($key)"
+		# streamed through exec: docker cp cannot write into the container's tmpfs /tmp, and its
+		# files would be root-owned while the bench runs as frappe
 		for f in database.sql.gz public.tgz private.tgz; do
-			"${compose[@]}" cp "$cache/$f" "backend:/tmp/$f" >/dev/null
+			"${compose[@]}" exec -T backend bash -c "cat >/tmp/$f" <"$cache/$f"
 		done
 		"${compose[@]}" exec -T -e DB_ROOT="$(<"$secrets/db_root_password")" backend bash -c \
 			"bench --site '$site' restore /tmp/database.sql.gz --with-public-files /tmp/public.tgz \
-			--with-private-files /tmp/private.tgz --db-root-password \"\$DB_ROOT\" --force >/dev/null \
+			--with-private-files /tmp/private.tgz --db-root-password \"\$DB_ROOT\" --force | tail -3 \
 			&& rm -f /tmp/database.sql.gz /tmp/public.tgz /tmp/private.tgz"
 		# the dataset's encrypted fields stay readable with its own key (Frappe creates one only
 		# when a field is first encrypted)

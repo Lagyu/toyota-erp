@@ -72,6 +72,6 @@ done
 log "backup into a local restic repository and restore drill"
 "${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/backup.sh 2>&1 | tail -3 | tee -a "$work/checks.log"
 "${compose[@]}" exec -T scheduler bash /opt/hinode/ops/backup/restore-drill.sh 2>&1 | tail -3 | tee -a "$work/checks.log"
-"${compose[@]}" exec -T scheduler bash -c 'cat "$(ls -t sites/smoke.localhost/private/backups/drills/*.json | head -1)"' \
+"${compose[@]}" exec -T scheduler bash -c 'cat "$(ls -t sites/smoke.localhost/private/ops/drills/*.json | head -1)"' \
 	>"$work/restore-drill.json"
 log "smoke test passed; evidence in ${work#"$REPO_ROOT"/}"

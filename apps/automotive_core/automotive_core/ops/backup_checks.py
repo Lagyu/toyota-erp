@@ -33,6 +33,7 @@ def verify_restored_site(output: str | None = None) -> dict:
 	counts = {doctype: frappe.db.count(doctype) for doctype in COUNTED if frappe.db.table_exists(doctype)}
 	checks.append({"check": "record counts", "ok": counts.get("Company", 0) > 0, "counts": counts})
 	checks.append(_attachments())
+	checks.append(_encrypted_fields())
 	last = frappe.db.sql("select max(posting_date) from `tabGL Entry`")[0][0]
 	checks.append({"check": "latest posting", "ok": True, "date": str(last) if last else None})
 	result = {"ok": all(c["ok"] for c in checks), "checks": checks}
@@ -61,3 +62,18 @@ def _attachments() -> dict:
 			missing.append(url)
 	return {"check": "attachments restored", "ok": not missing, "files": total, "missing": len(missing),
 		"examples": missing[:5]}
+
+
+def _encrypted_fields() -> dict:
+	"""Encrypted secrets (passwords, API and partner secrets) decrypt with the site's key:
+	a restore on another host that lost the source key would fail here."""
+	from frappe.utils.password import get_decrypted_password
+
+	rows = frappe.db.sql("select doctype, name, fieldname from `__Auth` where encrypted = 1 limit 50", as_dict=True)
+	failed = []
+	for row in rows:
+		try:
+			get_decrypted_password(row.doctype, row.name, row.fieldname, raise_exception=True)
+		except Exception:
+			failed.append(f"{row.doctype} {row.name} {row.fieldname}")
+	return {"check": "encrypted fields decrypt", "ok": not failed, "sampled": len(rows), "failed": failed[:5]}

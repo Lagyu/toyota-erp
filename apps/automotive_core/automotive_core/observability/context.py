@@ -10,6 +10,7 @@ web, queue and partner traffic.
 from __future__ import annotations
 
 import json
+import logging
 import re
 import uuid
 from typing import Any
@@ -62,4 +63,8 @@ def log(event: str, level: str = "info", **fields: Any) -> None:
 		**fields,
 	}
 	logger = frappe.logger("automotive", allow_site=True, file_count=10, max_size=50_000_000)
+	if logger.level > logging.INFO:
+		# Frappe creates loggers at ERROR outside the development server; these lines are the
+		# operational record (integration traffic, failures) and are wanted in production
+		logger.setLevel(logging.INFO)
 	getattr(logger, level)(json.dumps(record, default=str, sort_keys=True))

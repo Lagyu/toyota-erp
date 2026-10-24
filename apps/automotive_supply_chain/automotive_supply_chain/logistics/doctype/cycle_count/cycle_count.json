@@ -12,6 +12,9 @@
   "warehouse",
   "count_date",
   "count_class",
+  "source",
+  "supplier",
+  "partner_reference",
   "column_break_1",
   "tolerance_percent",
   "status",
@@ -63,6 +66,31 @@
    "fieldtype": "Select",
    "label": "Class",
    "options": "A\nB\nC\nFull"
+  },
+  {
+   "default": "Internal Count",
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Source",
+   "options": "Internal Count\nPartner Report",
+   "read_only": 1
+  },
+  {
+   "description": "Supplier whose count of its consignment stock this is (partner reports)",
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Reported By",
+   "options": "Supplier",
+   "read_only": 1
+  },
+  {
+   "fieldname": "partner_reference",
+   "fieldtype": "Data",
+   "label": "Partner Reference",
+   "no_copy": 1,
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "column_break_1",
@@ -135,7 +163,7 @@
  "icon": "clipboard-check",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 08:23:27.536924",
+ "modified": "2026-10-24 13:36:30.250188",
  "modified_by": "Administrator",
  "module": "Logistics",
  "name": "Cycle Count",

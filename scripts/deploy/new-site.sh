@@ -32,6 +32,8 @@ if [[ ${ENVIRONMENT:?} == reference ]]; then
 	bench --site "$site" set-config -p automotive_allow_seed 1
 fi
 bench --site "$site" set-config automotive_environment "$ENVIRONMENT"
+# bench backup prunes local backup files older than this; ops/backup/backup.sh keeps three days
+bench --site "$site" set-config -p keep_backups_for_hours 72
 bench --site "$site" set-config host_name "https://$site"
 "${compose[@]}" exec -T -e TOKEN="$token" backend bash -c \
 	"bench --site '$site' set-config automotive_metrics_token \"\$TOKEN\""

@@ -3,19 +3,21 @@
 # stack, verify it, record the evidence, drop the scratch site. Proves the backups can
 # actually be restored (RPO/RTO evidence for ops/runbooks/backup-restore.md).
 #
-# Evidence: sites/<site>/private/backups/drills/<timestamp>.json
+# Evidence: sites/<site>/private/ops/drills/<timestamp>.json (outside private/backups, which
+# bench backup prunes by age)
 set -euo pipefail
 site=${SITE_NAME:?}
 cd /home/frappe/frappe-bench
 scratch="restore-drill.invalid"
 work=$(mktemp -d)
-evidence_dir="sites/$site/private/backups/drills"
+evidence_dir="sites/$site/private/ops/drills"
 mkdir -p "$evidence_dir"
 started=$(date -u +%s)
 log() { printf '%s [drill] %s\n' "$(date -u +%FT%TZ)" "$*"; }
 cleanup() {
+	# drop-site keeps a copy of the site under archived/sites; put it in the work dir, removed below
 	bench drop-site "$scratch" --db-root-password "$(<"${DB_ROOT_PASSWORD_FILE:?}")" --force --no-backup \
-		>/dev/null 2>&1 || true
+		--archived-sites-path "$work/archived" >/dev/null 2>&1 || true
 	rm -rf "$work"
 }
 trap cleanup EXIT
@@ -37,6 +39,9 @@ zcat "$db" | sed -E 's#/\*!50017 DEFINER=`[^`]*`@`[^`]*`\*/ ?##g' | gzip -c >"$w
 bench new-site "$scratch" --db-root-password "$(<"${DB_ROOT_PASSWORD_FILE:?}")" \
 	--admin-password "$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')" \
 	--mariadb-user-host-login-scope='%' >/dev/null
+# encrypted fields must decrypt with the source site's key (checked below)
+config=$(find "$work" -name '*-site_config_backup.json' | head -1)
+[[ -z $config ]] || python3 "$(dirname "$0")/adopt_encryption_key.py" "$config" "sites/$scratch/site_config.json" >/dev/null
 bench --site "$scratch" restore "$work/restore.sql.gz" --with-public-files "$public" \
 	--with-private-files "$private" --db-root-password "$(<"${DB_ROOT_PASSWORD_FILE:?}")" --force >/dev/null
 bench --site "$scratch" migrate >/dev/null

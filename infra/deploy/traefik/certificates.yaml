@@ -1,0 +1,10 @@
+# Operator-supplied certificates for TLS_MODE=files (mounted from TLS_CERT_DIR at /certs).
+tls:
+  certificates:
+    - certFile: /certs/fullchain.pem
+      keyFile: /certs/privkey.pem
+  stores:
+    default:
+      defaultCertificate:
+        certFile: /certs/fullchain.pem
+        keyFile: /certs/privkey.pem
