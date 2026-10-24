@@ -67,6 +67,8 @@ RUN cd /home/frappe/frappe-bench \
   # node_modules: only the realtime server's packages stay (the rest built the assets)
   && node /tmp/prune-node-modules.js apps/frappe socket.io cookie @redis/client \
   && for app in erpnext ${apps}; do node /tmp/prune-node-modules.js "apps/${app}" || exit 1; done \
+  # ERPNext's banking screen is a separate Vite project, built into erpnext/public/banking
+  && if [ -f apps/erpnext/banking/package.json ]; then node /tmp/prune-node-modules.js apps/erpnext/banking; fi \
   && (cd apps/frappe && node -e 'for (const m of ["socket.io", "cookie", "@redis/client"]) require(m); require("./node_utils")') \
   && echo "{}" > sites/common_site_config.json \
   && find apps -mindepth 1 -maxdepth 2 -name .git -prune -exec rm -rf {} + \
@@ -100,14 +102,21 @@ USER root
 COPY --from=frappe_docker resources/core/main-entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY --from=frappe_docker resources/core/start.sh /usr/local/bin/start.sh
 # Security fixes Debian has published since the base image was built (ops/security/findings.md),
-# and no package installers at run time: uv only builds the bench (in the builder stage).
+# and no package installers at run time: uv only builds the bench (in the builder stage), and
+# the base image's Node keeps only node itself (the realtime server); npm, npx, corepack and
+# yarn built the assets.
 RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/start.sh \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade --no-install-recommends \
   && rm -rf /var/lib/apt/lists/* \
   && (python3 -m pip uninstall --yes --quiet uv || true) \
   && rm -rf /usr/local/bin/uv /usr/local/bin/uvx /usr/local/lib/python3*/site-packages/uv \
-       /usr/local/lib/python3*/site-packages/uv-*.dist-info
+       /usr/local/lib/python3*/site-packages/uv-*.dist-info \
+  && for node in /home/frappe/.nvm/versions/node/*; do \
+       rm -rf "${node}/lib/node_modules/npm" "${node}/lib/node_modules/corepack" "${node}/lib/node_modules/yarn" \
+         "${node}/bin/npm" "${node}/bin/npx" "${node}/bin/corepack" "${node}/bin/yarn" "${node}/bin/yarnpkg" \
+       && "${node}/bin/node" --version >/dev/null || exit 1; \
+     done
 
 USER frappe
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
