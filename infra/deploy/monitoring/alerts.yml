@@ -45,8 +45,46 @@ groups:
         annotations:
           summary: "p95 server time of {{ $labels.kind }} submissions above 4 s for 15 minutes"
 
+  - name: erp-assurance
+    rules:
+      - alert: ErpRestoreDrillFailed
+        expr: max(erp_restore_drill_last_ok) == 0
+        labels: { severity: critical }
+        annotations:
+          summary: "The last weekly restore drill failed: backups may not be restorable"
+      - alert: ErpRestoreDrillStale
+        expr: time() - max(erp_restore_drill_last_timestamp_seconds) > 8 * 86400
+        for: 1h
+        labels: { severity: warning }
+        annotations:
+          summary: "No restore drill for more than 8 days"
+      - alert: ErpVirusScannerDown
+        expr: max(erp_clamav_up) == 0
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "The upload virus scanner does not answer: new uploads stay unscanned (and unreadable when scanning is required)"
+      - alert: ErpCertificateExpiringSoon
+        expr: min(traefik_tls_certs_not_after) - time() < 14 * 86400
+        for: 1h
+        labels: { severity: warning }
+        annotations:
+          summary: "A TLS certificate expires in less than 14 days"
+      - alert: ErpCertificateExpiring
+        expr: min(traefik_tls_certs_not_after) - time() < 3 * 86400
+        for: 15m
+        labels: { severity: critical }
+        annotations:
+          summary: "A TLS certificate expires in less than 3 days"
+
   - name: erp-work
     rules:
+      - alert: ErpPlanningRunFailed
+        expr: max(erp_planning_runs_failed) > 0
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "A planning (MRP) run failed; its error is on the Planning Run"
       - alert: ErpQueueBacklog
         expr: max by (queue) (erp_queue_jobs) > 500
         for: 15m

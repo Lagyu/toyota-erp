@@ -39,3 +39,13 @@ def scan_bytes(data: bytes, host: str, port: int = 3310, timeout: float = 30.0) 
 	if text.endswith("FOUND"):
 		return False, text.split(":", 1)[-1].replace("FOUND", "").strip()
 	raise ClamdError(f"unexpected clamd reply: {text}")
+
+
+def ping(host: str, port: int = 3310, timeout: float = 3.0) -> bool:
+	"""clamd answers PING with PONG (liveness for the metrics endpoint)."""
+	try:
+		with socket.create_connection((host, port), timeout=timeout) as sock:
+			sock.sendall(b"zPING\0")
+			return sock.recv(16).rstrip(b"\0") == b"PONG"
+	except OSError:
+		return False

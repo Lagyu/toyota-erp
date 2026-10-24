@@ -20,7 +20,18 @@ cleanup() {
 		--archived-sites-path "$work/archived" >/dev/null 2>&1 || true
 	rm -rf "$work"
 }
-trap cleanup EXIT
+# outcome for the metrics endpoint (erp_restore_drill_*): written whether the drill passes or fails
+snapshot=""
+finish() {
+	local status=$?
+	python3 -c 'import json, sys, time
+path, status, started, snapshot = sys.argv[1:]
+json.dump({"finished_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), "ok": status == "0",
+	"seconds": int(time.time()) - int(started), "snapshot": snapshot}, open(path, "w"))' \
+		"sites/$site/private/ops/restore-drill-last.json" "$status" "$started" "$snapshot" || true
+	cleanup
+}
+trap finish EXIT
 
 snapshot=$(restic snapshots --host "$site" --latest 1 --json | python3 -c 'import json,sys; print(json.load(sys.stdin)[-1]["short_id"])')
 log "restoring snapshot $snapshot"

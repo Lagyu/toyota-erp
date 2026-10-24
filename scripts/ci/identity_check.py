@@ -26,7 +26,8 @@ CUSTOMER_FACING = [
 	"apps/*/*/**/sidebar/**/*.json",
 ]
 FORBIDDEN = re.compile(r"toyota|lexus|daihatsu|hino motors|denso|aisin|kanban\s*system\s*®|tps\s*®", re.I)
-ALLOWED_LINES = re.compile(r"Copyright \(c\) 2026, Toyota ERP Clone contributors")
+# licence headers name the working title as publisher (source files and gettext catalogues)
+ALLOWED_LINES = re.compile(r"Copyright \([cC]\) 2026,? Toyota ERP Clone contributors")
 
 
 def main() -> int:

@@ -39,6 +39,12 @@ if [[ ${MONITORING:-0} == 1 ]]; then
 	# Prometheus has no environment expansion: render the site name into its config
 	sed "s/\${SITE_NAME}/$SITE_NAME/g" "$deploy/monitoring/prometheus.yml.tmpl" >"$deploy/monitoring/prometheus.rendered.yml"
 	files+=(-f "$deploy/compose.monitoring.yaml")
+	if [[ ${TLS_MODE:-files} != none ]]; then
+		# the TLS proxy's own metrics: request rates and certificate expiry
+		printf '\n  - job_name: traefik\n    static_configs: [{ targets: ["proxy:8082"] }]\n' \
+			>>"$deploy/monitoring/prometheus.rendered.yml"
+		files+=(-f "$deploy/compose.monitoring-proxy.yaml")
+	fi
 fi
 
 # frappe_docker's compose.yaml pins nothing; the override supplies every image.

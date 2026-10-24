@@ -14,6 +14,7 @@ backup job writes; nothing is cached or estimated.
 from __future__ import annotations
 
 import hmac
+import json
 import time
 from pathlib import Path
 
@@ -24,6 +25,7 @@ from automotive_core.utils import hook_list
 
 # outside private/backups: bench backup prunes that directory by age (keep_backups_for_hours)
 BACKUP_MARKER = ("private", "ops", "backup-last-success.txt")
+DRILL_MARKER = ("private", "ops", "restore-drill-last.json")  # written by ops/backup/restore-drill.sh
 
 
 def _respond(payload: dict, status: int) -> dict:
@@ -113,10 +115,26 @@ def collect() -> list[tuple[str, str, dict, float]]:
 		last = get_datetime(marker.read_text().strip())
 		out.append(("erp_backup_last_success_timestamp_seconds", "Unix time of the last verified backup", {},
 			float(last.timestamp())))
-	last_scheduled = frappe.db.sql("select max(creation) from `tabScheduled Job Log` where status = 'Complete'")[0][0]
+	# every run updates last_execution (cron jobs too); the Scheduled Job Log only records
+	# non-cron jobs, whose newest entry is up to an hour old by design
+	last_scheduled = frappe.db.sql("select max(last_execution) from `tabScheduled Job Type` where stopped = 0")[0][0]
 	if last_scheduled:
-		out.append(("erp_scheduler_last_job_timestamp_seconds", "Unix time of the last completed scheduled job", {},
+		out.append(("erp_scheduler_last_job_timestamp_seconds", "Unix time of the last scheduled job run", {},
 			float(get_datetime(last_scheduled).timestamp())))
+	drill = Path(frappe.get_site_path(*DRILL_MARKER))
+	if drill.exists():
+		result = json.loads(drill.read_text())
+		out.append(("erp_restore_drill_last_timestamp_seconds", "Unix time of the last restore drill", {},
+			float(get_datetime(result["finished_at"]).timestamp())))
+		out.append(("erp_restore_drill_last_ok", "1 if the last restore drill passed", {}, float(bool(result["ok"]))))
+		out.append(("erp_restore_drill_duration_seconds", "Duration of the last restore drill", {},
+			float(result.get("seconds") or 0)))
+	settings = frappe.get_cached_doc("Automotive Settings")
+	if settings.get("clamd_host"):
+		from automotive_core.files.clamav import ping
+
+		out.append(("erp_clamav_up", "1 if the upload virus scanner answers", {},
+			float(ping(settings.clamd_host, cint(settings.clamd_port) or 3310))))
 	for metric in out:
 		metric[2].setdefault("site", site)
 	return out

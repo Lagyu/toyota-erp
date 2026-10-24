@@ -26,6 +26,11 @@ services:
       - --entrypoints.websecure.address=:443
       - --entrypoints.websecure.http.underscoreHeadersStrategy=delete
       - --entrypoints.websecure.transport.respondingTimeouts.readTimeout=180s
+      # Prometheus metrics (requests, certificate expiry) on an internal entrypoint, scraped
+      # only when the monitoring overlay is enabled (compose.monitoring-proxy.yaml)
+      - --metrics.prometheus=true
+      - --metrics.prometheus.entrypoint=metrics
+      - --entrypoints.metrics.address=:8082
       - --log.level=INFO
       - --accesslog=true
     ports:

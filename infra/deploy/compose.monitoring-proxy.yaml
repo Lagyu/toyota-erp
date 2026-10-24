@@ -1,0 +1,6 @@
+# Added by scripts/deploy/compose.sh when MONITORING=1 and a TLS proxy runs (TLS_MODE
+# letsencrypt or files): Prometheus scrapes Traefik's metrics, including certificate expiry,
+# over the internal monitoring network.
+services:
+  proxy:
+    networks: [edge, monitoring]
