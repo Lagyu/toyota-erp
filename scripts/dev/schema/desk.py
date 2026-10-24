@@ -84,7 +84,9 @@ class NumberCard:
 			"is_public": 1, "is_standard": 1, "show_percentage_stats": 0, "docstatus": 0, "idx": 0,
 			"owner": "Administrator", "modified_by": "Administrator"}
 		if self.kpi:
-			doc.update({"type": "Custom", "method": KPI_CARD_METHOD,
+			# Frappe shows a custom card to users who can read its document_type; the KPI
+			# service itself requires read on KPI Definition, so the two agree
+			doc.update({"type": "Custom", "method": KPI_CARD_METHOD, "document_type": "KPI Definition",
 				"filters_json": json.dumps({"kpi_code": self.kpi}, sort_keys=True)})
 		elif self.document_type:
 			doc.update({"type": "Document Type", "document_type": self.document_type, "function": "Count",

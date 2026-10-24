@@ -59,7 +59,9 @@ def _partner(party_type: str) -> str | None:
 		order_by="user asc")
 
 
-def prepare_users(password: str | None = None) -> str:
+def prepare_users(password: str | None = None, output: str | None = None) -> str:
+	"""Returns the credentials JSON, or writes it to ``output`` (mode 0600) and returns a
+	summary without the password."""
 	guard()
 	frappe.only_for("System Manager")
 	password = password or frappe.generate_hash(length=24)
@@ -80,4 +82,12 @@ def prepare_users(password: str | None = None) -> str:
 		if user:
 			update_password(user, password)
 	frappe.db.commit()
-	return json.dumps({"password": password, "users": users}, sort_keys=True)
+	payload = json.dumps({"password": password, "users": users}, sort_keys=True)
+	if output:
+		import os
+
+		fd = os.open(output, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+		with os.fdopen(fd, "w") as handle:
+			handle.write(payload)
+		return f"{len(users)} personas written to {output}"
+	return payload

@@ -65,3 +65,13 @@ def _messages(lang: str) -> dict[str, str]:
 			out[key] = _(message, context=msg_context)
 	frappe.cache.set_value(cache_key, out, expires_in_sec=3600)
 	return out
+
+
+def home_page(user: str) -> str | None:
+	"""Home page after login: the partner's portal for partner users, the default otherwise."""
+	if frappe.db.get_value("User", user, "user_type") != "Website User":
+		return None
+	mine = party_of_user(user)
+	if not mine:
+		return None
+	return "supplier-portal" if mine[0] == "Supplier" else "dealer-portal"
