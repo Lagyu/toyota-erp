@@ -45,7 +45,9 @@ def after_request(response=None, request=None) -> None:
 	path = request.path or ""
 	if path.startswith(_SKIP):
 		return
-	observe(time.perf_counter() - started, path, request.method or "GET", getattr(response, "status_code", None))
+	observe(
+		time.perf_counter() - started, path, request.method or "GET", getattr(response, "status_code", None)
+	)
 
 
 def _status_key(kind: str, status_class: str) -> str:
@@ -77,8 +79,10 @@ def metrics() -> list[tuple]:
 		for verb in VERBS:
 			base = _base(kind, verb)
 			keys = [f"{base}:le:{le:g}" for le in BUCKETS] + [f"{base}:count", f"{base}:sum"]
-			values = [float(v.decode() if isinstance(v, bytes) else v) if v is not None else 0.0
-				for v in frappe.cache.mget(keys)]
+			values = [
+				float(v.decode() if isinstance(v, bytes) else v) if v is not None else 0.0
+				for v in frappe.cache.mget(keys)
+			]
 			labels = {"kind": kind, "verb": verb}
 			for le, value in zip(BUCKETS, values, strict=False):
 				out.append((f"{NAME}_bucket", HELP, {**labels, "le": f"{le:g}"}, value, "histogram"))

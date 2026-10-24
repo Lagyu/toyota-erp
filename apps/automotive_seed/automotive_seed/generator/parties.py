@@ -17,22 +17,60 @@ from automotive_seed.generator.context import SeedContext
 
 PLANT_COMPANY = {"AICHI-VA": AICHI, "KYUSHU-PT": KYUSHU, "NA-PDC": NA}
 PLANT_ROLE = {
-	"Plant Director": "Director", "Production Planner": "Planner", "Production Supervisor": "Supervisor",
-	"Line Operator": "Operator", "Warehouse Clerk": "Warehouse", "Quality Inspector": "Quality",
-	"Quality Manager": "Quality", "Product Engineer": "Engineering", "Engineering Manager": "Engineering",
-	"Logistics Coordinator": "Logistics", "Sales Manager": "Administration", "Dealer Liaison": "Administration",
+	"Plant Director": "Director",
+	"Production Planner": "Planner",
+	"Production Supervisor": "Supervisor",
+	"Line Operator": "Operator",
+	"Warehouse Clerk": "Warehouse",
+	"Quality Inspector": "Quality",
+	"Quality Manager": "Quality",
+	"Product Engineer": "Engineering",
+	"Engineering Manager": "Engineering",
+	"Logistics Coordinator": "Logistics",
+	"Sales Manager": "Administration",
+	"Dealer Liaison": "Administration",
 }
-COMMODITIES = ["stamping", "tires", "glass", "electronics", "lighting", "interior", "seating", "motors", "plastics",
-	"harness", "battery", "chemicals", "paint", "castings", "forgings", "machining", "rubber", "fasteners", "steel"]
+COMMODITIES = [
+	"stamping",
+	"tires",
+	"glass",
+	"electronics",
+	"lighting",
+	"interior",
+	"seating",
+	"motors",
+	"plastics",
+	"harness",
+	"battery",
+	"chemicals",
+	"paint",
+	"castings",
+	"forgings",
+	"machining",
+	"rubber",
+	"fasteners",
+	"steel",
+]
 COMMODITY_GROUPS = {
-	"stamping": ["Body & Exterior"], "tires": ["Chassis & Wheels"], "glass": ["Body & Exterior"],
-	"electronics": ["Electrical & Electronics", "Service Parts"], "lighting": ["Electrical & Electronics"],
-	"interior": ["Interior", "Service Parts"], "seating": ["Interior"], "motors": ["Electrical & Electronics",
-	"Powertrain Components"], "plastics": ["Interior", "Body & Exterior", "Service Parts"], "harness":
-	["Electrical & Electronics"], "battery": ["Electrical & Electronics", "Powertrain Components"], "chemicals":
-	["Fluids & Paint"], "paint": ["Fluids & Paint"], "castings": ["Castings & Forgings"], "forgings":
-	["Castings & Forgings", "Powertrain Components"], "machining": ["Powertrain Components"], "rubber":
-	["Powertrain Components", "Body & Exterior"], "fasteners": ["Fasteners & Hardware"], "steel": ["Chassis & Wheels"],
+	"stamping": ["Body & Exterior"],
+	"tires": ["Chassis & Wheels"],
+	"glass": ["Body & Exterior"],
+	"electronics": ["Electrical & Electronics", "Service Parts"],
+	"lighting": ["Electrical & Electronics"],
+	"interior": ["Interior", "Service Parts"],
+	"seating": ["Interior"],
+	"motors": ["Electrical & Electronics", "Powertrain Components"],
+	"plastics": ["Interior", "Body & Exterior", "Service Parts"],
+	"harness": ["Electrical & Electronics"],
+	"battery": ["Electrical & Electronics", "Powertrain Components"],
+	"chemicals": ["Fluids & Paint"],
+	"paint": ["Fluids & Paint"],
+	"castings": ["Castings & Forgings"],
+	"forgings": ["Castings & Forgings", "Powertrain Components"],
+	"machining": ["Powertrain Components"],
+	"rubber": ["Powertrain Components", "Body & Exterior"],
+	"fasteners": ["Fasteners & Hardware"],
+	"steel": ["Chassis & Wheels"],
 }
 
 
@@ -43,22 +81,50 @@ def _email(first: str, last: str, n: int, domain: str = "hinode.example") -> str
 def _create_user_directly(email: str, first: str, last: str, profile: str) -> str:
 	"""Only the very first IT operators are created directly (they approve all later accounts)."""
 	if not frappe.db.exists("User", email):
-		user = frappe.get_doc({"doctype": "User", "email": email, "first_name": first, "last_name": last,
-			"send_welcome_email": 0, "user_type": "System User", "role_profiles": [{"role_profile": profile}]})
+		user = frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": email,
+				"first_name": first,
+				"last_name": last,
+				"send_welcome_email": 0,
+				"user_type": "System User",
+				"role_profiles": [{"role_profile": profile}],
+			}
+		)
 		user.flags.ignore_permissions = True
 		user.insert()
 	return email
 
 
-def _provision(ctx: SeedContext, maker: str, checker: str, email: str, first: str, last: str, profile: str,
-		scopes: list[tuple[str, str]]) -> str:
+def _provision(
+	ctx: SeedContext,
+	maker: str,
+	checker: str,
+	email: str,
+	first: str,
+	last: str,
+	profile: str,
+	scopes: list[tuple[str, str]],
+) -> str:
 	if frappe.db.exists("User", email):
 		return email
 	with ctx.as_user(maker):
-		req = frappe.get_doc({"doctype": "User Provisioning Request", "request_type": "Create", "email": email,
-			"first_name": first, "last_name": last, "user_type": "System User", "role_profile": profile,
-			"justification": f"Joiner: {profile}", "scopes": [{"allow": a, "for_value": v, "is_default": i == 0}
-				for i, (a, v) in enumerate(scopes)]}).insert()
+		req = frappe.get_doc(
+			{
+				"doctype": "User Provisioning Request",
+				"request_type": "Create",
+				"email": email,
+				"first_name": first,
+				"last_name": last,
+				"user_type": "System User",
+				"role_profile": profile,
+				"justification": f"Joiner: {profile}",
+				"scopes": [
+					{"allow": a, "for_value": v, "is_default": i == 0} for i, (a, v) in enumerate(scopes)
+				],
+			}
+		).insert()
 		request = approvals.request_approval(req.doctype, req.name)
 	with ctx.as_user(checker):
 		approvals.decide(request["name"], "Approve")
@@ -111,33 +177,61 @@ def _employees(ctx: SeedContext, roster: dict[str, list[str]]) -> None:
 			if frappe.db.exists("Employee", {"user_id": email}):
 				continue
 			user = frappe.db.get_value("User", email, ["first_name", "last_name"], as_dict=True)
-			emp = frappe.get_doc({"doctype": "Employee", "first_name": user.first_name, "last_name": user.last_name,
-				"gender": "Prefer not to say" if frappe.db.exists("Gender", "Prefer not to say") else
-					frappe.db.get_value("Gender", {}, "name"),
-				"date_of_birth": "1985-04-01", "date_of_joining": "2020-04-01", "company": company, "user_id": email,
-				"status": "Active",
-				# row-level scope comes from provisioning scopes and Plant Assignments, not ERPNext's
-				# automatic "own company" User Permission (which would confine group roles to one company)
-				"create_user_permission": 0})
+			emp = frappe.get_doc(
+				{
+					"doctype": "Employee",
+					"first_name": user.first_name,
+					"last_name": user.last_name,
+					"gender": "Prefer not to say"
+					if frappe.db.exists("Gender", "Prefer not to say")
+					else frappe.db.get_value("Gender", {}, "name"),
+					"date_of_birth": "1985-04-01",
+					"date_of_joining": "2020-04-01",
+					"company": company,
+					"user_id": email,
+					"status": "Active",
+					# row-level scope comes from provisioning scopes and Plant Assignments, not ERPNext's
+					# automatic "own company" User Permission (which would confine group roles to one company)
+					"create_user_permission": 0,
+				}
+			)
 			emp.flags.ignore_permissions = True
 			emp.insert()
 			ctx.count("Employee")
 			if plant:
 				line = None
 				if profile in ("Line Operator", "Production Supervisor") and plant != "NA-PDC":
-					lines = frappe.get_all("Production Line", filters={"plant": plant}, pluck="name", order_by="name")
+					lines = frappe.get_all(
+						"Production Line", filters={"plant": plant}, pluck="name", order_by="name"
+					)
 					line = lines[zlib.crc32(email.encode()) % len(lines)] if lines else None
-				frappe.get_doc({"doctype": "Plant Assignment", "employee": emp.name, "plant": plant, "production_line": line,
-					"assignment_role": PLANT_ROLE.get(profile, "Administration"), "from_date": "2024-04-01",
-					"grant_plant_access": 1}).insert(ignore_permissions=True)
+				frappe.get_doc(
+					{
+						"doctype": "Plant Assignment",
+						"employee": emp.name,
+						"plant": plant,
+						"production_line": line,
+						"assignment_role": PLANT_ROLE.get(profile, "Administration"),
+						"from_date": "2024-04-01",
+						"grant_plant_access": 1,
+					}
+				).insert(ignore_permissions=True)
 				ctx.count("Plant Assignment")
 	frappe.db.commit()
 
 
 def _portal_user(email: str, first: str, last: str) -> str:
 	if not frappe.db.exists("User", email):
-		frappe.get_doc({"doctype": "User", "email": email, "first_name": first, "last_name": last,
-			"user_type": "Website User", "send_welcome_email": 0}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": email,
+				"first_name": first,
+				"last_name": last,
+				"user_type": "Website User",
+				"send_welcome_email": 0,
+			}
+		).insert(ignore_permissions=True)
 	return email
 
 
@@ -149,30 +243,61 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 	for i in range(n):
 		# with fewer suppliers than commodities each supplier covers several, so every
 		# commodity has a source; otherwise one commodity each, round robin
-		covered = [COMMODITIES[k] for k in range(len(COMMODITIES)) if k % n == i] if n < len(COMMODITIES) \
+		covered = (
+			[COMMODITIES[k] for k in range(len(COMMODITIES)) if k % n == i]
+			if n < len(COMMODITIES)
 			else [COMMODITIES[i % len(COMMODITIES)]]
+		)
 		commodity = covered[0]
 		region = "US" if i % 15 == 14 else "JP"
 		name = names.supplier_name(i, commodity, region)
 		code = f"S{i + 1:03d}"
 		if not frappe.db.exists("Supplier", {"supplier_name": name}):
 			first, last = names.person(rng, region)
-			contacts = [{"first_name": first, "last_name": last, "email": f"sales@{code.lower()}.supplier.example",
-				"partner_role": "Administrator"}]
+			contacts = [
+				{
+					"first_name": first,
+					"last_name": last,
+					"email": f"sales@{code.lower()}.supplier.example",
+					"partner_role": "Administrator",
+				}
+			]
 			if rng.random() < float(ctx.profile["partners"]["second_portal_user_share"]):
 				f2, l2 = names.person(rng, region)
-				contacts.append({"first_name": f2, "last_name": l2, "email": f"logistics@{code.lower()}.supplier.example",
-					"partner_role": "Logistics"})
+				contacts.append(
+					{
+						"first_name": f2,
+						"last_name": l2,
+						"email": f"logistics@{code.lower()}.supplier.example",
+						"partner_role": "Logistics",
+					}
+				)
 			plants = sorted({p for c in covered for p in _commodity_plants(c)})
 			with ctx.as_user(buyer):
-				doc = frappe.get_doc({"doctype": "Supplier Onboarding", "supplier_name": name, "partner_code": code,
-					"supplier_group": "Production Material", "country": "United States" if region == "US" else "Japan",
-					"tax_id": f"{region}-T{7_000_000 + i:010d}", "risk_rating": rng.choice(["Low", "Low", "Medium"]),
-					"certifications": [{"standard": "IATF 16949", "certificate_no": f"IATF-{code}-2025",
-						"valid_until": add_days(ctx.end, 400)}],
-					"contacts": contacts,
-					"proposed_items": [{"item_group": g, "plant": p}
-						for g in sorted({g for c in covered for g in COMMODITY_GROUPS[c]}) for p in plants]})
+				doc = frappe.get_doc(
+					{
+						"doctype": "Supplier Onboarding",
+						"supplier_name": name,
+						"partner_code": code,
+						"supplier_group": "Production Material",
+						"country": "United States" if region == "US" else "Japan",
+						"tax_id": f"{region}-T{7_000_000 + i:010d}",
+						"risk_rating": rng.choice(["Low", "Low", "Medium"]),
+						"certifications": [
+							{
+								"standard": "IATF 16949",
+								"certificate_no": f"IATF-{code}-2025",
+								"valid_until": add_days(ctx.end, 400),
+							}
+						],
+						"contacts": contacts,
+						"proposed_items": [
+							{"item_group": g, "plant": p}
+							for g in sorted({g for c in covered for g in COMMODITY_GROUPS[c]})
+							for p in plants
+						],
+					}
+				)
 				doc.insert()
 				req = approvals.request_approval(doc.doctype, doc.name)
 			with ctx.as_user(managers[0]):
@@ -183,7 +308,9 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 				doc.reload()
 				doc.submit()
 			ctx.count("Supplier")
-			for row in frappe.get_all("Approved Supplier List", filters={"supplier_onboarding": doc.name}, pluck="name"):
+			for row in frappe.get_all(
+				"Approved Supplier List", filters={"supplier_onboarding": doc.name}, pluck="name"
+			):
 				asl = frappe.get_doc("Approved Supplier List", row)
 				asl.status, asl.ppap_status, asl.share_percent = "Approved", "Approved", 100
 				with ctx.as_user(managers[-1]):
@@ -208,8 +335,14 @@ def carriers(ctx: SeedContext) -> list[str]:
 	for i in range(int(ctx.profile["partners"]["carriers"])):
 		name = names.carrier_name(i)
 		if not frappe.db.exists("Supplier", name):
-			doc = frappe.get_doc({"doctype": "Supplier", "supplier_name": name, "supplier_group": "Carriers",
-				"automotive_partner_code": f"C{i + 1:02d}"})
+			doc = frappe.get_doc(
+				{
+					"doctype": "Supplier",
+					"supplier_name": name,
+					"supplier_group": "Carriers",
+					"automotive_partner_code": f"C{i + 1:02d}",
+				}
+			)
 			doc.flags.accept_similar_name = True
 			doc.insert(ignore_permissions=True)
 			ctx.count("Supplier")
@@ -229,8 +362,10 @@ def dealers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[st
 	out = {"JP": [], "US": []}
 	controller = roster["Group Controller"][0]
 	territory = frappe.db.get_value("Territory", {"is_group": 0}, "name")
-	for region, count, company, price_list in (("JP", ctx.profile["partners"]["dealers_jp"], AICHI, "Dealer Price JP"),
-			("US", ctx.profile["partners"]["dealers_us"], NA, "Dealer Price US")):
+	for region, count, company, price_list in (
+		("JP", ctx.profile["partners"]["dealers_jp"], AICHI, "Dealer Price JP"),
+		("US", ctx.profile["partners"]["dealers_us"], NA, "Dealer Price US"),
+	):
 		liaison = regional(ctx, roster, "Dealer Liaison", region)[0]
 		sales_mgr = regional(ctx, roster, "Sales Manager", region)[0]
 		for i in range(int(count)):
@@ -239,18 +374,44 @@ def dealers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[st
 			if not frappe.db.exists("Customer", {"customer_name": name}):
 				first, last = names.person(rng, region)
 				with ctx.as_user(liaison):
-					doc = frappe.get_doc({"doctype": "Dealer Registration", "dealer_name": name, "dealer_code": code,
-						"company": company, "territory": territory, "country": "Japan" if region == "JP" else "United States",
-						"tax_id": f"{region}-D{8_000_000 + i:08d}",
-						"requested_credit_limit": 400_000_000 if region == "JP" else 3_000_000, "price_list": price_list,
-						"authorized_models": [{"vehicle_model": m} for m in ("H1", "H2", "H3")],
-						# the dealer principal administers the portal account; larger dealers add a
-						# logistics contact who receives the vehicles (portal roles, ERP-10.4)
-						"contacts": [{"first_name": first, "last_name": last,
-							"email": f"orders@{code.lower()}.dealer.example", "partner_role": "Administrator"},
-							*([{"first_name": f2, "last_name": l2, "email": f"yard@{code.lower()}.dealer.example",
-								"partner_role": "Logistics"} for f2, l2 in [names.person(rng, region)]]
-								if rng.random() < float(ctx.profile["partners"]["second_portal_user_share"]) else [])]})
+					doc = frappe.get_doc(
+						{
+							"doctype": "Dealer Registration",
+							"dealer_name": name,
+							"dealer_code": code,
+							"company": company,
+							"territory": territory,
+							"country": "Japan" if region == "JP" else "United States",
+							"tax_id": f"{region}-D{8_000_000 + i:08d}",
+							"requested_credit_limit": 400_000_000 if region == "JP" else 3_000_000,
+							"price_list": price_list,
+							"authorized_models": [{"vehicle_model": m} for m in ("H1", "H2", "H3")],
+							# the dealer principal administers the portal account; larger dealers add a
+							# logistics contact who receives the vehicles (portal roles, ERP-10.4)
+							"contacts": [
+								{
+									"first_name": first,
+									"last_name": last,
+									"email": f"orders@{code.lower()}.dealer.example",
+									"partner_role": "Administrator",
+								},
+								*(
+									[
+										{
+											"first_name": f2,
+											"last_name": l2,
+											"email": f"yard@{code.lower()}.dealer.example",
+											"partner_role": "Logistics",
+										}
+										for f2, l2 in [names.person(rng, region)]
+									]
+									if rng.random()
+									< float(ctx.profile["partners"]["second_portal_user_share"])
+									else []
+								),
+							],
+						}
+					)
 					doc.insert()
 					req = approvals.request_approval(doc.doctype, doc.name)
 				with ctx.as_user(sales_mgr):
@@ -261,7 +422,9 @@ def dealers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[st
 					doc.reload()
 					doc.submit()
 				customer = frappe.db.get_value("Dealer Registration", doc.name, "customer")
-				frappe.db.set_value("Customer", customer, "automotive_dealer_tier", rng.choice(["A", "B", "B", "C"]))
+				frappe.db.set_value(
+					"Customer", customer, "automotive_dealer_tier", rng.choice(["A", "B", "B", "C"])
+				)
 				ctx.count("Customer")
 			out[region].append(frappe.db.get_value("Customer", {"customer_name": name}, "name"))
 	frappe.db.commit()
@@ -273,17 +436,28 @@ def bank_accounts(ctx: SeedContext, roster, supplier_names: list[str]) -> None:
 
 	clerk, treasury = roster["AP Clerk"][0], roster["Treasury Approver"][0]
 	# group companies settle intercompany invoices through the same verified-account control
-	supplier_names = sorted(set(supplier_names) | set(frappe.get_all("Supplier", filters={"is_internal_supplier": 1},
-		pluck="name")))
+	supplier_names = sorted(
+		set(supplier_names)
+		| set(frappe.get_all("Supplier", filters={"is_internal_supplier": 1}, pluck="name"))
+	)
 	if not frappe.db.exists("Bank", "Hinode Settlement Bank"):
-		frappe.get_doc({"doctype": "Bank", "bank_name": "Hinode Settlement Bank"}).insert(ignore_permissions=True)
+		frappe.get_doc({"doctype": "Bank", "bank_name": "Hinode Settlement Bank"}).insert(
+			ignore_permissions=True
+		)
 	for i, supplier in enumerate(supplier_names):
 		if frappe.db.exists("Bank Account", {"party_type": "Supplier", "party": supplier}):
 			continue
 		with ctx.as_user(clerk):
-			account = frappe.get_doc({"doctype": "Bank Account", "account_name": f"{supplier[:60]} settlement",
-				"bank": "Hinode Settlement Bank", "party_type": "Supplier", "party": supplier,
-				"bank_account_no": f"{9_100_000_000 + i}"}).insert()
+			account = frappe.get_doc(
+				{
+					"doctype": "Bank Account",
+					"account_name": f"{supplier[:60]} settlement",
+					"bank": "Hinode Settlement Bank",
+					"party_type": "Supplier",
+					"party": supplier,
+					"bank_account_no": f"{9_100_000_000 + i}",
+				}
+			).insert()
 		with ctx.as_user(treasury):
 			controls.verify(account.name, "Confirmed by call-back to registered phone number")
 		ctx.count("Bank Account")
@@ -293,12 +467,23 @@ def bank_accounts(ctx: SeedContext, roster, supplier_names: list[str]) -> None:
 def integration_partners(ctx: SeedContext, suppliers_by_commodity, dealers_by_region) -> None:
 	rng = ctx.rng("edi-partners")
 	all_suppliers = sorted({s for group in suppliers_by_commodity.values() for s in group})
-	for supplier in rng.sample(all_suppliers, min(len(all_suppliers), int(ctx.profile["partners"]["edi_suppliers"]))):
-		_partner(supplier, "Supplier", "asn\npo_acknowledgement", "purchase_order.submitted\nsupplier_schedule.published")
+	for supplier in rng.sample(
+		all_suppliers, min(len(all_suppliers), int(ctx.profile["partners"]["edi_suppliers"]))
+	):
+		_partner(
+			supplier,
+			"Supplier",
+			"asn\npo_acknowledgement",
+			"purchase_order.submitted\nsupplier_schedule.published",
+		)
 	all_dealers = sorted(dealers_by_region["JP"] + dealers_by_region["US"])
 	for dealer in rng.sample(all_dealers, min(len(all_dealers), int(ctx.profile["partners"]["edi_dealers"]))):
-		_partner(dealer, "Customer", "dealer_order\ndealer_order_change",
-			"dealer_order.received\ndealer_order.accepted\nshipment.dispatched")
+		_partner(
+			dealer,
+			"Customer",
+			"dealer_order\ndealer_order_change",
+			"dealer_order.received\ndealer_order.accepted\nshipment.dispatched",
+		)
 	frappe.db.commit()
 
 
@@ -308,7 +493,18 @@ def _partner(party: str, party_type: str, inbound: str, outbound: str) -> None:
 		return
 	field = "supplier" if party_type == "Supplier" else "customer"
 	service = frappe.db.get_value("Partner User Access", {field: party, "status": "Active"}, "user")
-	frappe.get_doc({"doctype": "Integration Partner", "partner_code": f"EDI-{code}", "partner_name": party,
-		"partner_type": "Supplier" if party_type == "Supplier" else "Dealer", "party_type": party_type, "party": party,
-		"adapter": "Local File Drop", "message_format": "Hinode EDI", "allowed_message_types": inbound,
-		"subscribed_events": outbound, "service_user": service}).insert(ignore_permissions=True)
+	frappe.get_doc(
+		{
+			"doctype": "Integration Partner",
+			"partner_code": f"EDI-{code}",
+			"partner_name": party,
+			"partner_type": "Supplier" if party_type == "Supplier" else "Dealer",
+			"party_type": party_type,
+			"party": party,
+			"adapter": "Local File Drop",
+			"message_format": "Hinode EDI",
+			"allowed_message_types": inbound,
+			"subscribed_events": outbound,
+			"service_user": service,
+		}
+	).insert(ignore_permissions=True)

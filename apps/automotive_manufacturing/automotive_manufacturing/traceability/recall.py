@@ -30,8 +30,12 @@ def analyze(doc) -> None:
 	units = units_containing(doc.component_item, query["batch_nos"], query["serial_nos"], doc.supplier)
 	rows = []
 	for unit in units:
-		vehicle = frappe.db.get_value("Vehicle Unit", unit["serial_no"],
-			["name", "built_at", "inventory_status", "shipment_status", "current_warehouse", "dealer"], as_dict=True)
+		vehicle = frappe.db.get_value(
+			"Vehicle Unit",
+			unit["serial_no"],
+			["name", "built_at", "inventory_status", "shipment_status", "current_warehouse", "dealer"],
+			as_dict=True,
+		)
 		built = getdate(vehicle.built_at) if vehicle and vehicle.built_at else None
 		if doc.built_from and built and built < getdate(doc.built_from):
 			continue
@@ -43,14 +47,16 @@ def analyze(doc) -> None:
 			location = vehicle.current_warehouse or vehicle.inventory_status
 		else:
 			location = frappe.db.get_value("Serial No", unit["serial_no"], "warehouse") or ""
-		rows.append({
-			"unit_serial_no": unit["serial_no"],
-			"unit_item": unit["item_code"],
-			"via": unit["path"][:140],
-			"vehicle_unit": vehicle.name if vehicle else None,
-			"location": location,
-			"dealer": vehicle.dealer if vehicle else None,
-		})
+		rows.append(
+			{
+				"unit_serial_no": unit["serial_no"],
+				"unit_item": unit["item_code"],
+				"via": unit["path"][:140],
+				"vehicle_unit": vehicle.name if vehicle else None,
+				"location": location,
+				"dealer": vehicle.dealer if vehicle else None,
+			}
+		)
 	doc.set("affected", rows)
 	doc.affected_units = len(rows)
 	doc.affected_at_dealers = sum(1 for r in rows if r["dealer"] and r["location"].startswith(_("Delivered")))
@@ -67,6 +73,10 @@ def run_analysis(name: str) -> dict:
 	doc.check_permission("write")
 	analyze(doc)
 	doc.save()
-	audit.record("recall.analyzed", doc.doctype, doc.name,
-		{"affected": doc.affected_units, "query": doc.query_sha256, "result": doc.result_sha256})
+	audit.record(
+		"recall.analyzed",
+		doc.doctype,
+		doc.name,
+		{"affected": doc.affected_units, "query": doc.query_sha256, "result": doc.result_sha256},
+	)
 	return {"affected_units": doc.affected_units, "result_sha256": doc.result_sha256}

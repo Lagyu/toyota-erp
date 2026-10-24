@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Static checks: ruff, shellcheck, generated-schema drift, YAML/JSON syntax, and the
+# Static checks: ruff (lint and formatting), shellcheck, generated-schema drift, YAML/JSON syntax, and the
 # identity boundary (no third-party trademarks in customer-facing assets).
 set -euo pipefail
 source "$(dirname "$0")/tools.sh"
@@ -7,8 +7,9 @@ cd "$CI_ROOT"
 status=0
 step() { printf '\n== %s\n' "$*"; }
 
-step "ruff"
+step "ruff: lint and formatting"
 ruff check apps scripts integration_tests perf ops || status=1
+ruff format --check apps scripts integration_tests perf ops || status=1
 
 step "shellcheck"
 find scripts ops -name '*.sh' -print0 | xargs -0 shellcheck -x -S warning || status=1

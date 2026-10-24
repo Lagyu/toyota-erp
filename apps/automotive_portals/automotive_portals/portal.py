@@ -27,8 +27,11 @@ def portal_context(context, party_type: str, title: str) -> None:
 		raise frappe.Redirect(302)  # temporary: a permanent redirect would be cached by the browser
 	mine = party_of_user()
 	if not mine or mine[0] != party_type:
-		raise frappe.PermissionError(_("This portal is only available to {0} users.").format(
-			_("supplier") if party_type == "Supplier" else _("dealer")))
+		raise frappe.PermissionError(
+			_("This portal is only available to {0} users.").format(
+				_("supplier") if party_type == "Supplier" else _("dealer")
+			)
+		)
 	context.no_cache = 1
 	context.show_sidebar = False
 	context.full_width = True
@@ -41,8 +44,14 @@ def portal_context(context, party_type: str, title: str) -> None:
 
 def script_json(value) -> str:
 	"""JSON that is safe inside an inline <script> (no tag or entity can be closed early)."""
-	return (frappe.as_json(value, indent=None).replace("<", "\\u003c").replace(">", "\\u003e")
-		.replace("&", "\\u0026").replace("\u2028", "\\u2028").replace("\u2029", "\\u2029"))
+	return (
+		frappe.as_json(value, indent=None)
+		.replace("<", "\\u003c")
+		.replace(">", "\\u003e")
+		.replace("&", "\\u0026")
+		.replace("\u2028", "\\u2028")
+		.replace("\u2029", "\\u2029")
+	)
 
 
 @functools.cache

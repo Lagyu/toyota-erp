@@ -17,4 +17,6 @@ class QualityDisposition(Document):
 		import frappe
 		from frappe import _
 
-		frappe.throw(_("An executed disposition is part of the stock history; record a new disposition instead."))
+		frappe.throw(
+			_("An executed disposition is part of the stock history; record a new disposition instead.")
+		)

@@ -19,8 +19,12 @@ class TestAuditChain(IntegrationTestCase):
 	def test_events_seal_into_a_verifiable_chain(self):
 		names = [audit.record("test.event", payload={"n": i}) for i in range(5)]
 		audit.seal_pending()
-		rows = frappe.get_all("Audit Event", filters={"name": ("in", names)},
-			fields=["name", "chain_index", "previous_hash", "event_hash"], order_by="chain_index asc")
+		rows = frappe.get_all(
+			"Audit Event",
+			filters={"name": ("in", names)},
+			fields=["name", "chain_index", "previous_hash", "event_hash"],
+			order_by="chain_index asc",
+		)
 		self.assertTrue(all(r.event_hash for r in rows))
 		for prev, cur in itertools.pairwise(rows):
 			self.assertEqual(cur.previous_hash, prev.event_hash)
@@ -73,8 +77,11 @@ class TestCancellation(IntegrationTestCase):
 				cancellation.cancel_with_reason(TEST_VOUCHER, doc.name, "short")
 			cancellation.cancel_with_reason(TEST_VOUCHER, doc.name, "Duplicate voucher entered twice")
 			self.assertEqual(frappe.db.get_value(TEST_VOUCHER, doc.name, "docstatus"), 2)
-			event = frappe.get_all("Audit Event", filters={"reference_name": doc.name, "event_type": "document.cancelled"},
-				fields=["payload"])
+			event = frappe.get_all(
+				"Audit Event",
+				filters={"reference_name": doc.name, "event_type": "document.cancelled"},
+				fields=["payload"],
+			)
 			self.assertIn("Duplicate voucher entered twice", event[0].payload)
 		frappe.local.automotive_hook_sets = {}
 
@@ -86,8 +93,12 @@ class TestSegregationOfDuties(IntegrationTestCase):
 
 	def test_warning_rule_allows_but_audits(self):
 		make_user("sod.warn@hinode.example", ["Warehouse Clerk", "Quality Manager"])
-		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "sod.warning_accepted",
-			"reference_name": "sod.warn@hinode.example"}))
+		self.assertTrue(
+			frappe.db.exists(
+				"Audit Event",
+				{"event_type": "sod.warning_accepted", "reference_name": "sod.warn@hinode.example"},
+			)
+		)
 
 
 class TestProvisioning(IntegrationTestCase):
@@ -99,7 +110,9 @@ class TestProvisioning(IntegrationTestCase):
 
 	def _request(self, **values):
 		with as_user("it.maker@hinode.example"):
-			doc = frappe.get_doc({"doctype": "User Provisioning Request", "justification": "New hire", **values}).insert()
+			doc = frappe.get_doc(
+				{"doctype": "User Provisioning Request", "justification": "New hire", **values}
+			).insert()
 		return doc
 
 	def _approve_and_submit(self, doc):
@@ -115,8 +128,13 @@ class TestProvisioning(IntegrationTestCase):
 		return doc
 
 	def test_create_requires_approval_then_applies_profile_and_scope(self):
-		doc = self._request(request_type="Create", email="new.planner@hinode.example", first_name="Ren",
-			role_profile="Production Planner", scopes=[{"allow": "Plant", "for_value": "AICHI-VA", "is_default": 1}])
+		doc = self._request(
+			request_type="Create",
+			email="new.planner@hinode.example",
+			first_name="Ren",
+			role_profile="Production Planner",
+			scopes=[{"allow": "Plant", "for_value": "AICHI-VA", "is_default": 1}],
+		)
 		from automotive_core.governance.approvals import ApprovalRequiredError
 
 		with as_user("it.maker@hinode.example"), self.assertRaises(ApprovalRequiredError):
@@ -124,20 +142,37 @@ class TestProvisioning(IntegrationTestCase):
 		self._approve_and_submit(doc)
 		user = frappe.get_doc("User", "new.planner@hinode.example")
 		self.assertIn("Production Planner", [r.role for r in user.roles])
-		self.assertTrue(frappe.db.exists("User Permission", {"user": user.name, "allow": "Plant", "for_value": "AICHI-VA",
-			"automotive_managed_by": provisioning.MANAGED_BY}))
+		self.assertTrue(
+			frappe.db.exists(
+				"User Permission",
+				{
+					"user": user.name,
+					"allow": "Plant",
+					"for_value": "AICHI-VA",
+					"automotive_managed_by": provisioning.MANAGED_BY,
+				},
+			)
+		)
 
 	def test_requested_roles_must_respect_segregation_of_duties(self):
 		with self.assertRaises(SegregationOfDutiesError):
-			self._request(request_type="Create", email="bad.combo@hinode.example", first_name="Bad",
-				extra_roles=[{"role": "Buyer"}, {"role": "AP Clerk"}])
+			self._request(
+				request_type="Create",
+				email="bad.combo@hinode.example",
+				first_name="Bad",
+				extra_roles=[{"role": "Buyer"}, {"role": "AP Clerk"}],
+			)
 
 	def test_deactivate_disables_and_expiry_job_disables(self):
 		make_user("leaver@hinode.example", ["Buyer"])
-		doc = self._request(request_type="Deactivate", user="leaver@hinode.example", email="leaver@hinode.example")
+		doc = self._request(
+			request_type="Deactivate", user="leaver@hinode.example", email="leaver@hinode.example"
+		)
 		self._approve_and_submit(doc)
 		self.assertEqual(frappe.db.get_value("User", "leaver@hinode.example", "enabled"), 0)
 		make_user("contractor@hinode.example", ["Buyer"])
-		frappe.db.set_value("User", "contractor@hinode.example", "automotive_access_expiry_date", add_days(nowdate(), -1))
+		frappe.db.set_value(
+			"User", "contractor@hinode.example", "automotive_access_expiry_date", add_days(nowdate(), -1)
+		)
 		provisioning.expire_accounts()
 		self.assertEqual(frappe.db.get_value("User", "contractor@hinode.example", "enabled"), 0)

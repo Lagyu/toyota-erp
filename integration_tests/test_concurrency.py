@@ -54,11 +54,17 @@ class TestConcurrency(unittest.TestCase):
 		if "raise_support" not in ((dashboard or {}).get("message") or {}).get("capabilities", []):
 			self.skipTest("the dealer persona's portal role cannot raise support requests")
 		key, subject = str(uuid.uuid4()), f"[concurrency] {uuid.uuid4().hex[:10]}"
-		body = json.dumps({"subject": subject, "description": "One request, sent eight times at once."}).encode()
+		body = json.dumps(
+			{"subject": subject, "description": "One request, sent eight times at once."}
+		).encode()
 
 		def send(_):
-			return client.request("POST", "/api/method/automotive_portals.api.dealer.create_support_request", body=body,
-				headers={"Content-Type": "application/json", "Idempotency-Key": key})
+			return client.request(
+				"POST",
+				"/api/method/automotive_portals.api.dealer.create_support_request",
+				body=body,
+				headers={"Content-Type": "application/json", "Idempotency-Key": key},
+			)
 
 		answers = at_once(send)
 		statuses = sorted(status for status, _ in answers)
@@ -76,17 +82,28 @@ class TestConcurrency(unittest.TestCase):
 			self.skipTest("no EDI partner fixture (INTEGRATION_FIXTURES)")
 		# an announcement that cannot be processed (no lines): the journeys' own messages and
 		# orders stay untouched, and storing it once is what is under test
-		envelope = {"message_id": f"CONCURRENCY.{uuid.uuid4().hex[:12]}", "message_type": "asn", "schema_version": "v1",
-			"data": {"supplier_asn_no": f"CONC-{uuid.uuid4().hex[:8]}", "lines": []}}
+		envelope = {
+			"message_id": f"CONCURRENCY.{uuid.uuid4().hex[:12]}",
+			"message_type": "asn",
+			"schema_version": "v1",
+			"data": {"supplier_asn_no": f"CONC-{uuid.uuid4().hex[:8]}", "lines": []},
+		}
 		edi = partner.get("format") == "Hinode EDI"
 		body = (encode_edi(envelope) if edi else json.dumps(envelope)).encode()
 		guest = Client()
 
 		def deliver(_):
 			# each delivery signed afresh: a reused signature (its nonce) is a replay, refused
-			return guest.request("POST", INBOUND, body=body, headers={
-				"Content-Type": "text/plain" if edi else "application/json",
-				"X-Hinode-Partner": partner["partner"], "X-Hinode-Signature": sign(partner["secret"], body)})
+			return guest.request(
+				"POST",
+				INBOUND,
+				body=body,
+				headers={
+					"Content-Type": "text/plain" if edi else "application/json",
+					"X-Hinode-Partner": partner["partner"],
+					"X-Hinode-Signature": sign(partner["secret"], body),
+				},
+			)
 
 		answers = at_once(deliver)
 		statuses = sorted(status for status, _ in answers)
@@ -94,10 +111,14 @@ class TestConcurrency(unittest.TestCase):
 		self.assertTrue(set(statuses) <= {200, 202, 409}, answers)  # ... duplicates, or retry later
 		stored = {data["message"]["inbound_id"] for status, data in answers if status in (200, 202)}
 		self.assertEqual(len(stored), 1, answers)  # one stored message
-		self.assertEqual({data["message"]["status"] for status, data in answers if status == 200} - {"duplicate"}, set())
+		self.assertEqual(
+			{data["message"]["status"] for status, data in answers if status == 200} - {"duplicate"}, set()
+		)
 		status, again = deliver(0)  # a retry afterwards is a duplicate of it
-		self.assertEqual((status, again["message"]["status"], again["message"]["inbound_id"]),
-			(200, "duplicate", next(iter(stored))))
+		self.assertEqual(
+			(status, again["message"]["status"], again["message"]["inbound_id"]),
+			(200, "duplicate", next(iter(stored))),
+		)
 
 	def test_simultaneous_submits_post_once(self):
 		password = os.environ.get("INTEGRATION_PASSWORD")
@@ -108,31 +129,60 @@ class TestConcurrency(unittest.TestCase):
 		admin.csrf("/app")
 
 		def value(doctype, filters, field):
-			_status, data = admin.request("GET", "/api/method/frappe.client.get_value", params={"doctype": doctype,
-				"filters": json.dumps(filters), "fieldname": field})
+			_status, data = admin.request(
+				"GET",
+				"/api/method/frappe.client.get_value",
+				params={"doctype": doctype, "filters": json.dumps(filters), "fieldname": field},
+			)
 			return ((data or {}).get("message") or {}).get(field)
 
 		company = value("Company", {"abbr": "HAMJ"}, "name")
 		cash = value("Account", {"company": company, "account_type": "Cash", "is_group": 0}, "name")
-		expense = value("Account", {"company": company, "root_type": "Expense", "account_type": "", "is_group": 0}, "name")
+		expense = value(
+			"Account", {"company": company, "root_type": "Expense", "account_type": "", "is_group": 0}, "name"
+		)
 		cost_center = value("Company", {"name": company}, "cost_center")
 		# a cash entry: manual journals (voucher type Journal Entry) need the controller's approval
-		draft = {"doctype": "Journal Entry", "voucher_type": "Cash Entry", "company": company,
-			"user_remark": "[concurrency]", "posting_date": datetime.date.today().isoformat(),
-			"accounts": [{"account": expense, "debit_in_account_currency": 10, "cost_center": cost_center},
-				{"account": cash, "credit_in_account_currency": 10, "cost_center": cost_center}]}
-		status, saved = admin.request("POST", "/api/method/frappe.client.insert",
-			body=json.dumps({"doc": draft}).encode(), headers={"Content-Type": "application/json"})
+		draft = {
+			"doctype": "Journal Entry",
+			"voucher_type": "Cash Entry",
+			"company": company,
+			"user_remark": "[concurrency]",
+			"posting_date": datetime.date.today().isoformat(),
+			"accounts": [
+				{"account": expense, "debit_in_account_currency": 10, "cost_center": cost_center},
+				{"account": cash, "credit_in_account_currency": 10, "cost_center": cost_center},
+			],
+		}
+		status, saved = admin.request(
+			"POST",
+			"/api/method/frappe.client.insert",
+			body=json.dumps({"doc": draft}).encode(),
+			headers={"Content-Type": "application/json"},
+		)
 		self.assertEqual(status, 200, saved)
 		doc = json.dumps({"doc": saved["message"]}).encode()
 
 		def submit(_):
-			return admin.request("POST", "/api/method/frappe.client.submit", body=doc,
-				headers={"Content-Type": "application/json"})
+			return admin.request(
+				"POST",
+				"/api/method/frappe.client.submit",
+				body=doc,
+				headers={"Content-Type": "application/json"},
+			)
 
 		answers = at_once(submit)
-		self.assertEqual(sorted(status for status, _ in answers).count(200), 1,
-			[(status, (data or {}).get("exc_type")) for status, data in answers])
-		status, entries = admin.request("GET", "/api/method/frappe.client.get_count", params={"doctype": "GL Entry",
-			"filters": json.dumps({"voucher_no": saved["message"]["name"], "is_cancelled": 0})})
+		self.assertEqual(
+			sorted(status for status, _ in answers).count(200),
+			1,
+			[(status, (data or {}).get("exc_type")) for status, data in answers],
+		)
+		status, entries = admin.request(
+			"GET",
+			"/api/method/frappe.client.get_count",
+			params={
+				"doctype": "GL Entry",
+				"filters": json.dumps({"voucher_no": saved["message"]["name"], "is_cancelled": 0}),
+			},
+		)
 		self.assertEqual(entries["message"], 2)  # one posting: a debit and a credit

@@ -30,4 +30,6 @@ class TestSupplyChainReports(IntegrationTestCase):
 		period = {"from_date": add_days(nowdate(), -89), "to_date": nowdate()}
 		for name in ("Purchase Price Variance", "Supplier Performance"):
 			self.assertIsInstance(run(name, filters=period)["result"], list, name)
-		self.assertIsInstance(run("Intercompany Reconciliation", filters={"to_date": nowdate()})["result"], list)
+		self.assertIsInstance(
+			run("Intercompany Reconciliation", filters={"to_date": nowdate()})["result"], list
+		)

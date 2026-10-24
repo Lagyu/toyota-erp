@@ -28,8 +28,12 @@ class Violation:
 	message: str
 
 
-def evaluate(selections: dict[str, str], rules: list[Rule], required: list[str] | None = None,
-		allowed_values: dict[str, set[str]] | None = None) -> list[Violation]:
+def evaluate(
+	selections: dict[str, str],
+	rules: list[Rule],
+	required: list[str] | None = None,
+	allowed_values: dict[str, set[str]] | None = None,
+) -> list[Violation]:
 	"""Return every violation (empty list = valid). Deterministic order (rule code)."""
 	violations: list[Violation] = []
 	for attribute in required or []:

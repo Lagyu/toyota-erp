@@ -34,7 +34,9 @@ def check(path: str, require_complete: bool) -> list[str]:
 			continue
 		where = f"{path}: {source[:60]!r}"
 		if Counter(PLACEHOLDER.findall(source)) != Counter(PLACEHOLDER.findall(target)):
-			problems.append(f"{where}: placeholders {PLACEHOLDER.findall(source)} -> {PLACEHOLDER.findall(target)}")
+			problems.append(
+				f"{where}: placeholders {PLACEHOLDER.findall(source)} -> {PLACEHOLDER.findall(target)}"
+			)
 		if Counter(t.lower() for t in TAG.findall(source)) != Counter(t.lower() for t in TAG.findall(target)):
 			problems.append(f"{where}: HTML tags differ")
 	if require_complete and untranslated:

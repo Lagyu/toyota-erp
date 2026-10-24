@@ -17,8 +17,11 @@ READER = "files.reader@hinode.example"
 
 def _pdf() -> bytes:
 	"""A valid one-page PDF (Frappe parses uploaded PDFs: a sketch of one is refused)."""
-	objects = [b"<< /Type /Catalog /Pages 2 0 R >>", b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
-		b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>"]
+	objects = [
+		b"<< /Type /Catalog /Pages 2 0 R >>",
+		b"<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+		b"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 200 200] >>",
+	]
 	out, offsets = bytearray(b"%PDF-1.4\n"), []
 	for number, body in enumerate(objects, start=1):
 		offsets.append(len(out))
@@ -38,19 +41,37 @@ class TestAttachmentPolicy(IntegrationTestCase):
 	def setUpClass(cls):
 		super().setUpClass()
 		make_user(READER, ["Production Planner"])
-		cls.todo = frappe.get_doc({"doctype": "ToDo", "description": "attachments", "allocated_to": READER}).insert(
-			ignore_permissions=True)
+		cls.todo = frappe.get_doc(
+			{"doctype": "ToDo", "description": "attachments", "allocated_to": READER}
+		).insert(ignore_permissions=True)
 
 	def setUp(self):
 		settings = frappe.get_single("Automotive Settings")
-		saved = {k: settings.get(k) for k in ("max_upload_mb", "virus_scan_mode", "default_retention_days", "clamd_host")}
+		saved = {
+			k: settings.get(k)
+			for k in ("max_upload_mb", "virus_scan_mode", "default_retention_days", "clamd_host")
+		}
 		rules = [r.as_dict() for r in settings.attachment_rules]
 
 		def restore():
 			doc = frappe.get_single("Automotive Settings")
 			doc.update(saved)
-			doc.set("attachment_rules", [{k: r[k] for k in ("reference_doctype", "allowed_extensions", "max_size_mb",
-				"retention_days", "private_only")} for r in rules])
+			doc.set(
+				"attachment_rules",
+				[
+					{
+						k: r[k]
+						for k in (
+							"reference_doctype",
+							"allowed_extensions",
+							"max_size_mb",
+							"retention_days",
+							"private_only",
+						)
+					}
+					for r in rules
+				],
+			)
 			doc.save(ignore_permissions=True)
 
 		self.addCleanup(restore)
@@ -61,12 +82,22 @@ class TestAttachmentPolicy(IntegrationTestCase):
 		doc.save(ignore_permissions=True)
 
 	def attach(self, name, content, doctype="ToDo", docname=None, private=1):
-		return frappe.get_doc({"doctype": "File", "file_name": name, "content": content, "is_private": private,
-			"attached_to_doctype": doctype, "attached_to_name": docname or self.todo.name}).insert(ignore_permissions=True)
+		return frappe.get_doc(
+			{
+				"doctype": "File",
+				"file_name": name,
+				"content": content,
+				"is_private": private,
+				"attached_to_doctype": doctype,
+				"attached_to_name": docname or self.todo.name,
+			}
+		).insert(ignore_permissions=True)
 
 	def test_types_sizes_content_and_privacy(self):
 		accepted = self.attach("delivery-note.pdf", PDF)
-		self.assertTrue(frappe.db.get_value("File", accepted.name, "automotive_sha256"))  # recorded after insert
+		self.assertTrue(
+			frappe.db.get_value("File", accepted.name, "automotive_sha256")
+		)  # recorded after insert
 		with self.assertRaises(AttachmentRejectedError):  # not an allowed type
 			self.attach("tool.exe", b"MZ\x90\x00")
 		with self.assertRaises(AttachmentRejectedError):  # an executable named as a PDF
@@ -80,7 +111,9 @@ class TestAttachmentPolicy(IntegrationTestCase):
 	def test_downloads_wait_for_a_clean_scan_when_scanning_is_required(self):
 		self._settings(virus_scan_mode="Required", clamd_host="")
 		doc = self.attach("drawing.pdf", PDF)
-		self.assertEqual(frappe.db.get_value("File", doc.name, "automotive_scan_status"), "Scanner Not Configured")
+		self.assertEqual(
+			frappe.db.get_value("File", doc.name, "automotive_scan_status"), "Scanner Not Configured"
+		)
 		doc.reload()
 		with as_user(READER):
 			self.assertFalse(policy.has_permission(doc, "read", READER))
@@ -104,22 +137,30 @@ class TestAttachmentPolicy(IntegrationTestCase):
 		with mock.patch.object(clamav, "ping", return_value=False):
 			self.assertEqual(policy.rescan_pending(), 0)  # clamd does not answer: no new failures recorded
 		self.assertEqual(status(waiting), "Scanner Not Configured")
-		with mock.patch.object(clamav, "ping", return_value=True), \
-				mock.patch.object(clamav, "scan_bytes", return_value=(True, None)):
+		with (
+			mock.patch.object(clamav, "ping", return_value=True),
+			mock.patch.object(clamav, "scan_bytes", return_value=(True, None)),
+		):
 			self.assertGreaterEqual(policy.rescan_pending(), 1)
 		self.assertEqual(status(waiting), "Clean")
 		self._settings(virus_scan_mode="Disabled")
 		self.assertEqual(policy.rescan_pending(), 0)
 
 	def test_retention_by_rule_and_by_default(self):
-		note = frappe.get_doc({"doctype": "Note", "title": "retention", "public": 1}).insert(ignore_permissions=True)
+		note = frappe.get_doc({"doctype": "Note", "title": "retention", "public": 1}).insert(
+			ignore_permissions=True
+		)
 		old_todo = self.attach("old.pdf", PDF)
 		new_todo = self.attach("new.pdf", PDF)
 		old_note = self.attach("old-note.pdf", PDF, doctype="Note", docname=note.name)
 		for name in (old_todo.name, old_note.name):
-			frappe.db.set_value("File", name, "creation", add_days(now_datetime(), -40), update_modified=False)
-		self._settings(attachment_rules=[{"reference_doctype": "ToDo", "retention_days": 30, "private_only": 1}],
-			default_retention_days=0)
+			frappe.db.set_value(
+				"File", name, "creation", add_days(now_datetime(), -40), update_modified=False
+			)
+		self._settings(
+			attachment_rules=[{"reference_doctype": "ToDo", "retention_days": 30, "private_only": 1}],
+			default_retention_days=0,
+		)
 		policy.apply_retention()
 		self.assertFalse(frappe.db.exists("File", old_todo.name))  # the ToDo rule: 30 days
 		self.assertTrue(frappe.db.exists("File", new_todo.name))

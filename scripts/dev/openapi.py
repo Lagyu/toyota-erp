@@ -64,8 +64,12 @@ def _type_schema(annotation) -> tuple[dict, bool]:
 	def one(t: str) -> dict:
 		base = t.split("[", 1)[0]
 		return {
-			"str": {"type": "string"}, "int": {"type": "integer"}, "float": {"type": "number"},
-			"bool": {"type": "boolean"}, "dict": {"type": "object"}, "list": {"type": "array"},
+			"str": {"type": "string"},
+			"int": {"type": "integer"},
+			"float": {"type": "number"},
+			"bool": {"type": "boolean"},
+			"dict": {"type": "object"},
+			"list": {"type": "array"},
 			"Any": {},
 		}.get(base, {})
 
@@ -98,7 +102,9 @@ def _return_schema(fn: ast.FunctionDef) -> dict:
 			fields = next((kw.value for kw in value.keywords if kw.arg == "fields"), None)
 			if isinstance(fields, ast.List) and all(isinstance(e, ast.Constant) for e in fields.elts):
 				names = [e.value.split(" as ")[-1].strip() for e in fields.elts]
-				shapes.append({"type": "array", "items": {"type": "object", "properties": {n: {} for n in names}}})
+				shapes.append(
+					{"type": "array", "items": {"type": "object", "properties": {n: {} for n in names}}}
+				)
 	nested = [n for n in ast.walk(fn) if isinstance(n, ast.FunctionDef | ast.Lambda) and n is not fn]
 	if shapes and not nested and all(s == shapes[0] for s in shapes):
 		return shapes[0]
@@ -117,7 +123,9 @@ def _operation(module: str, fn: ast.FunctionDef, deco: ast.expr, names: dict) ->
 	idempotency = None
 	for d in fn.decorator_list:
 		if isinstance(d, ast.Call) and ast.unparse(d.func).endswith("idempotent"):
-			required = next((bool(_const(kw.value, names)) for kw in d.keywords if kw.arg == "required"), True)
+			required = next(
+				(bool(_const(kw.value, names)) for kw in d.keywords if kw.arg == "required"), True
+			)
 			idempotency = {"endpoint": _const(d.args[0], names) if d.args else None, "required": required}
 	roles, party = [], None
 	for node in ast.walk(fn):
@@ -149,15 +157,27 @@ def _operation(module: str, fn: ast.FunctionDef, deco: ast.expr, names: dict) ->
 	doc = (ast.get_docstring(fn) or "").strip()
 	summary = doc.split("\n\n")[0].replace("\n", " ") if doc else fn.name.replace("_", " ")
 	# a path kept for a release after its replacement (D-034): "Deprecated: use <path> ..."
-	deprecation = next((line.strip()[len("Deprecated:"):].strip() for line in doc.splitlines()
-		if line.strip().startswith("Deprecated:")), None)
+	deprecation = next(
+		(
+			line.strip()[len("Deprecated:") :].strip()
+			for line in doc.splitlines()
+			if line.strip().startswith("Deprecated:")
+		),
+		None,
+	)
 	operation: dict = {
 		"operationId": f"{module}.{fn.name}",
 		"summary": summary[:300],
 		"tags": [module.rsplit(".", 1)[0]],
 		"responses": {
-			"200": {"description": "OK", "content": {"application/json": {"schema": {
-				"type": "object", "properties": {"message": _return_schema(fn)}}}}},
+			"200": {
+				"description": "OK",
+				"content": {
+					"application/json": {
+						"schema": {"type": "object", "properties": {"message": _return_schema(fn)}}
+					}
+				},
+			},
 			"403": {"$ref": "#/components/responses/Forbidden"},
 			"404": {"$ref": "#/components/responses/NotFound"},
 			"417": {"$ref": "#/components/responses/ValidationError"},
@@ -175,8 +195,13 @@ def _operation(module: str, fn: ast.FunctionDef, deco: ast.expr, names: dict) ->
 	header_params = []
 	if idempotency:
 		operation["x-idempotency-endpoint"] = idempotency["endpoint"]
-		header_params.append({"$ref": "#/components/parameters/IdempotencyKey" if idempotency["required"]
-			else "#/components/parameters/IdempotencyKeyOptional"})
+		header_params.append(
+			{
+				"$ref": "#/components/parameters/IdempotencyKey"
+				if idempotency["required"]
+				else "#/components/parameters/IdempotencyKeyOptional"
+			}
+		)
 		operation["responses"]["409"] = {"$ref": "#/components/responses/InProgress"}
 		operation["responses"]["422"] = {"$ref": "#/components/responses/IdempotencyConflict"}
 	header_params.append({"$ref": "#/components/parameters/CorrelationId"})
@@ -185,15 +210,24 @@ def _operation(module: str, fn: ast.FunctionDef, deco: ast.expr, names: dict) ->
 		body["required"] = required
 	ops = {}
 	for method in methods:
-		op = dict(operation, operationId=f"{operation['operationId']}" + ("" if method == methods[-1] else f".{method.lower()}"))
+		op = dict(
+			operation,
+			operationId=f"{operation['operationId']}"
+			+ ("" if method == methods[-1] else f".{method.lower()}"),
+		)
 		op["parameters"] = list(header_params)
 		if method in ("GET", "DELETE"):
-			op["parameters"] += [{"name": n, "in": "query", "required": n in required, "schema": s}
-				for n, s in params.items()]
+			op["parameters"] += [
+				{"name": n, "in": "query", "required": n in required, "schema": s} for n, s in params.items()
+			]
 		else:
-			op["requestBody"] = {"required": bool(required), "content": {
-				"application/json": {"schema": body},
-				"application/x-www-form-urlencoded": {"schema": body}}}
+			op["requestBody"] = {
+				"required": bool(required),
+				"content": {
+					"application/json": {"schema": body},
+					"application/x-www-form-urlencoded": {"schema": body},
+				},
+			}
 		ops[method.lower()] = op
 	return f"/api/method/{module}.{fn.name}", ops, {}
 
@@ -220,18 +254,44 @@ def _inbound_contract(ops: dict) -> dict:
 	"""The partner endpoint authenticates by signature and carries the message envelope."""
 	op = ops["post"]
 	op["security"] = [{"partnerSignature": []}]
-	op["parameters"] = [{"name": "X-Hinode-Partner", "in": "header", "required": True, "schema": {"type": "string"}},
-		*op["parameters"]]
-	op["requestBody"] = {"required": True, "content": {
-		"application/json": {"schema": {"$ref": "#/components/schemas/InboundEnvelope"}},
-		"text/plain": {"schema": {"type": "string",
-			"description": "The same envelope in Hinode EDI segments (partners configured for EDI)"}}}}
-	op["responses"]["200"] = {"description": "Duplicate delivery: the stored result", "content": {
-		"application/json": {"schema": {"type": "object",
-			"properties": {"message": {"$ref": "#/components/schemas/AcceptedResponse"}}}}}}
-	op["responses"]["202"] = {"description": "Accepted for processing", "content": {
-		"application/json": {"schema": {"type": "object",
-			"properties": {"message": {"$ref": "#/components/schemas/AcceptedResponse"}}}}}}
+	op["parameters"] = [
+		{"name": "X-Hinode-Partner", "in": "header", "required": True, "schema": {"type": "string"}},
+		*op["parameters"],
+	]
+	op["requestBody"] = {
+		"required": True,
+		"content": {
+			"application/json": {"schema": {"$ref": "#/components/schemas/InboundEnvelope"}},
+			"text/plain": {
+				"schema": {
+					"type": "string",
+					"description": "The same envelope in Hinode EDI segments (partners configured for EDI)",
+				}
+			},
+		},
+	}
+	op["responses"]["200"] = {
+		"description": "Duplicate delivery: the stored result",
+		"content": {
+			"application/json": {
+				"schema": {
+					"type": "object",
+					"properties": {"message": {"$ref": "#/components/schemas/AcceptedResponse"}},
+				}
+			}
+		},
+	}
+	op["responses"]["202"] = {
+		"description": "Accepted for processing",
+		"content": {
+			"application/json": {
+				"schema": {
+					"type": "object",
+					"properties": {"message": {"$ref": "#/components/schemas/AcceptedResponse"}},
+				}
+			}
+		},
+	}
 	op["responses"]["401"] = {"description": "Unknown partner, bad or replayed signature"}
 	op["responses"]["429"] = {"description": "Partner rate limit exceeded"}
 	return {"post": op}
@@ -273,8 +333,14 @@ def build() -> dict:
 			for fn in tree.body:
 				if not isinstance(fn, ast.FunctionDef):
 					continue
-				deco = next((d for d in fn.decorator_list if ast.unparse(d.func if isinstance(d, ast.Call) else d)
-					== "frappe.whitelist"), None)
+				deco = next(
+					(
+						d
+						for d in fn.decorator_list
+						if ast.unparse(d.func if isinstance(d, ast.Call) else d) == "frappe.whitelist"
+					),
+					None,
+				)
 				if deco is None:
 					continue
 				route, ops, _ = _operation(module, fn, deco, names)
@@ -297,7 +363,8 @@ def build() -> dict:
 				"send messages to the signed inbound endpoint "
 				"(`automotive_core.integration_hub.inbound.receive`). Versions: a method path keeps its "
 				"behaviour within a major version; a breaking change comes as a new path, and the old "
-				"one stays, marked deprecated, for one more release. Generated by scripts/dev/openapi.py."),
+				"one stays, marked deprecated, for one more release. Generated by scripts/dev/openapi.py."
+			),
 		},
 		"servers": [{"url": "/"}],
 		"security": [{"session": []}, {"apiToken": []}],
@@ -305,49 +372,88 @@ def build() -> dict:
 		"components": {
 			"securitySchemes": {
 				"session": {"type": "apiKey", "in": "cookie", "name": "sid"},
-				"apiToken": {"type": "apiKey", "in": "header", "name": "Authorization",
-					"description": "token <api_key>:<api_secret>"},
-				"partnerSignature": {"type": "apiKey", "in": "header", "name": "X-Hinode-Signature",
+				"apiToken": {
+					"type": "apiKey",
+					"in": "header",
+					"name": "Authorization",
+					"description": "token <api_key>:<api_secret>",
+				},
+				"partnerSignature": {
+					"type": "apiKey",
+					"in": "header",
+					"name": "X-Hinode-Signature",
 					"description": "t=<unix seconds>,kid=<key id>,n=<nonce>,v1=<hex HMAC-SHA256(secret, t + '.' + n + '.' + body)>"
-						" with X-Hinode-Partner: <partner code>"},
+					" with X-Hinode-Partner: <partner code>",
+				},
 			},
 			"parameters": {
-				"IdempotencyKey": {"name": "Idempotency-Key", "in": "header", "required": True,
+				"IdempotencyKey": {
+					"name": "Idempotency-Key",
+					"in": "header",
+					"required": True,
 					"schema": {"type": "string", "maxLength": 120},
-					"description": "Unique per business request; a retry with the same key returns the first result."},
-				"IdempotencyKeyOptional": {"name": "Idempotency-Key", "in": "header", "required": False,
-					"schema": {"type": "string", "maxLength": 120}},
-				"CorrelationId": {"name": "X-Correlation-ID", "in": "header", "required": False,
+					"description": "Unique per business request; a retry with the same key returns the first result.",
+				},
+				"IdempotencyKeyOptional": {
+					"name": "Idempotency-Key",
+					"in": "header",
+					"required": False,
+					"schema": {"type": "string", "maxLength": 120},
+				},
+				"CorrelationId": {
+					"name": "X-Correlation-ID",
+					"in": "header",
+					"required": False,
 					"schema": {"type": "string", "pattern": "^[A-Za-z0-9._:-]{8,64}$"},
-					"description": "Echoed in the response; follows the request into jobs and messages."},
+					"description": "Echoed in the response; follows the request into jobs and messages.",
+				},
 			},
 			"schemas": {
-				"InboundEnvelope": {"type": "object", "additionalProperties": False,
+				"InboundEnvelope": {
+					"type": "object",
+					"additionalProperties": False,
 					"required": ["message_id", "message_type", "data"],
 					"properties": {
-						"message_id": {"type": "string", "minLength": 1, "maxLength": 100,
+						"message_id": {
+							"type": "string",
+							"minLength": 1,
+							"maxLength": 100,
 							"pattern": "^[A-Za-z0-9._:-]+$",
-							"description": "Unique per partner; a redelivery with the same id is a duplicate"},
+							"description": "Unique per partner; a redelivery with the same id is a duplicate",
+						},
 						"message_type": {"type": "string", "enum": _message_types()},
 						"schema_version": {"type": "string", "enum": ["v1"], "default": "v1"},
 						"sent_at": {"type": ["string", "null"], "format": "date-time"},
-						"data": {"type": "object", "description": "Validated by the handler of the message type"}}},
-				"AcceptedResponse": {"type": "object", "required": ["status", "inbound_id", "processing_status"],
+						"data": {
+							"type": "object",
+							"description": "Validated by the handler of the message type",
+						},
+					},
+				},
+				"AcceptedResponse": {
+					"type": "object",
+					"required": ["status", "inbound_id", "processing_status"],
 					"properties": {
 						"status": {"type": "string", "enum": ["accepted", "duplicate"]},
 						"inbound_id": {"type": "string"},
 						"processing_status": {"type": "string"},
 						"result_doctype": {"type": ["string", "null"]},
-						"result_name": {"type": ["string", "null"]}}},
+						"result_name": {"type": ["string", "null"]},
+					},
+				},
 			},
 			"responses": {
 				"Forbidden": {"description": "Not permitted for this user, role or partner"},
 				"NotFound": {"description": "A document the request names does not exist"},
-				"ValidationError": {"description": "Business rule violated; the reason is in `_server_messages`"},
+				"ValidationError": {
+					"description": "Business rule violated; the reason is in `_server_messages`"
+				},
 				"InProgress": {"description": "The same Idempotency-Key is being processed"},
 				"IdempotencyConflict": {"description": "Idempotency-Key reused for a different request"},
-				"TooManyRequests": {"description": "Over the caller's request limit (`x-request-limit`, per user "
-					"and minute, set in Automotive Settings); retry in the next minute"},
+				"TooManyRequests": {
+					"description": "Over the caller's request limit (`x-request-limit`, per user "
+					"and minute, set in Automotive Settings); retry in the next minute"
+				},
 			},
 		},
 	}
@@ -420,7 +526,8 @@ def compare(old: dict, new: dict) -> tuple[list[str], list[str]]:
 		for name, (_, required) in inputs_after.items():
 			if name not in inputs_before:
 				(breaking if required else other).append(
-					f"{where}: {'required' if required else 'optional'} parameter {name} added")
+					f"{where}: {'required' if required else 'optional'} parameter {name} added"
+				)
 		result_before, result_after = _result(before), _result(after)
 		for name, schema in result_before.items():
 			if name not in result_after:
@@ -428,8 +535,11 @@ def compare(old: dict, new: dict) -> tuple[list[str], list[str]]:
 			elif _plain(result_after[name]) != _plain(schema):
 				breaking.append(f"{where}: result property {name} changed type")
 		wording = ("summary", "description")
-		changed = sorted(k for k in (before.keys() | after.keys()) - set(wording)
-			if _plain(before.get(k), wording) != _plain(after.get(k), wording))
+		changed = sorted(
+			k
+			for k in (before.keys() | after.keys()) - set(wording)
+			if _plain(before.get(k), wording) != _plain(after.get(k), wording)
+		)
 		if changed and not any(c.startswith(f"{where}:") for c in breaking + other):
 			other.append(f"{where}: {', '.join(changed)} changed")
 	return breaking, other
@@ -451,8 +561,10 @@ def compat(old: dict, new: dict) -> list[str]:
 	if after < before:
 		problems.append(f"version {new['info']['version']} is lower than {old['info']['version']}")
 	elif breaking and after[0] <= before[0]:
-		problems.append(f"breaking changes need a new major version (still {new['info']['version']}); "
-			"or keep the old method and add the new behaviour under a new path (D-034)")
+		problems.append(
+			f"breaking changes need a new major version (still {new['info']['version']}); "
+			"or keep the old method and add the new behaviour under a new path (D-034)"
+		)
 	elif other and after <= before:
 		problems.append(f"the contract changed: raise the minor version (still {new['info']['version']})")
 	return problems

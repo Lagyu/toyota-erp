@@ -91,8 +91,13 @@ def publish(
 		msg.insert()
 		created.append(msg.name)
 	if created and not (frappe.flags.in_test or frappe.flags.automotive_bulk):
-		frappe.enqueue("automotive_core.integration_hub.outbox.dispatch_due", queue="short",
-			job_id="automotive-outbox-dispatch", deduplicate=True, enqueue_after_commit=True)
+		frappe.enqueue(
+			"automotive_core.integration_hub.outbox.dispatch_due",
+			queue="short",
+			job_id="automotive-outbox-dispatch",
+			deduplicate=True,
+			enqueue_after_commit=True,
+		)
 	return created
 
 
@@ -177,7 +182,8 @@ def deliver(name: str) -> str:
 	else:
 		msg.status = "Failed"
 		msg.next_attempt_at = add_to_date(
-			now_datetime(), seconds=backoff_seconds(msg.attempts, cint(_settings().outbox_base_backoff_seconds) or 30)
+			now_datetime(),
+			seconds=backoff_seconds(msg.attempts, cint(_settings().outbox_base_backoff_seconds) or 30),
 		)
 	msg.flags.ignore_permissions = True
 	msg.save()
@@ -185,25 +191,40 @@ def deliver(name: str) -> str:
 	if msg.status == "Dead Letter":
 		from automotive_core.governance.notifications import dead_letter
 
-		audit.record("integration.outbound.dead_letter", msg.doctype, msg.name,
-			{"partner": partner.name, "event_type": msg.event_type, "error": result.error})
+		audit.record(
+			"integration.outbound.dead_letter",
+			msg.doctype,
+			msg.name,
+			{"partner": partner.name, "event_type": msg.event_type, "error": result.error},
+		)
 		dead_letter(msg.doctype, msg.name)
-	log("integration.outbound." + outcome.lower().replace(" ", "_"), outbound=msg.name, partner=partner.name,
-		attempt=msg.attempts, status_code=result.status_code, duration_ms=duration_ms)
+	log(
+		"integration.outbound." + outcome.lower().replace(" ", "_"),
+		outbound=msg.name,
+		partner=partner.name,
+		attempt=msg.attempts,
+		status_code=result.status_code,
+		duration_ms=duration_ms,
+	)
 	commit()
 	return msg.status
 
 
 def _update_partner_health(partner, ok: bool, error: str | None) -> None:
-	values: dict[str, Any] = {"last_success_at": now_datetime()} if ok else {"last_failure_at": now_datetime(),
-		"last_error": (error or "")[:500]}
+	values: dict[str, Any] = (
+		{"last_success_at": now_datetime()}
+		if ok
+		else {"last_failure_at": now_datetime(), "last_error": (error or "")[:500]}
+	)
 	frappe.db.set_value("Integration Partner", partner.name, values, update_modified=False)
 	from automotive_core.integration_hub.partners import connection_status
 
 	partner.reload()
 	status = connection_status(partner)
 	if status != partner.connection_status:
-		frappe.db.set_value("Integration Partner", partner.name, "connection_status", status, update_modified=False)
+		frappe.db.set_value(
+			"Integration Partner", partner.name, "connection_status", status, update_modified=False
+		)
 
 
 @frappe.whitelist(methods=["POST"])
@@ -212,6 +233,8 @@ def retry(name: str) -> str:
 	msg = frappe.get_doc("Integration Outbound Message", name)
 	if msg.status not in ("Dead Letter", "Failed"):
 		frappe.throw(_("Only failed or dead-lettered messages can be retried."))
-	frappe.db.set_value("Integration Outbound Message", name, {"status": "Pending", "next_attempt_at": now_datetime()})
+	frappe.db.set_value(
+		"Integration Outbound Message", name, {"status": "Pending", "next_attempt_at": now_datetime()}
+	)
 	audit.record("integration.outbound.retried", msg.doctype, msg.name, {"previous_attempts": msg.attempts})
 	return "Pending"

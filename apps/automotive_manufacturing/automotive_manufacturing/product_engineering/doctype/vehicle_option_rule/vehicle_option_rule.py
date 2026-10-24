@@ -8,8 +8,11 @@ from frappe.model.document import Document
 
 class VehicleOptionRule(Document):
 	def validate(self):
-		attributes = set(frappe.get_all("Vehicle Model Option Group", filters={"parent": self.vehicle_model},
-			pluck="attribute"))
+		attributes = set(
+			frappe.get_all(
+				"Vehicle Model Option Group", filters={"parent": self.vehicle_model}, pluck="attribute"
+			)
+		)
 		for field in ("if_attribute", "then_attribute"):
 			value = self.get(field)
 			if value and value not in attributes:
@@ -19,7 +22,9 @@ class VehicleOptionRule(Document):
 		for field, attribute in (("if_values", self.if_attribute), ("then_values", self.then_attribute)):
 			if not attribute:
 				continue
-			known = set(frappe.get_all("Item Attribute Value", filters={"parent": attribute}, pluck="attribute_value"))
+			known = set(
+				frappe.get_all("Item Attribute Value", filters={"parent": attribute}, pluck="attribute_value")
+			)
 			for value in filter(None, (v.strip() for v in (self.get(field) or "").splitlines())):
 				if value not in known:
 					frappe.throw(_("{0} is not a value of {1}.").format(value, attribute))

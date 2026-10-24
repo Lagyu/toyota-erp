@@ -74,7 +74,7 @@ The bootstrap installs Frappe and ERPNext at the pinned commits, links the custo
 creates a development site and a test site. Then:
 
 ```bash
-./scripts/ci/lint.sh                         # ruff, shellcheck, schema drift, translations, YAML/JSON, identity
+./scripts/ci/lint.sh                         # ruff (lint, format), shellcheck, schema drift, translations, YAML/JSON, identity
 ./scripts/dev/test-all.sh                    # integration tests of every app on test.localhost
 ./scripts/dev/compose.sh exec -T bench bash -lc '/workspace/scripts/seed/reset-site.sh small.localhost'
 ./scripts/dev/compose.sh exec -d bench bash -lc '/workspace/scripts/seed/run.sh small.localhost small'
@@ -116,7 +116,7 @@ portal checks, encrypted backup, restore drill) on one host.
 
 | Suite | Command | What it covers |
 |---|---|---|
-| Lint | `./scripts/ci/lint.sh` | ruff, shellcheck, generated-schema drift, YAML/JSON syntax, identity boundary |
+| Lint | `./scripts/ci/lint.sh` | ruff (lint and formatting), shellcheck, generated-schema drift, OpenAPI contract and its version, translations, YAML/JSON syntax, alert rule tests, e2e type check, identity boundary |
 | Unit | `./scripts/ci/unit.sh` | pure engines without a database: MRP, line sequencing, option rules, VIN |
 | Integration | `./scripts/ci/integration.sh` | every app's tests against real ERPNext, MariaDB and Redis |
 | End to end | `./scripts/ci/e2e.sh` | J-01 … J-10, role surfaces, supplier/dealer portals, shop floor (desktop and tablet) |

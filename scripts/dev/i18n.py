@@ -33,18 +33,64 @@ APPS = ("automotive_core", "automotive_manufacturing", "automotive_supply_chain"
 SKIP = {"public/dist", "node_modules", "__pycache__"}
 
 # ERPNext doctypes of the reference processes (ERP-01 ... ERP-09)
-_DOCUMENTS = "|".join((
-	"sales_invoice", "purchase_invoice", "payment_entry", "journal_entry", "sales_order", "purchase_order",
-	"customer", "supplier", "item", "stock_entry", "delivery_note", "purchase_receipt", "batch", "serial_no",
-	"warehouse", "stock_reconciliation", "quality_inspection", "bom", "work_order", "job_card",
-	"production_plan", "workstation", "operation", "routing", "material_request", "blanket_order",
-	"supplier_quotation", "request_for_quotation", "stock_reservation_entry", "serial_and_batch_bundle",
-	"landed_cost_voucher", "bank_reconciliation_tool", "bank_transaction", "company", "account",
-	"cost_center", "fiscal_year", "tax_rule", "sales_taxes_and_charges_template",
-	"purchase_taxes_and_charges_template", "price_list", "item_price", "pricing_rule", "payment_terms_template",
-	"quality_action", "non_conformance", "employee", "holiday_list", "uom", "item_group", "customer_group",
-	"supplier_group", "territory", "vehicle",
-))
+_DOCUMENTS = "|".join(
+	(
+		"sales_invoice",
+		"purchase_invoice",
+		"payment_entry",
+		"journal_entry",
+		"sales_order",
+		"purchase_order",
+		"customer",
+		"supplier",
+		"item",
+		"stock_entry",
+		"delivery_note",
+		"purchase_receipt",
+		"batch",
+		"serial_no",
+		"warehouse",
+		"stock_reconciliation",
+		"quality_inspection",
+		"bom",
+		"work_order",
+		"job_card",
+		"production_plan",
+		"workstation",
+		"operation",
+		"routing",
+		"material_request",
+		"blanket_order",
+		"supplier_quotation",
+		"request_for_quotation",
+		"stock_reservation_entry",
+		"serial_and_batch_bundle",
+		"landed_cost_voucher",
+		"bank_reconciliation_tool",
+		"bank_transaction",
+		"company",
+		"account",
+		"cost_center",
+		"fiscal_year",
+		"tax_rule",
+		"sales_taxes_and_charges_template",
+		"purchase_taxes_and_charges_template",
+		"price_list",
+		"item_price",
+		"pricing_rule",
+		"payment_terms_template",
+		"quality_action",
+		"non_conformance",
+		"employee",
+		"holiday_list",
+		"uom",
+		"item_group",
+		"customer_group",
+		"supplier_group",
+		"territory",
+		"vehicle",
+	)
+)
 # upstream app -> source locations (as written in its locale/main.pot) whose strings core translates
 UPSTREAM = {
 	"frappe": (
@@ -90,8 +136,10 @@ def _extract(app: str):
 	# repository's apps/ when the bench's links do not resolve, as on the host)
 	apps_dir = os.environ.get("I18N_APPS_DIR") or os.path.join(get_bench_path(), "apps")
 	for filename, lineno, message, comments, context in extract_from_dir(
-		os.path.join(apps_dir, app), get_method_map(app) + get_method_map("frappe"),
-		directory_filter=directory_filter, keywords=PYTHON_KEYWORDS,
+		os.path.join(apps_dir, app),
+		get_method_map(app) + get_method_map("frappe"),
+		directory_filter=directory_filter,
+		keywords=PYTHON_KEYWORDS,
 	):
 		if message and (message, context) not in ignored:
 			catalog.add(message, locations=[(filename, lineno)], auto_comments=comments, context=context)
@@ -116,7 +164,11 @@ def _translations(locale: str) -> dict:
 	known = {}
 	for app in APPS:
 		for message in get_catalog(app, locale):
-			if message.id and message.string and (not isinstance(message.string, tuple) or all(message.string)):
+			if (
+				message.id
+				and message.string
+				and (not isinstance(message.string, tuple) or all(message.string))
+			):
 				known.setdefault((message.id, message.context), message.string)
 	return known
 
@@ -133,10 +185,15 @@ def check(locale: str) -> None:
 				continue
 			missing += 1
 			where = ", ".join(f"{path}:{line}" for path, line in message.locations[:2])
-			print(f"{app}: untranslated {message.id!r}" + (f" [{message.context}]" if message.context else "")
-				+ f" ({where})")
+			print(
+				f"{app}: untranslated {message.id!r}"
+				+ (f" [{message.context}]" if message.context else "")
+				+ f" ({where})"
+			)
 	if missing:
-		print(f"{missing} string(s) without a {locale} translation: i18n.py pot, po {locale}, fill {locale}, then translate")
+		print(
+			f"{missing} string(s) without a {locale} translation: i18n.py pot, po {locale}, fill {locale}, then translate"
+		)
 		sys.exit(1)
 	print(f"{locale}: every extracted string is translated")
 
@@ -179,8 +236,13 @@ def _add_upstream(catalog) -> None:
 			if not message.id or catalog.get(message.id, message.context) is not None:
 				continue
 			if any(w.search(path) for path, _line in message.locations for w in wanted):
-				catalog.add(message.id, locations=message.locations, auto_comments=message.auto_comments,
-					context=message.context, flags=message.flags)
+				catalog.add(
+					message.id,
+					locations=message.locations,
+					auto_comments=message.auto_comments,
+					context=message.context,
+					flags=message.flags,
+				)
 				added += 1
 		print(f"automotive_core: {added} {app} messages")
 

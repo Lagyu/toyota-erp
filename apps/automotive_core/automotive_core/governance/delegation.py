@@ -49,8 +49,14 @@ def delegated_roles(delegate: str, on_date=None) -> list[DelegatedRole]:
 		if any(r.enforcement == "Block" for r in sod_conflicts(delegate, row.approver_role)):
 			continue
 		result.append(
-			DelegatedRole(row.name, row.delegator, row.approver_role, row.scope_company, row.reference_doctype,
-				flt(row.max_amount))
+			DelegatedRole(
+				row.name,
+				row.delegator,
+				row.approver_role,
+				row.scope_company,
+				row.reference_doctype,
+				flt(row.max_amount),
+			)
 		)
 	return result
 
@@ -62,8 +68,11 @@ def sod_conflicts(delegate: str, role: str) -> list[dict]:
 	from automotive_core.governance.sod import conflicts
 
 	held = set(frappe.get_roles(delegate))
-	return [r for r in conflicts(held | {role}) if role in (r.role_a, r.role_b)
-		and not (r.role_a in held and r.role_b in held)]
+	return [
+		r
+		for r in conflicts(held | {role})
+		if role in (r.role_a, r.role_b) and not (r.role_a in held and r.role_b in held)
+	]
 
 
 def _delegator_still_holds(delegator: str, role: str) -> bool:
@@ -113,7 +122,11 @@ def validate(doc) -> None:
 	if doc.is_new() and getdate(doc.from_date) < add_days(getdate(nowdate()), -1):
 		frappe.throw(_("A delegation cannot start in the past."))
 	if doc.approver_role not in frappe.get_roles(doc.delegator):
-		frappe.throw(_("{0} does not hold the role {1} and cannot delegate it.").format(doc.delegator, doc.approver_role))
+		frappe.throw(
+			_("{0} does not hold the role {1} and cannot delegate it.").format(
+				doc.delegator, doc.approver_role
+			)
+		)
 	if not frappe.db.get_value("User", doc.delegate, "enabled"):
 		frappe.throw(_("Delegate {0} is not an active user.").format(doc.delegate))
 	found = sod_conflicts(doc.delegate, doc.approver_role)
@@ -121,11 +134,19 @@ def validate(doc) -> None:
 	if blocking:
 		from automotive_core.governance.sod import SegregationOfDutiesError
 
-		raise SegregationOfDutiesError(_("Segregation of duties: {0} may not act as {1} ({2}).").format(
-			doc.delegate, doc.approver_role, "; ".join(f"{r.role_a} + {r.role_b}" for r in blocking)))
+		raise SegregationOfDutiesError(
+			_("Segregation of duties: {0} may not act as {1} ({2}).").format(
+				doc.delegate, doc.approver_role, "; ".join(f"{r.role_a} + {r.role_b}" for r in blocking)
+			)
+		)
 	for rule in found:
-		frappe.msgprint(_("Segregation of duties warning ({0}): {1} would hold {2} and {3}.").format(
-			rule.name, doc.delegate, rule.role_a, rule.role_b), indicator="orange", alert=True)
+		frappe.msgprint(
+			_("Segregation of duties warning ({0}): {1} would hold {2} and {3}.").format(
+				rule.name, doc.delegate, rule.role_a, rule.role_b
+			),
+			indicator="orange",
+			alert=True,
+		)
 	user = frappe.session.user
 	privileged = {"System Manager", "IT Operator"} & set(frappe.get_roles(user))
 	if user != doc.delegator and not privileged:
@@ -143,8 +164,11 @@ def validate(doc) -> None:
 		pluck="name",
 	)
 	if overlapping:
-		frappe.throw(_("{0} already delegates {1} in this period ({2}).").format(
-			doc.delegator, doc.approver_role, ", ".join(overlapping)))
+		frappe.throw(
+			_("{0} already delegates {1} in this period ({2}).").format(
+				doc.delegator, doc.approver_role, ", ".join(overlapping)
+			)
+		)
 	doc.status = compute_status(doc)
 
 
@@ -154,22 +178,37 @@ def on_submit(doc) -> None:
 		"delegation.granted",
 		doc.doctype,
 		doc.name,
-		{"delegator": doc.delegator, "delegate": doc.delegate, "role": doc.approver_role,
-		 "from": str(doc.from_date), "to": str(doc.to_date), "company": doc.scope_company,
-		 "doctype": doc.reference_doctype, "max_amount": flt(doc.max_amount)},
+		{
+			"delegator": doc.delegator,
+			"delegate": doc.delegate,
+			"role": doc.approver_role,
+			"from": str(doc.from_date),
+			"to": str(doc.to_date),
+			"company": doc.scope_company,
+			"doctype": doc.reference_doctype,
+			"max_amount": flt(doc.max_amount),
+		},
 		company=doc.scope_company,
 	)
 
 
 def on_cancel(doc) -> None:
 	doc.db_set("status", "Revoked")
-	audit.record("delegation.revoked", doc.doctype, doc.name, {"reason": doc.flags.get("cancel_reason")},
-		company=doc.scope_company)
+	audit.record(
+		"delegation.revoked",
+		doc.doctype,
+		doc.name,
+		{"reason": doc.flags.get("cancel_reason")},
+		company=doc.scope_company,
+	)
 
 
 def refresh_statuses() -> None:
-	for row in frappe.get_all("Approval Delegation", filters={"docstatus": 1}, fields=["name", "status", "from_date",
-			"to_date", "docstatus"]):
+	for row in frappe.get_all(
+		"Approval Delegation",
+		filters={"docstatus": 1},
+		fields=["name", "status", "from_date", "to_date", "docstatus"],
+	):
 		status = compute_status(frappe._dict(row))
 		if status != row.status:
 			frappe.db.set_value("Approval Delegation", row.name, "status", status, update_modified=False)

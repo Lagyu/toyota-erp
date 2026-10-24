@@ -45,14 +45,41 @@ def ensure_test_doctypes() -> None:
 					{"fieldname": "party", "fieldtype": "Data", "label": "Party"},
 					{"fieldname": "grand_total", "fieldtype": "Currency", "label": "Total"},
 					{"fieldname": "purpose", "fieldtype": "Data", "label": "Purpose"},
-					{"fieldname": "items", "fieldtype": "Table", "options": f"{TEST_VOUCHER} Item", "label": "Items"},
-					{"fieldname": "amended_from", "fieldtype": "Link", "options": TEST_VOUCHER, "label": "Amended From",
-					 "read_only": 1, "no_copy": 1},
+					{
+						"fieldname": "items",
+						"fieldtype": "Table",
+						"options": f"{TEST_VOUCHER} Item",
+						"label": "Items",
+					},
+					{
+						"fieldname": "amended_from",
+						"fieldtype": "Link",
+						"options": TEST_VOUCHER,
+						"label": "Amended From",
+						"read_only": 1,
+						"no_copy": 1,
+					},
 				],
 				"permissions": [
-					{"role": "System Manager", "read": 1, "write": 1, "create": 1, "submit": 1, "cancel": 1, "amend": 1,
-					 "delete": 1},
-					{"role": "Buyer", "read": 1, "write": 1, "create": 1, "submit": 1, "cancel": 1, "amend": 1},
+					{
+						"role": "System Manager",
+						"read": 1,
+						"write": 1,
+						"create": 1,
+						"submit": 1,
+						"cancel": 1,
+						"amend": 1,
+						"delete": 1,
+					},
+					{
+						"role": "Buyer",
+						"read": 1,
+						"write": 1,
+						"create": 1,
+						"submit": 1,
+						"cancel": 1,
+						"amend": 1,
+					},
 					{"role": "Procurement Manager", "read": 1},
 					{"role": "Plant Director", "read": 1},
 					{"role": "Treasury Approver", "read": 1},
@@ -61,7 +88,9 @@ def ensure_test_doctypes() -> None:
 		).insert(ignore_permissions=True)
 
 
-def make_user(email: str, roles: list[str], user_type: str = "System User", first_name: str | None = None) -> str:
+def make_user(
+	email: str, roles: list[str], user_type: str = "System User", first_name: str | None = None
+) -> str:
 	if frappe.db.exists("User", email):
 		user = frappe.get_doc("User", email)
 		user.set("roles", [])
@@ -103,7 +132,8 @@ def make_voucher(owner: str, total: float, company: str = AICHI, items: list[dic
 				"company": company,
 				"party": extra.pop("party", "Kisaragi Precision"),
 				"grand_total": total,
-				"items": items or [{"item_code": "BRK-PAD-001", "qty": 10, "rate": total / 10, "item_group": "Brakes"}],
+				"items": items
+				or [{"item_code": "BRK-PAD-001", "qty": 10, "rate": total / 10, "item_group": "Brakes"}],
 				**extra,
 			}
 		)
@@ -125,8 +155,10 @@ def make_policy(name: str, steps: list[tuple[int, str, float]], **extra) -> str:
 			"distinct_approvers": 1,
 			"allow_delegation": 1,
 			"bind_to_document_hash": 1,
-			"steps": [{"step_no": n, "step_name": f"Step {n}", "approver_role": role, "min_amount": minimum}
-				for n, role, minimum in steps],
+			"steps": [
+				{"step_no": n, "step_name": f"Step {n}", "approver_role": role, "min_amount": minimum}
+				for n, role, minimum in steps
+			],
 			**extra,
 		}
 	)

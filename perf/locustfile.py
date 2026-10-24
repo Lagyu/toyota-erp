@@ -70,67 +70,221 @@ class Persona:
 
 AICHI = "AICHI-VA"
 PERSONAS: dict[str, Persona] = {
-	"warehouse": Persona(6, AICHI, ("Logistics", "Supplier Collaboration"),
-		("Stock Entry", "Purchase Receipt", "Advance Shipping Notice", "Material Request", "Bin", "Cycle Count",
-			"Receipt Discrepancy"), ("Inventory Position",), ("mr_transfer", "stock_transfer")),
-	"planner": Persona(3, AICHI, ("Production Planning", "Shop Floor", "Logistics"),
-		("Work Order", "Planning Run", "Production Plan", "Material Request", "Plant Schedule", "Planning Parameter Set"),
-		("Production Variance", "WIP by Line", "Inventory Position"), ("mr_transfer",)),
-	"buyer": Persona(3, None, ("Supplier Collaboration", "Procurement Controls", "Production Planning"),
-		("Purchase Order", "Material Request", "Supplier", "Request for Quotation", "Supplier Quotation", "Blanket Order",
-			"Supplier Delivery Schedule", "Advance Shipping Notice"), ("Supplier Performance", "Purchase Price Variance"),
-		("mr_purchase",)),
-	"supervisor": Persona(3, AICHI, ("Shop Floor", "Production Planning"),
+	"warehouse": Persona(
+		6,
+		AICHI,
+		("Logistics", "Supplier Collaboration"),
+		(
+			"Stock Entry",
+			"Purchase Receipt",
+			"Advance Shipping Notice",
+			"Material Request",
+			"Bin",
+			"Cycle Count",
+			"Receipt Discrepancy",
+		),
+		("Inventory Position",),
+		("mr_transfer", "stock_transfer"),
+	),
+	"planner": Persona(
+		3,
+		AICHI,
+		("Production Planning", "Shop Floor", "Logistics"),
+		(
+			"Work Order",
+			"Planning Run",
+			"Production Plan",
+			"Material Request",
+			"Plant Schedule",
+			"Planning Parameter Set",
+		),
+		("Production Variance", "WIP by Line", "Inventory Position"),
+		("mr_transfer",),
+	),
+	"buyer": Persona(
+		3,
+		None,
+		("Supplier Collaboration", "Procurement Controls", "Production Planning"),
+		(
+			"Purchase Order",
+			"Material Request",
+			"Supplier",
+			"Request for Quotation",
+			"Supplier Quotation",
+			"Blanket Order",
+			"Supplier Delivery Schedule",
+			"Advance Shipping Notice",
+		),
+		("Supplier Performance", "Purchase Price Variance"),
+		("mr_purchase",),
+	),
+	"supervisor": Persona(
+		3,
+		AICHI,
+		("Shop Floor", "Production Planning"),
 		("Work Order", "Job Card", "Andon Event", "Shift Handover", "Downtime Entry", "Quality Hold"),
-		("OEE by Line", "WIP by Line", "Production Variance")),
-	"logistics": Persona(3, AICHI, ("Logistics", "Dealer Operations"),
-		("Delivery Note", "Transport Booking", "Shipment Manifest", "Stock Entry"), ("Goods In Transit", "Inventory Position"),
-		("stock_transfer",)),
+		("OEE by Line", "WIP by Line", "Production Variance"),
+	),
+	"logistics": Persona(
+		3,
+		AICHI,
+		("Logistics", "Dealer Operations"),
+		("Delivery Note", "Transport Booking", "Shipment Manifest", "Stock Entry"),
+		("Goods In Transit", "Inventory Position"),
+		("stock_transfer",),
+	),
 	"operator": Persona(3, AICHI, ("Shop Floor",), ("Job Card", "Work Order", "Downtime Entry")),
-	"inspector": Persona(2, AICHI, ("Quality Control", "Traceability"),
-		("Quality Inspection", "Non Conformance", "Quality Hold", "Purchase Receipt")),
-	"na_warehouse": Persona(2, "NA-PDC", ("Logistics",), ("Stock Entry", "Purchase Receipt", "Delivery Note", "Vehicle Unit"),
-		("Inventory Position",), ("mr_purchase", "stock_transfer")),
-	"quality_manager": Persona(2, AICHI, ("Quality Control", "Traceability", "Supplier Collaboration"),
-		("Quality Hold", "Quality Disposition", "Non Conformance", "Quality Inspection")),
-	"ap_clerk": Persona(2, None, ("Procurement Controls", "Finance Controls"),
-		("Purchase Invoice", "Invoice Match Exception", "Purchase Receipt", "Payment Entry", "Purchase Order"),
-		("Purchase Price Variance",)),
-	"dealer_liaison": Persona(2, None, ("Dealer Operations", "Traceability"),
-		("Dealer Order", "Dealer Order Change", "Issue", "Sales Order", "Vehicle Unit")),
-	"engineer": Persona(2, AICHI, ("Product Engineering",),
-		("Item", "BOM", "Engineering Change Request", "Engineering Change Order", "Vehicle Model"), ("BOM Where Used",)),
-	"planner_ja": Persona(1, AICHI, ("Production Planning",), ("Work Order", "Planning Run", "Material Request"),
-		("Inventory Position",), ("mr_transfer",)),
-	"kyushu_logistics": Persona(1, "KYUSHU-PT", ("Logistics",), ("Delivery Note", "Stock Entry", "Transport Booking"),
-		("Goods In Transit",), ("stock_transfer",)),
-	"quality_manager_2": Persona(1, AICHI, ("Quality Control", "Traceability"),
-		("Quality Hold", "Quality Disposition", "Non Conformance")),
-	"procurement_manager": Persona(1, None, ("Procurement Controls", "Supplier Collaboration", "Governance"),
-		("Purchase Order", "Approval Request", "Supplier", "Blanket Order", "Sourcing Decision", "Supplier Onboarding"),
-		("Supplier Performance",), ("mr_purchase",)),
-	"engineering_manager": Persona(1, AICHI, ("Product Engineering",),
-		("BOM", "Engineering Change Order", "Engineering Change Request", "Item"), ("BOM Where Used",)),
-	"treasury": Persona(1, None, ("Finance Controls", "Procurement Controls"),
-		("Payment Entry", "Purchase Invoice", "Approval Request", "Bank Account")),
+	"inspector": Persona(
+		2,
+		AICHI,
+		("Quality Control", "Traceability"),
+		("Quality Inspection", "Non Conformance", "Quality Hold", "Purchase Receipt"),
+	),
+	"na_warehouse": Persona(
+		2,
+		"NA-PDC",
+		("Logistics",),
+		("Stock Entry", "Purchase Receipt", "Delivery Note", "Vehicle Unit"),
+		("Inventory Position",),
+		("mr_purchase", "stock_transfer"),
+	),
+	"quality_manager": Persona(
+		2,
+		AICHI,
+		("Quality Control", "Traceability", "Supplier Collaboration"),
+		("Quality Hold", "Quality Disposition", "Non Conformance", "Quality Inspection"),
+	),
+	"ap_clerk": Persona(
+		2,
+		None,
+		("Procurement Controls", "Finance Controls"),
+		(
+			"Purchase Invoice",
+			"Invoice Match Exception",
+			"Purchase Receipt",
+			"Payment Entry",
+			"Purchase Order",
+		),
+		("Purchase Price Variance",),
+	),
+	"dealer_liaison": Persona(
+		2,
+		None,
+		("Dealer Operations", "Traceability"),
+		("Dealer Order", "Dealer Order Change", "Issue", "Sales Order", "Vehicle Unit"),
+	),
+	"engineer": Persona(
+		2,
+		AICHI,
+		("Product Engineering",),
+		("Item", "BOM", "Engineering Change Request", "Engineering Change Order", "Vehicle Model"),
+		("BOM Where Used",),
+	),
+	"planner_ja": Persona(
+		1,
+		AICHI,
+		("Production Planning",),
+		("Work Order", "Planning Run", "Material Request"),
+		("Inventory Position",),
+		("mr_transfer",),
+	),
+	"kyushu_logistics": Persona(
+		1,
+		"KYUSHU-PT",
+		("Logistics",),
+		("Delivery Note", "Stock Entry", "Transport Booking"),
+		("Goods In Transit",),
+		("stock_transfer",),
+	),
+	"quality_manager_2": Persona(
+		1,
+		AICHI,
+		("Quality Control", "Traceability"),
+		("Quality Hold", "Quality Disposition", "Non Conformance"),
+	),
+	"procurement_manager": Persona(
+		1,
+		None,
+		("Procurement Controls", "Supplier Collaboration", "Governance"),
+		(
+			"Purchase Order",
+			"Approval Request",
+			"Supplier",
+			"Blanket Order",
+			"Sourcing Decision",
+			"Supplier Onboarding",
+		),
+		("Supplier Performance",),
+		("mr_purchase",),
+	),
+	"engineering_manager": Persona(
+		1,
+		AICHI,
+		("Product Engineering",),
+		("BOM", "Engineering Change Order", "Engineering Change Request", "Item"),
+		("BOM Where Used",),
+	),
+	"treasury": Persona(
+		1,
+		None,
+		("Finance Controls", "Procurement Controls"),
+		("Payment Entry", "Purchase Invoice", "Approval Request", "Bank Account"),
+	),
 	"treasury_2": Persona(1, None, ("Finance Controls",), ("Payment Entry", "Approval Request")),
-	"sales_manager": Persona(1, None, ("Dealer Operations",),
-		("Sales Order", "Dealer Order", "Vehicle Allocation", "Customer", "Dealer Registration")),
-	"plant_director": Persona(1, AICHI, ("Management", "Production Planning", "Shop Floor", "Quality Control", "Logistics"),
+	"sales_manager": Persona(
+		1,
+		None,
+		("Dealer Operations",),
+		("Sales Order", "Dealer Order", "Vehicle Allocation", "Customer", "Dealer Registration"),
+	),
+	"plant_director": Persona(
+		1,
+		AICHI,
+		("Management", "Production Planning", "Shop Floor", "Quality Control", "Logistics"),
 		("Work Order", "Quality Hold", "Andon Event", "Stock Entry", "Vehicle Unit"),
-		("OEE by Line", "WIP by Line", "Production Variance", "Inventory Position")),
-	"controller": Persona(1, None, ("Finance Controls", "Management", "Intercompany", "Procurement Controls"),
+		("OEE by Line", "WIP by Line", "Production Variance", "Inventory Position"),
+	),
+	"controller": Persona(
+		1,
+		None,
+		("Finance Controls", "Management", "Intercompany", "Procurement Controls"),
 		("Sales Invoice", "Purchase Invoice", "Journal Entry", "Payment Entry", "Period Close Checklist"),
-		("Group Consolidation", "Intercompany Reconciliation", "Purchase Price Variance")),
-	"executive": Persona(1, None, ("Management", "Production Planning", "Dealer Operations", "Supplier Collaboration"),
+		("Group Consolidation", "Intercompany Reconciliation", "Purchase Price Variance"),
+	),
+	"executive": Persona(
+		1,
+		None,
+		("Management", "Production Planning", "Dealer Operations", "Supplier Collaboration"),
 		("Sales Order", "Purchase Order", "Work Order", "Stock Entry", "Quality Inspection"),
-		("Supplier Performance", "Production Variance", "OEE by Line", "Group Consolidation")),
-	"auditor": Persona(1, None, ("Governance", "Management"),
-		("Audit Event", "Stock Ledger Entry", "GL Entry", "Stock Entry", "Purchase Order", "Approval Request"),
-		("Segregation of Duties Review", "Group Consolidation", "Inventory Position")),
-	"it_operator": Persona(1, None, ("Integration Hub", "Automotive Setup"),
-		("Integration Inbound Message", "Integration Outbound Message", "Error Log", "Integration Partner", "Audit Event"),
-		("Segregation of Duties Review",)),
+		("Supplier Performance", "Production Variance", "OEE by Line", "Group Consolidation"),
+	),
+	"auditor": Persona(
+		1,
+		None,
+		("Governance", "Management"),
+		(
+			"Audit Event",
+			"Stock Ledger Entry",
+			"GL Entry",
+			"Stock Entry",
+			"Purchase Order",
+			"Approval Request",
+		),
+		("Segregation of Duties Review", "Group Consolidation", "Inventory Position"),
+	),
+	"it_operator": Persona(
+		1,
+		None,
+		("Integration Hub", "Automotive Setup"),
+		(
+			"Integration Inbound Message",
+			"Integration Outbound Message",
+			"Error Log",
+			"Integration Partner",
+			"Audit Event",
+		),
+		("Segregation of Duties Review",),
+	),
 }
 WRITE_WEIGHTS = {"todo": 1, "comment": 1, "mr_transfer": 2, "mr_purchase": 2, "stock_transfer": 3}
 NOT_DISCUSSED = {"Audit Event", "Bin", "Error Log", "GL Entry", "Stock Ledger Entry"}
@@ -247,18 +401,44 @@ class JobFailed(Exception):
 
 @events.init_command_line_parser.add_listener
 def _arguments(parser) -> None:
-	parser.add_argument("--credentials", env_var="PERF_CREDENTIALS", default="",
-		help="persona credentials JSON written by automotive_seed.e2e.prepare_users (mode 0600)")
-	parser.add_argument("--as-of", env_var="PERF_AS_OF", default="",
-		help="business date for report windows, YYYY-MM-DD (default today; use the dataset's last simulated day)")
-	parser.add_argument("--think-time", env_var="PERF_THINK_TIME", default="5-15",
-		help="seconds a user waits between actions, MIN-MAX (default 5-15)")
-	parser.add_argument("--planning-interval", env_var="PERF_PLANNING_INTERVAL", type=float, default=300.0,
-		help="seconds between background MRP runs of BackgroundPlanner, 0 to leave it out (default 300)")
-	parser.add_argument("--request-timeout", env_var="PERF_REQUEST_TIMEOUT", type=float, default=60.0,
-		help="seconds before a request counts as failed (default 60)")
-	parser.add_argument("--personas", env_var="PERF_PERSONAS", default="",
-		help="comma-separated persona keys to restrict the desk mix to (default: all with an account)")
+	parser.add_argument(
+		"--credentials",
+		env_var="PERF_CREDENTIALS",
+		default="",
+		help="persona credentials JSON written by automotive_seed.e2e.prepare_users (mode 0600)",
+	)
+	parser.add_argument(
+		"--as-of",
+		env_var="PERF_AS_OF",
+		default="",
+		help="business date for report windows, YYYY-MM-DD (default today; use the dataset's last simulated day)",
+	)
+	parser.add_argument(
+		"--think-time",
+		env_var="PERF_THINK_TIME",
+		default="5-15",
+		help="seconds a user waits between actions, MIN-MAX (default 5-15)",
+	)
+	parser.add_argument(
+		"--planning-interval",
+		env_var="PERF_PLANNING_INTERVAL",
+		type=float,
+		default=300.0,
+		help="seconds between background MRP runs of BackgroundPlanner, 0 to leave it out (default 300)",
+	)
+	parser.add_argument(
+		"--request-timeout",
+		env_var="PERF_REQUEST_TIMEOUT",
+		type=float,
+		default=60.0,
+		help="seconds before a request counts as failed (default 60)",
+	)
+	parser.add_argument(
+		"--personas",
+		env_var="PERF_PERSONAS",
+		default="",
+		help="comma-separated persona keys to restrict the desk mix to (default: all with an account)",
+	)
 
 
 def _accounts(value) -> list[str]:
@@ -283,7 +463,11 @@ def _init(environment, **_kwargs) -> None:
 	SETTINGS.planning_interval = float(options.planning_interval)
 	SETTINGS.timeout = float(options.request_timeout)
 	wanted = {p.strip() for p in options.personas.split(",") if p.strip()}
-	desk = {key: p.weight for key, p in PERSONAS.items() if SETTINGS.accounts.get(key) and (not wanted or key in wanted)}
+	desk = {
+		key: p.weight
+		for key, p in PERSONAS.items()
+		if SETTINGS.accounts.get(key) and (not wanted or key in wanted)
+	}
 	DeskUser.picker = _SmoothRoundRobin(desk)
 	available = {
 		"DeskUser": bool(desk),
@@ -291,9 +475,15 @@ def _init(environment, **_kwargs) -> None:
 		"DealerPortalUser": bool(SETTINGS.accounts.get("dealer")),
 		"BackgroundPlanner": SETTINGS.planning_interval > 0 and bool(BackgroundPlanner.account_key()),
 	}
-	environment.user_classes[:] = [cls for cls in environment.user_classes if available.get(cls.__name__, True)]
-	log.info("desk personas: %s; user classes: %s; report date %s", ", ".join(desk) or "none",
-		", ".join(cls.__name__ for cls in environment.user_classes), SETTINGS.as_of)
+	environment.user_classes[:] = [
+		cls for cls in environment.user_classes if available.get(cls.__name__, True)
+	]
+	log.info(
+		"desk personas: %s; user classes: %s; report date %s",
+		", ".join(desk) or "none",
+		", ".join(cls.__name__ for cls in environment.user_classes),
+		SETTINGS.as_of,
+	)
 
 
 class _SmoothRoundRobin:
@@ -357,11 +547,21 @@ class ErpUser(HttpUser):
 		self.client.headers["User-Agent"] = USER_AGENT
 		self.user_id = ""
 
-	def call(self, verb: str, method: str, name: str, *, params=None, data=None, json_body=None,
-			headers=None) -> dict | None:
+	def call(
+		self, verb: str, method: str, name: str, *, params=None, data=None, json_body=None, headers=None
+	) -> dict | None:
 		"""One API request; the decoded JSON body, or None after recording a failure."""
-		with self.client.request(verb, API + method, name=name, params=params, data=data, json=json_body,
-				headers=headers, timeout=SETTINGS.timeout, catch_response=True) as response:
+		with self.client.request(
+			verb,
+			API + method,
+			name=name,
+			params=params,
+			data=data,
+			json=json_body,
+			headers=headers,
+			timeout=SETTINGS.timeout,
+			catch_response=True,
+		) as response:
 			if not response.ok:
 				reason = _failure(response)
 				response.failure(reason)
@@ -393,11 +593,30 @@ class ErpUser(HttpUser):
 			raise StopUser
 		self.user_id = user
 
-	def get_list(self, doctype: str, fields, filters=(), *, limit: int = 20, start: int = 0,
-			order_by: str = "modified desc", name: str | None = None) -> list[dict]:
-		body = self.call("GET", "frappe.client.get_list", name or f"read:list {doctype}", params={
-			"doctype": doctype, "fields": json.dumps(list(fields)), "filters": json.dumps(list(filters)),
-			"order_by": order_by, "limit_start": start, "limit_page_length": limit})
+	def get_list(
+		self,
+		doctype: str,
+		fields,
+		filters=(),
+		*,
+		limit: int = 20,
+		start: int = 0,
+		order_by: str = "modified desc",
+		name: str | None = None,
+	) -> list[dict]:
+		body = self.call(
+			"GET",
+			"frappe.client.get_list",
+			name or f"read:list {doctype}",
+			params={
+				"doctype": doctype,
+				"fields": json.dumps(list(fields)),
+				"filters": json.dumps(list(filters)),
+				"order_by": order_by,
+				"limit_start": start,
+				"limit_page_length": limit,
+			},
+		)
 		return (body or {}).get("message") or []
 
 
@@ -443,24 +662,36 @@ class DeskUser(ErpUser):
 		filters = LIST_FILTERS.get(doctype, [])
 		fields = (*STANDARD_FIELDS, *LIST_FIELDS.get(doctype, "").split())
 		rows = self.get_list(doctype, fields, filters, start=random.choice((0, 0, 0, 20)))
-		self.call("GET", "frappe.client.get_count", f"read:count {doctype}",
-			params={"doctype": doctype, "filters": json.dumps(filters)})
+		self.call(
+			"GET",
+			"frappe.client.get_count",
+			f"read:count {doctype}",
+			params={"doctype": doctype, "filters": json.dumps(filters)},
+		)
 		if rows:
 			self.seen.setdefault(doctype, deque(maxlen=20)).extend(r["name"] for r in rows)
 			if random.random() < 0.6:
 				self.open_form(doctype, random.choice(rows)["name"])
 
 	def open_form(self, doctype: str, name: str) -> dict | None:
-		body = self.call("GET", "frappe.desk.form.load.getdoc", f"read:form {doctype}",
-			params={"doctype": doctype, "name": name})
+		body = self.call(
+			"GET",
+			"frappe.desk.form.load.getdoc",
+			f"read:form {doctype}",
+			params={"doctype": doctype, "name": name},
+		)
 		docs = (body or {}).get("docs") or []
 		return docs[0] if docs else None
 
 	@task(18)
 	def workspace(self) -> None:
 		name = random.choice(self.persona.workspaces)
-		body = self.call("GET", "frappe.desk.desktop.get_desktop_page", f"read:workspace {name}",
-			params={"page": json.dumps({"name": name, "title": name, "public": 1})})
+		body = self.call(
+			"GET",
+			"frappe.desk.desktop.get_desktop_page",
+			f"read:workspace {name}",
+			params={"page": json.dumps({"name": name, "title": name, "public": 1})},
+		)
 		page = (body or {}).get("message") or {}
 		for card in (page.get("number_cards") or {}).get("items") or []:
 			self.number_card(card.get("number_card_name"))
@@ -477,13 +708,34 @@ class DeskUser(ErpUser):
 		if doc.get("type") == "Custom" and doc.get("method"):
 			self.call("GET", doc["method"], name, params={"filters": doc.get("filters_json") or "{}"})
 		elif doc.get("type") == "Report" and doc.get("report_name"):
-			self.call("GET", "frappe.desk.query_report.run", name, params={"report_name": doc["report_name"],
-				"filters": doc.get("filters_json") or "{}", "ignore_prepared_report": 1})
+			self.call(
+				"GET",
+				"frappe.desk.query_report.run",
+				name,
+				params={
+					"report_name": doc["report_name"],
+					"filters": doc.get("filters_json") or "{}",
+					"ignore_prepared_report": 1,
+				},
+			)
 		else:
-			card_doc = {k: doc.get(k) for k in ("document_type", "label", "function", "aggregate_function_based_on",
-				"color", "filters_json")}
-			self.call("GET", "frappe.desk.doctype.number_card.number_card.get_result", name,
-				params={"doc": json.dumps(card_doc), "filters": doc.get("filters_json") or "[]"})
+			card_doc = {
+				k: doc.get(k)
+				for k in (
+					"document_type",
+					"label",
+					"function",
+					"aggregate_function_based_on",
+					"color",
+					"filters_json",
+				)
+			}
+			self.call(
+				"GET",
+				"frappe.desk.doctype.number_card.number_card.get_result",
+				name,
+				params={"doc": json.dumps(card_doc), "filters": doc.get("filters_json") or "[]"},
+			)
 
 	@task(14)
 	def report(self) -> None:
@@ -492,8 +744,17 @@ class DeskUser(ErpUser):
 		if filters is None:  # no report for this persona, or it needs a document not seen yet
 			self.list_view()
 			return
-		self.call("GET", "frappe.desk.query_report.run", f"read:report {name}", params={"report_name": name,
-			"filters": json.dumps(filters), "ignore_prepared_report": 0, "are_default_filters": 1})
+		self.call(
+			"GET",
+			"frappe.desk.query_report.run",
+			f"read:report {name}",
+			params={
+				"report_name": name,
+				"filters": json.dumps(filters),
+				"ignore_prepared_report": 0,
+				"are_default_filters": 1,
+			},
+		)
 
 	def report_filters(self, name: str) -> dict | None:
 		days, end_field, needs = REPORTS.get(name, (None, None, None))
@@ -534,16 +795,30 @@ class DeskUser(ErpUser):
 
 	def write_todo(self) -> bool:
 		if self.todo:  # close the one opened last time
-			self.call("POST", "frappe.client.set_value", "write:close ToDo",
-				data={"doctype": "ToDo", "name": self.todo, "fieldname": "status", "value": "Closed"})
+			self.call(
+				"POST",
+				"frappe.client.set_value",
+				"write:close ToDo",
+				data={"doctype": "ToDo", "name": self.todo, "fieldname": "status", "value": "Closed"},
+			)
 			self.todo = None
 			return True
-		doc = {"doctype": "ToDo", "__islocal": 1, "name": "new-todo-1", "status": "Open", "priority": "Medium",
-			"allocated_to": self.user_id, "description": "[perf] follow up"}
+		doc = {
+			"doctype": "ToDo",
+			"__islocal": 1,
+			"name": "new-todo-1",
+			"status": "Open",
+			"priority": "Medium",
+			"allocated_to": self.user_id,
+			"description": "[perf] follow up",
+		}
 		reference = self.recent_document()
 		if reference:
-			doc.update(reference_type=reference[0], reference_name=reference[1],
-				description=f"[perf] follow up {reference[0]} {reference[1]}")
+			doc.update(
+				reference_type=reference[0],
+				reference_name=reference[1],
+				description=f"[perf] follow up {reference[0]} {reference[1]}",
+			)
 		body = self.call("POST", SAVE, "write:save ToDo", data={"doc": json.dumps(doc), "action": "Save"})
 		docs = (body or {}).get("docs") or []
 		self.todo = docs[0]["name"] if docs else None
@@ -553,9 +828,18 @@ class DeskUser(ErpUser):
 		reference = self.recent_document()
 		if not reference:
 			return False
-		self.call("POST", "frappe.desk.form.utils.add_comment", "write:comment", data={
-			"reference_doctype": reference[0], "reference_name": reference[1], "content": "<p>[perf] checked</p>",
-			"comment_email": self.user_id, "comment_by": self.user_id})
+		self.call(
+			"POST",
+			"frappe.desk.form.utils.add_comment",
+			"write:comment",
+			data={
+				"reference_doctype": reference[0],
+				"reference_name": reference[1],
+				"content": "<p>[perf] checked</p>",
+				"comment_email": self.user_id,
+				"comment_by": self.user_id,
+			},
+		)
 		return True
 
 	def stock_view(self) -> Stock | None:
@@ -564,26 +848,64 @@ class DeskUser(ErpUser):
 			return None
 		if self.stock and time.monotonic() - self.stock.loaded < 600:
 			return self.stock
-		warehouses = self.get_list("Warehouse", ("name", "company", "automotive_warehouse_role"),
-			[["automotive_plant", "=", self.persona.plant], ["is_group", "=", 0]], limit=200)
+		warehouses = self.get_list(
+			"Warehouse",
+			("name", "company", "automotive_warehouse_role"),
+			[["automotive_plant", "=", self.persona.plant], ["is_group", "=", 0]],
+			limit=200,
+		)
 		store = next((w for w in warehouses if w["automotive_warehouse_role"] == "Raw Material"), None)
 		if not store:
 			return None
 		line_sides = [w["name"] for w in warehouses if w["automotive_warehouse_role"] == "Line Side"]
 		movable: list[dict] = []
 		if line_sides:
-			bins = self.get_list("Bin", ("item_code", "warehouse", "actual_qty"),
-				[["warehouse", "in", line_sides], ["actual_qty", ">=", 3]], limit=100, order_by="actual_qty desc")
-			items = {i["name"]: i for i in self.get_list("Item", ("name", "item_name", "stock_uom"), [
-				["name", "in", sorted({b["item_code"] for b in bins}) or [""]], ["has_batch_no", "=", 0],
-				["has_serial_no", "=", 0], ["is_stock_item", "=", 1]], limit=100)}
-			loops = {(r["item_code"], r["line_side_warehouse"]) for r in self.get_list("Kanban Loop",
-				("item_code", "line_side_warehouse"), [["status", "=", "Active"], ["line_side_warehouse", "in", line_sides]],
-				limit=1000)}
-			held = {r["item"] for r in self.get_list("Quality Hold", ("item",),
-				[["status", "=", "Active"], ["hold_scope", "=", "Item"]], limit=500)}
-			movable = [{**b, **items[b["item_code"]]} for b in bins if b["item_code"] in items
-				and (b["item_code"], b["warehouse"]) not in loops and b["item_code"] not in held]
+			bins = self.get_list(
+				"Bin",
+				("item_code", "warehouse", "actual_qty"),
+				[["warehouse", "in", line_sides], ["actual_qty", ">=", 3]],
+				limit=100,
+				order_by="actual_qty desc",
+			)
+			items = {
+				i["name"]: i
+				for i in self.get_list(
+					"Item",
+					("name", "item_name", "stock_uom"),
+					[
+						["name", "in", sorted({b["item_code"] for b in bins}) or [""]],
+						["has_batch_no", "=", 0],
+						["has_serial_no", "=", 0],
+						["is_stock_item", "=", 1],
+					],
+					limit=100,
+				)
+			}
+			loops = {
+				(r["item_code"], r["line_side_warehouse"])
+				for r in self.get_list(
+					"Kanban Loop",
+					("item_code", "line_side_warehouse"),
+					[["status", "=", "Active"], ["line_side_warehouse", "in", line_sides]],
+					limit=1000,
+				)
+			}
+			held = {
+				r["item"]
+				for r in self.get_list(
+					"Quality Hold",
+					("item",),
+					[["status", "=", "Active"], ["hold_scope", "=", "Item"]],
+					limit=500,
+				)
+			}
+			movable = [
+				{**b, **items[b["item_code"]]}
+				for b in bins
+				if b["item_code"] in items
+				and (b["item_code"], b["warehouse"]) not in loops
+				and b["item_code"] not in held
+			]
 		self.stock = Stock(store["company"], store["name"], movable, time.monotonic())
 		return self.stock
 
@@ -600,15 +922,41 @@ class DeskUser(ErpUser):
 			back = False
 		else:
 			return False
-		doc = {"doctype": "Stock Entry", "__islocal": 1, "name": "new-stock-entry-1",
-			"stock_entry_type": "Material Transfer", "purpose": "Material Transfer", "company": stock.company,
-			"remarks": "[perf] 1-unit transfer", "items": [{"doctype": "Stock Entry Detail", "__islocal": 1,
-				"name": "new-stock-entry-detail-1", "item_code": item, "qty": 1, "transfer_qty": 1, "uom": uom,
-				"stock_uom": uom, "conversion_factor": 1, "s_warehouse": source, "t_warehouse": target}]}
-		body = self.call("POST", SAVE, "write:save Stock Entry", data={"doc": json.dumps(doc), "action": "Save"})
+		doc = {
+			"doctype": "Stock Entry",
+			"__islocal": 1,
+			"name": "new-stock-entry-1",
+			"stock_entry_type": "Material Transfer",
+			"purpose": "Material Transfer",
+			"company": stock.company,
+			"remarks": "[perf] 1-unit transfer",
+			"items": [
+				{
+					"doctype": "Stock Entry Detail",
+					"__islocal": 1,
+					"name": "new-stock-entry-detail-1",
+					"item_code": item,
+					"qty": 1,
+					"transfer_qty": 1,
+					"uom": uom,
+					"stock_uom": uom,
+					"conversion_factor": 1,
+					"s_warehouse": source,
+					"t_warehouse": target,
+				}
+			],
+		}
+		body = self.call(
+			"POST", SAVE, "write:save Stock Entry", data={"doc": json.dumps(doc), "action": "Save"}
+		)
 		saved = ((body or {}).get("docs") or [None])[0]
-		if saved and self.call("POST", SAVE, "write:submit Stock Entry",
-				data={"doc": json.dumps(saved), "action": "Submit"}) and not back:
+		if (
+			saved
+			and self.call(
+				"POST", SAVE, "write:submit Stock Entry", data={"doc": json.dumps(saved), "action": "Submit"}
+			)
+			and not back
+		):
 			self.returns.append((item, target, source, uom))
 		return True
 
@@ -618,40 +966,90 @@ class DeskUser(ErpUser):
 			return False
 		rows = random.sample(stock.movable, k=min(len(stock.movable), random.randint(1, 3)))
 		target = rows[0]["warehouse"]
-		self.save_material_request("Material Transfer", stock.company, target,
+		self.save_material_request(
+			"Material Transfer",
+			stock.company,
+			target,
 			[(r["item_code"], r["item_name"], r["stock_uom"]) for r in rows if r["warehouse"] == target],
-			from_warehouse=stock.store)
+			from_warehouse=stock.store,
+		)
 		return True
 
 	def write_mr_purchase(self) -> bool:
 		if self.purchase is None:  # the stores the user may order into, and stock items to order
-			stores = self.get_list("Warehouse", ("name", "company"),
-				[["automotive_warehouse_role", "=", "Raw Material"], ["is_group", "=", 0]], limit=50)
-			items = self.get_list("Item", ("name", "item_name", "stock_uom"), [["is_purchase_item", "=", 1],
-				["is_stock_item", "=", 1], ["has_variants", "=", 0], ["disabled", "=", 0]], limit=100)
+			stores = self.get_list(
+				"Warehouse",
+				("name", "company"),
+				[["automotive_warehouse_role", "=", "Raw Material"], ["is_group", "=", 0]],
+				limit=50,
+			)
+			items = self.get_list(
+				"Item",
+				("name", "item_name", "stock_uom"),
+				[
+					["is_purchase_item", "=", 1],
+					["is_stock_item", "=", 1],
+					["has_variants", "=", 0],
+					["disabled", "=", 0],
+				],
+				limit=100,
+			)
 			self.purchase = (stores, items)
 		stores, items = self.purchase
 		if not stores or not items:
 			return False
 		store = random.choice(stores)
 		rows = random.sample(items, k=min(len(items), random.randint(1, 4)))
-		self.save_material_request("Purchase", store["company"], store["name"],
-			[(r["name"], r["item_name"], r["stock_uom"]) for r in rows])
+		self.save_material_request(
+			"Purchase",
+			store["company"],
+			store["name"],
+			[(r["name"], r["item_name"], r["stock_uom"]) for r in rows],
+		)
 		return True
 
-	def save_material_request(self, kind: str, company: str, warehouse: str, items: list[tuple[str, str, str]],
-			from_warehouse: str | None = None) -> None:
+	def save_material_request(
+		self,
+		kind: str,
+		company: str,
+		warehouse: str,
+		items: list[tuple[str, str, str]],
+		from_warehouse: str | None = None,
+	) -> None:
 		today = dt.date.today()
 		needed = (today + dt.timedelta(days=7)).isoformat()
-		rows = [{"doctype": "Material Request Item", "__islocal": 1, "name": f"new-material-request-item-{i}",
-			"item_code": code, "item_name": item_name, "description": item_name, "qty": random.randint(1, 20), "uom": uom,
-			"stock_uom": uom, "conversion_factor": 1, "schedule_date": needed, "warehouse": warehouse,
-			**({"from_warehouse": from_warehouse} if from_warehouse else {})}
-			for i, (code, item_name, uom) in enumerate(items, start=1)]
-		doc = {"doctype": "Material Request", "__islocal": 1, "name": "new-material-request-1",
-			"material_request_type": kind, "company": company, "transaction_date": today.isoformat(),
-			"schedule_date": needed, "set_warehouse": warehouse, "items": rows}
-		self.call("POST", SAVE, "write:save Material Request", data={"doc": json.dumps(doc), "action": "Save"})
+		rows = [
+			{
+				"doctype": "Material Request Item",
+				"__islocal": 1,
+				"name": f"new-material-request-item-{i}",
+				"item_code": code,
+				"item_name": item_name,
+				"description": item_name,
+				"qty": random.randint(1, 20),
+				"uom": uom,
+				"stock_uom": uom,
+				"conversion_factor": 1,
+				"schedule_date": needed,
+				"warehouse": warehouse,
+				**({"from_warehouse": from_warehouse} if from_warehouse else {}),
+			}
+			for i, (code, item_name, uom) in enumerate(items, start=1)
+		]
+		doc = {
+			"doctype": "Material Request",
+			"__islocal": 1,
+			"name": "new-material-request-1",
+			"material_request_type": kind,
+			"company": company,
+			"transaction_date": today.isoformat(),
+			"schedule_date": needed,
+			"set_warehouse": warehouse,
+			"items": rows,
+		}
+		self.call(
+			"POST", SAVE, "write:save Material Request", data={"doc": json.dumps(doc), "action": "Save"}
+		)
 
 
 # ---------------------------------------------------------------------------------------
@@ -667,7 +1065,9 @@ class BackgroundPlanner(ErpUser):
 
 	@staticmethod
 	def account_key() -> str | None:
-		return next((key for key in ("planner", "planner_ja", "plant_director") if SETTINGS.accounts.get(key)), None)
+		return next(
+			(key for key in ("planner", "planner_ja", "plant_director") if SETTINGS.accounts.get(key)), None
+		)
 
 	def wait_time(self) -> float:
 		return SETTINGS.planning_interval
@@ -678,33 +1078,55 @@ class BackgroundPlanner(ErpUser):
 		self.sign_in(account(key))
 		self.page("/desk", "read:desk")
 		plant = PERSONAS[key].plant
-		sets = self.get_list("Planning Parameter Set", ("name", "company", "plant"), [["docstatus", "=", 1]], limit=50)
+		sets = self.get_list(
+			"Planning Parameter Set", ("name", "company", "plant"), [["docstatus", "=", 1]], limit=50
+		)
 		self.parameter_sets = [s for s in sets if s["plant"] == plant] or sets
 		if not self.parameter_sets:
-			log.warning("BackgroundPlanner: no submitted Planning Parameter Set visible; no background planning")
+			log.warning(
+				"BackgroundPlanner: no submitted Planning Parameter Set visible; no background planning"
+			)
 			raise StopUser
 
 	@task
 	def plan(self) -> None:
 		params = random.choice(self.parameter_sets)
 		started = time.monotonic()
-		body = self.call("POST", "automotive_manufacturing.production_planning.planning_run.start",
-			"write:start Planning Run", data={"company": params["company"], "plant": params["plant"],
-				"parameter_set": params["name"]})
+		body = self.call(
+			"POST",
+			"automotive_manufacturing.production_planning.planning_run.start",
+			"write:start Planning Run",
+			data={"company": params["company"], "plant": params["plant"], "parameter_set": params["name"]},
+		)
 		run = (body or {}).get("message")
 		if not run:
 			return
 		status = None
 		while time.monotonic() - started < JOB_TIMEOUT:
 			gevent.sleep(JOB_POLL)
-			body = self.call("GET", "frappe.client.get_value", "read:poll Planning Run", params={
-				"doctype": "Planning Run", "filters": run, "fieldname": json.dumps(["status", "progress"])})
+			body = self.call(
+				"GET",
+				"frappe.client.get_value",
+				"read:poll Planning Run",
+				params={
+					"doctype": "Planning Run",
+					"filters": run,
+					"fieldname": json.dumps(["status", "progress"]),
+				},
+			)
 			status = ((body or {}).get("message") or {}).get("status")
 			if status in ("Completed", "Failed", "Cancelled"):
 				break
-		self.environment.events.request.fire(request_type="JOB", name="job:Planning Run",
-			response_time=(time.monotonic() - started) * 1000, response_length=0, context={},
-			exception=None if status == "Completed" else JobFailed(f"Planning Run {status or 'not finished'}"))
+		self.environment.events.request.fire(
+			request_type="JOB",
+			name="job:Planning Run",
+			response_time=(time.monotonic() - started) * 1000,
+			response_length=0,
+			context={},
+			exception=None
+			if status == "Completed"
+			else JobFailed(f"Planning Run {status or 'not finished'}"),
+		)
 
 
 # ---------------------------------------------------------------------------------------
@@ -727,7 +1149,9 @@ class PortalUser(ErpUser):
 		self.capabilities = set((self.dashboard() or {}).get("capabilities") or ())
 
 	def api(self, function: str, *, params=None) -> list | dict | None:
-		body = self.call("GET", f"{self.module}.{function}", f"read:portal {self.persona} {function}", params=params)
+		body = self.call(
+			"GET", f"{self.module}.{function}", f"read:portal {self.persona} {function}", params=params
+		)
 		return (body or {}).get("message")
 
 	def dashboard(self) -> dict | None:
@@ -737,13 +1161,22 @@ class PortalUser(ErpUser):
 	def post(self, function: str, payload: dict) -> dict | None:
 		"""A state-changing portal call, as the portal script sends it (JSON, CSRF token,
 		a new Idempotency-Key)."""
-		return self.call("POST", f"{self.module}.{function}", f"write:portal {self.persona} {function}",
-			json_body=payload, headers={"Idempotency-Key": str(uuid.uuid4())})
+		return self.call(
+			"POST",
+			f"{self.module}.{function}",
+			f"write:portal {self.persona} {function}",
+			json_body=payload,
+			headers={"Idempotency-Key": str(uuid.uuid4())},
+		)
 
 	@task(80)
 	def browse(self) -> None:
-		options = [entry for capability, entries in self.reads.items() if capability in self.capabilities
-			for entry in entries]
+		options = [
+			entry
+			for capability, entries in self.reads.items()
+			if capability in self.capabilities
+			for entry in entries
+		]
 		if not options:
 			self.overview()
 			return
@@ -821,13 +1254,24 @@ class DealerPortalUser(PortalUser):
 		# configuring a vehicle: price and promise date for one choice per option group
 		if function == "models" and isinstance(rows, list) and rows and random.random() < 0.7:
 			model = random.choice(rows)
-			selections = {g["attribute"]: random.choice(g["values"]) for g in model.get("options") or [] if g.get("values")}
-			self.api("check_configuration", params={"vehicle_model": model["name"], "selections": json.dumps(selections),
-				"qty": 1})
+			selections = {
+				g["attribute"]: random.choice(g["values"])
+				for g in model.get("options") or []
+				if g.get("values")
+			}
+			self.api(
+				"check_configuration",
+				params={"vehicle_model": model["name"], "selections": json.dumps(selections), "qty": 1},
+			)
 
 	def portal_write(self) -> bool:
 		if "raise_support" not in self.capabilities:
 			return False
-		self.post("create_support_request", {"subject": "[perf] question about a delivery",
-			"description": "Load test request, please ignore."})
+		self.post(
+			"create_support_request",
+			{
+				"subject": "[perf] question about a delivery",
+				"description": "Load test request, please ignore.",
+			},
+		)
 		return True

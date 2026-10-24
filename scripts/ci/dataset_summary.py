@@ -19,8 +19,10 @@ def main() -> int:
 	segment = f"Segment {sys.argv[2]}: " if len(sys.argv) > 2 else ""
 	print(f"### {segment}{status.get('run')} {status.get('status')}")
 	print()
-	print(f"Simulated to **{status.get('simulated_date') or '-'}** of {status.get('start_date')} .. "
-		f"{status.get('end_date')} (stage `{status.get('stage')}`).")
+	print(
+		f"Simulated to **{status.get('simulated_date') or '-'}** of {status.get('start_date')} .. "
+		f"{status.get('end_date')} (stage `{status.get('stage')}`)."
+	)
 	if status.get("error"):
 		print("\n```\n" + str(status["error"])[-3000:] + "\n```")
 	counts = status.get("counts") or {}
@@ -34,8 +36,10 @@ def main() -> int:
 	if validation:
 		checks = validation.get("checks", [])
 		failed = [c for c in checks if not c.get("ok")]
-		print(f"\n**Validation: {'passed' if validation.get('ok') else 'FAILED'}** "
-			f"({len(checks) - len(failed)}/{len(checks)} checks)\n")
+		print(
+			f"\n**Validation: {'passed' if validation.get('ok') else 'FAILED'}** "
+			f"({len(checks) - len(failed)}/{len(checks)} checks)\n"
+		)
 		print("| Check | Result | Detail |\n|---|---|---|")
 		for check in checks:
 			detail = json.dumps(check.get("detail"), default=str)

@@ -21,10 +21,14 @@ def companies(filters: dict | None = None, user: str | None = None) -> list[str]
 		if allowed is not None and requested not in allowed:
 			raise frappe.PermissionError(_("You have no access to company {0}.").format(requested))
 		return [requested]
-	return sorted(allowed) if allowed is not None else frappe.get_all("Company", pluck="name", order_by="name")
+	return (
+		sorted(allowed) if allowed is not None else frappe.get_all("Company", pluck="name", order_by="name")
+	)
 
 
-def plants(filters: dict | None = None, user: str | None = None, company_list: list[str] | None = None) -> list[str]:
+def plants(
+	filters: dict | None = None, user: str | None = None, company_list: list[str] | None = None
+) -> list[str]:
 	"""Plants in scope; always a concrete list (for SQL ``in``)."""
 	user = user or frappe.session.user
 	allowed = scoped_values(user, "Plant")
@@ -34,8 +38,9 @@ def plants(filters: dict | None = None, user: str | None = None, company_list: l
 			raise frappe.PermissionError(_("You have no access to plant {0}.").format(requested))
 		return [requested]
 	company_list = company_list if company_list is not None else companies(filters, user)
-	in_companies = frappe.get_all("Plant", filters={"company": ("in", company_list or [""])}, pluck="name",
-		order_by="name")
+	in_companies = frappe.get_all(
+		"Plant", filters={"company": ("in", company_list or [""])}, pluck="name", order_by="name"
+	)
 	return [p for p in in_companies if allowed is None or p in allowed]
 
 

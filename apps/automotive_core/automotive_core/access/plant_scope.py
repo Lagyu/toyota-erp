@@ -114,7 +114,9 @@ def ensure_plant(doc, method=None) -> None:
 		plant_company = frappe.get_cached_value("Plant", doc.automotive_plant, "company")
 		if plant_company and plant_company != doc.company:
 			frappe.throw(
-				_("Plant {0} belongs to {1}, not {2}.").format(doc.automotive_plant, plant_company, doc.company)
+				_("Plant {0} belongs to {1}, not {2}.").format(
+					doc.automotive_plant, plant_company, doc.company
+				)
 			)
 	if not doc.automotive_plant and _enforced() and company_has_plants(doc.get("company")):
 		raise PlantRequiredError(

@@ -15,16 +15,43 @@ def execute(filters=None):
 	columns = [
 		{"fieldname": "level", "label": _("Level"), "fieldtype": "Int", "width": 70},
 		{"fieldname": "parent", "label": _("Built Into"), "fieldtype": "Data", "width": 170},
-		{"fieldname": "component_item", "label": _("Component"), "fieldtype": "Link", "options": "Item", "width": 170},
-		{"fieldname": "component_serial_no", "label": _("Serial No"), "fieldtype": "Link", "options": "Serial No",
-			"width": 170},
-		{"fieldname": "component_batch_no", "label": _("Batch / Lot"), "fieldtype": "Link", "options": "Batch",
-			"width": 160},
+		{
+			"fieldname": "component_item",
+			"label": _("Component"),
+			"fieldtype": "Link",
+			"options": "Item",
+			"width": 170,
+		},
+		{
+			"fieldname": "component_serial_no",
+			"label": _("Serial No"),
+			"fieldtype": "Link",
+			"options": "Serial No",
+			"width": 170,
+		},
+		{
+			"fieldname": "component_batch_no",
+			"label": _("Batch / Lot"),
+			"fieldtype": "Link",
+			"options": "Batch",
+			"width": 160,
+		},
 		{"fieldname": "qty", "label": _("Qty"), "fieldtype": "Float", "width": 70},
-		{"fieldname": "supplier", "label": _("Supplier"), "fieldtype": "Link", "options": "Supplier", "width": 170},
+		{
+			"fieldname": "supplier",
+			"label": _("Supplier"),
+			"fieldtype": "Link",
+			"options": "Supplier",
+			"width": 170,
+		},
 		{"fieldname": "supplier_lot", "label": _("Supplier Lot"), "fieldtype": "Data", "width": 120},
-		{"fieldname": "stock_entry", "label": _("Build Entry"), "fieldtype": "Link", "options": "Stock Entry",
-			"width": 150},
+		{
+			"fieldname": "stock_entry",
+			"label": _("Build Entry"),
+			"fieldtype": "Link",
+			"options": "Stock Entry",
+			"width": 150,
+		},
 	]
 	if not filters.serial_no:
 		return columns, []

@@ -11,12 +11,18 @@ class VehicleModel(Document):
 		self.model_code = (self.model_code or "").strip().upper()
 		if not frappe.db.get_value("Item", self.template_item, "has_variants"):
 			frappe.throw(_("Template item {0} must have variants enabled.").format(self.template_item))
-		template_attributes = set(frappe.get_all("Item Variant Attribute", filters={"parent": self.template_item},
-			pluck="attribute"))
+		template_attributes = set(
+			frappe.get_all(
+				"Item Variant Attribute", filters={"parent": self.template_item}, pluck="attribute"
+			)
+		)
 		groups = {g.attribute for g in self.option_groups}
 		if groups and groups != template_attributes:
-			frappe.throw(_("Option groups {0} must match the template's variant attributes {1}.").format(
-				sorted(groups), sorted(template_attributes)))
+			frappe.throw(
+				_("Option groups {0} must match the template's variant attributes {1}.").format(
+					sorted(groups), sorted(template_attributes)
+				)
+			)
 		if frappe.db.get_value("Production Line", self.production_line, "plant") != self.default_plant:
 			frappe.throw(_("Line {0} is not in plant {1}.").format(self.production_line, self.default_plant))
 		if self.vin_prefix:

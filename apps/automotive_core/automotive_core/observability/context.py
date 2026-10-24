@@ -48,7 +48,9 @@ def after_request(response=None, request=None) -> None:
 		response.headers[HEADER] = get_correlation_id()
 
 
-def before_job(method: str | None = None, kwargs: dict | None = None, transaction_type: str | None = None) -> None:
+def before_job(
+	method: str | None = None, kwargs: dict | None = None, transaction_type: str | None = None
+) -> None:
 	cid = (kwargs or {}).get("automotive_correlation_id") if isinstance(kwargs, dict) else None
 	set_correlation_id(cid)
 

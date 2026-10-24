@@ -81,7 +81,9 @@ class TestBinlog(unittest.TestCase):
 
 	def logs(self, numbers: list[int]) -> Path:
 		root = self.bench / "restored"
-		where = root / "home" / "frappe" / "frappe-bench" / "sites" / SITE / "private" / "ops" / "binlog" / "logs"
+		where = (
+			root / "home" / "frappe" / "frappe-bench" / "sites" / SITE / "private" / "ops" / "binlog" / "logs"
+		)
 		where.mkdir(parents=True)
 		for n in numbers:
 			(where / f"mariadb-bin.{n:06d}").write_bytes(b"\xfebin")
@@ -90,13 +92,17 @@ class TestBinlog(unittest.TestCase):
 
 	def test_replay_takes_the_logs_from_the_position_in_order(self):
 		root = self.logs([40, 41, 42, 43, 44])
-		self.assertEqual([f.name for f in self.binlog.logs_from("mariadb-bin.000042", root)],
-			["mariadb-bin.000042", "mariadb-bin.000043", "mariadb-bin.000044"])
+		self.assertEqual(
+			[f.name for f in self.binlog.logs_from("mariadb-bin.000042", root)],
+			["mariadb-bin.000042", "mariadb-bin.000043", "mariadb-bin.000044"],
+		)
 
 	def test_numbering_past_six_digits_stays_in_order(self):
 		root = self.logs([999998, 999999, 1000000])
-		self.assertEqual([f.name for f in self.binlog.logs_from("mariadb-bin.999998", root)],
-			["mariadb-bin.999998", "mariadb-bin.999999", "mariadb-bin.1000000"])
+		self.assertEqual(
+			[f.name for f in self.binlog.logs_from("mariadb-bin.999998", root)],
+			["mariadb-bin.999998", "mariadb-bin.999999", "mariadb-bin.1000000"],
+		)
 
 	def test_a_missing_start_or_a_gap_is_refused(self):
 		root = self.logs([43, 44, 46])
@@ -111,7 +117,8 @@ class TestBinlog(unittest.TestCase):
 		(state / "positions").mkdir(parents=True)
 		for stamp, number in (("20261020", 10), ("20261021", 20), ("20261022", 30), ("20261023", 40)):
 			(state / "positions" / f"{stamp}_173000-erp_test.json").write_text(
-				json.dumps({"file": f"mariadb-bin.{number:06d}", "position": 4}))
+				json.dumps({"file": f"mariadb-bin.{number:06d}", "position": 4})
+			)
 		# the oldest of the last three backups' positions
 		self.assertEqual(self.binlog._keep_from(state, ["mariadb-bin.000050"]), 20)
 

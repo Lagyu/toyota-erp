@@ -46,7 +46,9 @@ class ShiftPattern(Document):
 		day = frappe.utils.getdate(day)
 		if not self.get(WEEKDAYS[day.weekday()]):
 			return False
-		if self.holiday_list and frappe.db.exists("Holiday", {"parent": self.holiday_list, "holiday_date": day}):
+		if self.holiday_list and frappe.db.exists(
+			"Holiday", {"parent": self.holiday_list, "holiday_date": day}
+		):
 			return False
 		return True
 

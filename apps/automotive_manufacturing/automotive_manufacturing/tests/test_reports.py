@@ -23,9 +23,11 @@ class TestManufacturingReports(IntegrationTestCase):
 		self.assertTrue(all("path" in row for row in result["result"]))
 
 	def test_line_reports_run(self):
-		for name, filters in (("WIP by Line", {"show_orders": 1}),
-				("OEE by Line", {"from_date": add_days(nowdate(), -6), "to_date": nowdate()}),
-				("Production Variance", {"from_date": add_days(nowdate(), -29), "to_date": nowdate()})):
+		for name, filters in (
+			("WIP by Line", {"show_orders": 1}),
+			("OEE by Line", {"from_date": add_days(nowdate(), -6), "to_date": nowdate()}),
+			("Production Variance", {"from_date": add_days(nowdate(), -29), "to_date": nowdate()}),
+		):
 			result = run(name, filters=filters)
 			self.assertIsInstance(result["result"], list, name)
 		lines = {row["production_line"] for row in run("WIP by Line", filters={})["result"]}
@@ -34,5 +36,7 @@ class TestManufacturingReports(IntegrationTestCase):
 	def test_traceability_reports_need_a_subject(self):
 		self.assertEqual(run("Vehicle Genealogy", filters={})["result"], [])
 		self.assertEqual(run("Affected Vehicles", filters={})["result"], [])
-		unknown = run("Affected Vehicles", filters={"item_code": self.cat["wheel"], "batch_nos": "NO-SUCH-LOT"})
+		unknown = run(
+			"Affected Vehicles", filters={"item_code": self.cat["wheel"], "batch_nos": "NO-SUCH-LOT"}
+		)
 		self.assertEqual(unknown["result"], [])

@@ -62,6 +62,13 @@ def report() -> list[dict]:
 	for user in users:
 		roles = set(frappe.get_roles(user))
 		for rule in conflicts(roles):
-			out.append({"user": user, "rule": rule.name, "role_a": rule.role_a, "role_b": rule.role_b,
-				"enforcement": rule.enforcement})
+			out.append(
+				{
+					"user": user,
+					"rule": rule.name,
+					"role_a": rule.role_a,
+					"role_b": rule.role_b,
+					"enforcement": rule.enforcement,
+				}
+			)
 	return out

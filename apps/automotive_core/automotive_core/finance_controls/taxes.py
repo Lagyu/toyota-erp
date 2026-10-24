@@ -17,7 +17,9 @@ from __future__ import annotations
 import frappe
 
 
-def default_tax_category(party_type: str, company: str | None = None, country: str | None = None) -> str | None:
+def default_tax_category(
+	party_type: str, company: str | None = None, country: str | None = None
+) -> str | None:
 	"""The most specific Automotive Settings row for this party type, company and party
 	country: a row naming the party's country beats one for "any other country", and a row
 	naming the company's country beats one for any company."""

@@ -28,25 +28,31 @@ def _seller_of(purchase_order: str) -> str:
 	po = frappe.db.get_value("Purchase Order", purchase_order, ["supplier", "docstatus"], as_dict=True)
 	if not po or po.docstatus != 1:
 		frappe.throw(_("Purchase Order {0} is not submitted.").format(purchase_order))
-	seller = frappe.db.get_value("Supplier", {"name": po.supplier, "is_internal_supplier": 1}, "represents_company")
+	seller = frappe.db.get_value(
+		"Supplier", {"name": po.supplier, "is_internal_supplier": 1}, "represents_company"
+	)
 	if not seller:
 		frappe.throw(_("Purchase Order {0} is not addressed to a group company.").format(purchase_order))
 	return seller
 
 
 @frappe.whitelist(methods=["POST"])
-def create_seller_order(purchase_order: str, delivery_date: str | None = None, warehouse: str | None = None) -> str:
+def create_seller_order(
+	purchase_order: str, delivery_date: str | None = None, warehouse: str | None = None
+) -> str:
 	from erpnext.buying.doctype.purchase_order.purchase_order import make_inter_company_sales_order
 
 	frappe.only_for(SELLER_ROLES)
 	seller = _seller_of(purchase_order)
 	scope.companies({"company": seller})  # the requester must be allowed to act for the seller
-	existing = frappe.db.get_value("Sales Order", {"inter_company_order_reference": purchase_order,
-		"docstatus": ("<", 2)}, "name")
+	existing = frappe.db.get_value(
+		"Sales Order", {"inter_company_order_reference": purchase_order, "docstatus": ("<", 2)}, "name"
+	)
 	if existing:
 		return existing
-	with elevation.on_behalf_of(_("Seller order for {0}").format(purchase_order), "Purchase Order",
-			purchase_order) as requester:
+	with elevation.on_behalf_of(
+		_("Seller order for {0}").format(purchase_order), "Purchase Order", purchase_order
+	) as requester:
 		so = make_inter_company_sales_order(purchase_order)
 		if delivery_date:
 			so.delivery_date = getdate(delivery_date)
@@ -62,10 +68,14 @@ def create_seller_order(purchase_order: str, delivery_date: str | None = None, w
 
 
 def _buyer_of(delivery_note: str) -> str:
-	dn = frappe.db.get_value("Delivery Note", delivery_note, ["customer", "docstatus", "is_return"], as_dict=True)
+	dn = frappe.db.get_value(
+		"Delivery Note", delivery_note, ["customer", "docstatus", "is_return"], as_dict=True
+	)
 	if not dn or dn.docstatus != 1 or dn.is_return:
 		frappe.throw(_("Delivery Note {0} is not a submitted shipment.").format(delivery_note))
-	buyer = frappe.db.get_value("Customer", {"name": dn.customer, "is_internal_customer": 1}, "represents_company")
+	buyer = frappe.db.get_value(
+		"Customer", {"name": dn.customer, "is_internal_customer": 1}, "represents_company"
+	)
 	if not buyer:
 		frappe.throw(_("Delivery Note {0} is not addressed to a group company.").format(delivery_note))
 	return buyer
@@ -78,14 +88,16 @@ def create_buyer_receipt(delivery_note: str, warehouse: str | None = None) -> st
 	frappe.only_for(RECEIVING_ROLES)
 	buyer = _buyer_of(delivery_note)
 	scope.companies({"company": buyer})  # the requester must be allowed to act for the buyer
-	existing = frappe.db.get_value("Purchase Receipt", {"inter_company_reference": delivery_note,
-		"docstatus": ("<", 2)}, "name")
+	existing = frappe.db.get_value(
+		"Purchase Receipt", {"inter_company_reference": delivery_note, "docstatus": ("<", 2)}, "name"
+	)
 	if existing:
 		return existing
 	if warehouse and frappe.db.get_value("Warehouse", warehouse, "company") != buyer:
 		frappe.throw(_("{0} is not a warehouse of {1}.").format(warehouse, buyer))
-	with elevation.on_behalf_of(_("Receipt for {0}").format(delivery_note), "Delivery Note",
-			delivery_note) as requester:
+	with elevation.on_behalf_of(
+		_("Receipt for {0}").format(delivery_note), "Delivery Note", delivery_note
+	) as requester:
 		pr = make_inter_company_purchase_receipt(delivery_note)
 		for item in pr.items:
 			if warehouse:

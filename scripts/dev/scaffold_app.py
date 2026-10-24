@@ -42,7 +42,7 @@ erpnext = ">=16.52.1,<17.0.0"
 extend = "../../ruff.toml"
 """
 
-HOOKS = '''app_name = "{app}"
+HOOKS = """app_name = "{app}"
 app_title = "{title}"
 app_publisher = "{publisher}"
 app_description = "{description}"
@@ -50,7 +50,7 @@ app_email = "{email}"
 app_license = "GPL-3.0-only"
 
 required_apps = {requires!r}
-'''
+"""
 
 README = """# {title}
 
@@ -84,13 +84,20 @@ def main() -> int:
 	root = REPO / "apps" / app
 	pkg = root / app
 	fmt = dict(
-		app=app, title=args.title, description=args.description, publisher=PUBLISHER, email=EMAIL,
+		app=app,
+		title=args.title,
+		description=args.description,
+		publisher=PUBLISHER,
+		email=EMAIL,
 		requires=["frappe", "erpnext", *requires],
 	)
 
 	write(root / "pyproject.toml", PYPROJECT.format(**fmt))
 	write(root / "README.md", README.format(**fmt, order=" → ".join(["erpnext", *requires, app])))
-	write(root / "license.txt", "GNU General Public License v3.0 only. See the LICENSE file at the repository root.\n")
+	write(
+		root / "license.txt",
+		"GNU General Public License v3.0 only. See the LICENSE file at the repository root.\n",
+	)
 	write(pkg / "__init__.py", '__version__ = "0.1.0"\n')
 	write(pkg / "hooks.py", HOOKS.format(**fmt))
 	write(pkg / "patches.txt", "[pre_model_sync]\n\n[post_model_sync]\n")

@@ -69,37 +69,71 @@ def bank_statement(message, partner, data):
 	msg = _parse(data)
 	if not partner.get("bank"):
 		raise InboundRejected(f"partner {partner.name} is not linked to a bank")
-	account = frappe.db.get_value("Bank Account", {"bank_account_no": msg.account_number, "is_company_account": 1,
-		"bank": partner.bank, "disabled": 0}, ["name", "company", "account"], as_dict=True)
+	account = frappe.db.get_value(
+		"Bank Account",
+		{"bank_account_no": msg.account_number, "is_company_account": 1, "bank": partner.bank, "disabled": 0},
+		["name", "company", "account"],
+		as_dict=True,
+	)
 	if not account:
 		raise InboundRejected(f"no company account {msg.account_number} at {partner.bank}")
 	currency = frappe.get_cached_value("Account", account.account, "account_currency")
 	if msg.currency != currency:
 		raise InboundRejected(f"statement currency {msg.currency} differs from the account's {currency}")
-	if msg.from_date > msg.to_date or any(not msg.from_date <= e.booking_date <= msg.to_date for e in msg.entries):
+	if msg.from_date > msg.to_date or any(
+		not msg.from_date <= e.booking_date <= msg.to_date for e in msg.entries
+	):
 		raise InboundRejected("entries fall outside the statement period")
 	movement = sum(e.amount for e in msg.entries)
 	if abs(flt(msg.opening_balance + movement - msg.closing_balance, 2)) >= 0.01:
-		raise InboundRejected(f"balances do not add up: {msg.opening_balance} + {movement} != {msg.closing_balance}")
-	with on_behalf_of(_("Bank statement {0} from {1}").format(msg.statement_id, partner.partner_name),
-			"Integration Inbound Message", message.name):
+		raise InboundRejected(
+			f"balances do not add up: {msg.opening_balance} + {movement} != {msg.closing_balance}"
+		)
+	with on_behalf_of(
+		_("Bank statement {0} from {1}").format(msg.statement_id, partner.partner_name),
+		"Integration Inbound Message",
+		message.name,
+	):
 		created = []
 		for entry in msg.entries:
-			if not flt(entry.amount) or frappe.db.exists("Bank Transaction", {"bank_account": account.name,
-					"transaction_id": entry.entry_id, "docstatus": 1}):
+			if not flt(entry.amount) or frappe.db.exists(
+				"Bank Transaction",
+				{"bank_account": account.name, "transaction_id": entry.entry_id, "docstatus": 1},
+			):
 				continue
-			transaction = frappe.get_doc({"doctype": "Bank Transaction", "date": entry.booking_date,
-				"bank_account": account.name, "company": account.company, "currency": currency,
-				"deposit": max(flt(entry.amount), 0), "withdrawal": max(-flt(entry.amount), 0),
-				"description": entry.description, "reference_number": entry.reference, "transaction_id": entry.entry_id,
-				"bank_party_name": entry.counterparty_name, "bank_party_account_number": entry.counterparty_account})
+			transaction = frappe.get_doc(
+				{
+					"doctype": "Bank Transaction",
+					"date": entry.booking_date,
+					"bank_account": account.name,
+					"company": account.company,
+					"currency": currency,
+					"deposit": max(flt(entry.amount), 0),
+					"withdrawal": max(-flt(entry.amount), 0),
+					"description": entry.description,
+					"reference_number": entry.reference,
+					"transaction_id": entry.entry_id,
+					"bank_party_name": entry.counterparty_name,
+					"bank_party_account_number": entry.counterparty_account,
+				}
+			)
 			transaction.insert()
 			transaction.submit()
 			created.append(transaction)
 		reconciled = reconcile(created, add_days(msg.from_date, -MATCH_LOOKBACK_DAYS), msg.to_date)
-	audit.record("bank.statement_imported", "Bank Account", account.name, {"statement": msg.statement_id,
-		"entries": len(msg.entries), "imported": len(created), "reconciled": reconciled,
-		"closing_balance": msg.closing_balance}, company=account.company)
+	audit.record(
+		"bank.statement_imported",
+		"Bank Account",
+		account.name,
+		{
+			"statement": msg.statement_id,
+			"entries": len(msg.entries),
+			"imported": len(created),
+			"reconciled": reconciled,
+			"closing_balance": msg.closing_balance,
+		},
+		company=account.company,
+	)
 	return "Bank Account", account.name
 
 

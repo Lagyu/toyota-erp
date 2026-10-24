@@ -19,7 +19,11 @@ class IntegrationPartner(Document):
 			frappe.throw(_("Unknown inbound message types: {0}").format(", ".join(sorted(unknown))))
 		if self.party_type and not self.party:
 			frappe.throw(_("Select the {0} this partner represents.").format(_(self.party_type)))
-		if self.service_user and self.allowed_message_types and not frappe.db.get_value("User", self.service_user, "enabled"):
+		if (
+			self.service_user
+			and self.allowed_message_types
+			and not frappe.db.get_value("User", self.service_user, "enabled")
+		):
 			frappe.throw(_("Service user {0} is disabled.").format(self.service_user))
 		if self.allowed_message_types and not self.service_user:
 			frappe.throw(_("A service user is required to process inbound messages."))

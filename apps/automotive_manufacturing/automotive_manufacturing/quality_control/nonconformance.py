@@ -23,7 +23,9 @@ def validate(doc, method=None) -> None:
 		problems.append(_("corrective action (containment) is empty"))
 	if not (doc.get("automotive_root_cause") or "").strip():
 		problems.append(_("root cause is not recorded"))
-	drafts = frappe.get_all("Quality Disposition", filters={"nonconformance": doc.name, "docstatus": 0}, pluck="name")
+	drafts = frappe.get_all(
+		"Quality Disposition", filters={"nonconformance": doc.name, "docstatus": 0}, pluck="name"
+	)
 	if drafts:
 		problems.append(_("dispositions not executed: {0}").format(", ".join(drafts)))
 	if doc.get("automotive_quality_hold"):
@@ -44,5 +46,10 @@ def validate(doc, method=None) -> None:
 		raise NonconformanceClosureError(_("Cannot resolve {0}: {1}.").format(doc.name, "; ".join(problems)))
 	doc.automotive_closure_approved_by = user
 	doc.automotive_closure_approved_at = now_datetime()
-	audit.record("quality.nonconformance_closed", doc.doctype, doc.name,
-		{"capa": doc.automotive_capa, "hold": doc.get("automotive_quality_hold")}, company=doc.get("automotive_company"))
+	audit.record(
+		"quality.nonconformance_closed",
+		doc.doctype,
+		doc.name,
+		{"capa": doc.automotive_capa, "hold": doc.get("automotive_quality_hold")},
+		company=doc.get("automotive_company"),
+	)

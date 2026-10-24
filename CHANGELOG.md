@@ -22,7 +22,7 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - Health (`live`, `ready`) and token-protected Prometheus metrics endpoints; alert rules
   for service health, queues, failed jobs, integration failures, audit sealing, error
   spikes, backup age and disk space.
-- CI: lint (ruff, shellcheck, schema drift, YAML/JSON, identity boundary), unit and
+- CI: lint (ruff lint and format check, shellcheck, schema drift, YAML/JSON, identity boundary), unit and
   integration tests, dependency audit with a reviewed allowlist, image builds, SBOM and
   vulnerability scan, production-shaped smoke test with backup and restore drill, and the
   end-to-end suite on a reference stack with a cached synthetic dataset.
@@ -211,6 +211,8 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   permission tables by the integration tests.
 - The environment templates moved from `infra/deploy/env/` to `config/env/`, with the other
   safe configuration templates (`config/README.md`).
+- The Python code is formatted with `ruff format` (tabs, double quotes, 110 columns), and lint
+  checks it; the formatting commit is listed in `.git-blame-ignore-revs`.
 - The production rehearsal gives up on a `compose up` of the previous release after 15 minutes
   and records the services' states: releases from d7662a7 up to 0062cc2 restart their one-shot
   configurator and cannot start.

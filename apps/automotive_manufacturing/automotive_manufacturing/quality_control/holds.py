@@ -41,13 +41,22 @@ class QualityHoldError(frappe.ValidationError):
 
 
 def _active(filters: dict) -> list[dict]:
-	return frappe.get_all("Quality Hold", filters={"status": "Active", **filters},
-		fields=["name", "hold_scope", "item", "batch_no", "serial_no", "reason"])
+	return frappe.get_all(
+		"Quality Hold",
+		filters={"status": "Active", **filters},
+		fields=["name", "hold_scope", "item", "batch_no", "serial_no", "reason"],
+	)
 
 
-def active_holds_for(item: str | None = None, batch: str | None = None, serials: list[str] | None = None,
-		work_order: str | None = None, workstation: str | None = None, line: str | None = None,
-		supplier: str | None = None) -> list[dict]:
+def active_holds_for(
+	item: str | None = None,
+	batch: str | None = None,
+	serials: list[str] | None = None,
+	work_order: str | None = None,
+	workstation: str | None = None,
+	line: str | None = None,
+	supplier: str | None = None,
+) -> list[dict]:
 	found = []
 	if batch:
 		found += _active({"hold_scope": "Batch", "batch_no": batch})
@@ -73,13 +82,16 @@ def _serials(row) -> list[str]:
 def _blocked(holds: list[dict], what: str) -> None:
 	if holds:
 		raise QualityHoldError(
-			_("{0} is under quality hold: {1}").format(what, "; ".join(f"{h.name} ({h.reason})" for h in holds))
+			_("{0} is under quality hold: {1}").format(
+				what, "; ".join(f"{h.name} ({h.reason})" for h in holds)
+			)
 		)
 
 
 def _is_segregation_target(warehouse: str | None) -> bool:
-	return bool(warehouse) and frappe.get_cached_value("Warehouse", warehouse, "automotive_warehouse_role") in (
-		"Quarantine", "Scrap")
+	return bool(warehouse) and frappe.get_cached_value(
+		"Warehouse", warehouse, "automotive_warehouse_role"
+	) in ("Quarantine", "Scrap")
 
 
 def validate_stock_entry(doc, method=None) -> None:
@@ -89,7 +101,10 @@ def validate_stock_entry(doc, method=None) -> None:
 	if doc.work_order:
 		line = frappe.db.get_value("Work Order", doc.work_order, "automotive_production_line")
 		if doc.purpose in ("Manufacture", "Material Transfer for Manufacture"):
-			_blocked(active_holds_for(work_order=doc.work_order, line=line), _("Work Order {0}").format(doc.work_order))
+			_blocked(
+				active_holds_for(work_order=doc.work_order, line=line),
+				_("Work Order {0}").format(doc.work_order),
+			)
 	for row in doc.items:
 		if row.t_warehouse and not row.s_warehouse:
 			if doc.purpose != "Manufacture" or not row.is_finished_item:
@@ -106,15 +121,25 @@ def validate_job_card(doc, method=None) -> None:
 	time_logged = any(log.get("from_time") for log in doc.get("time_logs") or [])
 	if not time_logged and not doc.get("total_completed_qty"):
 		return
-	line = frappe.db.get_value("Workstation", doc.workstation, "automotive_production_line") if doc.workstation else None
-	_blocked(active_holds_for(work_order=doc.work_order, workstation=doc.workstation, line=line),
-		_("Job Card {0}").format(doc.name or ""))
+	line = (
+		frappe.db.get_value("Workstation", doc.workstation, "automotive_production_line")
+		if doc.workstation
+		else None
+	)
+	_blocked(
+		active_holds_for(work_order=doc.work_order, workstation=doc.workstation, line=line),
+		_("Job Card {0}").format(doc.name or ""),
+	)
 
 
 def validate_work_order(doc, method=None) -> None:
 	if doc.docstatus == 1 or (doc.docstatus == 0 and doc.flags.get("in_submit")):
-		_blocked(active_holds_for(item=doc.production_item, work_order=doc.name,
-			line=doc.get("automotive_production_line")), _("Work Order {0}").format(doc.name))
+		_blocked(
+			active_holds_for(
+				item=doc.production_item, work_order=doc.name, line=doc.get("automotive_production_line")
+			),
+			_("Work Order {0}").format(doc.name),
+		)
 
 
 def validate_purchase_receipt(doc, method=None) -> None:
@@ -126,8 +151,9 @@ def validate_purchase_receipt(doc, method=None) -> None:
 	for row in doc.items:
 		if not _is_segregation_target(row.warehouse):
 			raise QualityHoldError(
-				_("Supplier {0} is under quality hold ({1}); receive row {2} into a quarantine warehouse.").format(
-					doc.supplier, supplier_holds[0].name, row.idx)
+				_(
+					"Supplier {0} is under quality hold ({1}); receive row {2} into a quarantine warehouse."
+				).format(doc.supplier, supplier_holds[0].name, row.idx)
 			)
 
 
@@ -141,13 +167,17 @@ def validate_outbound(doc, method=None) -> None:
 		return
 	for row in rows or []:
 		serials = _serials(row)
-		_blocked(active_holds_for(item=row.item_code, batch=row.get("batch_no"), serials=serials),
-			_("Row {0}: {1}").format(row.idx, row.item_code))
+		_blocked(
+			active_holds_for(item=row.item_code, batch=row.get("batch_no"), serials=serials),
+			_("Row {0}: {1}").format(row.idx, row.item_code),
+		)
 		for serial in serials:
 			status = frappe.db.get_value("Vehicle Unit", serial, "quality_status")
 			if status and status != "Released":
 				raise QualityHoldError(
-					_("Row {0}: vehicle {1} is not quality-released ({2}).").format(row.idx, serial, _(status))
+					_("Row {0}: vehicle {1} is not quality-released ({2}).").format(
+						row.idx, serial, _(status)
+					)
 				)
 
 
@@ -157,8 +187,13 @@ def validate_outbound(doc, method=None) -> None:
 
 
 SCOPE_FIELDS = {
-	"Batch": "batch_no", "Serial No": "serial_no", "Item": "item", "Work Order": "work_order",
-	"Workstation": "workstation", "Production Line": "production_line", "Supplier": "supplier",
+	"Batch": "batch_no",
+	"Serial No": "serial_no",
+	"Item": "item",
+	"Work Order": "work_order",
+	"Workstation": "workstation",
+	"Production Line": "production_line",
+	"Supplier": "supplier",
 }
 
 
@@ -166,11 +201,21 @@ def raise_hold(scope: str, reason: str, company: str, source=None, **targets) ->
 	"""Hold the target, or confirm the active hold already on it (one hold per target: a
 	second finding on a held batch is recorded on that hold's audit trail)."""
 	field = SCOPE_FIELDS[scope]
-	existing = frappe.db.get_value("Quality Hold", {"hold_scope": scope, field: targets.get(field), "status": "Active"},
-		"name") if targets.get(field) else None
+	existing = (
+		frappe.db.get_value(
+			"Quality Hold", {"hold_scope": scope, field: targets.get(field), "status": "Active"}, "name"
+		)
+		if targets.get(field)
+		else None
+	)
 	if existing:
-		audit.record("quality.hold_confirmed", "Quality Hold", existing, {"reason": reason,
-			"source": [source.doctype, source.name] if source else None}, company=company)
+		audit.record(
+			"quality.hold_confirmed",
+			"Quality Hold",
+			existing,
+			{"reason": reason, "source": [source.doctype, source.name] if source else None},
+			company=company,
+		)
 		return existing
 	doc = frappe.get_doc(
 		{
@@ -192,9 +237,20 @@ def raise_hold(scope: str, reason: str, company: str, source=None, **targets) ->
 def on_hold_insert(doc) -> None:
 	doc.db_set({"raised_by": frappe.session.user, "raised_at": now_datetime()}, update_modified=False)
 	_sync_vehicle_quality(doc, "On Hold")
-	audit.record("quality.hold_raised", doc.doctype, doc.name,
-		{"scope": doc.hold_scope, "item": doc.item, "batch": doc.batch_no, "serial": doc.serial_no,
-		 "work_order": doc.work_order, "reason": doc.reason}, company=doc.company)
+	audit.record(
+		"quality.hold_raised",
+		doc.doctype,
+		doc.name,
+		{
+			"scope": doc.hold_scope,
+			"item": doc.item,
+			"batch": doc.batch_no,
+			"serial": doc.serial_no,
+			"work_order": doc.work_order,
+			"reason": doc.reason,
+		},
+		company=doc.company,
+	)
 	from automotive_core.governance.notifications import notify, users_with_role
 
 	notify("quality.hold_raised", users_with_role("Quality Manager", doc.plant), doc.doctype, doc.name)
@@ -259,5 +315,9 @@ def _sync_vehicle_quality(hold, status: str | None) -> None:
 		frappe.db.set_value("Vehicle Unit", hold.serial_no, "quality_status", status)
 		return
 	inspection = frappe.db.get_value("Vehicle Unit", hold.serial_no, "final_inspection")
-	accepted = inspection and frappe.db.get_value("Quality Inspection", inspection, ["docstatus", "status"]) == (1, "Accepted")
-	frappe.db.set_value("Vehicle Unit", hold.serial_no, "quality_status", "Released" if accepted else "Pending Inspection")
+	accepted = inspection and frappe.db.get_value(
+		"Quality Inspection", inspection, ["docstatus", "status"]
+	) == (1, "Accepted")
+	frappe.db.set_value(
+		"Vehicle Unit", hold.serial_no, "quality_status", "Released" if accepted else "Pending Inspection"
+	)

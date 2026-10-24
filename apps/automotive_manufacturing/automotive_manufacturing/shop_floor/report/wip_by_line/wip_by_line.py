@@ -23,7 +23,12 @@ def execute(filters=None):
 		{"fieldname": "built_qty", "label": _("Built"), "fieldtype": "Float", "width": 90},
 		{"fieldname": "remaining_qty", "label": _("Remaining"), "fieldtype": "Float", "width": 100},
 		{"fieldname": "oldest_days", "label": _("Oldest (Days)"), "fieldtype": "Int", "width": 100},
-		{"fieldname": "line_side_value", "label": _("Line-Side Stock Value"), "fieldtype": "Currency", "width": 160},
+		{
+			"fieldname": "line_side_value",
+			"label": _("Line-Side Stock Value"),
+			"fieldtype": "Currency",
+			"width": 160,
+		},
 		{"fieldname": "wip_value", "label": _("WIP Warehouse Value"), "fieldtype": "Currency", "width": 150},
 	]
 	companies = scope.companies(filters)
@@ -33,26 +38,59 @@ def execute(filters=None):
 		line_filters["name"] = filters.production_line
 	today = nowdate()
 	data = []
-	for line in frappe.get_all("Production Line", filters=line_filters,
-			fields=["name", "plant", "line_side_warehouse", "wip_warehouse"], order_by="name"):
-		orders = frappe.get_all("Work Order", filters={"automotive_production_line": line.name, "docstatus": 1,
-			"status": ("in", OPEN)}, fields=["name", "production_item", "qty", "produced_qty", "planned_start_date"],
-			order_by="planned_start_date asc")
+	for line in frappe.get_all(
+		"Production Line",
+		filters=line_filters,
+		fields=["name", "plant", "line_side_warehouse", "wip_warehouse"],
+		order_by="name",
+	):
+		orders = frappe.get_all(
+			"Work Order",
+			filters={"automotive_production_line": line.name, "docstatus": 1, "status": ("in", OPEN)},
+			fields=["name", "production_item", "qty", "produced_qty", "planned_start_date"],
+			order_by="planned_start_date asc",
+		)
 		values = {}
 		for key in ("line_side_warehouse", "wip_warehouse"):
-			values[key] = flt(frappe.db.sql("select sum(stock_value) from `tabBin` where warehouse = %s",
-				line.get(key))[0][0]) if line.get(key) else 0
-		data.append({
-			"production_line": line.name, "plant": line.plant, "indent": 0,
-			"open_orders": len(orders), "planned_qty": sum(flt(o.qty) for o in orders),
-			"built_qty": sum(flt(o.produced_qty) for o in orders),
-			"remaining_qty": sum(flt(o.qty) - flt(o.produced_qty) for o in orders),
-			"oldest_days": max([date_diff(today, o.planned_start_date) for o in orders if o.planned_start_date] or [0]),
-			"line_side_value": values["line_side_warehouse"], "wip_value": values["wip_warehouse"],
-		})
+			values[key] = (
+				flt(
+					frappe.db.sql(
+						"select sum(stock_value) from `tabBin` where warehouse = %s", line.get(key)
+					)[0][0]
+				)
+				if line.get(key)
+				else 0
+			)
+		data.append(
+			{
+				"production_line": line.name,
+				"plant": line.plant,
+				"indent": 0,
+				"open_orders": len(orders),
+				"planned_qty": sum(flt(o.qty) for o in orders),
+				"built_qty": sum(flt(o.produced_qty) for o in orders),
+				"remaining_qty": sum(flt(o.qty) - flt(o.produced_qty) for o in orders),
+				"oldest_days": max(
+					[date_diff(today, o.planned_start_date) for o in orders if o.planned_start_date] or [0]
+				),
+				"line_side_value": values["line_side_warehouse"],
+				"wip_value": values["wip_warehouse"],
+			}
+		)
 		if filters.get("show_orders"):
 			for o in orders:
-				data.append({"production_line": o.name, "plant": line.plant, "item": o.production_item, "indent": 1,
-					"planned_qty": o.qty, "built_qty": o.produced_qty, "remaining_qty": flt(o.qty) - flt(o.produced_qty),
-					"oldest_days": date_diff(today, o.planned_start_date) if o.planned_start_date else None})
+				data.append(
+					{
+						"production_line": o.name,
+						"plant": line.plant,
+						"item": o.production_item,
+						"indent": 1,
+						"planned_qty": o.qty,
+						"built_qty": o.produced_qty,
+						"remaining_qty": flt(o.qty) - flt(o.produced_qty),
+						"oldest_days": date_diff(today, o.planned_start_date)
+						if o.planned_start_date
+						else None,
+					}
+				)
 	return columns, data

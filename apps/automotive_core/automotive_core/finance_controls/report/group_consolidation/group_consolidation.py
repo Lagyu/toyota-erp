@@ -40,28 +40,40 @@ def rate(from_currency: str, to_currency: str, on_date, average_from=None) -> fl
 		return 1.0
 	for a, b, invert in ((from_currency, to_currency, False), (to_currency, from_currency, True)):
 		if average_from:
-			value = frappe.db.sql("""select avg(exchange_rate) from `tabCurrency Exchange` where from_currency=%s
-				and to_currency=%s and date between %s and %s""", (a, b, average_from, on_date))[0][0]
+			value = frappe.db.sql(
+				"""select avg(exchange_rate) from `tabCurrency Exchange` where from_currency=%s
+				and to_currency=%s and date between %s and %s""",
+				(a, b, average_from, on_date),
+			)[0][0]
 		else:
-			value = frappe.db.get_value("Currency Exchange", {"from_currency": a, "to_currency": b,
-				"date": ("<=", on_date)}, "exchange_rate", order_by="date desc")
+			value = frappe.db.get_value(
+				"Currency Exchange",
+				{"from_currency": a, "to_currency": b, "date": ("<=", on_date)},
+				"exchange_rate",
+				order_by="date desc",
+			)
 		if value:
 			return 1 / flt(value) if invert else flt(value)
 	if average_from:
 		return rate(from_currency, to_currency, on_date)
-	frappe.throw(_("No exchange rate {0} → {1} on or before {2}.").format(from_currency, to_currency, on_date))
+	frappe.throw(
+		_("No exchange rate {0} → {1} on or before {2}.").format(from_currency, to_currency, on_date)
+	)
 
 
 def _sums(company: str, from_date, to_date, internal: bool) -> dict[str, float]:
 	"""Debit-minus-credit by root type: balance sheet accounts cumulatively to ``to_date``,
 	profit and loss for ``from_date``..``to_date``; ``internal`` keeps only intercompany rows."""
 	clause = f" and {INTERNAL}" if internal else ""
-	rows = frappe.db.sql(f"""select a.root_type, sum(gle.debit - gle.credit)
+	rows = frappe.db.sql(
+		f"""select a.root_type, sum(gle.debit - gle.credit)
 		from `tabGL Entry` gle join `tabAccount` a on a.name = gle.account
 		where gle.company = %(company)s and gle.is_cancelled = 0 and gle.posting_date <= %(to)s
 		and (a.root_type in ('Asset', 'Liability', 'Equity') or gle.posting_date >= %(from)s)
 		{clause}
-		group by a.root_type""", {"company": company, "from": from_date, "to": to_date})  # noqa: S608 (constant SQL fragments; values are bound)
+		group by a.root_type""",  # noqa: S608 (constant SQL fragments; values are bound)
+		{"company": company, "from": from_date, "to": to_date},
+	)
 	return {root: flt(value) for root, value in rows}
 
 
@@ -81,15 +93,37 @@ def execute(filters=None):
 	from_date = _period_start(filters, to_date, companies)
 	columns = [{"fieldname": "line", "label": _("Statement Line"), "fieldtype": "Data", "width": 260}]
 	for company in companies:
-		columns.append({"fieldname": scrub(company), "label": frappe.get_cached_value("Company", company, "abbr"),
-			"fieldtype": "Currency", "options": "currency", "width": 160})
+		columns.append(
+			{
+				"fieldname": scrub(company),
+				"label": frappe.get_cached_value("Company", company, "abbr"),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 160,
+			}
+		)
 	columns += [
-		{"fieldname": "group_total", "label": _("Group Total"), "fieldtype": "Currency", "options": "currency",
-			"width": 170},
-		{"fieldname": "intercompany", "label": _("of which Intercompany"), "fieldtype": "Currency",
-			"options": "currency", "width": 170},
-		{"fieldname": "external", "label": _("Group excl. Intercompany"), "fieldtype": "Currency",
-			"options": "currency", "width": 190},
+		{
+			"fieldname": "group_total",
+			"label": _("Group Total"),
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 170,
+		},
+		{
+			"fieldname": "intercompany",
+			"label": _("of which Intercompany"),
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 170,
+		},
+		{
+			"fieldname": "external",
+			"label": _("Group excl. Intercompany"),
+			"fieldtype": "Currency",
+			"options": "currency",
+			"width": 190,
+		},
 	]
 	lines = {root: {"line": _(root), "currency": currency} for root in (*BALANCE_SHEET, *PROFIT_AND_LOSS)}
 	net = {"line": _("Net Profit (Income - Expense)"), "currency": currency, "bold": 1}

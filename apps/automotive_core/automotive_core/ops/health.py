@@ -53,7 +53,9 @@ def _check(fn) -> tuple[bool, str]:
 def _scheduler_ok() -> None:
 	from frappe.utils.scheduler import is_scheduler_inactive
 
-	if frappe.conf.get("automotive_environment") in ("production", "staging") and is_scheduler_inactive(verbose=False):
+	if frappe.conf.get("automotive_environment") in ("production", "staging") and is_scheduler_inactive(
+		verbose=False
+	):
 		raise RuntimeError("scheduler inactive")
 
 
@@ -68,8 +70,10 @@ def ready() -> dict:
 		"scheduler": _check(_scheduler_ok),
 	}
 	ok = all(passed for passed, _ in checks.values())
-	payload = {"status": "ok" if ok else "unavailable",
-		"checks": {name: {"ok": passed, "detail": detail} for name, (passed, detail) in checks.items()}}
+	payload = {
+		"status": "ok" if ok else "unavailable",
+		"checks": {name: {"ok": passed, "detail": detail} for name, (passed, detail) in checks.items()},
+	}
 	return _respond(payload, 200 if ok else 503)
 
 
@@ -97,56 +101,148 @@ def collect() -> list[tuple[str, str, dict, float]]:
 	out: list[tuple[str, str, dict, float]] = []
 	for queue_name in get_queue_list():
 		queue = get_queue(queue_name)
-		out.append(("erp_queue_jobs", "Jobs waiting in an RQ queue", {"queue": queue_name}, float(queue.count)))
-		out.append(("erp_queue_failed_jobs", "Jobs in the failed registry", {"queue": queue_name},
-			float(len(FailedJobRegistry(queue=queue)))))
+		out.append(
+			("erp_queue_jobs", "Jobs waiting in an RQ queue", {"queue": queue_name}, float(queue.count))
+		)
+		out.append(
+			(
+				"erp_queue_failed_jobs",
+				"Jobs in the failed registry",
+				{"queue": queue_name},
+				float(len(FailedJobRegistry(queue=queue))),
+			)
+		)
 	for status in ("Pending", "Failed", "Dead Letter"):
-		out.append(("erp_outbox_messages", "Integration outbox messages by status", {"status": status},
-			float(_count("Integration Outbound Message", {"status": status}))))
+		out.append(
+			(
+				"erp_outbox_messages",
+				"Integration outbox messages by status",
+				{"status": status},
+				float(_count("Integration Outbound Message", {"status": status})),
+			)
+		)
 	for status in ("Failed", "Dead Letter", "Rejected"):
-		out.append(("erp_inbox_messages", "Integration inbox messages by status", {"status": status},
-			float(_count("Integration Inbound Message", {"status": status}))))
-	out.append(("erp_audit_unsealed_events", "Audit events not yet sealed into the hash chain", {},
-		float(cint(frappe.db.sql("select count(*) from `tabAudit Event` where ifnull(chain_index, 0) = 0")[0][0]))))
-	out.append(("erp_approvals_pending", "Approval requests awaiting a decision", {},
-		float(_count("Approval Request", {"status": "Pending"}))))
-	out.append(("erp_error_logs_24h", "Error Log entries in the last 24 hours", {},
-		float(_count("Error Log", {"creation": (">", frappe.utils.add_to_date(now_datetime(), hours=-24))}))))
+		out.append(
+			(
+				"erp_inbox_messages",
+				"Integration inbox messages by status",
+				{"status": status},
+				float(_count("Integration Inbound Message", {"status": status})),
+			)
+		)
+	out.append(
+		(
+			"erp_audit_unsealed_events",
+			"Audit events not yet sealed into the hash chain",
+			{},
+			float(
+				cint(
+					frappe.db.sql("select count(*) from `tabAudit Event` where ifnull(chain_index, 0) = 0")[
+						0
+					][0]
+				)
+			),
+		)
+	)
+	out.append(
+		(
+			"erp_approvals_pending",
+			"Approval requests awaiting a decision",
+			{},
+			float(_count("Approval Request", {"status": "Pending"})),
+		)
+	)
+	out.append(
+		(
+			"erp_error_logs_24h",
+			"Error Log entries in the last 24 hours",
+			{},
+			float(
+				_count("Error Log", {"creation": (">", frappe.utils.add_to_date(now_datetime(), hours=-24))})
+			),
+		)
+	)
 	for path in hook_list("automotive_metrics"):  # app-specific work queues (holds, andon, kanban, ...)
 		out.extend(frappe.get_attr(path)())
 	marker = Path(frappe.get_site_path(*BACKUP_MARKER))
 	if marker.exists():
 		last = get_datetime(marker.read_text().strip())
-		out.append(("erp_backup_last_success_timestamp_seconds", "Unix time of the last verified backup", {},
-			float(last.timestamp())))
+		out.append(
+			(
+				"erp_backup_last_success_timestamp_seconds",
+				"Unix time of the last verified backup",
+				{},
+				float(last.timestamp()),
+			)
+		)
 	# every run updates last_execution (cron jobs too); the Scheduled Job Log only records
 	# non-cron jobs, whose newest entry is up to an hour old by design
-	last_scheduled = frappe.db.sql("select max(last_execution) from `tabScheduled Job Type` where stopped = 0")[0][0]
+	last_scheduled = frappe.db.sql(
+		"select max(last_execution) from `tabScheduled Job Type` where stopped = 0"
+	)[0][0]
 	if last_scheduled:
-		out.append(("erp_scheduler_last_job_timestamp_seconds", "Unix time of the last scheduled job run", {},
-			float(get_datetime(last_scheduled).timestamp())))
+		out.append(
+			(
+				"erp_scheduler_last_job_timestamp_seconds",
+				"Unix time of the last scheduled job run",
+				{},
+				float(get_datetime(last_scheduled).timestamp()),
+			)
+		)
 	drill = Path(frappe.get_site_path(*DRILL_MARKER))
 	if drill.exists():
 		result = json.loads(drill.read_text())
-		out.append(("erp_restore_drill_last_timestamp_seconds", "Unix time of the last restore drill", {},
-			float(get_datetime(result["finished_at"]).timestamp())))
-		out.append(("erp_restore_drill_last_ok", "1 if the last restore drill passed", {}, float(bool(result["ok"]))))
-		out.append(("erp_restore_drill_duration_seconds", "Duration of the last restore drill", {},
-			float(result.get("seconds") or 0)))
+		out.append(
+			(
+				"erp_restore_drill_last_timestamp_seconds",
+				"Unix time of the last restore drill",
+				{},
+				float(get_datetime(result["finished_at"]).timestamp()),
+			)
+		)
+		out.append(
+			("erp_restore_drill_last_ok", "1 if the last restore drill passed", {}, float(bool(result["ok"])))
+		)
+		out.append(
+			(
+				"erp_restore_drill_duration_seconds",
+				"Duration of the last restore drill",
+				{},
+				float(result.get("seconds") or 0),
+			)
+		)
 		pitr = result.get("pitr") or {}
 		if pitr.get("replayed") and pitr.get("rpo_seconds") is not None:
-			out.append(("erp_restore_drill_rpo_seconds",
-				"Recovery point of the last drill: age of the newest change it recovered", {}, float(pitr["rpo_seconds"])))
+			out.append(
+				(
+					"erp_restore_drill_rpo_seconds",
+					"Recovery point of the last drill: age of the newest change it recovered",
+					{},
+					float(pitr["rpo_seconds"]),
+				)
+			)
 	shipped = Path(frappe.get_site_path(*BINLOG_MARKER))
 	if shipped.exists():
-		out.append(("erp_binlog_last_shipped_timestamp_seconds", "Unix time binary logs were last shipped off the host",
-			{}, float(get_datetime(json.loads(shipped.read_text())["shipped_at"]).timestamp())))
+		out.append(
+			(
+				"erp_binlog_last_shipped_timestamp_seconds",
+				"Unix time binary logs were last shipped off the host",
+				{},
+				float(get_datetime(json.loads(shipped.read_text())["shipped_at"]).timestamp()),
+			)
+		)
 	settings = frappe.get_cached_doc("Automotive Settings")
 	if settings.get("clamd_host"):
 		from automotive_core.files.clamav import ping
 
-		out.append(("erp_clamav_up", "1 if the upload virus scanner answers", {},
-			float(ping(settings.clamd_host, cint(settings.clamd_port) or 3310))))
+		out.append(
+			(
+				"erp_clamav_up",
+				"1 if the upload virus scanner answers",
+				{},
+				float(ping(settings.clamd_host, cint(settings.clamd_port) or 3310)),
+			)
+		)
 	for metric in out:
 		metric[2].setdefault("site", site)
 	return out

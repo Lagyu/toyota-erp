@@ -24,10 +24,24 @@ class PortalTestCase(IntegrationTestCase):
 
 def _purchase_order(supplier: str, item_code: str, qty: float = 10) -> frappe._dict:
 	with as_user(h.BUYER):
-		po = frappe.get_doc({"doctype": "Purchase Order", "supplier": supplier, "company": AICHI,
-			"transaction_date": nowdate(), "schedule_date": add_days(nowdate(), 5), "items": [{
-				"item_code": item_code, "qty": qty, "rate": 120, "warehouse": catalog.PARTS_STORE,
-				"schedule_date": add_days(nowdate(), 5)}]}).insert()
+		po = frappe.get_doc(
+			{
+				"doctype": "Purchase Order",
+				"supplier": supplier,
+				"company": AICHI,
+				"transaction_date": nowdate(),
+				"schedule_date": add_days(nowdate(), 5),
+				"items": [
+					{
+						"item_code": item_code,
+						"qty": qty,
+						"rate": 120,
+						"warehouse": catalog.PARTS_STORE,
+						"schedule_date": add_days(nowdate(), 5),
+					}
+				],
+			}
+		).insert()
 	approve(po, h.BUYER, [h.PROC_MGR])
 	with as_user(h.BUYER):
 		po.reload()
@@ -47,12 +61,27 @@ class TestSupplierPortal(PortalTestCase):
 		cls.po_alpha = _purchase_order(cls.alpha, cls.wheel)
 		cls.po_beta = _purchase_order(cls.beta, cls.wheel)
 		with as_user(h.BUYER):
-			rfq = frappe.get_doc({"doctype": "Request for Quotation", "company": AICHI, "transaction_date": nowdate(),
-				"schedule_date": add_days(nowdate(), 20), "message_for_supplier": "Annual volume 1,200 sets",
-				"suppliers": [{"supplier": cls.alpha, "send_email": 0}],
-				"items": [{"item_code": cls.wheel, "qty": 1200, "uom": "Nos", "conversion_factor": 1,
-					"schedule_date": add_days(nowdate(), 20), "warehouse": catalog.PARTS_STORE,
-					"description": "Wheel assembly"}]}).insert()
+			rfq = frappe.get_doc(
+				{
+					"doctype": "Request for Quotation",
+					"company": AICHI,
+					"transaction_date": nowdate(),
+					"schedule_date": add_days(nowdate(), 20),
+					"message_for_supplier": "Annual volume 1,200 sets",
+					"suppliers": [{"supplier": cls.alpha, "send_email": 0}],
+					"items": [
+						{
+							"item_code": cls.wheel,
+							"qty": 1200,
+							"uom": "Nos",
+							"conversion_factor": 1,
+							"schedule_date": add_days(nowdate(), 20),
+							"warehouse": catalog.PARTS_STORE,
+							"description": "Wheel assembly",
+						}
+					],
+				}
+			).insert()
 			rfq.submit()
 		cls.rfq = rfq.name
 
@@ -70,8 +99,13 @@ class TestSupplierPortal(PortalTestCase):
 			self.assertEqual(supplier_api.order(self.po_alpha.name)["name"], self.po_alpha.name)
 			with self.assertRaises(frappe.PermissionError):
 				supplier_api.order(self.po_beta.name)
-			self.assertEqual(supplier_api.dashboard()["orders_awaiting_ack"], frappe.db.count("Purchase Order",
-				{"supplier": self.alpha, "docstatus": 1, "automotive_ack_status": "Awaiting"}))
+			self.assertEqual(
+				supplier_api.dashboard()["orders_awaiting_ack"],
+				frappe.db.count(
+					"Purchase Order",
+					{"supplier": self.alpha, "docstatus": 1, "automotive_ack_status": "Awaiting"},
+				),
+			)
 		with as_user(h.BUYER), self.assertRaises(frappe.PermissionError):
 			supplier_api.orders()  # desk users are not portal partners
 
@@ -79,23 +113,40 @@ class TestSupplierPortal(PortalTestCase):
 		po = self.po_alpha
 		promised = add_days(nowdate(), 7)
 		with as_user(self.user_alpha):
-			first = supplier_api.acknowledge(po.name, "Accepted", lines=[{"po_item": po.items[0].name,
-				"confirmed_qty": 10, "promised_date": promised}], idempotency_key="ack-alpha-1")
-			again = supplier_api.acknowledge(po.name, "Accepted", lines=[{"po_item": po.items[0].name,
-				"confirmed_qty": 10, "promised_date": promised}], idempotency_key="ack-alpha-1")
+			first = supplier_api.acknowledge(
+				po.name,
+				"Accepted",
+				lines=[{"po_item": po.items[0].name, "confirmed_qty": 10, "promised_date": promised}],
+				idempotency_key="ack-alpha-1",
+			)
+			again = supplier_api.acknowledge(
+				po.name,
+				"Accepted",
+				lines=[{"po_item": po.items[0].name, "confirmed_qty": 10, "promised_date": promised}],
+				idempotency_key="ack-alpha-1",
+			)
 		self.assertEqual(first, again)  # replayed, not duplicated
 		self.assertEqual(frappe.db.count("Supplier Order Acknowledgement", {"purchase_order": po.name}), 1)
 		# a later promise than the order date is a change, even with the full quantity
 		self.assertEqual(first["ack_type"], "Accepted With Changes")
-		self.assertEqual(getdate(frappe.db.get_value("Purchase Order Item", po.items[0].name,
-			"automotive_promised_date")), getdate(promised))
+		self.assertEqual(
+			getdate(frappe.db.get_value("Purchase Order Item", po.items[0].name, "automotive_promised_date")),
+			getdate(promised),
+		)
 
 		with as_user(self.user_alpha):
 			[line] = [ln for ln in supplier_api.open_lines() if ln.purchase_order == po.name]
 			self.assertEqual(line.open_qty, 10)
-			asn = supplier_api.create_asn("ALPHA-ASN-1", nowdate(), add_days(nowdate(), 1), lines=[{
-				"purchase_order": po.name, "po_item": line.po_item, "item_code": self.wheel, "qty": 6}],
-				carrier="Raijin Logistics", idempotency_key="asn-alpha-1")
+			asn = supplier_api.create_asn(
+				"ALPHA-ASN-1",
+				nowdate(),
+				add_days(nowdate(), 1),
+				lines=[
+					{"purchase_order": po.name, "po_item": line.po_item, "item_code": self.wheel, "qty": 6}
+				],
+				carrier="Raijin Logistics",
+				idempotency_key="asn-alpha-1",
+			)
 			self.assertEqual(asn["status"], "In Transit")
 			self.assertEqual(supplier_api.asn(asn["asn"])["lines"][0]["qty"], 6)
 			[line] = [ln for ln in supplier_api.open_lines() if ln.purchase_order == po.name]
@@ -104,9 +155,20 @@ class TestSupplierPortal(PortalTestCase):
 			with self.assertRaises(frappe.PermissionError):
 				supplier_api.asn(asn["asn"])
 			with self.assertRaises(frappe.PermissionError):  # cannot ship against another supplier's order
-				supplier_api.create_asn("BETA-ASN-1", nowdate(), add_days(nowdate(), 1), lines=[{
-					"purchase_order": po.name, "po_item": line.po_item, "item_code": self.wheel, "qty": 1}],
-					idempotency_key="asn-beta-1")
+				supplier_api.create_asn(
+					"BETA-ASN-1",
+					nowdate(),
+					add_days(nowdate(), 1),
+					lines=[
+						{
+							"purchase_order": po.name,
+							"po_item": line.po_item,
+							"item_code": self.wheel,
+							"qty": 1,
+						}
+					],
+					idempotency_key="asn-beta-1",
+				)
 			self.assertNotIn(asn["asn"], {a.name for a in supplier_api.asns()})
 
 	def test_quotation_on_invited_rfq_only(self):
@@ -118,19 +180,35 @@ class TestSupplierPortal(PortalTestCase):
 			rfq = supplier_api.rfq(self.rfq)
 			self.assertEqual(rfq["message"], "Annual volume 1,200 sets")
 			row = rfq["items"][0]["row"]
-			result = supplier_api.submit_quotation(self.rfq, lines=[{"row": row, "qty": 1200, "rate": 118.5}],
-				valid_till=add_days(nowdate(), 60), lead_time_days=6, idempotency_key="quote-alpha-1")
+			result = supplier_api.submit_quotation(
+				self.rfq,
+				lines=[{"row": row, "qty": 1200, "rate": 118.5}],
+				valid_till=add_days(nowdate(), 60),
+				lead_time_days=6,
+				idempotency_key="quote-alpha-1",
+			)
 			with self.assertRaises(frappe.ValidationError):
-				supplier_api.submit_quotation(self.rfq, lines=[{"row": row, "qty": 1200, "rate": 99}],
-					valid_till=add_days(nowdate(), 60), idempotency_key="quote-alpha-2")
+				supplier_api.submit_quotation(
+					self.rfq,
+					lines=[{"row": row, "qty": 1200, "rate": 99}],
+					valid_till=add_days(nowdate(), 60),
+					idempotency_key="quote-alpha-2",
+				)
 			self.assertEqual(supplier_api.rfqs()[0]["quote_status"], "Received")
 		sq = frappe.get_doc("Supplier Quotation", result["supplier_quotation"])
 		self.assertEqual((sq.docstatus, sq.supplier, sq.items[0].rate), (1, self.alpha, 118.5))
 		self.assertEqual(sq.items[0].request_for_quotation, self.rfq)
 
 	def test_notices_are_private(self):
-		notice = frappe.get_doc({"doctype": "Supplier Notice", "supplier": self.alpha, "subject": "Line stop at Aichi",
-			"notice_type": "Schedule Change", "message": "Deliveries move by one day."}).insert(ignore_permissions=True)
+		notice = frappe.get_doc(
+			{
+				"doctype": "Supplier Notice",
+				"supplier": self.alpha,
+				"subject": "Line stop at Aichi",
+				"notice_type": "Schedule Change",
+				"message": "Deliveries move by one day.",
+			}
+		).insert(ignore_permissions=True)
 		with as_user(self.user_beta):
 			self.assertNotIn(notice.name, {n.name for n in supplier_api.notices()})
 			with self.assertRaises(frappe.PermissionError):
@@ -162,15 +240,29 @@ class TestDealerPortal(PortalTestCase):
 		cls.variant = cls.cat["variants"][("Premium", "AWD")]
 		h.item_price(cls.variant, "Dealer Price JP", 2_500_000)
 		cls.dealer, cls.user = cls._dealer("Portal Motors Okazaki", "PM-OKZ", "orders@pm-okazaki.example")
-		cls.other, cls.other_user = cls._dealer("Portal Motors Toyohashi", "PM-TYH", "orders@pm-toyohashi.example")
+		cls.other, cls.other_user = cls._dealer(
+			"Portal Motors Toyohashi", "PM-TYH", "orders@pm-toyohashi.example"
+		)
 
 	@classmethod
 	def _dealer(cls, name: str, code: str, email: str) -> tuple[str, str]:
-		registration = frappe.get_doc({"doctype": "Dealer Registration", "dealer_name": name, "dealer_code": code,
-			"company": AICHI, "territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
-			"country": "Japan", "tax_id": f"JP-{code}", "requested_credit_limit": 100_000_000,
-			"price_list": "Dealer Price JP", "authorized_models": [{"vehicle_model": catalog.MODEL}],
-			"contacts": [{"first_name": "Aoi", "last_name": code, "email": email, "partner_role": "Sales"}]})
+		registration = frappe.get_doc(
+			{
+				"doctype": "Dealer Registration",
+				"dealer_name": name,
+				"dealer_code": code,
+				"company": AICHI,
+				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				"country": "Japan",
+				"tax_id": f"JP-{code}",
+				"requested_credit_limit": 100_000_000,
+				"price_list": "Dealer Price JP",
+				"authorized_models": [{"vehicle_model": catalog.MODEL}],
+				"contacts": [
+					{"first_name": "Aoi", "last_name": code, "email": email, "partner_role": "Sales"}
+				],
+			}
+		)
 		registration.insert(ignore_permissions=True)
 		approve(registration, h.LIAISON, [h.SALES_MGR, h.CONTROLLER])
 		registration.reload()
@@ -179,8 +271,18 @@ class TestDealerPortal(PortalTestCase):
 
 	def _place(self, reference: str, key: str) -> dict:
 		with as_user(self.user):
-			return dealer_api.place_order(reference, add_days(nowdate(), 30), lines=[{"vehicle_model": catalog.MODEL,
-				"selections": {"Trim": "Premium", "Drivetrain": "AWD"}, "qty": 1}], idempotency_key=key)
+			return dealer_api.place_order(
+				reference,
+				add_days(nowdate(), 30),
+				lines=[
+					{
+						"vehicle_model": catalog.MODEL,
+						"selections": {"Trim": "Premium", "Drivetrain": "AWD"},
+						"qty": 1,
+					}
+				],
+				idempotency_key=key,
+			)
 
 	def test_configuration_check_and_order(self):
 		with as_user(self.user):
@@ -189,12 +291,16 @@ class TestDealerPortal(PortalTestCase):
 			self.assertFalse(bad["valid"])
 			self.assertIn("AWD needs the Premium trim", {v["message"] for v in bad["violations"]})
 			good = dealer_api.check_configuration(catalog.MODEL, {"Trim": "Premium", "Drivetrain": "AWD"})
-			self.assertEqual((good["valid"], good["variant"], good["list_price"]), (True, self.variant, 2_500_000))
+			self.assertEqual(
+				(good["valid"], good["variant"], good["list_price"]), (True, self.variant, 2_500_000)
+			)
 			self.assertTrue(good["promise_date"])
 		first = self._place("PM-OKZ-1", "order-okz-1")
 		self.assertEqual(self._place("PM-OKZ-1", "order-okz-1"), first)  # replay
 		order = frappe.get_doc("Dealer Order", first["dealer_order"])
-		self.assertEqual((order.docstatus, order.dealer, order.company, order.total), (1, self.dealer, AICHI, 2_500_000))
+		self.assertEqual(
+			(order.docstatus, order.dealer, order.company, order.total), (1, self.dealer, AICHI, 2_500_000)
+		)
 		with as_user(self.user):
 			self.assertIn(order.name, {o.name for o in dealer_api.orders()})
 			self.assertEqual(dealer_api.order(order.name)["reference"], "PM-OKZ-1")
@@ -211,9 +317,16 @@ class TestDealerPortal(PortalTestCase):
 		with as_user(self.user):
 			config = configure(catalog.MODEL, {"Trim": "Premium", "Drivetrain": "AWD"})["configuration"]
 			with self.assertRaises(frappe.ValidationError):
-				frappe.get_doc({"doctype": "Dealer Order", "dealer": self.dealer, "dealer_reference": "PM-OKZ-NA",
-					"company": NA, "requested_delivery_date": add_days(nowdate(), 30),
-					"items": [{"vehicle_model": catalog.MODEL, "configuration": config, "qty": 1}]}).insert()
+				frappe.get_doc(
+					{
+						"doctype": "Dealer Order",
+						"dealer": self.dealer,
+						"dealer_reference": "PM-OKZ-NA",
+						"company": NA,
+						"requested_delivery_date": add_days(nowdate(), 30),
+						"items": [{"vehicle_model": catalog.MODEL, "configuration": config, "qty": 1}],
+					}
+				).insert()
 
 	def test_change_request_after_acceptance(self):
 		from automotive_supply_chain.dealer_operations.orders import accept
@@ -222,17 +335,25 @@ class TestDealerPortal(PortalTestCase):
 		with as_user(h.LIAISON):
 			accept(placed["dealer_order"])
 		with as_user(self.user):
-			change = dealer_api.request_change(placed["dealer_order"], "Change Delivery Date", "Customer moved date",
-				new_delivery_date=add_days(nowdate(), 45), idempotency_key="chg-okz-2")
+			change = dealer_api.request_change(
+				placed["dealer_order"],
+				"Change Delivery Date",
+				"Customer moved date",
+				new_delivery_date=add_days(nowdate(), 45),
+				idempotency_key="chg-okz-2",
+			)
 		self.assertEqual(change["status"], "Applied")
 		so = frappe.db.get_value("Dealer Order", placed["dealer_order"], "sales_order")
-		self.assertEqual(getdate(frappe.db.get_value("Sales Order Item", {"parent": so}, "delivery_date")),
-			getdate(add_days(nowdate(), 45)))
+		self.assertEqual(
+			getdate(frappe.db.get_value("Sales Order Item", {"parent": so}, "delivery_date")),
+			getdate(add_days(nowdate(), 45)),
+		)
 
 	def test_support_requests_are_private(self):
 		with as_user(self.user):
-			issue = dealer_api.create_support_request("Navigation update", "Map data for 2027?",
-				idempotency_key="sup-okz-1")["issue"]
+			issue = dealer_api.create_support_request(
+				"Navigation update", "Map data for 2027?", idempotency_key="sup-okz-1"
+			)["issue"]
 			self.assertIn(issue, {i.name for i in dealer_api.support_requests()})
 		self.assertEqual(frappe.db.get_value("Issue", issue, "customer"), self.dealer)
 		with as_user(self.other_user):
@@ -270,9 +391,18 @@ class TestPortalRoles(PortalTestCase):
 			self.assertEqual(supplier_api.dashboard()["capabilities"], ["notices", "payments"])
 
 	def test_dealer_roles(self):
-		dealer = frappe.get_doc({"doctype": "Customer", "customer_name": "Role Test Dealer",
-			"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
-			"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True).name
+		dealer = (
+			frappe.get_doc(
+				{
+					"doctype": "Customer",
+					"customer_name": "Role Test Dealer",
+					"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+					"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				}
+			)
+			.insert(ignore_permissions=True)
+			.name
+		)
 		viewer = h.portal_user("viewer@role-dealer.example", "Customer", dealer, role="Viewer")
 		finance = h.portal_user("finance@role-dealer.example", "Customer", dealer, role="Finance")
 		with as_user(viewer):
@@ -286,4 +416,3 @@ class TestPortalRoles(PortalTestCase):
 			self.assertEqual(dealer_api.invoices(), [])
 			with self.assertRaises(frappe.PermissionError):
 				dealer_api.deliveries()
-

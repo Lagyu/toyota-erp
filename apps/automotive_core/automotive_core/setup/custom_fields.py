@@ -70,7 +70,9 @@ def core_custom_fields() -> dict[str, list[dict]]:
 			},
 		],
 		"Employee": [
-			plant_field("department", read_only=1, description="Maintained from the active Plant Assignment."),
+			plant_field(
+				"department", read_only=1, description="Maintained from the active Plant Assignment."
+			),
 		],
 		"User": [
 			{
@@ -199,7 +201,9 @@ def core_custom_fields() -> dict[str, list[dict]]:
 	}
 	for doctype in hook_list("automotive_plant_scoped_doctypes"):
 		meta = frappe.get_meta(doctype)
-		anchor = "company" if meta.has_field("company") else (meta.fields[0].fieldname if meta.fields else None)
+		anchor = (
+			"company" if meta.has_field("company") else (meta.fields[0].fieldname if meta.fields else None)
+		)
 		fields.setdefault(doctype, []).insert(0, plant_field(anchor))
 	return fields
 

@@ -58,6 +58,7 @@ PLANT = "AICHI-VA"
 def _cli(fn):
 	"""``bench execute`` swallows a function's exception and retries the path with ``eval``,
 	reporting a misleading NameError: print the real traceback and exit non-zero instead."""
+
 	@functools.wraps(fn)
 	def wrapper(*args, **kwargs):
 		try:
@@ -76,12 +77,17 @@ def _write(output: str, payload: str) -> None:
 
 
 def _user_with(role: str, plant: str | None) -> str | None:
-	rows = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
+	rows = frappe.db.sql(
+		"""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
 		where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name not in ('Administrator', 'Guest')
-		order by u.name""", role, pluck=True)
+		order by u.name""",
+		role,
+		pluck=True,
+	)
 	for user in rows:
-		user_plant = frappe.db.get_value("User Permission", {"user": user, "allow": "Plant", "is_default": 1},
-			"for_value")
+		user_plant = frappe.db.get_value(
+			"User Permission", {"user": user, "allow": "Plant", "is_default": 1}, "for_value"
+		)
 		if user_plant == plant:
 			return user
 	return rows[0] if rows else None
@@ -91,26 +97,38 @@ def _partner(party_type: str) -> str | None:
 	"""The partner's portal administrator: the specs quote, acknowledge, ship and order, which
 	no single narrower portal role may all do."""
 	if party_type == "Supplier":  # a just-in-time supplier: the Kanban journey needs one
-		rows = frappe.db.sql("""select pua.user from `tabPartner User Access` pua
+		rows = frappe.db.sql(
+			"""select pua.user from `tabPartner User Access` pua
 			join `tabKanban Loop` kl on kl.supplier = pua.supplier and kl.status = 'Active'
 			where pua.status = 'Active' and pua.party_type = 'Supplier'
-			order by pua.partner_role = 'Administrator' desc, pua.user limit 1""", pluck=True)
+			order by pua.partner_role = 'Administrator' desc, pua.user limit 1""",
+			pluck=True,
+		)
 		if rows:
 			return rows[0]
-	rows = frappe.db.sql("""select user from `tabPartner User Access` where party_type = %s and status = 'Active'
-		order by partner_role = 'Administrator' desc, user limit 1""", party_type, pluck=True)
+	rows = frappe.db.sql(
+		"""select user from `tabPartner User Access` where party_type = %s and status = 'Active'
+		order by partner_role = 'Administrator' desc, user limit 1""",
+		party_type,
+		pluck=True,
+	)
 	return rows[0] if rows else None
 
 
 def _second(role: str, first: str | None, plant: str | None) -> str | None:
 	"""Another user with the role and the same plant scope as ``first`` (a second approver
 	must be able to read what the first one raised)."""
-	rows = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
+	rows = frappe.db.sql(
+		"""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
 		where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name != %s
-		and u.name not in ('Administrator', 'Guest') order by u.name""", (role, first or ""), pluck=True)
+		and u.name not in ('Administrator', 'Guest') order by u.name""",
+		(role, first or ""),
+		pluck=True,
+	)
 	for user in rows:
-		user_plant = frappe.db.get_value("User Permission", {"user": user, "allow": "Plant", "is_default": 1},
-			"for_value")
+		user_plant = frappe.db.get_value(
+			"User Permission", {"user": user, "allow": "Plant", "is_default": 1}, "for_value"
+		)
 		if user_plant == plant:
 			return user
 	return None
@@ -137,9 +155,13 @@ def prepare_users(password: str | None = None, output: str | None = None) -> str
 		if second:
 			users[f"{key}_2"] = second
 	# a Japanese-speaking planner (ERP-12.3): the other personas keep the English desk the specs read
-	planners = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
+	planners = frappe.db.sql(
+		"""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
 		where r.role = 'Production Planner' and u.enabled = 1 and u.user_type = 'System User' and u.name != %s
-		and u.name not in ('Administrator', 'Guest') order by u.name""", users.get("planner") or "", pluck=True)
+		and u.name not in ('Administrator', 'Guest') order by u.name""",
+		users.get("planner") or "",
+		pluck=True,
+	)
 	if planners:
 		users["planner_ja"] = planners[0]
 		frappe.db.set_value("User", planners[0], "language", "ja")
@@ -190,8 +212,11 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	summary; without ``output`` returns the fixtures."""
 	guard()
 	frappe.only_for("System Manager")
-	dealer = frappe.db.get_value("Partner User Access", {"user": _partner("Customer"), "status": "Active",
-		"party_type": "Customer"}, "customer")
+	dealer = frappe.db.get_value(
+		"Partner User Access",
+		{"user": _partner("Customer"), "status": "Active", "party_type": "Customer"},
+		"customer",
+	)
 	registration = frappe.db.get_value("Customer", dealer, "automotive_dealer_registration")
 	company = frappe.db.get_value("Dealer Registration", registration, "company")
 	variants = _orderable(dealer, registration, company)
@@ -208,10 +233,12 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	if output:
 		_write(output, json.dumps(fixtures, sort_keys=True, default=str))
 		staged = len((fixtures["j01"] or {}).get("staged") or [])
-		return (f"journeys: j01 {(fixtures['j01'] or {}).get('variant')} ({staged} components staged), "
+		return (
+			f"journeys: j01 {(fixtures['j01'] or {}).get('variant')} ({staged} components staged), "
 			f"j04 {(fixtures['j04'] or {}).get('bom')}, j05 {(fixtures['j05'] or {}).get('batch_no')}, j06 {(fixtures['j06'] or {}).get('purchase_receipt')}, "
 			f"j07 {(fixtures['j07'] or {}).get('item_code')}, j08 {(fixtures['j08'] or {}).get('vin')}, "
-			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}")
+			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}"
+		)
 	return fixtures
 
 
@@ -222,34 +249,59 @@ def _orderable(dealer: str, registration: str, company: str) -> list[dict]:
 
 	market = "JP" if company == AICHI else "US"
 	price_list = frappe.db.get_value("Customer", dealer, "default_price_list")
-	models = frappe.get_all("Dealer Authorised Model", filters={"parent": registration}, pluck="vehicle_model")
+	models = frappe.get_all(
+		"Dealer Authorised Model", filters={"parent": registration}, pluck="vehicle_model"
+	)
 	out = []
-	for variant in frappe.get_all("Item", filters={"variant_of": ("in", models), "disabled": 0}, pluck="name",
-			order_by="name asc"):
-		selections = {r.attribute: r.attribute_value for r in frappe.get_all("Item Variant Attribute",
-			filters={"parent": variant}, fields=["attribute", "attribute_value"])}
+	for variant in frappe.get_all(
+		"Item", filters={"variant_of": ("in", models), "disabled": 0}, pluck="name", order_by="name asc"
+	):
+		selections = {
+			r.attribute: r.attribute_value
+			for r in frappe.get_all(
+				"Item Variant Attribute", filters={"parent": variant}, fields=["attribute", "attribute_value"]
+			)
+		}
 		model = frappe.get_cached_value("Item", variant, "variant_of")
-		priced = any(frappe.db.exists("Item Price", {"item_code": code, "price_list": price_list, "selling": 1})
-			for code in (variant, model))
+		priced = any(
+			frappe.db.exists("Item Price", {"item_code": code, "price_list": price_list, "selling": 1})
+			for code in (variant, model)
+		)
 		if selections.get("Market") == market and priced and MODEL_LINE.get(model):
-			out.append({"variant": variant, "model": model, "selections": selections, "line": MODEL_LINE[model]})
+			out.append(
+				{"variant": variant, "model": model, "selections": selections, "line": MODEL_LINE[model]}
+			)
 	return out
 
 
 def _free_in_stock(variant: str) -> int:
-	return frappe.db.count("Vehicle Unit", {"variant_item": variant, "quality_status": "Released",
-		"inventory_status": "In Stock", "production_status": "Built", "automotive_allocation": ("is", "not set")})
+	return frappe.db.count(
+		"Vehicle Unit",
+		{
+			"variant_item": variant,
+			"quality_status": "Released",
+			"inventory_status": "In Stock",
+			"production_status": "Built",
+			"automotive_allocation": ("is", "not set"),
+		},
+	)
 
 
 def _waiting_orders(variant: str) -> int:
-	return int(flt(frappe.db.sql("""select sum(soi.stock_qty - soi.delivered_qty * soi.conversion_factor
+	return int(
+		flt(
+			frappe.db.sql(
+				"""select sum(soi.stock_qty - soi.delivered_qty * soi.conversion_factor
 			- ifnull(soi.automotive_allocated_qty, 0))
 		from `tabSales Order Item` soi join `tabSales Order` so on so.name = soi.parent
 		join `tabCustomer` c on c.name = so.customer
 		where so.docstatus = 1 and so.status not in ('Closed', 'Completed', 'On Hold') and c.is_internal_customer = 0
 		and soi.item_code = %s
 		and soi.stock_qty - soi.delivered_qty * soi.conversion_factor - ifnull(soi.automotive_allocated_qty, 0) > 0""",
-		variant)[0][0]))
+				variant,
+			)[0][0]
+		)
+	)
 
 
 def _from_stock(variants: list[dict]) -> dict | None:
@@ -273,17 +325,25 @@ def _build_to_order(variants: list[dict], exclude: set) -> dict | None:
 		line_side = line_side_for(v["line"])
 		missing = 0
 		for row in frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"]):
-			have = sum(flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": w}, "actual_qty"))
-				for w in (line_side, store_for(PLANT)))
+			have = sum(
+				flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": w}, "actual_qty"))
+				for w in (line_side, store_for(PLANT))
+			)
 			missing += have < flt(row.stock_qty)
 		candidates.append((missing, v["variant"], v, bom, line_side))
 	if not candidates:
 		return None
 	_missing, _name, choice, bom, line_side = min(candidates, key=lambda c: (c[0], c[1]))
 	staged = _stage(bom, line_side)
-	return {**choice, "bom": bom, "line_side": line_side, "plant": PLANT,
-		"wip_warehouse": frappe.get_cached_value("Plant", PLANT, "wip_warehouse"), "fg_warehouse": fg_for(PLANT),
-		"staged": staged}
+	return {
+		**choice,
+		"bom": bom,
+		"line_side": line_side,
+		"plant": PLANT,
+		"wip_warehouse": frappe.get_cached_value("Plant", PLANT, "wip_warehouse"),
+		"fg_warehouse": fg_for(PLANT),
+		"staged": staged,
+	}
 
 
 def _live_clock(start: dt.datetime):
@@ -316,8 +376,13 @@ def _live():
 	from automotive_seed.generator.simulation import Simulation
 	from automotive_seed.runner import load_state, save_state
 
-	runs = frappe.get_all("Seed Run", filters={"status": ("in", ("Completed", "Validated"))},
-		fields=["name", "profile", "seed"], order_by="modified desc", limit=1)
+	runs = frappe.get_all(
+		"Seed Run",
+		filters={"status": ("in", ("Completed", "Validated"))},
+		fields=["name", "profile", "seed"],
+		order_by="modified desc",
+		limit=1,
+	)
 	if not runs:
 		frappe.throw("No finished seed run on this site.")
 	run = runs[0]
@@ -353,8 +418,9 @@ def _stage(bom: str, line_side: str) -> list[dict]:
 	"""One unit of the BOM at the line side, as the generator stages a day's builds."""
 	staged = []
 	with _live() as (sim, _ctx):
-		for row in frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"],
-				order_by="idx asc"):
+		for row in frappe.get_all(
+			"BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"], order_by="idx asc"
+		):
 			before = sim.production.actual(row.item_code, line_side)
 			sim.production.ensure(row.item_code, flt(row.stock_qty), line_side, PLANT)
 			moved = sim.production.actual(row.item_code, line_side) - before
@@ -378,8 +444,17 @@ def _build_powertrain(code: str) -> None:
 		else:
 			production._machined("GEARSET-240", 2 if code == "E240-D" else 1, planner, supervisor)
 			production._machined("HOUSING-240", 1, planner, supervisor)
-		wo = production.work_order(code, 1, KYUSHU, "KYUSHU-PT", production.structure["powertrains"][code]["line"],
-			store_for("KYUSHU-PT"), fg_for("KYUSHU-PT"), ctx.clock.tick(60), planner)
+		wo = production.work_order(
+			code,
+			1,
+			KYUSHU,
+			"KYUSHU-PT",
+			production.structure["powertrains"][code]["line"],
+			store_for("KYUSHU-PT"),
+			fg_for("KYUSHU-PT"),
+			ctx.clock.tick(60),
+			planner,
+		)
 		se = production.build(wo, 1, supervisor)
 		sim.quality.powertrain_inspection(code, se, sim.person("Quality Inspector", "KYUSHU-PT"))
 
@@ -388,18 +463,26 @@ def _edi_supplier() -> dict | None:
 	"""An EDI supplier (not the portal persona's) with an open order line nothing has been
 	announced for; its partner gets a new inbound secret for this test run."""
 	persona_supplier = frappe.db.get_value("Partner User Access", {"user": _partner("Supplier")}, "supplier")
-	for partner in frappe.get_all("Integration Partner", filters={"party_type": "Supplier", "is_active": 1},
-			fields=["name", "party", "message_format", "allowed_message_types"], order_by="name asc"):
+	for partner in frappe.get_all(
+		"Integration Partner",
+		filters={"party_type": "Supplier", "is_active": 1},
+		fields=["name", "party", "message_format", "allowed_message_types"],
+		order_by="name asc",
+	):
 		if partner.party == persona_supplier or "asn" not in (partner.allowed_message_types or "").split():
 			continue
-		line = frappe.db.sql("""select po.name purchase_order, poi.name po_item, poi.item_code, poi.qty
+		line = frappe.db.sql(
+			"""select po.name purchase_order, poi.name po_item, poi.item_code, poi.qty
 			from `tabPurchase Order` po join `tabPurchase Order Item` poi on poi.parent = po.name
 			join `tabItem` i on i.name = poi.item_code
 			where po.supplier = %s and po.docstatus = 1 and po.status in ('To Receive and Bill', 'To Receive')
 			and poi.received_qty = 0 and i.has_serial_no = 0
 			and not exists (select 1 from `tabASN Item` ai join `tabAdvance Shipping Notice` a on a.name = ai.parent
 				where ai.po_item = poi.name and a.docstatus = 1)
-			order by po.transaction_date desc, po.name, poi.idx limit 1""", partner.party, as_dict=True)
+			order by po.transaction_date desc, po.name, poi.idx limit 1""",
+			partner.party,
+			as_dict=True,
+		)
 		if not line:
 			continue
 		secret = frappe.generate_hash(length=48)
@@ -407,28 +490,48 @@ def _edi_supplier() -> dict | None:
 		doc.inbound_secret = secret
 		doc.flags.ignore_permissions = True
 		doc.save()
-		return {"partner": partner.name, "supplier": partner.party, "format": partner.message_format,
-			"secret": secret, "has_batch_no": frappe.get_cached_value("Item", line[0].item_code, "has_batch_no"),
-			**line[0]}
+		return {
+			"partner": partner.name,
+			"supplier": partner.party,
+			"format": partner.message_format,
+			"secret": secret,
+			"has_batch_no": frappe.get_cached_value("Item", line[0].item_code, "has_batch_no"),
+			**line[0],
+		}
 	return None
 
 
 def _receipt_to_invoice(company: str) -> dict | None:
 	from automotive_seed.generator.flows.common import company_bank_account
 
-	rows = frappe.db.sql("""select pr.name, pr.supplier from `tabPurchase Receipt` pr
+	rows = frappe.db.sql(
+		"""select pr.name, pr.supplier from `tabPurchase Receipt` pr
 		join `tabSupplier` s on s.name = pr.supplier
 		where pr.docstatus = 1 and pr.is_return = 0 and pr.per_billed = 0 and pr.company = %s
 		and s.is_internal_supplier = 0 and ifnull(pr.supplier_delivery_note, '') not like 'CSM-%%'
 		and exists (select 1 from `tabBank Account` ba where ba.party_type = 'Supplier' and ba.party = pr.supplier
 			and ba.automotive_verification_status = 'Verified')
-		order by pr.posting_date asc, pr.name asc limit 1""", company, as_dict=True)
+		order by pr.posting_date asc, pr.name asc limit 1""",
+		company,
+		as_dict=True,
+	)
 	if not rows:
 		return None
-	return {"purchase_receipt": rows[0].name, "supplier": rows[0].supplier, "company": company,
+	return {
+		"purchase_receipt": rows[0].name,
+		"supplier": rows[0].supplier,
+		"company": company,
 		"paid_from": company_bank_account(company),
-		"bank_account": frappe.db.get_value("Bank Account", {"party_type": "Supplier", "party": rows[0].supplier,
-			"automotive_verification_status": "Verified"}, "name")}
+		"bank_account": frappe.db.get_value(
+			"Bank Account",
+			{
+				"party_type": "Supplier",
+				"party": rows[0].supplier,
+				"automotive_verification_status": "Verified",
+			},
+			"name",
+		),
+	}
 
 
 def _intercompany_supply() -> dict | None:
@@ -441,13 +544,19 @@ def _intercompany_supply() -> dict | None:
 	seller_store = fg_for("KYUSHU-PT")
 
 	def in_stock() -> list[str]:
-		return frappe.db.sql_list("""select item_code from `tabSerial No` where warehouse = %s and status = 'Active'
-			group by item_code order by count(*) desc, item_code asc""", seller_store)
+		return frappe.db.sql_list(
+			"""select item_code from `tabSerial No` where warehouse = %s and status = 'Active'
+			group by item_code order by count(*) desc, item_code asc""",
+			seller_store,
+		)
 
 	codes = in_stock()
 	if not codes:
-		priced = [c for c in ("P180-FWD", "P180-AWD", "E240-S", "E240-D") if frappe.db.exists("Item", c)
-			and agreed_price(KYUSHU, AICHI, c, nowdate())]
+		priced = [
+			c
+			for c in ("P180-FWD", "P180-AWD", "E240-S", "E240-D")
+			if frappe.db.exists("Item", c) and agreed_price(KYUSHU, AICHI, c, nowdate())
+		]
 		if not priced:
 			return None
 		_build_powertrain(priced[0])
@@ -455,27 +564,49 @@ def _intercompany_supply() -> dict | None:
 	for item_code in codes:
 		price = agreed_price(KYUSHU, AICHI, item_code, nowdate())
 		if price:
-			return {"item_code": item_code, "rate": price[0], "seller": KYUSHU, "buyer": AICHI,
-				"supplier": frappe.db.get_value("Supplier", {"is_internal_supplier": 1, "represents_company": KYUSHU}),
-				"seller_warehouse": seller_store, "buyer_warehouse": store_for(PLANT)}
+			return {
+				"item_code": item_code,
+				"rate": price[0],
+				"seller": KYUSHU,
+				"buyer": AICHI,
+				"supplier": frappe.db.get_value(
+					"Supplier", {"is_internal_supplier": 1, "represents_company": KYUSHU}
+				),
+				"seller_warehouse": seller_store,
+				"buyer_warehouse": store_for(PLANT),
+			}
 	return None
 
 
 def _engineering_change() -> dict | None:
-	boms = frappe.db.sql("""select b.name, b.item from `tabBOM` b join `tabItem` i on i.name = b.item
+	boms = frappe.db.sql(
+		"""select b.name, b.item from `tabBOM` b join `tabItem` i on i.name = b.item
 		where b.docstatus = 1 and b.is_active = 1 and ifnull(b.automotive_superseded_by, '') = ''
 		and i.item_group = 'Vehicle Modules'
 		and exists (select 1 from `tabWork Order` wo where wo.bom_no = b.name and wo.docstatus = 1)
 		and not exists (select 1 from `tabECO Change` c join `tabEngineering Change Order` e on e.name = c.parent
 			where c.target_bom = b.name and e.docstatus < 2)
-		order by b.item asc""", as_dict=True)
+		order by b.item asc""",
+		as_dict=True,
+	)
 	for bom in boms:
-		for line in frappe.get_all("BOM Item", filters={"parent": bom.name}, fields=["item_code", "qty", "stock_uom"],
-				order_by="idx asc"):
+		for line in frappe.get_all(
+			"BOM Item",
+			filters={"parent": bom.name},
+			fields=["item_code", "qty", "stock_uom"],
+			order_by="idx asc",
+		):
 			if frappe.get_cached_value("UOM", line.stock_uom, "must_be_whole_number"):
-				return {"item": bom.item, "bom": bom.name, "component": line.item_code, "qty": line.qty,
-					"new_qty": line.qty + 1, "work_order": frappe.db.get_value("Work Order",
-						{"bom_no": bom.name, "docstatus": 1}, "name", order_by="creation desc")}
+				return {
+					"item": bom.item,
+					"bom": bom.name,
+					"component": line.item_code,
+					"qty": line.qty,
+					"new_qty": line.qty + 1,
+					"work_order": frappe.db.get_value(
+						"Work Order", {"bom_no": bom.name, "docstatus": 1}, "name", order_by="creation desc"
+					),
+				}
 	return None
 
 
@@ -487,42 +618,83 @@ def _batch_in_use() -> dict | None:
 	plant = frappe.get_cached_doc("Plant", PLANT)
 	for line in ("AICHI-FA1", "AICHI-FA2"):
 		line_side = line_side_for(line)
-		for item_code in frappe.get_all("Bin", filters={"warehouse": line_side, "actual_qty": (">", 0)},
-				pluck="item_code", order_by="item_code asc"):
-			item = frappe.get_cached_value("Item", item_code, ["has_batch_no", "is_purchase_item", "has_serial_no"],
-				as_dict=True)
+		for item_code in frappe.get_all(
+			"Bin",
+			filters={"warehouse": line_side, "actual_qty": (">", 0)},
+			pluck="item_code",
+			order_by="item_code asc",
+		):
+			item = frappe.get_cached_value(
+				"Item", item_code, ["has_batch_no", "is_purchase_item", "has_serial_no"], as_dict=True
+			)
 			if not item.has_batch_no or not item.is_purchase_item or item.has_serial_no:
 				continue
-			batches = sorted((b for b in get_batch_qty(warehouse=line_side, item_code=item_code) or []
-				if flt(b.get("qty")) >= 2), key=lambda b: (-flt(b["qty"]), b["batch_no"]))
+			batches = sorted(
+				(
+					b
+					for b in get_batch_qty(warehouse=line_side, item_code=item_code) or []
+					if flt(b.get("qty")) >= 2
+				),
+				key=lambda b: (-flt(b["qty"]), b["batch_no"]),
+			)
 			for b in batches:
 				supplier = frappe.db.get_value("Batch", b["batch_no"], "automotive_supplier")
-				receipt = frappe.db.get_value("Purchase Receipt Item", {"batch_no": b["batch_no"], "docstatus": 1},
-					["parent", "name"], as_dict=True)
+				receipt = frappe.db.get_value(
+					"Purchase Receipt Item",
+					{"batch_no": b["batch_no"], "docstatus": 1},
+					["parent", "name"],
+					as_dict=True,
+				)
 				held = frappe.db.exists("Quality Hold", {"batch_no": b["batch_no"], "status": "Active"})
 				if supplier and receipt and not held:
-					station = frappe.get_all("Production Line Station", filters={"parent": line}, pluck="workstation",
-						order_by="idx asc", limit=1)
-					return {"item_code": item_code, "batch_no": b["batch_no"], "supplier": supplier, "line": line,
-						"workstation": station[0] if station else frappe.get_cached_value("Production Line", line,
-							"default_workstation"),
-						"line_side": line_side, "store": store_for(PLANT), "quarantine": plant.quarantine_warehouse,
-						"line_side_qty": flt(b["qty"]), "purchase_receipt": receipt.parent, "receipt_row": receipt.name,
-						"company": plant.company}
+					station = frappe.get_all(
+						"Production Line Station",
+						filters={"parent": line},
+						pluck="workstation",
+						order_by="idx asc",
+						limit=1,
+					)
+					return {
+						"item_code": item_code,
+						"batch_no": b["batch_no"],
+						"supplier": supplier,
+						"line": line,
+						"workstation": station[0]
+						if station
+						else frappe.get_cached_value("Production Line", line, "default_workstation"),
+						"line_side": line_side,
+						"store": store_for(PLANT),
+						"quarantine": plant.quarantine_warehouse,
+						"line_side_qty": flt(b["qty"]),
+						"purchase_receipt": receipt.parent,
+						"receipt_row": receipt.name,
+						"company": plant.company,
+					}
 	return None
 
 
 def _traced_vehicle() -> dict | None:
 	from automotive_manufacturing.traceability.genealogy import components_of
 
-	for vin in frappe.get_all("Vehicle Unit", filters={"production_status": "Built", "inventory_status": "Delivered",
-			"dealer": ("is", "set")}, pluck="name", order_by="built_at desc, name asc", limit=40):
+	for vin in frappe.get_all(
+		"Vehicle Unit",
+		filters={"production_status": "Built", "inventory_status": "Delivered", "dealer": ("is", "set")},
+		pluck="name",
+		order_by="built_at desc, name asc",
+		limit=40,
+	):
 		tree = components_of(vin)
 		deep = [r for r in tree if r["level"] >= 2 and r["component_batch_no"] and r.get("supplier")]
 		serial = [r for r in tree if r["level"] == 1 and r["component_serial_no"]]
 		if deep and serial:
-			return {"vin": vin, "dealer": frappe.db.get_value("Vehicle Unit", vin, "dealer"),
-				"batch_item": deep[0]["component_item"], "batch_no": deep[0]["component_batch_no"],
-				"batch_supplier": deep[0]["supplier"], "batch_level": deep[0]["level"],
-				"serial_item": serial[0]["component_item"], "serial_no": serial[0]["component_serial_no"]}
+			return {
+				"vin": vin,
+				"dealer": frappe.db.get_value("Vehicle Unit", vin, "dealer"),
+				"batch_item": deep[0]["component_item"],
+				"batch_no": deep[0]["component_batch_no"],
+				"batch_supplier": deep[0]["supplier"],
+				"batch_level": deep[0]["level"],
+				"serial_item": serial[0]["component_item"],
+				"serial_no": serial[0]["component_serial_no"],
+			}
 	return None

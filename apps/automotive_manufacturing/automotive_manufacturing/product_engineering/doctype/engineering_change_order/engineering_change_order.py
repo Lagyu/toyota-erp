@@ -15,7 +15,9 @@ class EngineeringChangeOrder(Document):
 		if self.engineering_change_request:
 			import frappe
 
-			frappe.db.set_value("Engineering Change Request", self.engineering_change_request, "status", "Converted")
+			frappe.db.set_value(
+				"Engineering Change Request", self.engineering_change_request, "status", "Converted"
+			)
 
 	def on_cancel(self):
 		change_control.revert(self)

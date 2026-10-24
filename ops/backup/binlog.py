@@ -73,9 +73,12 @@ def state_dir(site: str) -> Path:
 
 def server() -> dict:
 	common = json.loads((BENCH / "sites" / "common_site_config.json").read_text())
-	return {"host": common.get("db_host") or "db", "port": int(common.get("db_port") or 3306),
+	return {
+		"host": common.get("db_host") or "db",
+		"port": int(common.get("db_port") or 3306),
 		"user": os.environ.get("DB_ROOT_USER") or "root",
-		"password": Path(os.environ["DB_ROOT_PASSWORD_FILE"]).read_text().strip()}
+		"password": Path(os.environ["DB_ROOT_PASSWORD_FILE"]).read_text().strip(),
+	}
 
 
 def connect(database: str | None = None):
@@ -92,7 +95,9 @@ def client_options():
 	fd, path = tempfile.mkstemp(prefix="binlog-", suffix=".cnf")
 	try:
 		with os.fdopen(fd, "w") as handle:
-			handle.write(f'[client]\nhost={conf["host"]}\nport={conf["port"]}\nuser={conf["user"]}\npassword="{quoted}"\n')
+			handle.write(
+				f'[client]\nhost={conf["host"]}\nport={conf["port"]}\nuser={conf["user"]}\npassword="{quoted}"\n'
+			)
 		yield path
 	finally:
 		os.unlink(path)
@@ -140,7 +145,9 @@ def ship() -> int:
 			log("the database server writes no binary log: nothing to ship")
 			return 1
 		# the newest change a replay can recover: a drill reads it back to measure the RPO
-		cur.execute(f"CREATE TABLE IF NOT EXISTS `{HEARTBEAT}` (id TINYINT PRIMARY KEY, beat DATETIME(6) NOT NULL)")
+		cur.execute(
+			f"CREATE TABLE IF NOT EXISTS `{HEARTBEAT}` (id TINYINT PRIMARY KEY, beat DATETIME(6) NOT NULL)"
+		)
 		cur.execute(f"REPLACE INTO `{HEARTBEAT}` VALUES (1, UTC_TIMESTAMP(6))")  # noqa: S608 (a constant)
 		cur.execute(f"SELECT beat FROM `{HEARTBEAT}` WHERE id = 1")  # noqa: S608
 		beat = cur.fetchone()[0]
@@ -152,8 +159,17 @@ def ship() -> int:
 	if wanted:
 		with client_options() as options, tempfile.TemporaryDirectory(dir=state) as tmp:
 			for name in wanted:
-				subprocess.run([MARIADB_BINLOG, f"--defaults-extra-file={options}",  # noqa: S603
-					"--read-from-remote-server", "--raw", f"--result-file={tmp}/", name], check=True)
+				subprocess.run(  # noqa: S603
+					[
+						MARIADB_BINLOG,
+						f"--defaults-extra-file={options}",
+						"--read-from-remote-server",
+						"--raw",
+						f"--result-file={tmp}/",
+						name,
+					],
+					check=True,
+				)
 				os.replace(Path(tmp, name), mirror / name)
 	for path in mirror.iterdir():
 		if index(path.name) < start:
@@ -163,14 +179,32 @@ def ship() -> int:
 	# the files of the records in these logs: written before their records were committed, so
 	# a snapshot taken after the flush holds the file of every record a replay brings back
 	site_dir = BENCH / "sites" / site
-	restic("backup", "--quiet", "--host", site, "--tag", f"files:{site}",
-		str(site_dir / "public" / "files"), str(site_dir / "private" / "files"),
-		ok=(0, 3))  # 3: a file removed during the scan; the snapshot holds the rest
-	(state / "last-shipped.json").write_text(json.dumps({"shipped_at": now(),
-		"heartbeat": f"{beat:%Y-%m-%dT%H:%M:%S.%fZ}", "logs": len(held),
-		"first": held[0].name if held else None, "last": held[-1].name if held else None}))
-	log(f"shipped {len(wanted)} log(s) and the files; the mirror holds {len(held)}"
-		+ (f" ({held[0].name} to {held[-1].name})" if held else ""))
+	restic(
+		"backup",
+		"--quiet",
+		"--host",
+		site,
+		"--tag",
+		f"files:{site}",
+		str(site_dir / "public" / "files"),
+		str(site_dir / "private" / "files"),
+		ok=(0, 3),
+	)  # 3: a file removed during the scan; the snapshot holds the rest
+	(state / "last-shipped.json").write_text(
+		json.dumps(
+			{
+				"shipped_at": now(),
+				"heartbeat": f"{beat:%Y-%m-%dT%H:%M:%S.%fZ}",
+				"logs": len(held),
+				"first": held[0].name if held else None,
+				"last": held[-1].name if held else None,
+			}
+		)
+	)
+	log(
+		f"shipped {len(wanted)} log(s) and the files; the mirror holds {len(held)}"
+		+ (f" ({held[0].name} to {held[-1].name})" if held else "")
+	)
 	return 0
 
 
@@ -189,8 +223,13 @@ def position(dump: str, output: str) -> int:
 	if not found:
 		log(f"no binary log position in {Path(dump).name}: this backup cannot be brought forward")
 		return 1
-	record = {"file": found.group(1), "position": int(found.group(2)), "gtid": gtid.group(1) if gtid else None,
-		"dump": Path(dump).name, "recorded_at": now()}
+	record = {
+		"file": found.group(1),
+		"position": int(found.group(2)),
+		"gtid": gtid.group(1) if gtid else None,
+		"dump": Path(dump).name,
+		"recorded_at": now(),
+	}
 	Path(output).write_text(json.dumps(record))
 	positions = state_dir(site_name()) / "positions"
 	positions.mkdir(parents=True, exist_ok=True)
@@ -205,8 +244,14 @@ class LogsMissing(Exception):
 
 def logs_from(first: str, logs: Path) -> list[Path]:
 	"""The binary log files under ``logs`` from ``first`` on, in order, without gaps."""
-	files = sorted((p for p in logs.rglob("*") if p.is_file() and re.search(r"\.\d+$", p.name)
-		and index(p.name) >= index(first)), key=lambda p: index(p.name))
+	files = sorted(
+		(
+			p
+			for p in logs.rglob("*")
+			if p.is_file() and re.search(r"\.\d+$", p.name) and index(p.name) >= index(first)
+		),
+		key=lambda p: index(p.name),
+	)
 	if not files or files[0].name != first:
 		raise LogsMissing(f"the shipped logs do not reach back to {first}")
 	gaps = [f"{a.name}..{b.name}" for a, b in itertools.pairwise(files) if index(b.name) != index(a.name) + 1]
@@ -215,8 +260,9 @@ def logs_from(first: str, logs: Path) -> list[Path]:
 	return files
 
 
-def replay(position_file: str, logs: str, database: str, source: str | None, until: str | None,
-		report: str | None) -> int:
+def replay(
+	position_file: str, logs: str, database: str, source: str | None, until: str | None, report: str | None
+) -> int:
 	"""Apply the shipped logs from the backup's position (rows of the source database only,
 	renamed to ``database``), up to ``until`` or their end. Not binlogged again."""
 	start = json.loads(Path(position_file).read_text())
@@ -235,23 +281,38 @@ def replay(position_file: str, logs: str, database: str, source: str | None, unt
 	command.extend(str(f) for f in files)
 	with client_options() as options:
 		reader = subprocess.Popen(command, stdout=subprocess.PIPE, env={**os.environ, "TZ": "UTC"})  # noqa: S603
-		applied = subprocess.run([MARIADB, f"--defaults-extra-file={options}",  # noqa: S603
-			"--init-command=SET sql_log_bin=0", database], stdin=reader.stdout, check=False)
+		applied = subprocess.run(  # noqa: S603
+			[
+				MARIADB,
+				f"--defaults-extra-file={options}",
+				"--init-command=SET sql_log_bin=0",
+				database,
+			],
+			stdin=reader.stdout,
+			check=False,
+		)
 		reader.stdout.close()
 		status = reader.wait()
 	if status or applied.returncode:
 		log(f"replay failed (mariadb-binlog {status}, mariadb {applied.returncode})")
 		return 1
 	with connect(database) as conn, conn.cursor() as cur:
-		cur.execute("SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s",
-			(database, HEARTBEAT))
+		cur.execute(
+			"SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s AND TABLE_NAME = %s",
+			(database, HEARTBEAT),
+		)
 		beat = None
 		if cur.fetchone()[0]:
 			cur.execute(f"SELECT beat FROM `{HEARTBEAT}` WHERE id = 1")  # noqa: S608
 			row = cur.fetchone()
 			beat = f"{row[0]:%Y-%m-%dT%H:%M:%S.%fZ}" if row else None
-	result = {"from": f"{start['file']}:{start['position']}", "logs": len(files), "last_log": files[-1].name,
-		"until": until, "recovered_to": beat}
+	result = {
+		"from": f"{start['file']}:{start['position']}",
+		"logs": len(files),
+		"last_log": files[-1].name,
+		"until": until,
+		"recovered_to": beat,
+	}
 	if report:
 		Path(report).write_text(json.dumps(result))
 	log(f"replayed {len(files)} log(s) from {result['from']}; newest heartbeat {beat}")

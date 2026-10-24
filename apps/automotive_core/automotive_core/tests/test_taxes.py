@@ -12,7 +12,9 @@ from automotive_core.tests.utils import AICHI, KYUSHU, NA
 
 
 def _template(company: str, tax_type: str, category: str | None) -> str | None:
-	return get_tax_template(nowdate(), {"company": company, "tax_type": tax_type, "tax_category": category or ""})
+	return get_tax_template(
+		nowdate(), {"company": company, "tax_type": tax_type, "tax_category": category or ""}
+	)
 
 
 class TestTaxDetermination(IntegrationTestCase):
@@ -26,11 +28,15 @@ class TestTaxDetermination(IntegrationTestCase):
 		self.assertIsNone(_template(NA, "Purchase", None))
 
 	def test_zero_tax_templates_have_no_rows(self):
-		for doctype, name in (("Sales Taxes and Charges Template", "Export Zero-rated - HAMJ"),
-				("Sales Taxes and Charges Template", "Resale Exempt - HADNA"),
-				("Purchase Taxes and Charges Template", "Import - HADNA")):
+		for doctype, name in (
+			("Sales Taxes and Charges Template", "Export Zero-rated - HAMJ"),
+			("Sales Taxes and Charges Template", "Resale Exempt - HADNA"),
+			("Purchase Taxes and Charges Template", "Import - HADNA"),
+		):
 			self.assertEqual(frappe.get_doc(doctype, name).taxes, [], name)
-		self.assertEqual(frappe.db.get_single_value("Accounts Settings", "add_taxes_from_taxes_and_charges_template"), 1)
+		self.assertEqual(
+			frappe.db.get_single_value("Accounts Settings", "add_taxes_from_taxes_and_charges_template"), 1
+		)
 
 	def test_default_category_from_company_and_party_country(self):
 		self.assertEqual(default_tax_category("Customer", AICHI, "Japan"), "Domestic Taxable")

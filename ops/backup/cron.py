@@ -32,10 +32,24 @@ from croniter import croniter
 
 PYTHON = "/home/frappe/frappe-bench/env/bin/python"
 JOBS = {
-	"backup": ("maintenance", "BACKUP_SCHEDULE", "0 30 17 * * *", ["bash", "/opt/hinode/ops/backup/backup.sh"]),
-	"restore-drill": ("maintenance", "RESTORE_DRILL_SCHEDULE", "0 30 19 * * 6",
-		["bash", "/opt/hinode/ops/backup/restore-drill.sh"]),
-	"binlog": ("binlog", "BINLOG_SCHEDULE", "0 */5 * * * *", [PYTHON, "/opt/hinode/ops/backup/binlog.py", "ship"]),
+	"backup": (
+		"maintenance",
+		"BACKUP_SCHEDULE",
+		"0 30 17 * * *",
+		["bash", "/opt/hinode/ops/backup/backup.sh"],
+	),
+	"restore-drill": (
+		"maintenance",
+		"RESTORE_DRILL_SCHEDULE",
+		"0 30 19 * * 6",
+		["bash", "/opt/hinode/ops/backup/restore-drill.sh"],
+	),
+	"binlog": (
+		"binlog",
+		"BINLOG_SCHEDULE",
+		"0 */5 * * * *",
+		[PYTHON, "/opt/hinode/ops/backup/binlog.py", "ship"],
+	),
 }
 
 
@@ -90,10 +104,14 @@ def main() -> int:
 		if expression is None:
 			log(f"{name}: off ({variable})")
 			continue
-		log(f"{name}: {os.environ.get(variable) or default} (UTC), next at {next_run(expression):%Y-%m-%d %H:%M:%S}")
+		log(
+			f"{name}: {os.environ.get(variable) or default} (UTC), next at {next_run(expression):%Y-%m-%d %H:%M:%S}"
+		)
 		lanes.setdefault(lane_name, []).append(name)
-	threads = [threading.Thread(target=lane, args=(jobs,), name=lane_name, daemon=True)
-		for lane_name, jobs in lanes.items()]
+	threads = [
+		threading.Thread(target=lane, args=(jobs,), name=lane_name, daemon=True)
+		for lane_name, jobs in lanes.items()
+	]
 	for thread in threads:
 		thread.start()
 	# idle when every job is off (the restart policy would otherwise restart the service in a

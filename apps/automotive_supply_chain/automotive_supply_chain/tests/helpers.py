@@ -40,8 +40,14 @@ def users() -> None:
 
 def supplier(name: str, group: str = "Production Material", partner_code: str | None = None) -> str:
 	if not frappe.db.exists("Supplier", name):
-		doc = frappe.get_doc({"doctype": "Supplier", "supplier_name": name, "supplier_group": group,
-			"automotive_partner_code": partner_code})
+		doc = frappe.get_doc(
+			{
+				"doctype": "Supplier",
+				"supplier_name": name,
+				"supplier_group": group,
+				"automotive_partner_code": partner_code,
+			}
+		)
 		doc.flags.accept_similar_name = True
 		doc.insert(ignore_permissions=True)
 	return name
@@ -50,16 +56,33 @@ def supplier(name: str, group: str = "Production Material", partner_code: str | 
 def portal_user(email: str, party_type: str, party: str, role: str = "Administrator") -> str:
 	make_user(email, [], user_type="Website User")
 	if not frappe.db.exists("Partner User Access", {"user": email, "status": "Active"}):
-		frappe.get_doc({"doctype": "Partner User Access", "user": email, "party_type": party_type,
-			"supplier" if party_type == "Supplier" else "customer": party, "partner_role": role,
-			"from_date": nowdate()}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Partner User Access",
+				"user": email,
+				"party_type": party_type,
+				"supplier" if party_type == "Supplier" else "customer": party,
+				"partner_role": role,
+				"from_date": nowdate(),
+			}
+		).insert(ignore_permissions=True)
 	return email
 
 
-def blanket_order(supplier_name: str, item_code: str, rate: float, qty: float = 10_000, company: str = AICHI) -> str:
-	bo = frappe.get_doc({"doctype": "Blanket Order", "blanket_order_type": "Purchasing", "supplier": supplier_name,
-		"company": company, "from_date": add_days(nowdate(), -1), "to_date": add_days(nowdate(), 90),
-		"items": [{"item_code": item_code, "qty": qty, "rate": rate}]})
+def blanket_order(
+	supplier_name: str, item_code: str, rate: float, qty: float = 10_000, company: str = AICHI
+) -> str:
+	bo = frappe.get_doc(
+		{
+			"doctype": "Blanket Order",
+			"blanket_order_type": "Purchasing",
+			"supplier": supplier_name,
+			"company": company,
+			"from_date": add_days(nowdate(), -1),
+			"to_date": add_days(nowdate(), 90),
+			"items": [{"item_code": item_code, "qty": qty, "rate": rate}],
+		}
+	)
 	bo.insert(ignore_permissions=True)
 	bo.submit()
 	return bo.name
@@ -69,13 +92,23 @@ def company_bank_account(company: str = AICHI) -> str:
 	abbr = frappe.get_cached_value("Company", company, "abbr")
 	name = f"Hinode Settlement Bank - {abbr}"
 	if not frappe.db.exists("Account", name):
-		parent = frappe.db.get_value("Account", {"company": company, "account_type": "Bank", "is_group": 1}, "name") or \
-			frappe.db.get_value("Account", {"company": company, "account_name": "Bank Accounts"}, "name")
-		frappe.get_doc({"doctype": "Account", "account_name": "Hinode Settlement Bank", "company": company,
-			"parent_account": parent, "account_type": "Bank", "is_group": 0}).insert(ignore_permissions=True)
+		parent = frappe.db.get_value(
+			"Account", {"company": company, "account_type": "Bank", "is_group": 1}, "name"
+		) or frappe.db.get_value("Account", {"company": company, "account_name": "Bank Accounts"}, "name")
+		frappe.get_doc(
+			{
+				"doctype": "Account",
+				"account_name": "Hinode Settlement Bank",
+				"company": company,
+				"parent_account": parent,
+				"account_type": "Bank",
+				"is_group": 0,
+			}
+		).insert(ignore_permissions=True)
 	if not frappe.db.exists("Mode of Payment", "Wire Transfer"):
-		frappe.get_doc({"doctype": "Mode of Payment", "mode_of_payment": "Wire Transfer", "type": "Bank"}).insert(
-			ignore_permissions=True)
+		frappe.get_doc(
+			{"doctype": "Mode of Payment", "mode_of_payment": "Wire Transfer", "type": "Bank"}
+		).insert(ignore_permissions=True)
 	mop = frappe.get_doc("Mode of Payment", "Wire Transfer")
 	if not any(a.company == company for a in mop.accounts):
 		mop.append("accounts", {"company": company, "default_account": name})
@@ -93,9 +126,16 @@ def verified_supplier_bank_account(supplier_name: str) -> str:
 	if existing:
 		return existing
 	with as_user(AP_CLERK):
-		account = frappe.get_doc({"doctype": "Bank Account", "account_name": f"{supplier_name} main",
-			"bank": "Hinode Test Bank", "party_type": "Supplier", "party": supplier_name,
-			"bank_account_no": frappe.generate_hash(length=10)}).insert()
+		account = frappe.get_doc(
+			{
+				"doctype": "Bank Account",
+				"account_name": f"{supplier_name} main",
+				"bank": "Hinode Test Bank",
+				"party_type": "Supplier",
+				"party": supplier_name,
+				"bank_account_no": frappe.generate_hash(length=10),
+			}
+		).insert()
 	with as_user(TREASURY1):
 		bank_accounts.verify(account.name)
 	return account.name
@@ -103,16 +143,32 @@ def verified_supplier_bank_account(supplier_name: str) -> str:
 
 def item_price(item_code: str, price_list: str, rate: float) -> None:
 	if not frappe.db.exists("Item Price", {"item_code": item_code, "price_list": price_list}):
-		frappe.get_doc({"doctype": "Item Price", "item_code": item_code, "price_list": price_list,
-			"price_list_rate": rate}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Item Price",
+				"item_code": item_code,
+				"price_list": price_list,
+				"price_list_rate": rate,
+			}
+		).insert(ignore_permissions=True)
 
 
 def transfer_price(seller: str, buyer: str, item_code: str, price: float, currency: str = "JPY") -> str:
 	from automotive_core.tests.utils import approve
 
-	tpa = frappe.get_doc({"doctype": "Transfer Price Agreement", "seller_company": seller, "buyer_company": buyer,
-		"item_code": item_code, "pricing_method": "Fixed Price", "price": price, "currency": currency,
-		"valid_from": add_days(nowdate(), -1), "basis": "Cost plus 8% benchmark (test)"})
+	tpa = frappe.get_doc(
+		{
+			"doctype": "Transfer Price Agreement",
+			"seller_company": seller,
+			"buyer_company": buyer,
+			"item_code": item_code,
+			"pricing_method": "Fixed Price",
+			"price": price,
+			"currency": currency,
+			"valid_from": add_days(nowdate(), -1),
+			"basis": "Cost plus 8% benchmark (test)",
+		}
+	)
 	tpa.insert(ignore_permissions=True)
 	approve(tpa, "Administrator", [CONTROLLER])
 	tpa.reload()

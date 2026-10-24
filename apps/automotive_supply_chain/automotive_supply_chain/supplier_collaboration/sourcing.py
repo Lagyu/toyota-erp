@@ -61,22 +61,47 @@ def on_onboarding_submit(doc) -> None:
 	supplier.flags.ignore_permissions = True
 	supplier.insert()
 	for item in doc.proposed_items:
-		frappe.get_doc({"doctype": "Approved Supplier List", "supplier": supplier.name, "item_code": item.item_code,
-			"item_group": item.item_group, "plant": item.plant, "status": "Provisional", "share_percent": 0,
-			"valid_from": nowdate(), "supplier_onboarding": doc.name}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Approved Supplier List",
+				"supplier": supplier.name,
+				"item_code": item.item_code,
+				"item_group": item.item_group,
+				"plant": item.plant,
+				"status": "Provisional",
+				"share_percent": 0,
+				"valid_from": nowdate(),
+				"supplier_onboarding": doc.name,
+			}
+		).insert(ignore_permissions=True)
 	for contact in doc.contacts:
 		if not contact.portal_access:
 			continue
 		if not frappe.db.exists("User", contact.email):
-			frappe.get_doc({"doctype": "User", "email": contact.email, "first_name": contact.first_name,
-				"last_name": contact.last_name, "user_type": "Website User",
-				"send_welcome_email": send_welcome_email()}).insert(
-				ignore_permissions=True)
-		frappe.get_doc({"doctype": "Partner User Access", "user": contact.email, "party_type": "Supplier",
-			"supplier": supplier.name, "partner_role": contact.partner_role, "from_date": nowdate()}).insert(
-			ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "User",
+					"email": contact.email,
+					"first_name": contact.first_name,
+					"last_name": contact.last_name,
+					"user_type": "Website User",
+					"send_welcome_email": send_welcome_email(),
+				}
+			).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Partner User Access",
+				"user": contact.email,
+				"party_type": "Supplier",
+				"supplier": supplier.name,
+				"partner_role": contact.partner_role,
+				"from_date": nowdate(),
+			}
+		).insert(ignore_permissions=True)
 	doc.db_set({"status": "Approved", "supplier": supplier.name})
-	audit.record("supplier.onboarded", "Supplier", supplier.name, {"onboarding": doc.name, "risk": doc.risk_rating})
+	audit.record(
+		"supplier.onboarded", "Supplier", supplier.name, {"onboarding": doc.name, "risk": doc.risk_rating}
+	)
 
 
 # ---------------------------------------------------------------------------------------
@@ -91,8 +116,12 @@ def validate_asl(doc) -> None:
 		frappe.throw(_("Valid To is before Valid From."))
 	if doc.status == "Approved" and doc.ppap_status == "Rejected":
 		frappe.throw(_("A rejected PPAP cannot be approved for supply."))
-	filters = {"supplier": doc.supplier, "plant": doc.plant, "name": ("!=", doc.name),
-		"status": ("in", ("Provisional", "Approved"))}
+	filters = {
+		"supplier": doc.supplier,
+		"plant": doc.plant,
+		"name": ("!=", doc.name),
+		"status": ("in", ("Provisional", "Approved")),
+	}
 	filters.update({"item_code": doc.item_code} if doc.item_code else {"item_group": doc.item_group})
 	if frappe.db.exists("Approved Supplier List", filters):
 		frappe.throw(_("{0} already has an active entry for this item/plant.").format(doc.supplier))
@@ -137,8 +166,11 @@ def validate_purchase_order_sources(doc, method=None) -> None:
 			continue
 		suppliers = {r.supplier for r in approved_entries(row.item_code, plant, doc.transaction_date)}
 		if doc.supplier not in suppliers:
-			frappe.throw(_("Row {0}: {1} is not an approved source of {2} for plant {3}.").format(
-				row.idx, doc.supplier, row.item_code, plant or "-"))
+			frappe.throw(
+				_("Row {0}: {1} is not an approved source of {2} for plant {3}.").format(
+					row.idx, doc.supplier, row.item_code, plant or "-"
+				)
+			)
 
 
 # ---------------------------------------------------------------------------------------
@@ -163,7 +195,9 @@ def score(doc) -> None:
 			price_score = best_price / flt(q.unit_price) * 100
 			lead_score = (best_lead / q.lead_time_days * 100) if q.lead_time_days else 100
 			q.total_score = round(
-				(price_score * weights[0] + lead_score * weights[1] + flt(q.quality_score) * weights[2]) / 100, 2
+				(price_score * weights[0] + lead_score * weights[1] + flt(q.quality_score) * weights[2])
+				/ 100,
+				2,
 			)
 	if not any(flt(q.awarded_share_percent) for q in quotes):
 		max(quotes, key=lambda q: (q.total_score, -flt(q.unit_price), q.supplier)).awarded_share_percent = 100
@@ -177,35 +211,71 @@ def on_sourcing_submit(doc) -> None:
 	price_list = frappe.db.get_value("Price List", {"buying": 1, "enabled": 1}, "name")
 	for q in doc.quotes:
 		share = flt(q.awarded_share_percent)
-		existing = frappe.db.get_value("Approved Supplier List", {"supplier": q.supplier, "item_code": doc.item_code,
-			"plant": doc.plant, "status": ("in", ("Provisional", "Approved"))}, "name")
+		existing = frappe.db.get_value(
+			"Approved Supplier List",
+			{
+				"supplier": q.supplier,
+				"item_code": doc.item_code,
+				"plant": doc.plant,
+				"status": ("in", ("Provisional", "Approved")),
+			},
+			"name",
+		)
 		if share <= 0:
 			if existing:
-				frappe.db.set_value("Approved Supplier List", existing, {"share_percent": 0, "sourcing_decision": doc.name})
+				frappe.db.set_value(
+					"Approved Supplier List", existing, {"share_percent": 0, "sourcing_decision": doc.name}
+				)
 			continue
 		if existing:
 			asl = frappe.get_doc("Approved Supplier List", existing)
 		else:
 			asl = frappe.new_doc("Approved Supplier List")
-			asl.update({"supplier": q.supplier, "item_code": doc.item_code, "plant": doc.plant,
-				"valid_from": doc.effective_from})
+			asl.update(
+				{
+					"supplier": q.supplier,
+					"item_code": doc.item_code,
+					"plant": doc.plant,
+					"valid_from": doc.effective_from,
+				}
+			)
 		asl.update({"status": "Approved", "share_percent": share, "sourcing_decision": doc.name})
 		asl.flags.ignore_permissions = True
 		asl.save()
 		if price_list:
-			price = frappe.db.get_value("Item Price", {"item_code": doc.item_code, "price_list": price_list,
-				"supplier": q.supplier}, "name")
+			price = frappe.db.get_value(
+				"Item Price",
+				{"item_code": doc.item_code, "price_list": price_list, "supplier": q.supplier},
+				"name",
+			)
 			if price:
-				frappe.db.set_value("Item Price", price, {"price_list_rate": q.unit_price, "valid_from": doc.effective_from})
+				frappe.db.set_value(
+					"Item Price", price, {"price_list_rate": q.unit_price, "valid_from": doc.effective_from}
+				)
 			else:
-				frappe.get_doc({"doctype": "Item Price", "item_code": doc.item_code, "price_list": price_list,
-					"supplier": q.supplier, "price_list_rate": q.unit_price, "valid_from": doc.effective_from}).insert(
-					ignore_permissions=True)
+				frappe.get_doc(
+					{
+						"doctype": "Item Price",
+						"item_code": doc.item_code,
+						"price_list": price_list,
+						"supplier": q.supplier,
+						"price_list_rate": q.unit_price,
+						"valid_from": doc.effective_from,
+					}
+				).insert(ignore_permissions=True)
 		if not frappe.db.exists("Item Supplier", {"parent": doc.item_code, "supplier": q.supplier}):
 			item = frappe.get_doc("Item", doc.item_code)
 			item.append("supplier_items", {"supplier": q.supplier})
 			item.flags.ignore_permissions = True
 			item.save()
-	audit.record("sourcing.awarded", doc.doctype, doc.name,
-		{"item": doc.item_code, "plant": doc.plant, "shares": {q.supplier: flt(q.awarded_share_percent) for q in doc.quotes}},
-		company=doc.company)
+	audit.record(
+		"sourcing.awarded",
+		doc.doctype,
+		doc.name,
+		{
+			"item": doc.item_code,
+			"plant": doc.plant,
+			"shares": {q.supplier: flt(q.awarded_share_percent) for q in doc.quotes},
+		},
+		company=doc.company,
+	)

@@ -42,10 +42,18 @@ def assess(doc) -> dict:
 	all_boms = sorted(set(boms) | parents)
 	open_wos = frappe.get_all(
 		"Work Order",
-		filters={"docstatus": ("<", 2), "status": ("in", OPEN_WO_STATUSES), "bom_no": ("in", all_boms or [""])},
+		filters={
+			"docstatus": ("<", 2),
+			"status": ("in", OPEN_WO_STATUSES),
+			"bom_no": ("in", all_boms or [""]),
+		},
 		fields=["name", "qty", "produced_qty"],
 	)
-	on_hand = flt(frappe.db.sql("select sum(actual_qty) from `tabBin` where item_code in %s", [tuple(items) or ("",)])[0][0])
+	on_hand = flt(
+		frappe.db.sql("select sum(actual_qty) from `tabBin` where item_code in %s", [tuple(items) or ("",)])[
+			0
+		][0]
+	)
 	open_po = flt(
 		frappe.db.sql(
 			"""select sum(poi.stock_qty - poi.received_qty * poi.conversion_factor) from `tabPurchase Order Item` poi
@@ -76,12 +84,14 @@ def assess(doc) -> dict:
 
 def _open_request_qty(items: list[str]) -> float:
 	"""Quantity of the affected items requested and not yet ordered (submitted, open requests)."""
-	return flt(frappe.db.sql(
-		"""select sum(greatest(mri.stock_qty - ifnull(mri.ordered_qty, 0), 0)) from `tabMaterial Request Item` mri
+	return flt(
+		frappe.db.sql(
+			"""select sum(greatest(mri.stock_qty - ifnull(mri.ordered_qty, 0), 0)) from `tabMaterial Request Item` mri
 		join `tabMaterial Request` mr on mr.name = mri.parent
 		where mr.docstatus = 1 and mr.status not in %s and mri.item_code in %s""",
-		[CLOSED_MR_STATUSES, tuple(items) or ("",)],
-	)[0][0])
+			[CLOSED_MR_STATUSES, tuple(items) or ("",)],
+		)[0][0]
+	)
 
 
 def _proposal_qty(items: list[str]) -> float:
@@ -89,15 +99,26 @@ def _proposal_qty(items: list[str]) -> float:
 	approved but not yet released into a document."""
 	runs = []
 	for plant in frappe.get_all("Plant", pluck="name"):
-		runs += frappe.get_all("Planning Run", filters={"plant": plant, "status": ("in", ("Completed", "Released")),
-			"replay_of": ("is", "not set")}, order_by="creation desc", limit=1, pluck="name")
+		runs += frappe.get_all(
+			"Planning Run",
+			filters={
+				"plant": plant,
+				"status": ("in", ("Completed", "Released")),
+				"replay_of": ("is", "not set"),
+			},
+			order_by="creation desc",
+			limit=1,
+			pluck="name",
+		)
 	if not runs:
 		return 0.0
-	return flt(frappe.db.sql(
-		"""select sum(qty) from `tabPlanning Run Proposal` where parent in %s and item_code in %s
+	return flt(
+		frappe.db.sql(
+			"""select sum(qty) from `tabPlanning Run Proposal` where parent in %s and item_code in %s
 		and decision != 'Rejected' and ifnull(document_name, '') = ''""",
-		[tuple(runs), tuple(items) or ("",)],
-	)[0][0])
+			[tuple(runs), tuple(items) or ("",)],
+		)[0][0]
+	)
 
 
 @frappe.whitelist(methods=["POST"])
@@ -133,9 +154,18 @@ def make_eco(source_name: str | None = None, ecr: str | None = None):
 		if not row.current_bom:
 			continue
 		eco.company = eco.company or frappe.db.get_value("BOM", row.current_bom, "company")
-		eco.append("changes", {"change_type": "Change Quantity", "target_bom": row.current_bom,
-			"component": row.item_code, "reason": row.proposed_change,
-			"qty": frappe.db.get_value("BOM Item", {"parent": row.current_bom, "item_code": row.item_code}, "qty")})
+		eco.append(
+			"changes",
+			{
+				"change_type": "Change Quantity",
+				"target_bom": row.current_bom,
+				"component": row.item_code,
+				"reason": row.proposed_change,
+				"qty": frappe.db.get_value(
+					"BOM Item", {"parent": row.current_bom, "item_code": row.item_code}, "qty"
+				),
+			},
+		)
 	if not eco.changes:
 		frappe.throw(_("Name the current BOM of at least one affected item first."))
 	return eco
@@ -163,8 +193,15 @@ def where_used(item_code: str, released_only: bool = True, max_depth: int = 10) 
 				if row.name in seen:
 					continue
 				seen.add(row.name)
-				result.append({"bom": row.name, "parent_item": row.item, "qty": row.qty, "level": depth,
-					"path": f"{path} -> {row.item}"})
+				result.append(
+					{
+						"bom": row.name,
+						"parent_item": row.item,
+						"qty": row.qty,
+						"level": depth,
+						"path": f"{path} -> {row.item}",
+					}
+				)
 				next_frontier.append((row.item, f"{path} -> {row.item}"))
 		if not next_frontier:
 			break
@@ -185,39 +222,70 @@ def get_where_used(item_code: str) -> list[dict]:
 
 def validate_eco(doc) -> None:
 	for row in doc.changes:
-		bom = frappe.db.get_value("BOM", row.target_bom, ["docstatus", "is_active", "automotive_superseded_by", "item"],
-			as_dict=True)
+		bom = frappe.db.get_value(
+			"BOM",
+			row.target_bom,
+			["docstatus", "is_active", "automotive_superseded_by", "item"],
+			as_dict=True,
+		)
 		if not bom or bom.docstatus != 1 or not bom.is_active:
 			frappe.throw(_("Row {0}: BOM {1} is not an active released BOM.").format(row.idx, row.target_bom))
 		if bom.automotive_superseded_by:
-			frappe.throw(_("Row {0}: BOM {1} is already superseded by {2}.").format(row.idx, row.target_bom,
-				bom.automotive_superseded_by))
+			frappe.throw(
+				_("Row {0}: BOM {1} is already superseded by {2}.").format(
+					row.idx, row.target_bom, bom.automotive_superseded_by
+				)
+			)
 		components = set(frappe.get_all("BOM Item", filters={"parent": row.target_bom}, pluck="item_code"))
-		if row.change_type in ("Remove Component", "Replace Component", "Change Quantity") and row.component not in components:
+		if (
+			row.change_type in ("Remove Component", "Replace Component", "Change Quantity")
+			and row.component not in components
+		):
 			frappe.throw(_("Row {0}: {1} is not in BOM {2}.").format(row.idx, row.component, row.target_bom))
-		if row.change_type in ("Add Component", "Replace Component") and not row.new_component and row.change_type != "Add Component":
+		if (
+			row.change_type in ("Add Component", "Replace Component")
+			and not row.new_component
+			and row.change_type != "Add Component"
+		):
 			frappe.throw(_("Row {0}: choose the new component.").format(row.idx))
 		if row.change_type == "Add Component" and not (row.new_component or row.component):
 			frappe.throw(_("Row {0}: choose the component to add.").format(row.idx))
 		if row.change_type in ("Add Component", "Change Quantity") and flt(row.qty) <= 0:
 			frappe.throw(_("Row {0}: quantity must be positive.").format(row.idx))
 		if row.change_type == "Change Operation":
-			current = frappe.db.get_value("BOM Operation", {"parent": row.target_bom, "operation": row.operation},
-				["workstation", "time_in_mins"], as_dict=True)
+			current = frappe.db.get_value(
+				"BOM Operation",
+				{"parent": row.target_bom, "operation": row.operation},
+				["workstation", "time_in_mins"],
+				as_dict=True,
+			)
 			if not current:
-				frappe.throw(_("Row {0}: BOM {1} has no operation {2}.").format(row.idx, row.target_bom, row.operation))
-			if not ((row.workstation and row.workstation != current.workstation)
-					or (flt(row.time_in_mins) and abs(flt(row.time_in_mins) - flt(current.time_in_mins)) > 1e-9)):
+				frappe.throw(
+					_("Row {0}: BOM {1} has no operation {2}.").format(row.idx, row.target_bom, row.operation)
+				)
+			if not (
+				(row.workstation and row.workstation != current.workstation)
+				or (flt(row.time_in_mins) and abs(flt(row.time_in_mins) - flt(current.time_in_mins)) > 1e-9)
+			):
 				frappe.throw(_("Row {0}: enter the operation's new workstation or time.").format(row.idx))
-		if row.change_type == "Approve Alternative" and (row.component not in components or not row.new_component
-				or row.new_component == row.component):
-			frappe.throw(_("Row {0}: an alternative needs a component of BOM {1} and a different item to take its place.")
-				.format(row.idx, row.target_bom))
+		if row.change_type == "Approve Alternative" and (
+			row.component not in components or not row.new_component or row.new_component == row.component
+		):
+			frappe.throw(
+				_(
+					"Row {0}: an alternative needs a component of BOM {1} and a different item to take its place."
+				).format(row.idx, row.target_bom)
+			)
 		if row.change_type == "Change Quantity":
-			current = frappe.db.get_value("BOM Item", {"parent": row.target_bom, "item_code": row.component}, "qty")
+			current = frappe.db.get_value(
+				"BOM Item", {"parent": row.target_bom, "item_code": row.component}, "qty"
+			)
 			if abs(flt(current) - flt(row.qty)) < 1e-9:
-				frappe.throw(_("Row {0}: BOM {1} already uses {2} of {3}; enter the new quantity.").format(
-					row.idx, row.target_bom, flt(current), row.component))
+				frappe.throw(
+					_("Row {0}: BOM {1} already uses {2} of {3}; enter the new quantity.").format(
+						row.idx, row.target_bom, flt(current), row.component
+					)
+				)
 	if doc.is_new() and getdate(doc.effective_date) < getdate(nowdate()):
 		frappe.throw(_("An engineering change cannot take effect in the past."))
 
@@ -235,7 +303,9 @@ def _apply_changes(new_bom, changes) -> None:
 					if flt(row.qty):
 						item.qty = flt(row.qty)
 						item.automotive_net_qty = flt(row.qty)
-					item.automotive_scrap_factor_percent = flt(row.scrap_factor_percent) or item.automotive_scrap_factor_percent
+					item.automotive_scrap_factor_percent = (
+						flt(row.scrap_factor_percent) or item.automotive_scrap_factor_percent
+					)
 		elif row.change_type == "Change Quantity":
 			for item in new_bom.items:
 				if item.item_code == row.component:
@@ -252,25 +322,38 @@ def _apply_changes(new_bom, changes) -> None:
 						operation.time_in_mins = flt(row.time_in_mins)
 		elif row.change_type == "Add Component":
 			code = row.new_component or row.component
-			new_bom.append("items", {
-				"item_code": code,
-				"qty": flt(row.qty),
-				"automotive_net_qty": flt(row.qty),
-				"automotive_scrap_factor_percent": flt(row.scrap_factor_percent),
-				"uom": frappe.get_cached_value("Item", code, "stock_uom"),
-				"bom_no": frappe.get_cached_value("Item", code, "default_bom"),
-			})
+			new_bom.append(
+				"items",
+				{
+					"item_code": code,
+					"qty": flt(row.qty),
+					"automotive_net_qty": flt(row.qty),
+					"automotive_scrap_factor_percent": flt(row.scrap_factor_percent),
+					"uom": frappe.get_cached_value("Item", code, "stock_uom"),
+					"bom_no": frappe.get_cached_value("Item", code, "default_bom"),
+				},
+			)
 	if not new_bom.items:
-		frappe.throw(_("The change would leave BOM {0} without components.").format(new_bom.automotive_supersedes))
+		frappe.throw(
+			_("The change would leave BOM {0} without components.").format(new_bom.automotive_supersedes)
+		)
 
 
-def _release_revision(old_name: str, eco, changes, reason: str, replace_bom: dict[str, str] | None = None) -> str:
+def _release_revision(
+	old_name: str, eco, changes, reason: str, replace_bom: dict[str, str] | None = None
+) -> str:
 	old = frappe.get_doc("BOM", old_name)
 	new = frappe.copy_doc(old)
 	new.automotive_supersedes = old.name
 	new.automotive_superseded_by = None
-	new.automotive_revision = next_revision([r for r in frappe.get_all("BOM", filters={"item": old.item,
-		"docstatus": ("<", 2)}, pluck="automotive_revision")])
+	new.automotive_revision = next_revision(
+		[
+			r
+			for r in frappe.get_all(
+				"BOM", filters={"item": old.item, "docstatus": ("<", 2)}, pluck="automotive_revision"
+			)
+		]
+	)
 	new.automotive_effective_from = eco.effective_date
 	new.automotive_effective_to = None
 	new.automotive_eco = eco.name
@@ -285,13 +368,19 @@ def _release_revision(old_name: str, eco, changes, reason: str, replace_bom: dic
 	new.insert()
 	new.submit()
 	effective_to = add_days(getdate(eco.effective_date), -1)
-	old.db_set({
-		"automotive_effective_to": effective_to,
-		"automotive_superseded_by": new.name,
-		"automotive_engineering_status": "Superseded" if getdate(eco.effective_date) <= getdate(nowdate()) else "Released",
-	})
-	eco.append("revisions", {"old_bom": old.name, "new_bom": new.name, "revision": new.automotive_revision,
-		"reason": reason})
+	old.db_set(
+		{
+			"automotive_effective_to": effective_to,
+			"automotive_superseded_by": new.name,
+			"automotive_engineering_status": "Superseded"
+			if getdate(eco.effective_date) <= getdate(nowdate())
+			else "Released",
+		}
+	)
+	eco.append(
+		"revisions",
+		{"old_bom": old.name, "new_bom": new.name, "revision": new.automotive_revision, "reason": reason},
+	)
 	return new.name
 
 
@@ -320,7 +409,9 @@ def implement(eco) -> None:
 			for (parent,) in parents:
 				if parent in replaced:
 					continue
-				new_parent = _release_revision(parent, eco, [], "Parent Of Changed Assembly", replace_bom=replaced)
+				new_parent = _release_revision(
+					parent, eco, [], "Parent Of Changed Assembly", replace_bom=replaced
+				)
 				replaced[parent] = new_parent
 				next_frontier[parent] = new_parent
 			frontier = next_frontier
@@ -328,7 +419,9 @@ def implement(eco) -> None:
 		for row in eco.revisions:
 			row.db_insert() if row.is_new() else row.db_update()
 		if eco.engineering_change_request:
-			frappe.db.set_value("Engineering Change Request", eco.engineering_change_request, "status", "Converted")
+			frappe.db.set_value(
+				"Engineering Change Request", eco.engineering_change_request, "status", "Converted"
+			)
 	finally:
 		frappe.flags.automotive_eco_context = False
 
@@ -337,17 +430,29 @@ def _approve_alternative(eco, row) -> None:
 	"""An approved substitution: ERPNext's Item Alternative for the component, linked to the ECO and
 	valid from its effective date (consumption checks both: validate_approved_alternatives)."""
 	frappe.db.set_value("Item", row.component, "allow_alternative_item", 1)
-	name = frappe.db.get_value("Item Alternative", {"item_code": row.component, "alternative_item_code": row.new_component})
+	name = frappe.db.get_value(
+		"Item Alternative", {"item_code": row.component, "alternative_item_code": row.new_component}
+	)
 	alternative = frappe.get_doc("Item Alternative", name) if name else frappe.new_doc("Item Alternative")
-	alternative.update({"item_code": row.component, "alternative_item_code": row.new_component,
-		"automotive_eco": eco.name, "automotive_valid_from": eco.effective_date, "automotive_valid_to": None})
+	alternative.update(
+		{
+			"item_code": row.component,
+			"alternative_item_code": row.new_component,
+			"automotive_eco": eco.name,
+			"automotive_valid_from": eco.effective_date,
+			"automotive_valid_to": None,
+		}
+	)
 	alternative.flags.ignore_permissions = True
 	alternative.save()
 
 
 def _consumed_as_alternative(component: str, alternative: str) -> str | None:
-	return frappe.db.sql("""select sed.parent from `tabStock Entry Detail` sed join `tabStock Entry` se on se.name = sed.parent
-		where se.docstatus = 1 and sed.original_item = %s and sed.item_code = %s limit 1""", (component, alternative))
+	return frappe.db.sql(
+		"""select sed.parent from `tabStock Entry Detail` sed join `tabStock Entry` se on se.name = sed.parent
+		where se.docstatus = 1 and sed.original_item = %s and sed.item_code = %s limit 1""",
+		(component, alternative),
+	)
 
 
 def validate_approved_alternatives(doc, method=None) -> None:
@@ -357,43 +462,77 @@ def validate_approved_alternatives(doc, method=None) -> None:
 	work order allows alternatives."""
 	from automotive_manufacturing.product_engineering.bom_revisions import EngineeringControlError
 
-	if doc.purpose not in ("Manufacture", "Material Transfer for Manufacture", "Material Consumption for Manufacture"):
+	if doc.purpose not in (
+		"Manufacture",
+		"Material Transfer for Manufacture",
+		"Material Consumption for Manufacture",
+	):
 		return
 	day = getdate(doc.posting_date or nowdate())
 	for row in doc.items:
 		if not row.original_item or row.original_item == row.item_code:
 			continue
 		fields = ["automotive_eco", "automotive_valid_from", "automotive_valid_to"]
-		alternative = frappe.db.get_value("Item Alternative", {"item_code": row.original_item,
-			"alternative_item_code": row.item_code}, fields, as_dict=True) or frappe.db.get_value("Item Alternative",
-			{"item_code": row.item_code, "alternative_item_code": row.original_item, "two_way": 1}, fields, as_dict=True)
-		approved = bool(alternative and alternative.automotive_eco
-			and frappe.db.get_value("Engineering Change Order", alternative.automotive_eco, "docstatus") == 1)
-		valid = bool(alternative) and (not alternative.automotive_valid_from
-			or getdate(alternative.automotive_valid_from) <= day) and (not alternative.automotive_valid_to
-			or day <= getdate(alternative.automotive_valid_to))
+		alternative = frappe.db.get_value(
+			"Item Alternative",
+			{"item_code": row.original_item, "alternative_item_code": row.item_code},
+			fields,
+			as_dict=True,
+		) or frappe.db.get_value(
+			"Item Alternative",
+			{"item_code": row.item_code, "alternative_item_code": row.original_item, "two_way": 1},
+			fields,
+			as_dict=True,
+		)
+		approved = bool(
+			alternative
+			and alternative.automotive_eco
+			and frappe.db.get_value("Engineering Change Order", alternative.automotive_eco, "docstatus") == 1
+		)
+		valid = (
+			bool(alternative)
+			and (not alternative.automotive_valid_from or getdate(alternative.automotive_valid_from) <= day)
+			and (not alternative.automotive_valid_to or day <= getdate(alternative.automotive_valid_to))
+		)
 		if not (approved and valid):
-			frappe.throw(_("Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering "
-				"change order and valid on {3}.").format(row.idx, row.item_code, row.original_item, day),
-				EngineeringControlError)
+			frappe.throw(
+				_(
+					"Row {0}: {1} may take the place of {2} only as an alternative approved by an engineering "
+					"change order and valid on {3}."
+				).format(row.idx, row.item_code, row.original_item, day),
+				EngineeringControlError,
+			)
 
 
 def revert(eco) -> None:
 	"""ECO cancellation: allowed only while no Work Order used any new revision and no production
 	consumed an alternative it approved."""
 	new_boms = [r.new_bom for r in eco.revisions]
-	used = frappe.get_all("Work Order", filters={"bom_no": ("in", new_boms or [""]), "docstatus": 1}, pluck="name", limit=1)
+	used = frappe.get_all(
+		"Work Order", filters={"bom_no": ("in", new_boms or [""]), "docstatus": 1}, pluck="name", limit=1
+	)
 	if used:
-		frappe.throw(_("Revision used by Work Order {0}; issue a new ECO instead of cancelling.").format(used[0]))
+		frappe.throw(
+			_("Revision used by Work Order {0}; issue a new ECO instead of cancelling.").format(used[0])
+		)
 	alternatives = [r for r in eco.changes if r.change_type == "Approve Alternative"]
 	for row in alternatives:
 		consumed = _consumed_as_alternative(row.component, row.new_component)
 		if consumed:
-			frappe.throw(_("{0} was consumed in place of {1} ({2}); issue a new ECO instead of cancelling.").format(
-				row.new_component, row.component, consumed[0][0]))
+			frappe.throw(
+				_("{0} was consumed in place of {1} ({2}); issue a new ECO instead of cancelling.").format(
+					row.new_component, row.component, consumed[0][0]
+				)
+			)
 	for row in alternatives:
-		frappe.db.delete("Item Alternative", {"item_code": row.component, "alternative_item_code": row.new_component,
-			"automotive_eco": eco.name})
+		frappe.db.delete(
+			"Item Alternative",
+			{
+				"item_code": row.component,
+				"alternative_item_code": row.new_component,
+				"automotive_eco": eco.name,
+			},
+		)
 	frappe.flags.automotive_eco_context = True
 	try:
 		for row in reversed(eco.revisions):
@@ -401,8 +540,16 @@ def revert(eco) -> None:
 			if new.docstatus == 1:
 				new.flags.ignore_permissions = True
 				new.cancel()
-			frappe.db.set_value("BOM", row.old_bom, {"automotive_effective_to": None, "automotive_superseded_by": None,
-				"automotive_engineering_status": "Released", "is_active": 1})
+			frappe.db.set_value(
+				"BOM",
+				row.old_bom,
+				{
+					"automotive_effective_to": None,
+					"automotive_superseded_by": None,
+					"automotive_engineering_status": "Released",
+					"is_active": 1,
+				},
+			)
 	finally:
 		frappe.flags.automotive_eco_context = False
 	eco.db_set("implementation_status", "Not Started")

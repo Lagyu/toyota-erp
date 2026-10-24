@@ -12,8 +12,19 @@ import json
 import frappe
 from frappe.utils import flt
 
-COUNTED = ("Company", "User", "Item", "BOM", "Work Order", "Purchase Order", "Sales Invoice", "GL Entry",
-	"Stock Ledger Entry", "Audit Event", "Vehicle Unit")
+COUNTED = (
+	"Company",
+	"User",
+	"Item",
+	"BOM",
+	"Work Order",
+	"Purchase Order",
+	"Sales Invoice",
+	"GL Entry",
+	"Stock Ledger Entry",
+	"Audit Event",
+	"Vehicle Unit",
+)
 
 
 def verify_restored_site(output: str | None = None) -> dict:
@@ -22,10 +33,19 @@ def verify_restored_site(output: str | None = None) -> dict:
 	frappe.only_for("System Manager")
 	checks = []
 	for company in frappe.get_all("Company", pluck="name"):
-		debit, credit = frappe.db.sql("""select ifnull(sum(debit), 0), ifnull(sum(credit), 0) from `tabGL Entry`
-			where company = %s and is_cancelled = 0""", company)[0]
-		checks.append({"check": f"trial balance {company}", "ok": abs(flt(debit) - flt(credit)) < 0.01,
-			"debit": flt(debit), "credit": flt(credit)})
+		debit, credit = frappe.db.sql(
+			"""select ifnull(sum(debit), 0), ifnull(sum(credit), 0) from `tabGL Entry`
+			where company = %s and is_cancelled = 0""",
+			company,
+		)[0]
+		checks.append(
+			{
+				"check": f"trial balance {company}",
+				"ok": abs(flt(debit) - flt(credit)) < 0.01,
+				"debit": flt(debit),
+				"credit": flt(credit),
+			}
+		)
 	from automotive_core.governance.audit import verify_chain
 
 	chain = verify_chain()
@@ -60,8 +80,13 @@ def _attachments() -> dict:
 		total += 1
 		if not os.path.exists(path):
 			missing.append(url)
-	return {"check": "attachments restored", "ok": not missing, "files": total, "missing": len(missing),
-		"examples": missing[:5]}
+	return {
+		"check": "attachments restored",
+		"ok": not missing,
+		"files": total,
+		"missing": len(missing),
+		"examples": missing[:5],
+	}
 
 
 def _encrypted_fields() -> dict:
@@ -69,7 +94,9 @@ def _encrypted_fields() -> dict:
 	a restore on another host that lost the source key would fail here."""
 	from frappe.utils.password import get_decrypted_password
 
-	rows = frappe.db.sql("select doctype, name, fieldname from `__Auth` where encrypted = 1 limit 50", as_dict=True)
+	rows = frappe.db.sql(
+		"select doctype, name, fieldname from `__Auth` where encrypted = 1 limit 50", as_dict=True
+	)
 	failed = []
 	for row in rows:
 		try:

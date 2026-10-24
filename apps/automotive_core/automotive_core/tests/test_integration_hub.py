@@ -63,7 +63,10 @@ class TestSigningAndEdi(UnitTestCase):
 			"sent_at": "2026-04-01T09:00:00",
 			"data": {
 				"supplier": "Kisaragi*Precision~KK",
-				"lines": [{"item": "BRK-001", "qty": 120, "weight": 3.5, "lot": "L?1"}, {"item": "X", "qty": 1}],
+				"lines": [
+					{"item": "BRK-001", "qty": 120, "weight": 3.5, "lot": "L?1"},
+					{"item": "X", "qty": 1},
+				],
 				"urgent": True,
 				"note": None,
 				"empty": {},
@@ -133,7 +136,9 @@ class TestInbound(IntegrationTestCase):
 			name = inbound.accept("TEST-PLANT-MES", envelope("EVT-3", ref="F"))["inbound_id"]
 			statuses = [inbound.process(name) for _ in range(3)]
 		self.assertEqual(statuses, ["Failed", "Failed", "Dead Letter"])
-		self.assertEqual(frappe.db.count("ToDo", {"description": "half done F"}), 0)  # partial effect rolled back
+		self.assertEqual(
+			frappe.db.count("ToDo", {"description": "half done F"}), 0
+		)  # partial effect rolled back
 		msg = frappe.get_doc("Integration Inbound Message", name)
 		self.assertEqual(msg.attempts, 3)
 		self.assertIn("downstream unavailable", msg.last_error)
@@ -149,7 +154,9 @@ class TestInbound(IntegrationTestCase):
 		with self.assertRaises(frappe.PermissionError):
 			inbound.accept("TEST-PLANT-MES", envelope("EVT-4", message_type="supplier_invoice"))
 		with self.assertRaises(frappe.ValidationError):
-			inbound.accept("TEST-PLANT-MES", b'{"message_id": "bad id with spaces", "message_type": "asn", "data": {}}')
+			inbound.accept(
+				"TEST-PLANT-MES", b'{"message_id": "bad id with spaces", "message_type": "asn", "data": {}}'
+			)
 
 	def test_file_drop_inbox_is_polled_and_moved(self):
 		from automotive_core.integration_hub.adapters.file_drop import poll_inbox
@@ -203,10 +210,18 @@ class TestInboundSecretRotation(IntegrationTestCase):
 		self.assertNotEqual(result["secret"], "first-secret-0123456789")
 		self.verify(self.delivery(result["secret"]))
 		self.verify(old)  # the partner has not switched yet
-		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "integration.inbound_secret_rotated",
-			"reference_name": "TEST-ROTATE"}))
-		frappe.db.set_value("Integration Partner", "TEST-ROTATE", "previous_inbound_secret_until",
-			frappe.utils.add_to_date(frappe.utils.now_datetime(), minutes=-1))
+		self.assertTrue(
+			frappe.db.exists(
+				"Audit Event",
+				{"event_type": "integration.inbound_secret_rotated", "reference_name": "TEST-ROTATE"},
+			)
+		)
+		frappe.db.set_value(
+			"Integration Partner",
+			"TEST-ROTATE",
+			"previous_inbound_secret_until",
+			frappe.utils.add_to_date(frappe.utils.now_datetime(), minutes=-1),
+		)
 		with self.assertRaises(frappe.AuthenticationError):
 			self.verify(old)  # the overlap is over
 		self.verify(self.delivery(result["secret"]))
@@ -259,9 +274,18 @@ class TestInboundDeliveryGuards(IntegrationTestCase):
 
 	def post(self, body: bytes, signature: str, partner: str = GUARD) -> dict:
 		"""The endpoint on a request as the partner's system sends it (no HTTP server)."""
-		frappe.local.request = Request(EnvironBuilder(path="/api/method/automotive_core.integration_hub.inbound.receive",
-			method="POST", data=body, headers={signing.PARTNER_HEADER: partner, signing.HEADER: signature,
-				"Content-Type": "application/json"}).get_environ())
+		frappe.local.request = Request(
+			EnvironBuilder(
+				path="/api/method/automotive_core.integration_hub.inbound.receive",
+				method="POST",
+				data=body,
+				headers={
+					signing.PARTNER_HEADER: partner,
+					signing.HEADER: signature,
+					"Content-Type": "application/json",
+				},
+			).get_environ()
+		)
 		return inbound.receive()
 
 	def test_a_replayed_delivery_is_refused_and_stores_nothing(self):
@@ -288,12 +312,17 @@ class TestInboundDeliveryGuards(IntegrationTestCase):
 	def test_a_partner_over_its_rate_limit_is_refused_until_the_next_minute(self):
 		previous = frappe.db.get_single_value("Automotive Settings", "inbound_rate_limit_per_minute")
 		frappe.db.set_single_value("Automotive Settings", "inbound_rate_limit_per_minute", 3)
-		self.addCleanup(frappe.db.set_single_value, "Automotive Settings", "inbound_rate_limit_per_minute", previous)
+		self.addCleanup(
+			frappe.db.set_single_value, "Automotive Settings", "inbound_rate_limit_per_minute", previous
+		)
 		minute = datetime.datetime(2031, 3, 4, 5, 6, 7)
 		later = minute + datetime.timedelta(minutes=1)
 		# the counters live in Redis (not rolled back with the test): keys of minutes no other test uses
-		keys = [frappe.cache.make_key(f"automotive:inbound-rate:{partner}:{at:%Y%m%d%H%M}")
-			for partner in (GUARD, f"{GUARD}-2") for at in (minute, later)]
+		keys = [
+			frappe.cache.make_key(f"automotive:inbound-rate:{partner}:{at:%Y%m%d%H%M}")
+			for partner in (GUARD, f"{GUARD}-2")
+			for at in (minute, later)
+		]
 		frappe.cache.delete(*keys)
 		self.addCleanup(frappe.cache.delete, *keys)
 		with mock.patch.object(inbound, "now_datetime", return_value=minute):
@@ -315,8 +344,10 @@ class TestOutbox(IntegrationTestCase):
 	@classmethod
 	def setUpClass(cls):
 		super().setUpClass()
-		for code, adapter, url in (("TEST-DROP", "Local File Drop", None), ("TEST-HTTPS", "HTTPS Webhook",
-				"https://partner.example/hooks")):
+		for code, adapter, url in (
+			("TEST-DROP", "Local File Drop", None),
+			("TEST-HTTPS", "HTTPS Webhook", "https://partner.example/hooks"),
+		):
 			frappe.get_doc(
 				{
 					"doctype": "Integration Partner",
@@ -333,23 +364,27 @@ class TestOutbox(IntegrationTestCase):
 
 	def test_publish_is_idempotent_and_file_drop_delivers(self):
 		ref1 = todo("po 1")
-		first = outbox.publish("purchase_order.submitted", {"po": "PO-1"}, "ToDo", ref1,
-			partners=["TEST-DROP"])
-		again = outbox.publish("purchase_order.submitted", {"po": "PO-1"}, "ToDo", ref1,
-			partners=["TEST-DROP"])
+		first = outbox.publish(
+			"purchase_order.submitted", {"po": "PO-1"}, "ToDo", ref1, partners=["TEST-DROP"]
+		)
+		again = outbox.publish(
+			"purchase_order.submitted", {"po": "PO-1"}, "ToDo", ref1, partners=["TEST-DROP"]
+		)
 		self.assertEqual(len(first), 1)
 		self.assertEqual(again, [])
 		self.assertEqual(outbox.deliver(first[0]), "Delivered")
 		written = Path(partner_dir("TEST-DROP")) / "outbox" / f"{first[0]}.json"
 		self.assertEqual(json.loads(written.read_text())["data"], {"po": "PO-1"})
 		written.unlink()
-		self.assertEqual(frappe.db.get_value("Integration Partner", "TEST-DROP", "connection_status"),
-			"Local Adapter Only")
+		self.assertEqual(
+			frappe.db.get_value("Integration Partner", "TEST-DROP", "connection_status"), "Local Adapter Only"
+		)
 
 	def test_https_requires_allowlist_then_signs_and_retries(self):
 		ref2 = todo("po 2")
-		[name] = outbox.publish("purchase_order.submitted", {"po": "PO-2"}, "ToDo", ref2,
-			partners=["TEST-HTTPS"])
+		[name] = outbox.publish(
+			"purchase_order.submitted", {"po": "PO-2"}, "ToDo", ref2, partners=["TEST-HTTPS"]
+		)
 		self.assertEqual(outbox.deliver(name), "Failed")  # host not allowlisted
 		self.assertIn("allowlist", frappe.db.get_value("Integration Outbound Message", name, "last_error"))
 		frappe.db.set_single_value("Automotive Settings", "outbound_host_allowlist", "partner.example")
@@ -361,27 +396,40 @@ class TestOutbox(IntegrationTestCase):
 			response = mock.Mock(status_code=503, text="busy")
 			return response
 
-		with mock.patch("automotive_core.integration_hub.adapters.https.requests.post", side_effect=fake_post):
+		with mock.patch(
+			"automotive_core.integration_hub.adapters.https.requests.post", side_effect=fake_post
+		):
 			self.assertEqual(outbox.deliver(name), "Failed")
 		sig = signing.verify(captured["headers"][signing.HEADER], captured["data"], "out-secret", 300)
 		self.assertEqual(sig.key_id, "k-1")
 		self.assertFalse(captured["allow_redirects"])
-		self.assertEqual(captured["headers"]["Idempotency-Key"], f"purchase_order.submitted:ToDo:{ref2}:TEST-HTTPS")
-		with mock.patch("automotive_core.integration_hub.adapters.https.requests.post",
-				return_value=mock.Mock(status_code=202, text="ok")):
+		self.assertEqual(
+			captured["headers"]["Idempotency-Key"], f"purchase_order.submitted:ToDo:{ref2}:TEST-HTTPS"
+		)
+		with mock.patch(
+			"automotive_core.integration_hub.adapters.https.requests.post",
+			return_value=mock.Mock(status_code=202, text="ok"),
+		):
 			self.assertEqual(outbox.deliver(name), "Delivered")
 		msg = frappe.get_doc("Integration Outbound Message", name)
-		self.assertEqual([a.outcome for a in msg.delivery_attempts],
-			["Retryable Failure", "Retryable Failure", "Delivered"])
-		self.assertEqual(frappe.db.get_value("Integration Partner", "TEST-HTTPS", "connection_status"), "Live")
+		self.assertEqual(
+			[a.outcome for a in msg.delivery_attempts],
+			["Retryable Failure", "Retryable Failure", "Delivered"],
+		)
+		self.assertEqual(
+			frappe.db.get_value("Integration Partner", "TEST-HTTPS", "connection_status"), "Live"
+		)
 
 	def test_permanent_failure_dead_letters(self):
 		ref3 = todo("po 3")
-		[name] = outbox.publish("purchase_order.submitted", {"po": "PO-3"}, "ToDo", ref3,
-			partners=["TEST-HTTPS"])
+		[name] = outbox.publish(
+			"purchase_order.submitted", {"po": "PO-3"}, "ToDo", ref3, partners=["TEST-HTTPS"]
+		)
 		frappe.db.set_single_value("Automotive Settings", "outbound_host_allowlist", "partner.example")
 		frappe.clear_document_cache("Automotive Settings", "Automotive Settings")
-		with mock.patch("automotive_core.integration_hub.adapters.https.requests.post",
-				return_value=mock.Mock(status_code=400, text="bad")):
+		with mock.patch(
+			"automotive_core.integration_hub.adapters.https.requests.post",
+			return_value=mock.Mock(status_code=400, text="bad"),
+		):
 			self.assertEqual(outbox.deliver(name), "Dead Letter")
 		self.assertEqual(outbox.classify(DeliveryResult(ok=False, status_code=429)), "Retryable Failure")

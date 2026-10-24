@@ -40,6 +40,8 @@ def sync() -> None:
 				continue
 			doc.update(values)
 		else:
-			doc = frappe.get_doc({"doctype": "KPI Definition", "kpi_code": item["kpi_code"], "is_active": 1, **values})
+			doc = frappe.get_doc(
+				{"doctype": "KPI Definition", "kpi_code": item["kpi_code"], "is_active": 1, **values}
+			)
 		doc.flags.ignore_permissions = True
 		doc.save()

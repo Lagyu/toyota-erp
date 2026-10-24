@@ -32,20 +32,52 @@ class TestPrintFormats(IntegrationTestCase):
 
 	def test_kanban_card(self):
 		wheel, foam = self.cat["wheel"], self.cat["foam"]
-		supplied = frappe.get_doc({"doctype": "Kanban Loop", "loop_code": "KL-PRINT-WHEEL", "item_code": wheel,
-			"plant": catalog.PLANT, "production_line": catalog.LINE, "supply_type": "Supplier",
-			"supplier": "Kaminari Electronics", "line_side_warehouse": catalog.LINE_SIDE, "container_qty": 4,
-			"number_of_cards": 3, "lead_time_hours": 4}).insert(ignore_permissions=True)
-		internal = frappe.get_doc({"doctype": "Kanban Loop", "loop_code": "KL-PRINT-FOAM", "item_code": foam,
-			"plant": catalog.PLANT, "production_line": catalog.LINE, "supply_type": "Internal Transfer",
-			"line_side_warehouse": catalog.LINE_SIDE, "source_warehouse": catalog.PARTS_STORE, "container_qty": 7.5,
-			"number_of_cards": 2, "lead_time_hours": 2}).insert(ignore_permissions=True)
+		supplied = frappe.get_doc(
+			{
+				"doctype": "Kanban Loop",
+				"loop_code": "KL-PRINT-WHEEL",
+				"item_code": wheel,
+				"plant": catalog.PLANT,
+				"production_line": catalog.LINE,
+				"supply_type": "Supplier",
+				"supplier": "Kaminari Electronics",
+				"line_side_warehouse": catalog.LINE_SIDE,
+				"container_qty": 4,
+				"number_of_cards": 3,
+				"lead_time_hours": 4,
+			}
+		).insert(ignore_permissions=True)
+		internal = frappe.get_doc(
+			{
+				"doctype": "Kanban Loop",
+				"loop_code": "KL-PRINT-FOAM",
+				"item_code": foam,
+				"plant": catalog.PLANT,
+				"production_line": catalog.LINE,
+				"supply_type": "Internal Transfer",
+				"line_side_warehouse": catalog.LINE_SIDE,
+				"source_warehouse": catalog.PARTS_STORE,
+				"container_qty": 7.5,
+				"number_of_cards": 2,
+				"lead_time_hours": 2,
+			}
+		).insert(ignore_permissions=True)
 		card = frappe.db.get_value("Kanban Card", {"kanban_loop": supplied.name, "card_no": 2}, "name")
 		self.assertEqual(card, "KL-PRINT-WHEEL-02")
 		with as_user(SUPERVISOR):
 			html = render("Kanban Card", card, "Kanban Card")
-		for expected in (AICHI, "Kanban Card", "KL-PRINT-WHEEL", card, wheel, "4 Nos", "Kaminari Electronics",
-				catalog.LINE_SIDE, catalog.LINE, "2 / 3"):
+		for expected in (
+			AICHI,
+			"Kanban Card",
+			"KL-PRINT-WHEEL",
+			card,
+			wheel,
+			"4 Nos",
+			"Kaminari Electronics",
+			catalog.LINE_SIDE,
+			catalog.LINE,
+			"2 / 3",
+		):
 			self.assertIn(expected, html)
 		# the card id is scannable: the QR code of exactly this id, and the id in plain text
 		self.assertIn(f'src="{automotive_qr_code(card)}"', html)
@@ -54,8 +86,13 @@ class TestPrintFormats(IntegrationTestCase):
 		card = frappe.db.get_value("Kanban Card", {"kanban_loop": internal.name, "card_no": 1}, "name")
 		with as_user(SUPERVISOR):
 			html = render("Kanban Card", card, "Kanban Card")
-		for expected in ("KL-PRINT-FOAM-01", "Source Warehouse", catalog.PARTS_STORE,
-				f"{frappe.format_value(7.5, {'fieldtype': 'Float'})} Kg", "1 / 2"):
+		for expected in (
+			"KL-PRINT-FOAM-01",
+			"Source Warehouse",
+			catalog.PARTS_STORE,
+			f"{frappe.format_value(7.5, {'fieldtype': 'Float'})} Kg",
+			"1 / 2",
+		):
 			self.assertIn(expected, html)
 		self.assertNotIn("Kaminari Electronics", html)
 
@@ -67,9 +104,25 @@ class TestPrintFormats(IntegrationTestCase):
 		self.assertEqual((unit.configuration, unit.quality_status), (config, "Released"))
 		with as_user(QM):
 			html = render("Vehicle Unit", vin, "Vehicle Certificate")
-		for expected in (AICHI, "Vehicle Certificate", vin, "H1 Test (H1T)", variant, config, "Trim", "Premium",
-				"Drivetrain", "AWD", formatdate(getdate(unit.built_at)), "Aichi Vehicle Assembly", unit.final_inspection,
-				"Accepted", "Released", get_fullname(QM), "Starts on delivery acceptance"):
+		for expected in (
+			AICHI,
+			"Vehicle Certificate",
+			vin,
+			"H1 Test (H1T)",
+			variant,
+			config,
+			"Trim",
+			"Premium",
+			"Drivetrain",
+			"AWD",
+			formatdate(getdate(unit.built_at)),
+			"Aichi Vehicle Assembly",
+			unit.final_inspection,
+			"Accepted",
+			"Released",
+			get_fullname(QM),
+			"Starts on delivery acceptance",
+		):
 			self.assertIn(expected, html)
 		# the warranty starts when the dealer accepts the delivery (supply chain), recorded on the unit
 		start, end = nowdate(), add_months(nowdate(), 36)

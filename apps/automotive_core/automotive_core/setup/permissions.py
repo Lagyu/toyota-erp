@@ -190,8 +190,11 @@ def report_roles(doctype: str) -> set[str]:
 	reads them: from its Custom DocPerms when it has any, else from its DocPerms. A right on the
 	user's own documents only (*If Owner*) does not run a report over the DocType."""
 	table = "Custom DocPerm" if frappe.db.exists("Custom DocPerm", {"parent": doctype}) else "DocPerm"
-	return set(frappe.get_all(table, filters={"parent": doctype, "permlevel": 0, "report": 1, "if_owner": 0},
-		pluck="role"))
+	return set(
+		frappe.get_all(
+			table, filters={"parent": doctype, "permlevel": 0, "report": 1, "if_owner": 0}, pluck="role"
+		)
+	)
 
 
 def align_report_roles() -> list[str]:
@@ -207,16 +210,27 @@ def align_report_roles() -> list[str]:
 
 	profiles = [set(roles) for roles in ROLE_PROFILES.values()]
 	changed = []
-	for report in frappe.get_all("Report", filters={"disabled": 0}, fields=["name", "ref_doctype"], order_by="name"):
+	for report in frappe.get_all(
+		"Report", filters={"disabled": 0}, fields=["name", "ref_doctype"], order_by="name"
+	):
 		if not report.ref_doctype or not frappe.db.exists("DocType", report.ref_doctype):
 			continue
 		able = report_roles(report.ref_doctype)
 		if "All" in able:
 			continue
 		custom = frappe.db.get_value("Custom Role", {"report": report.name}, "name")
-		own = set(frappe.get_all("Has Role", filters={"parenttype": "Report", "parent": report.name}, pluck="role"))
-		current = set(frappe.get_all("Has Role", filters={"parenttype": "Custom Role", "parent": custom},
-			pluck="role")) if custom else own
+		own = set(
+			frappe.get_all("Has Role", filters={"parenttype": "Report", "parent": report.name}, pluck="role")
+		)
+		current = (
+			set(
+				frappe.get_all(
+					"Has Role", filters={"parenttype": "Custom Role", "parent": custom}, pluck="role"
+				)
+			)
+			if custom
+			else own
+		)
 		keep = (current & able) if current else set(able)
 		for mine in profiles:
 			if (not current or mine & current) and mine & able:
@@ -241,8 +255,15 @@ def align_report_roles() -> list[str]:
 			changed.append(report.name)
 		if not own:
 			for role in sorted(wanted):
-				frappe.get_doc({"doctype": "Has Role", "parent": report.name, "parenttype": "Report",
-					"parentfield": "roles", "role": role}).db_insert()
+				frappe.get_doc(
+					{
+						"doctype": "Has Role",
+						"parent": report.name,
+						"parenttype": "Report",
+						"parentfield": "roles",
+						"role": role,
+					}
+				).db_insert()
 			if report.name not in changed:
 				changed.append(report.name)
 	return changed

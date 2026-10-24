@@ -35,7 +35,13 @@ PORTAL_ROLES = ["Supplier Portal User", "Dealer Portal User"]
 
 # Roles whose holders must use two-factor authentication when it is enabled in
 # System Settings (production tenant configuration enables it).
-PRIVILEGED_ROLES = ["System Manager", "IT Operator", "Treasury Approver", "Group Controller", "Automotive Executive"]
+PRIVILEGED_ROLES = [
+	"System Manager",
+	"IT Operator",
+	"Treasury Approver",
+	"Group Controller",
+	"Automotive Executive",
+]
 
 ROLE_PROFILES: dict[str, list[str]] = {
 	"Automotive Executive": ["Automotive Executive"],

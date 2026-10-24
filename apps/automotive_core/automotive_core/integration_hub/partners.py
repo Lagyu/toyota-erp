@@ -21,7 +21,9 @@ def connection_status(partner) -> str:
 	has_secret = bool(partner.get_password("outbound_secret", raise_exception=False))
 	if check_destination(partner.endpoint_url) or not has_secret:
 		return "Not Configured"
-	if partner.last_success_at and (not partner.last_failure_at or partner.last_success_at >= partner.last_failure_at):
+	if partner.last_success_at and (
+		not partner.last_failure_at or partner.last_success_at >= partner.last_failure_at
+	):
 		return "Live"
 	return "Configured (Unverified)"
 
@@ -29,7 +31,9 @@ def connection_status(partner) -> str:
 def poll_file_drops() -> None:
 	from automotive_core.integration_hub.adapters.file_drop import poll_inbox
 
-	for name in frappe.get_all("Integration Partner", filters={"is_active": 1, "adapter": "Local File Drop"}, pluck="name"):
+	for name in frappe.get_all(
+		"Integration Partner", filters={"is_active": 1, "adapter": "Local File Drop"}, pluck="name"
+	):
 		poll_inbox(name)
 
 
@@ -46,9 +50,15 @@ def rotate_inbound_secret(partner: str, overlap_hours: int = 24) -> dict:
 	current = doc.get_password("inbound_secret", raise_exception=False)
 	secret = secrets.token_urlsafe(32)
 	doc.previous_inbound_secret = current if current and overlap else None
-	doc.previous_inbound_secret_until = add_to_date(now_datetime(), hours=overlap) if current and overlap else None
+	doc.previous_inbound_secret_until = (
+		add_to_date(now_datetime(), hours=overlap) if current and overlap else None
+	)
 	doc.inbound_secret = secret
 	doc.save()
-	audit.record("integration.inbound_secret_rotated", doc.doctype, doc.name,
-		{"overlap_hours": overlap, "previous_valid_until": str(doc.previous_inbound_secret_until or "")})
+	audit.record(
+		"integration.inbound_secret_rotated",
+		doc.doctype,
+		doc.name,
+		{"overlap_hours": overlap, "previous_valid_until": str(doc.previous_inbound_secret_until or "")},
+	)
 	return {"secret": secret, "previous_valid_until": doc.previous_inbound_secret_until}

@@ -45,7 +45,7 @@ def before_request() -> None:
 	if request is None:
 		return
 	path = request.path or ""
-	method = next((path[len(p):].strip("/") for p in _METHOD_PATHS if path.startswith(p)), None)
+	method = next((path[len(p) :].strip("/") for p in _METHOD_PATHS if path.startswith(p)), None)
 	method = method or frappe.form_dict.get("cmd")  # the deprecated RPC form
 	if not method:
 		return

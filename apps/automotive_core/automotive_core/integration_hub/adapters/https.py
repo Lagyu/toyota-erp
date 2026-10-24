@@ -52,7 +52,11 @@ class HttpsWebhookAdapter(Adapter):
 		}
 		try:
 			response = requests.post(
-				partner.endpoint_url, data=body, headers=headers, timeout=TIMEOUT_SECONDS, allow_redirects=False
+				partner.endpoint_url,
+				data=body,
+				headers=headers,
+				timeout=TIMEOUT_SECONDS,
+				allow_redirects=False,
 			)
 		except requests.RequestException as exc:
 			return DeliveryResult(ok=False, status_code=0, error=f"{type(exc).__name__}: {exc}"[:500])

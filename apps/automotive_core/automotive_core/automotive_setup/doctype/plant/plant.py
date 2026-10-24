@@ -30,12 +30,21 @@ class Plant(Document):
 				continue
 			company, plant = frappe.db.get_value("Warehouse", warehouse, ["company", "automotive_plant"])
 			if company != self.company:
-				frappe.throw(_("{0}: warehouse {1} belongs to {2}, not {3}.").format(
-					self.meta.get_label(field), warehouse, company, self.company))
+				frappe.throw(
+					_("{0}: warehouse {1} belongs to {2}, not {3}.").format(
+						self.meta.get_label(field), warehouse, company, self.company
+					)
+				)
 			if plant and plant != self.name:
-				frappe.throw(_("{0}: warehouse {1} is assigned to plant {2}.").format(
-					self.meta.get_label(field), warehouse, plant))
-		if self.cost_center and frappe.db.get_value("Cost Center", self.cost_center, "company") != self.company:
+				frappe.throw(
+					_("{0}: warehouse {1} is assigned to plant {2}.").format(
+						self.meta.get_label(field), warehouse, plant
+					)
+				)
+		if (
+			self.cost_center
+			and frappe.db.get_value("Cost Center", self.cost_center, "company") != self.company
+		):
 			frappe.throw(_("Cost Center {0} does not belong to {1}.").format(self.cost_center, self.company))
 
 	def on_update(self):

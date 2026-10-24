@@ -29,8 +29,21 @@ from frappe.utils import add_days, getdate, now_datetime
 from automotive_seed.generator.context import SeedContext, load_profile
 from automotive_seed.generator.inline_jobs import inline_background_jobs
 
-STAGES = ["tenant", "people", "catalog", "suppliers", "dealers", "bank_accounts", "sourcing", "kanban", "pricing",
-	"edi_partners", "opening", "history", "validation"]
+STAGES = [
+	"tenant",
+	"people",
+	"catalog",
+	"suppliers",
+	"dealers",
+	"bank_accounts",
+	"sourcing",
+	"kanban",
+	"pricing",
+	"edi_partners",
+	"opening",
+	"history",
+	"validation",
+]
 
 
 class SeedNotAllowed(frappe.PermissionError):
@@ -72,21 +85,33 @@ def _run_doc(profile: dict) -> str:
 	name = f"SEED-{profile['profile']}-{profile['seed']}"
 	if not frappe.db.exists("Seed Run", name):
 		_state_path(name).unlink(missing_ok=True)  # a new run never inherits an old run's state
-		doc = frappe.get_doc({"doctype": "Seed Run", "profile": profile["profile"], "seed": int(profile["seed"]),
-			"status": "Queued", "stages": [{"stage": s, "stage_status": "Pending"} for s in STAGES]})
+		doc = frappe.get_doc(
+			{
+				"doctype": "Seed Run",
+				"profile": profile["profile"],
+				"seed": int(profile["seed"]),
+				"status": "Queued",
+				"stages": [{"stage": s, "stage_status": "Pending"} for s in STAGES],
+			}
+		)
 		doc.insert(ignore_permissions=True)
 		frappe.db.commit()
 	return name
 
 
 def _mark(run: str, stage: str, note: str = "", documents: int = 0) -> None:
-	frappe.db.sql("""update `tabSeed Run Stage` set stage_status='Done', completed_at=%s, note=%s, documents=%s
-		where parent=%s and stage=%s""", (now_datetime(), note[:500], documents, run, stage))
+	frappe.db.sql(
+		"""update `tabSeed Run Stage` set stage_status='Done', completed_at=%s, note=%s, documents=%s
+		where parent=%s and stage=%s""",
+		(now_datetime(), note[:500], documents, run, stage),
+	)
 	frappe.db.commit()
 
 
 def _done(run: str) -> set[str]:
-	return set(frappe.get_all("Seed Run Stage", filters={"parent": run, "stage_status": "Done"}, pluck="stage"))
+	return set(
+		frappe.get_all("Seed Run Stage", filters={"parent": run, "stage_status": "Done"}, pluck="stage")
+	)
 
 
 def run(profile: str = "small", seed: int | None = None, until: str | None = None) -> str:
@@ -105,8 +130,17 @@ def run(profile: str = "small", seed: int | None = None, until: str | None = Non
 	# Users are created in bulk under a frozen clock; Frappe's per-hour signup throttle would
 	# count all of them as "just now". Raised for this process only (site config untouched).
 	frappe.local.conf["throttle_user_limit"] = 10**9
-	frappe.db.set_value("Seed Run", name, {"status": "Running", "start_date": ctx.start, "end_date": ctx.end,
-		"started_at": frappe.db.get_value("Seed Run", name, "started_at") or now_datetime(), "error": None})
+	frappe.db.set_value(
+		"Seed Run",
+		name,
+		{
+			"status": "Running",
+			"start_date": ctx.start,
+			"end_date": ctx.end,
+			"started_at": frappe.db.get_value("Seed Run", name, "started_at") or now_datetime(),
+			"error": None,
+		},
+	)
 	frappe.db.commit()
 	try:
 		with inline_background_jobs():
@@ -116,7 +150,9 @@ def run(profile: str = "small", seed: int | None = None, until: str | None = Non
 		outcome = frappe.db.get_value("Seed Run", name, "status")
 		finished = "validation" in _done(name)
 		status = outcome if finished and outcome in ("Validated", "Validation Failed") else "Paused"
-		frappe.db.set_value("Seed Run", name, {"status": status, "finished_at": now_datetime() if finished else None})
+		frappe.db.set_value(
+			"Seed Run", name, {"status": status, "finished_at": now_datetime() if finished else None}
+		)
 		frappe.db.commit()
 	except Exception:
 		frappe.db.rollback()
@@ -182,8 +218,12 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		return f"{len(state['dealers']['JP'])} JP / {len(state['dealers']['US'])} US dealers"
 
 	stage("dealers", dealers)
-	stage("bank_accounts", lambda: parties.bank_accounts(ctx, state["roster"],
-		sorted({s for g in state["suppliers"].values() for s in g})))
+	stage(
+		"bank_accounts",
+		lambda: parties.bank_accounts(
+			ctx, state["roster"], sorted({s for g in state["suppliers"].values() for s in g})
+		),
+	)
 	stage("sourcing", lambda: supply.sourcing(ctx, state["structure"], state["roster"], state["suppliers"]))
 
 	def kanban():
@@ -240,8 +280,14 @@ def _stages(ctx: SeedContext, name: str, state: dict, until: str | None) -> None
 		from automotive_seed.generator import validate
 
 		result = validate.run(ctx, state)
-		frappe.db.set_value("Seed Run", name, {"validation": json.dumps(result, indent=1, default=str),
-			"status": "Validated" if result["ok"] else "Validation Failed"})
+		frappe.db.set_value(
+			"Seed Run",
+			name,
+			{
+				"validation": json.dumps(result, indent=1, default=str),
+				"status": "Validated" if result["ok"] else "Validation Failed",
+			},
+		)
 		frappe.db.commit()
 		return "ok" if result["ok"] else "FAILED"
 
@@ -292,8 +338,23 @@ def status(profile: str = "small", seed: int | None = None) -> dict:
 	if seed is not None:
 		spec["seed"] = int(seed)
 	name = f"SEED-{spec['profile']}-{spec['seed']}"
-	row = frappe.db.get_value("Seed Run", name, ["status", "stage", "simulated_date", "start_date", "end_date",
-		"started_at", "finished_at", "counts", "validation", "error"], as_dict=True)
+	row = frappe.db.get_value(
+		"Seed Run",
+		name,
+		[
+			"status",
+			"stage",
+			"simulated_date",
+			"start_date",
+			"end_date",
+			"started_at",
+			"finished_at",
+			"counts",
+			"validation",
+			"error",
+		],
+		as_dict=True,
+	)
 	if not row:
 		return {"run": name, "status": "Not Started"}
 	out = {"run": name, **{k: v for k, v in row.items() if k not in ("counts", "validation")}}
@@ -314,7 +375,13 @@ def revalidate(profile: str = "small", seed: int | None = None) -> dict:
 	name = f"SEED-{spec['profile']}-{spec['seed']}"
 	ctx = SeedContext(name, spec)
 	result = validate.run(ctx, load_state(name))
-	frappe.db.set_value("Seed Run", name, {"validation": json.dumps(result, indent=1, default=str),
-		"status": "Validated" if result["ok"] else "Validation Failed"})
+	frappe.db.set_value(
+		"Seed Run",
+		name,
+		{
+			"validation": json.dumps(result, indent=1, default=str),
+			"status": "Validated" if result["ok"] else "Validation Failed",
+		},
+	)
 	frappe.db.commit()
 	return {"ok": result["ok"], "failed": [c["check"] for c in result["checks"] if not c["ok"]]}

@@ -57,7 +57,9 @@ class TestPrivilegedTwoFactor(IntegrationTestCase):
 			frappe.db.commit()
 
 		self.addCleanup(restore)
-		frappe.db.set_single_value("System Settings", {"enable_two_factor_auth": 1, "two_factor_method": "OTP App"})
+		frappe.db.set_single_value(
+			"System Settings", {"enable_two_factor_auth": 1, "two_factor_method": "OTP App"}
+		)
 		two_factor_for_privileged_roles()
 		clerk = make_user("otp.clerk@hinode.example", ["Stock User"])
 		controller = make_user("otp.controller@hinode.example", ["Group Controller"])

@@ -172,7 +172,9 @@ def _company(company: dict, log: TenantLog) -> None:
 def _fiscal_years(definition, log: TenantLog) -> None:
 	for year in definition["fiscal_years"]:
 		start, end = getdate(year["start"]), getdate(year["end"])
-		existing = frappe.db.get_value("Fiscal Year", {"year_start_date": start, "year_end_date": end}, "name")
+		existing = frappe.db.get_value(
+			"Fiscal Year", {"year_start_date": start, "year_end_date": end}, "name"
+		)
 		if existing:
 			continue
 		if not log.change(f"fiscal year {year['year']}"):
@@ -198,8 +200,12 @@ def _holiday_lists(definition, log: TenantLog) -> None:
 			calendar = holiday_calendars.country_holidays(region, years=year)
 			days: dict[dt.date, str] = {d: str(n) for d, n in calendar.items()}
 			if region == "JP":  # plant shutdowns (New Year, Golden Week, Obon) on top of public holidays
-				for month, day_from, day_to, label in ((1, 1, 3, "New Year shutdown"), (5, 1, 5, "Golden Week shutdown"),
-						(8, 13, 16, "Obon shutdown"), (12, 29, 31, "Year-end shutdown")):
+				for month, day_from, day_to, label in (
+					(1, 1, 3, "New Year shutdown"),
+					(5, 1, 5, "Golden Week shutdown"),
+					(8, 13, 16, "Obon shutdown"),
+					(12, 29, 31, "Year-end shutdown"),
+				):
 					for day in range(day_from, day_to + 1):
 						days.setdefault(dt.date(year, month, day), label)
 			doc = frappe.get_doc(
@@ -208,7 +214,9 @@ def _holiday_lists(definition, log: TenantLog) -> None:
 					"holiday_list_name": name,
 					"from_date": dt.date(year, 1, 1),
 					"to_date": dt.date(year, 12, 31),
-					"holidays": [{"holiday_date": d, "description": label} for d, label in sorted(days.items())],
+					"holidays": [
+						{"holiday_date": d, "description": label} for d, label in sorted(days.items())
+					],
 				}
 			)
 			for weekday in ("Saturday", "Sunday"):
@@ -237,15 +245,22 @@ def _branches(companies, log: TenantLog) -> None:
 
 def _departments(definition, companies, log: TenantLog) -> None:
 	for company in companies:
-		root = frappe.db.get_value("Department", {"department_name": "All Departments"}, "name") or "All Departments"
+		root = (
+			frappe.db.get_value("Department", {"department_name": "All Departments"}, "name")
+			or "All Departments"
+		)
 		for department in definition["departments"]:
 			if frappe.db.exists("Department", {"department_name": department, "company": company["name"]}):
 				continue
 			if not log.change(f"department {department} - {company['abbr']}"):
 				continue
 			frappe.get_doc(
-				{"doctype": "Department", "department_name": department, "company": company["name"],
-				 "parent_department": root}
+				{
+					"doctype": "Department",
+					"department_name": department,
+					"company": company["name"],
+					"parent_department": root,
+				}
 			).insert(ignore_permissions=True)
 
 
@@ -266,8 +281,12 @@ def _shift_patterns(definition, log: TenantLog) -> None:
 				"holiday_list": holiday_list_name(pattern["holidays"], year),
 				**{day.lower(): int(day.lower() in pattern["days"]) for day in WEEKDAY_NAMES},
 				"shifts": [
-					{"shift_code": s["code"], "start_time": s["start"], "end_time": s["end"],
-					 "break_minutes": s.get("break_minutes", 0)}
+					{
+						"shift_code": s["code"],
+						"start_time": s["start"],
+						"end_time": s["end"],
+						"break_minutes": s.get("break_minutes", 0),
+					}
 					for s in pattern["shifts"]
 				],
 			}
@@ -284,8 +303,18 @@ def _abbr(companies, company_name: str) -> str:
 	return next(c["abbr"] for c in companies if c["name"] == company_name)
 
 
-def _warehouse(name: str, company: str, abbr: str, parent: str, log: TenantLog, *, is_group=False,
-		plant: str | None = None, role: str | None = None, transit: bool = False) -> str:
+def _warehouse(
+	name: str,
+	company: str,
+	abbr: str,
+	parent: str,
+	log: TenantLog,
+	*,
+	is_group=False,
+	plant: str | None = None,
+	role: str | None = None,
+	transit: bool = False,
+) -> str:
 	full = f"{name} - {abbr}"
 	if frappe.db.exists("Warehouse", full):
 		updates = {}
@@ -326,11 +355,18 @@ def _cost_center(plant: dict, abbr: str, log: TenantLog) -> str:
 	if not log.change(f"cost center {name}"):
 		return name
 	parent = frappe.db.get_value(
-		"Cost Center", {"company": plant["company"], "is_group": 1, "parent_cost_center": ("is", "not set")}, "name"
+		"Cost Center",
+		{"company": plant["company"], "is_group": 1, "parent_cost_center": ("is", "not set")},
+		"name",
 	)
 	doc = frappe.get_doc(
-		{"doctype": "Cost Center", "cost_center_name": plant["name"], "company": plant["company"],
-		 "parent_cost_center": parent, "is_group": 0}
+		{
+			"doctype": "Cost Center",
+			"cost_center_name": plant["name"],
+			"company": plant["company"],
+			"parent_cost_center": parent,
+			"is_group": 0,
+		}
 	)
 	doc.insert(ignore_permissions=True)
 	return doc.name
@@ -347,18 +383,34 @@ def _plant(plant: dict, companies, definition, log: TenantLog) -> None:
 	exists = frappe.db.exists("Plant", code)
 	if not exists and log.change(f"plant {code}"):
 		frappe.get_doc(
-			{"doctype": "Plant", "plant_code": code, "plant_name": plant["name"], "company": company,
-			 "plant_type": plant["type"], "time_zone": plant["time_zone"], "country": plant["country"]}
+			{
+				"doctype": "Plant",
+				"plant_code": code,
+				"plant_name": plant["name"],
+				"company": company,
+				"plant_type": plant["type"],
+				"time_zone": plant["time_zone"],
+				"country": plant["country"],
+			}
 		).insert(ignore_permissions=True)
 	site_group = _warehouse(plant["name"], company, abbr, root, log, is_group=True, plant=code)
 	values: dict[str, Any] = {}
 	for key, (field, role) in ROLE_FIELDS.items():
 		name = plant["warehouses"].get(key)
 		if name:
-			values[field] = _warehouse(name, company, abbr, site_group, log, plant=code, role=role,
-				transit=key == "in_transit")
-	line_side_group = _warehouse(f"{plant['name']} Line Side", company, abbr, site_group, log, is_group=True,
-		plant=code, role="Line Side")
+			values[field] = _warehouse(
+				name, company, abbr, site_group, log, plant=code, role=role, transit=key == "in_transit"
+			)
+	line_side_group = _warehouse(
+		f"{plant['name']} Line Side",
+		company,
+		abbr,
+		site_group,
+		log,
+		is_group=True,
+		plant=code,
+		role="Line Side",
+	)
 	values["line_side_warehouse"] = line_side_group
 	values["cost_center"] = _cost_center(plant, abbr, log)
 	values["branch"] = next((c.get("branch") for c in companies if c["name"] == company), None)
@@ -386,26 +438,43 @@ def _operating_costs(definition, companies, log: TenantLog) -> None:
 	"""Operation costing: workstations of lines with an hour_rate charge it (as the "Labour and
 	Overhead" operating component) to the job cards they run; manufacture entries debit it to
 	the product's valuation and credit an absorption account of the company."""
-	costed = sorted({p["company"] for p in definition["plants"] for ln in p.get("lines", []) if ln.get("hour_rate")})
+	costed = sorted(
+		{p["company"] for p in definition["plants"] for ln in p.get("lines", []) if ln.get("hour_rate")}
+	)
 	accounts = []
 	for company in costed:
 		name = f"Labour and Overhead Absorbed - {_abbr(companies, company)}"
 		if not frappe.db.exists("Account", name) and log.change(f"account {name}"):
-			parent = frappe.db.get_value("Account", {"company": company, "account_name": "Direct Expenses",
-				"is_group": 1}, "name") or frappe.db.get_value("Account", {"company": company, "root_type": "Expense",
-				"is_group": 1}, "name", order_by="lft")
-			frappe.get_doc({"doctype": "Account", "account_name": "Labour and Overhead Absorbed", "company": company,
-				"parent_account": parent, "is_group": 0}).insert(ignore_permissions=True)
+			parent = frappe.db.get_value(
+				"Account", {"company": company, "account_name": "Direct Expenses", "is_group": 1}, "name"
+			) or frappe.db.get_value(
+				"Account", {"company": company, "root_type": "Expense", "is_group": 1}, "name", order_by="lft"
+			)
+			frappe.get_doc(
+				{
+					"doctype": "Account",
+					"account_name": "Labour and Overhead Absorbed",
+					"company": company,
+					"parent_account": parent,
+					"is_group": 0,
+				}
+			).insert(ignore_permissions=True)
 		if not frappe.db.exists("Account", name):
 			continue
 		accounts.append({"company": company, "expense_account": name})
 		if frappe.db.get_value("Company", company, "default_operating_cost_account") != name and log.change(
-				f"{company}: default operating cost account {name}"):
+			f"{company}: default operating cost account {name}"
+		):
 			frappe.db.set_value("Company", company, "default_operating_cost_account", name)
 	if not frappe.db.exists("Workstation Operating Component", OPERATING_COMPONENT):
 		if log.change(f"workstation operating component {OPERATING_COMPONENT}"):
-			frappe.get_doc({"doctype": "Workstation Operating Component", "component_name": OPERATING_COMPONENT,
-				"accounts": accounts}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "Workstation Operating Component",
+					"component_name": OPERATING_COMPONENT,
+					"accounts": accounts,
+				}
+			).insert(ignore_permissions=True)
 		return
 	component = frappe.get_doc("Workstation Operating Component", OPERATING_COMPONENT)
 	missing = [a for a in accounts if not any(r.company == a["company"] for r in component.accounts)]
@@ -419,8 +488,11 @@ def _workstation(name: str, plant: dict, log: TenantLog, hour_rate: float | None
 	"""hour_rate: labour and overhead per hour (the line's), the operating cost of its job cards."""
 	costs = [{"operating_component": OPERATING_COMPONENT, "operating_cost": hour_rate}] if hour_rate else []
 	if frappe.db.exists("Workstation", name):
-		if hour_rate and float(frappe.db.get_value("Workstation", name, "hour_rate") or 0) != float(hour_rate) \
-				and log.change(f"workstation {name}: hour rate {hour_rate}"):
+		if (
+			hour_rate
+			and float(frappe.db.get_value("Workstation", name, "hour_rate") or 0) != float(hour_rate)
+			and log.change(f"workstation {name}: hour rate {hour_rate}")
+		):
 			doc = frappe.get_doc("Workstation", name)
 			doc.set("workstation_costs", costs)
 			doc.save(ignore_permissions=True)
@@ -466,8 +538,15 @@ def _working_hours(pattern) -> list[dict]:
 
 def _line(line: dict, plant: dict, company: str, abbr: str, line_side_group: str, log: TenantLog) -> None:
 	code = line["code"]
-	line_side = _warehouse(f"{line['name']} Line Side", company, abbr, line_side_group, log, plant=plant["code"],
-		role="Line Side")
+	line_side = _warehouse(
+		f"{line['name']} Line Side",
+		company,
+		abbr,
+		line_side_group,
+		log,
+		plant=plant["code"],
+		role="Line Side",
+	)
 	stations = []
 	for seq, station in enumerate(line["stations"], start=1):
 		station_code, _sep, _label = station.partition(" ")
@@ -477,8 +556,9 @@ def _line(line: dict, plant: dict, company: str, abbr: str, line_side_group: str
 				"station_code": station_code,
 				"sequence": seq * 10,
 				"workstation": workstation,
-				"station_type": "Inspection" if ("Inspection" in station or "Test" in station or "Audit" in station
-					or "PDI" in station) else "Assembly",
+				"station_type": "Inspection"
+				if ("Inspection" in station or "Test" in station or "Audit" in station or "PDI" in station)
+				else "Assembly",
 				"is_quality_gate": int("Inspection" in station or "Test" in station or "PDI" in station),
 				"cycle_time_seconds": line["takt"],
 			}
@@ -525,33 +605,59 @@ def _taxes(definition, companies, log: TenantLog) -> None:
 		for abbr in template["companies"]:
 			name = f"{template['title']} - {abbr}"
 			if not frappe.db.exists(doctype, name) and log.change(f"{doctype} {name}"):
-				frappe.get_doc({"doctype": doctype, "title": template["title"], "company": company_of[abbr]}).insert(
-					ignore_permissions=True)
+				frappe.get_doc(
+					{"doctype": doctype, "title": template["title"], "company": company_of[abbr]}
+				).insert(ignore_permissions=True)
 	for abbr, by_type in (taxes.get("rules") or {}).items():
 		for tax_type, by_category in by_type.items():
 			for category, title in by_category.items():
 				_tax_rule(company_of[abbr], tax_type, category or None, f"{title} - {abbr}", log)
-	wanted = [(r["party_type"], r.get("company_country"), r.get("party_country"), r["tax_category"])
-		for r in taxes.get("party_defaults", [])]
+	wanted = [
+		(r["party_type"], r.get("company_country"), r.get("party_country"), r["tax_category"])
+		for r in taxes.get("party_defaults", [])
+	]
 	settings = frappe.get_single("Automotive Settings")
-	current = [(r.party_type, r.company_country or None, r.party_country or None, r.tax_category)
-		for r in settings.get("tax_category_defaults")]
+	current = [
+		(r.party_type, r.company_country or None, r.party_country or None, r.tax_category)
+		for r in settings.get("tax_category_defaults")
+	]
 	if current != wanted and log.change(f"Automotive Settings: {len(wanted)} tax category defaults"):
-		settings.set("tax_category_defaults", [dict(zip(("party_type", "company_country", "party_country",
-			"tax_category"), row, strict=True)) for row in wanted])
+		settings.set(
+			"tax_category_defaults",
+			[
+				dict(
+					zip(("party_type", "company_country", "party_country", "tax_category"), row, strict=True)
+				)
+				for row in wanted
+			],
+		)
 		settings.save(ignore_permissions=True)
 
 
 # a rule the tenant manages: company, tax type and category only (rules with other filters are the
 # operator's own)
-_RULE_FILTERS_NOT_SET = ("customer", "supplier", "customer_group", "supplier_group", "item", "item_group",
-	"billing_country", "shipping_country", "from_date", "to_date")
+_RULE_FILTERS_NOT_SET = (
+	"customer",
+	"supplier",
+	"customer_group",
+	"supplier_group",
+	"item",
+	"item_group",
+	"billing_country",
+	"shipping_country",
+	"from_date",
+	"to_date",
+)
 
 
 def _tax_rule(company: str, tax_type: str, category: str | None, template: str, log: TenantLog) -> None:
 	field = "sales_tax_template" if tax_type == "Sales" else "purchase_tax_template"
-	filters = {"company": company, "tax_type": tax_type, "tax_category": category or ("is", "not set"),
-		**{f: ("is", "not set") for f in _RULE_FILTERS_NOT_SET}}
+	filters = {
+		"company": company,
+		"tax_type": tax_type,
+		"tax_category": category or ("is", "not set"),
+		**{f: ("is", "not set") for f in _RULE_FILTERS_NOT_SET},
+	}
 	existing = frappe.get_all("Tax Rule", filters=filters, fields=["name", field], limit=1)
 	label = f"tax rule {company} {tax_type} {category or '(no category)'} -> {template}"
 	if existing and existing[0][field] == template:
@@ -562,8 +668,16 @@ def _tax_rule(company: str, tax_type: str, category: str | None, template: str, 
 		frappe.db.set_value("Tax Rule", existing[0].name, field, template)
 		return
 	# no shopping cart here (the rule's default would also apply it there)
-	frappe.get_doc({"doctype": "Tax Rule", "tax_type": tax_type, "company": company, "tax_category": category,
-		"use_for_shopping_cart": 0, field: template}).insert(ignore_permissions=True)
+	frappe.get_doc(
+		{
+			"doctype": "Tax Rule",
+			"tax_type": tax_type,
+			"company": company,
+			"tax_category": category,
+			"use_for_shopping_cart": 0,
+			field: template,
+		}
+	).insert(ignore_permissions=True)
 
 
 def _intercompany(definition, companies, log: TenantLog) -> None:
@@ -574,8 +688,11 @@ def _intercompany(definition, companies, log: TenantLog) -> None:
 		# pair trades in the buyer's currency.
 		price_list = _intercompany_price_list(currency[buyer], log)
 		# a seller billing in the buyer's (foreign) currency needs a receivable in that currency
-		receivable = _party_account(seller, currency[buyer], "Receivable", log) \
-			if currency[seller] != currency[buyer] else None
+		receivable = (
+			_party_account(seller, currency[buyer], "Receivable", log)
+			if currency[seller] != currency[buyer]
+			else None
+		)
 		_internal_party("Customer", buyer, seller, log, price_list, receivable, currency[buyer])
 		_internal_party("Supplier", seller, buyer, log, price_list)
 
@@ -586,59 +703,109 @@ def _party_account(company: str, currency: str, account_type: str, log: TenantLo
 	name = f"{label} {currency} - {abbr}"
 	if frappe.db.exists("Account", name):
 		return name
-	parent = frappe.db.get_value("Account", {"company": company, "account_type": account_type, "is_group": 0,
-		"account_currency": frappe.get_cached_value("Company", company, "default_currency")}, "parent_account")
+	parent = frappe.db.get_value(
+		"Account",
+		{
+			"company": company,
+			"account_type": account_type,
+			"is_group": 0,
+			"account_currency": frappe.get_cached_value("Company", company, "default_currency"),
+		},
+		"parent_account",
+	)
 	if not log.change(f"account {name}"):
 		return name
-	frappe.get_doc({"doctype": "Account", "account_name": f"{label} {currency}", "company": company,
-		"parent_account": parent, "account_type": account_type, "account_currency": currency,
-		"is_group": 0}).insert(ignore_permissions=True)
+	frappe.get_doc(
+		{
+			"doctype": "Account",
+			"account_name": f"{label} {currency}",
+			"company": company,
+			"parent_account": parent,
+			"account_type": account_type,
+			"account_currency": currency,
+			"is_group": 0,
+		}
+	).insert(ignore_permissions=True)
 	return name
 
 
 def _intercompany_price_list(currency: str, log: TenantLog) -> str:
 	name = f"Intercompany {currency}"
 	if not frappe.db.exists("Price List", name) and log.change(f"price list {name}"):
-		frappe.get_doc({"doctype": "Price List", "price_list_name": name, "currency": currency, "buying": 1,
-			"selling": 1, "enabled": 1}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Price List",
+				"price_list_name": name,
+				"currency": currency,
+				"buying": 1,
+				"selling": 1,
+				"enabled": 1,
+			}
+		).insert(ignore_permissions=True)
 	return name
 
 
-def _internal_party(doctype: str, represents: str, transacting_company: str, log: TenantLog,
-		price_list: str | None = None, party_account: str | None = None, billing_currency: str | None = None) -> None:
+def _internal_party(
+	doctype: str,
+	represents: str,
+	transacting_company: str,
+	log: TenantLog,
+	price_list: str | None = None,
+	party_account: str | None = None,
+	billing_currency: str | None = None,
+) -> None:
 	name_field = "customer_name" if doctype == "Customer" else "supplier_name"
 	flag = "is_internal_customer" if doctype == "Customer" else "is_internal_supplier"
 	existing = frappe.db.get_value(doctype, {flag: 1, "represents_company": represents}, "name")
-	tax_category = default_tax_category(doctype, transacting_company,
-		frappe.get_cached_value("Company", represents, "country"))
+	tax_category = default_tax_category(
+		doctype, transacting_company, frappe.get_cached_value("Company", represents, "country")
+	)
 	if existing:
 		doc = frappe.get_doc(doctype, existing)
 		drift = {}
 		if price_list and doc.get("default_price_list") != price_list:
 			drift["default_price_list"] = price_list
 		if doctype == "Supplier":
-			drift.update({f: 1 for f in ("allow_purchase_invoice_creation_without_purchase_order",
-				"allow_purchase_invoice_creation_without_purchase_receipt") if not doc.get(f)})
+			drift.update(
+				{
+					f: 1
+					for f in (
+						"allow_purchase_invoice_creation_without_purchase_order",
+						"allow_purchase_invoice_creation_without_purchase_receipt",
+					)
+					if not doc.get(f)
+				}
+			)
 			if drift and log.change(f"Supplier {existing}: {sorted(drift)}"):
 				doc.update(drift)
 				doc.flags.accept_similar_name = True
 				doc.save(ignore_permissions=True)
 		changed = False
-		if billing_currency and doc.get("default_currency") != billing_currency and log.change(
-				f"{doctype} {existing}: billing currency {billing_currency}"):
+		if (
+			billing_currency
+			and doc.get("default_currency") != billing_currency
+			and log.change(f"{doctype} {existing}: billing currency {billing_currency}")
+		):
 			doc.default_currency = billing_currency
 			changed = True
-		if party_account and not any(r.company == transacting_company and r.account == party_account
-				for r in doc.accounts) and log.change(f"{doctype} {existing}: account {party_account}"):
+		if (
+			party_account
+			and not any(r.company == transacting_company and r.account == party_account for r in doc.accounts)
+			and log.change(f"{doctype} {existing}: account {party_account}")
+		):
 			doc.set("accounts", [r for r in doc.accounts if r.company != transacting_company])
 			doc.append("accounts", {"company": transacting_company, "account": party_account})
 			changed = True
 		if not any(row.company == transacting_company for row in doc.companies) and log.change(
-				f"{doctype} {existing}: allowed company {transacting_company}"):
+			f"{doctype} {existing}: allowed company {transacting_company}"
+		):
 			doc.append("companies", {"company": transacting_company})
 			changed = True
-		if tax_category and doc.get("tax_category") != tax_category and log.change(
-				f"{doctype} {existing}: tax category {tax_category}"):
+		if (
+			tax_category
+			and doc.get("tax_category") != tax_category
+			and log.change(f"{doctype} {existing}: tax category {tax_category}")
+		):
 			doc.tax_category = tax_category
 			changed = True
 		if changed:
@@ -679,8 +846,15 @@ def _sod_rules(definition, log: TenantLog) -> None:
 		if not log.change(f"SoD rule {rule['name']}"):
 			continue
 		frappe.get_doc(
-			{"doctype": "Segregation of Duties Rule", "rule_name": rule["name"], "role_a": rule["a"], "role_b": rule["b"],
-			 "enforcement": rule["enforcement"], "rationale": rule["rationale"], "is_active": 1}
+			{
+				"doctype": "Segregation of Duties Rule",
+				"rule_name": rule["name"],
+				"role_a": rule["a"],
+				"role_b": rule["b"],
+				"enforcement": rule["enforcement"],
+				"rationale": rule["rationale"],
+				"is_active": 1,
+			}
 		).insert(ignore_permissions=True)
 
 
@@ -712,8 +886,12 @@ def approval_policy(policy: dict, log: TenantLog) -> None:
 				"allow_delegation": 1,
 				"bind_to_document_hash": 1,
 				"steps": [
-					{"step_no": s["step"], "step_name": s["name"], "approver_role": s["role"],
-					 "min_amount": s.get("min_amount", 0)}
+					{
+						"step_no": s["step"],
+						"step_name": s["name"],
+						"approver_role": s["role"],
+						"min_amount": s.get("min_amount", 0),
+					}
 					for s in policy["steps"]
 				],
 			}

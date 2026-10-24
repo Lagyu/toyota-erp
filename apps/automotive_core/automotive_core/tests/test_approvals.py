@@ -51,8 +51,11 @@ class TestApprovals(IntegrationTestCase):
 			doc.reload()
 			doc.submit()
 		self.assertEqual(doc.docstatus, 1)
-		decision = frappe.get_all("Approval Decision", filters={"approval_request": req["name"]},
-			fields=["decided_by", "decision", "document_hash"])
+		decision = frappe.get_all(
+			"Approval Decision",
+			filters={"approval_request": req["name"]},
+			fields=["decided_by", "decision", "document_hash"],
+		)
 		self.assertEqual(decision[0].decided_by, PM1)
 
 	def test_overdue_steps_escalate_once_to_the_next_level(self):
@@ -63,19 +66,30 @@ class TestApprovals(IntegrationTestCase):
 		requested_at = frappe.utils.get_datetime(frappe.db.get_value("Approval Request", req, "requested_at"))
 		self.assertNotIn(req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=23)))
 		self.assertIn(req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=25)))
-		self.assertNotIn(req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=30)))  # once per step
+		self.assertNotIn(
+			req, approvals.escalate_overdue(requested_at + dt.timedelta(hours=30))
+		)  # once per step
 
 		def step(no):
-			return frappe.get_all("Approval Request Step", filters={"parent": req, "step_no": no},
-				fields=["escalate_after_hours", "escalated_at", "escalated_to", "decided_at"])[0]
+			return frappe.get_all(
+				"Approval Request Step",
+				filters={"parent": req, "step_no": no},
+				fields=["escalate_after_hours", "escalated_at", "escalated_to", "decided_at"],
+			)[0]
 
 		first = step(1)
 		self.assertEqual(first.escalate_after_hours, 24)
 		self.assertTrue(first.escalated_at)
 		self.assertIn(DIRECTOR, first.escalated_to.split("\n"))  # the next step's approvers
-		self.assertTrue(frappe.db.exists("Notification Dispatch", {"event": "approval.escalated", "recipient": PM1,
-			"reference_name": req, "channel": "In-App"}))
-		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "approval.escalated", "reference_name": doc.name}))
+		self.assertTrue(
+			frappe.db.exists(
+				"Notification Dispatch",
+				{"event": "approval.escalated", "recipient": PM1, "reference_name": req, "channel": "In-App"},
+			)
+		)
+		self.assertTrue(
+			frappe.db.exists("Audit Event", {"event_type": "approval.escalated", "reference_name": doc.name})
+		)
 
 		# the last step's clock starts at the decision before it, and escalates to group control
 		self.decide(req, PM1)
@@ -213,33 +227,75 @@ class TestApprovals(IntegrationTestCase):
 
 	def test_delegate_cannot_be_self_or_unheld_role(self):
 		with as_user(PM1), self.assertRaises(frappe.ValidationError):
-			frappe.get_doc({"doctype": "Approval Delegation", "delegator": PM1, "delegate": PM1,
-				"approver_role": "Procurement Manager", "from_date": nowdate(), "to_date": nowdate(),
-				"reason": "x"}).insert()
+			frappe.get_doc(
+				{
+					"doctype": "Approval Delegation",
+					"delegator": PM1,
+					"delegate": PM1,
+					"approver_role": "Procurement Manager",
+					"from_date": nowdate(),
+					"to_date": nowdate(),
+					"reason": "x",
+				}
+			).insert()
 		with as_user(PM1), self.assertRaises(frappe.ValidationError):
-			frappe.get_doc({"doctype": "Approval Delegation", "delegator": PM1, "delegate": DIRECTOR,
-				"approver_role": "Treasury Approver", "from_date": nowdate(), "to_date": nowdate(),
-				"reason": "role not held"}).insert()
+			frappe.get_doc(
+				{
+					"doctype": "Approval Delegation",
+					"delegator": PM1,
+					"delegate": DIRECTOR,
+					"approver_role": "Treasury Approver",
+					"from_date": nowdate(),
+					"to_date": nowdate(),
+					"reason": "role not held",
+				}
+			).insert()
 
 	def test_delegation_cannot_break_segregation_of_duties(self):
 		from automotive_core.governance.delegation import delegated_roles
 		from automotive_core.governance.sod import SegregationOfDutiesError
 
 		treasurer = make_user("treasury.sod@hinode.example", ["Treasury Approver"])
-		if not frappe.db.exists("Segregation of Duties Rule", {"role_a": "Buyer", "role_b": "Treasury Approver"}):
-			frappe.get_doc({"doctype": "Segregation of Duties Rule", "rule_name": "Buyer vs Treasury Approver (test)",
-				"role_a": "Buyer", "role_b": "Treasury Approver", "enforcement": "Block", "is_active": 1,
-				"rationale": "Who orders must not release the payment."}).insert(ignore_permissions=True)
+		if not frappe.db.exists(
+			"Segregation of Duties Rule", {"role_a": "Buyer", "role_b": "Treasury Approver"}
+		):
+			frappe.get_doc(
+				{
+					"doctype": "Segregation of Duties Rule",
+					"rule_name": "Buyer vs Treasury Approver (test)",
+					"role_a": "Buyer",
+					"role_b": "Treasury Approver",
+					"enforcement": "Block",
+					"is_active": 1,
+					"rationale": "Who orders must not release the payment.",
+				}
+			).insert(ignore_permissions=True)
 		with as_user(treasurer), self.assertRaises(SegregationOfDutiesError):
-			frappe.get_doc({"doctype": "Approval Delegation", "delegator": treasurer, "delegate": BUYER,
-				"approver_role": "Treasury Approver", "from_date": nowdate(), "to_date": nowdate(),
-				"reason": "holiday cover"}).insert()
+			frappe.get_doc(
+				{
+					"doctype": "Approval Delegation",
+					"delegator": treasurer,
+					"delegate": BUYER,
+					"approver_role": "Treasury Approver",
+					"from_date": nowdate(),
+					"to_date": nowdate(),
+					"reason": "holiday cover",
+				}
+			).insert()
 		# granted to someone without the conflict, then the delegate gains the conflicting role: no authority
 		cover = make_user("cover.sod@hinode.example", ["Production Planner"])
 		with as_user(treasurer):
-			granted = frappe.get_doc({"doctype": "Approval Delegation", "delegator": treasurer, "delegate": cover,
-				"approver_role": "Treasury Approver", "from_date": nowdate(), "to_date": nowdate(),
-				"reason": "holiday cover"}).insert()
+			granted = frappe.get_doc(
+				{
+					"doctype": "Approval Delegation",
+					"delegator": treasurer,
+					"delegate": cover,
+					"approver_role": "Treasury Approver",
+					"from_date": nowdate(),
+					"to_date": nowdate(),
+					"reason": "holiday cover",
+				}
+			).insert()
 			granted.submit()
 		self.assertEqual([d.role for d in delegated_roles(cover)], ["Treasury Approver"])
 		user = frappe.get_doc("User", cover)

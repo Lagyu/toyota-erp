@@ -59,8 +59,15 @@ def ensure_cards(loop) -> None:
 	for card_no in range(1, (loop.number_of_cards or 0) + 1):
 		if card_no in existing:
 			continue
-		frappe.get_doc({"doctype": "Kanban Card", "card_id": f"{loop.name}-{card_no:02d}", "kanban_loop": loop.name,
-			"card_no": card_no, "status": "Full"}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Kanban Card",
+				"card_id": f"{loop.name}-{card_no:02d}",
+				"kanban_loop": loop.name,
+				"card_no": card_no,
+				"status": "Full",
+			}
+		).insert(ignore_permissions=True)
 
 
 def create_signal(loop_name: str, source: str, card: str | None = None) -> str:
@@ -74,8 +81,13 @@ def create_signal(loop_name: str, source: str, card: str | None = None) -> str:
 		if card_doc.status != "Full":
 			return card_doc.current_signal  # re-scan of an already signalled card is idempotent
 	else:
-		full = frappe.get_all("Kanban Card", filters={"kanban_loop": loop.name, "status": "Full"}, pluck="name",
-			order_by="card_no asc", limit=1)
+		full = frappe.get_all(
+			"Kanban Card",
+			filters={"kanban_loop": loop.name, "status": "Full"},
+			pluck="name",
+			order_by="card_no asc",
+			limit=1,
+		)
 		card_doc = frappe.get_doc("Kanban Card", full[0], for_update=True) if full else None
 	now = now_datetime()
 	signal = frappe.get_doc(
@@ -99,8 +111,13 @@ def create_signal(loop_name: str, source: str, card: str | None = None) -> str:
 	_request_supply(loop, signal)
 	loop.db_set("last_signal_at", now, update_modified=False)
 	if not card_doc:
-		signal.db_set({"status": "Escalated", "escalation_level": 1,
-			"escalation_note": _("No full card left in the loop: line-side stock-out risk.")})
+		signal.db_set(
+			{
+				"status": "Escalated",
+				"escalation_level": 1,
+				"escalation_note": _("No full card left in the loop: line-side stock-out risk."),
+			}
+		)
 	return signal.name
 
 
@@ -112,16 +129,20 @@ def _request_supply(loop, signal) -> None:
 				"doctype": "Material Request",
 				"material_request_type": "Purchase",
 				"company": company,
-				"transaction_date": signal.signaled_at.date() if hasattr(signal.signaled_at, "date") else None,
+				"transaction_date": signal.signaled_at.date()
+				if hasattr(signal.signaled_at, "date")
+				else None,
 				"schedule_date": get_datetime(signal.due_by).date(),
 				"automotive_kanban_signal": signal.name,
 				"set_warehouse": loop.line_side_warehouse,
-				"items": [{
-					"item_code": loop.item_code,
-					"qty": loop.container_qty,
-					"schedule_date": get_datetime(signal.due_by).date(),
-					"warehouse": loop.line_side_warehouse,
-				}],
+				"items": [
+					{
+						"item_code": loop.item_code,
+						"qty": loop.container_qty,
+						"schedule_date": get_datetime(signal.due_by).date(),
+						"warehouse": loop.line_side_warehouse,
+					}
+				],
 			}
 		)
 		mr.flags.ignore_permissions = True
@@ -137,12 +158,14 @@ def _request_supply(loop, signal) -> None:
 				"company": company,
 				"automotive_source_doctype": "Kanban Signal",
 				"automotive_source_name": signal.name,
-				"items": [{
-					"item_code": loop.item_code,
-					"qty": loop.container_qty,
-					"s_warehouse": loop.source_warehouse,
-					"t_warehouse": loop.line_side_warehouse,
-				}],
+				"items": [
+					{
+						"item_code": loop.item_code,
+						"qty": loop.container_qty,
+						"s_warehouse": loop.source_warehouse,
+						"t_warehouse": loop.line_side_warehouse,
+					}
+				],
 			}
 		)
 		se.flags.ignore_permissions = True
@@ -155,8 +178,11 @@ def _complete(signal_name: str, receipt_field: str | None = None, receipt: str |
 	if signal.status not in OPEN_STATUSES:
 		return
 	now = now_datetime()
-	values = {"status": "Received", "received_at": now,
-		"lead_time_hours_actual": round(time_diff_in_hours(now, signal.signaled_at), 2)}
+	values = {
+		"status": "Received",
+		"received_at": now,
+		"lead_time_hours_actual": round(time_diff_in_hours(now, signal.signaled_at), 2),
+	}
 	if receipt_field:
 		values[receipt_field] = receipt
 	signal.db_set(values)
@@ -166,9 +192,13 @@ def _complete(signal_name: str, receipt_field: str | None = None, receipt: str |
 
 def _reopen(signal_name: str) -> None:
 	signal = frappe.get_doc("Kanban Signal", signal_name)
-	signal.db_set({"status": "Ordered", "received_at": None, "lead_time_hours_actual": None, "purchase_receipt": None})
+	signal.db_set(
+		{"status": "Ordered", "received_at": None, "lead_time_hours_actual": None, "purchase_receipt": None}
+	)
 	if signal.kanban_card:
-		frappe.db.set_value("Kanban Card", signal.kanban_card, {"status": "Signaled", "current_signal": signal.name})
+		frappe.db.set_value(
+			"Kanban Card", signal.kanban_card, {"status": "Signaled", "current_signal": signal.name}
+		)
 
 
 # ---------------------------------------------------------------------------------------
@@ -177,15 +207,23 @@ def _reopen(signal_name: str) -> None:
 
 
 def _line_side(warehouse: str | None) -> bool:
-	return bool(warehouse) and frappe.get_cached_value("Warehouse", warehouse, "automotive_warehouse_role") == "Line Side"
+	return (
+		bool(warehouse)
+		and frappe.get_cached_value("Warehouse", warehouse, "automotive_warehouse_role") == "Line Side"
+	)
 
 
 def check_consumption(item_code: str, warehouse: str) -> list[str]:
-	loops = frappe.get_all("Kanban Loop", filters={"item_code": item_code, "line_side_warehouse": warehouse,
-		"status": "Active"}, fields=["name", "container_qty"])
+	loops = frappe.get_all(
+		"Kanban Loop",
+		filters={"item_code": item_code, "line_side_warehouse": warehouse, "status": "Active"},
+		fields=["name", "container_qty"],
+	)
 	created = []
 	for loop in loops:
-		actual = flt(frappe.db.get_value("Bin", {"item_code": item_code, "warehouse": warehouse}, "actual_qty"))
+		actual = flt(
+			frappe.db.get_value("Bin", {"item_code": item_code, "warehouse": warehouse}, "actual_qty")
+		)
 		full = frappe.db.count("Kanban Card", {"kanban_loop": loop.name, "status": "Full"})
 		needed = math.ceil(max(actual, 0) / flt(loop.container_qty)) if flt(loop.container_qty) else full
 		for _i in range(max(full - needed, 0)):
@@ -248,13 +286,30 @@ def escalate_overdue() -> None:
 	from automotive_core.governance.notifications import notify
 
 	now = now_datetime()
-	overdue = frappe.get_all("Kanban Signal", filters={"status": ("in", ("Open", "Ordered", "Shipped")),
-		"due_by": ("<", now)}, fields=["name", "kanban_loop", "item_code", "plant", "escalation_level", "due_by"])
+	overdue = frappe.get_all(
+		"Kanban Signal",
+		filters={"status": ("in", ("Open", "Ordered", "Shipped")), "due_by": ("<", now)},
+		fields=["name", "kanban_loop", "item_code", "plant", "escalation_level", "due_by"],
+	)
 	for row in overdue:
 		level = (row.escalation_level or 0) + 1
-		frappe.db.set_value("Kanban Signal", row.name, {"status": "Escalated", "escalation_level": level,
-			"escalation_note": _("Overdue since {0}").format(row.due_by)})
-		supervisors = frappe.get_all("Plant Assignment", filters={"plant": row.plant, "status": "Active",
-			"assignment_role": ("in", ("Supervisor", "Logistics", "Warehouse"))}, pluck="user")
+		frappe.db.set_value(
+			"Kanban Signal",
+			row.name,
+			{
+				"status": "Escalated",
+				"escalation_level": level,
+				"escalation_note": _("Overdue since {0}").format(row.due_by),
+			},
+		)
+		supervisors = frappe.get_all(
+			"Plant Assignment",
+			filters={
+				"plant": row.plant,
+				"status": "Active",
+				"assignment_role": ("in", ("Supervisor", "Logistics", "Warehouse")),
+			},
+			pluck="user",
+		)
 		notify("kanban.overdue", sorted({u for u in supervisors if u}), "Kanban Signal", row.name)
 	commit()

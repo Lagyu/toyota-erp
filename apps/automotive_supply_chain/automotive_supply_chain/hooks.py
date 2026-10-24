@@ -13,14 +13,37 @@ after_migrate = "automotive_supply_chain.setup.install.after_migrate"
 app_include_js = ["automotive_supply_chain.bundle.js"]
 
 # Extensions of automotive_core governance -------------------------------------------
-automotive_cancel_reason_doctypes = ["Sales Order", "Purchase Order", "Delivery Note", "Purchase Receipt",
-	"Shipment Manifest", "Advance Shipping Notice", "Sourcing Decision", "Transfer Price Agreement",
-	"Consignment Movement", "Consignment Agreement"]
-automotive_audited_doctypes = ["Supplier Onboarding", "Sourcing Decision", "Supplier Delivery Schedule",
-	"Advance Shipping Notice", "Purchase Receipt", "Delivery Note", "Shipment Manifest", "Dealer Registration",
-	"Dealer Order", "Dealer Order Change", "Delivery Acceptance", "Transfer Price Agreement", "Cycle Count"]
+automotive_cancel_reason_doctypes = [
+	"Sales Order",
+	"Purchase Order",
+	"Delivery Note",
+	"Purchase Receipt",
+	"Shipment Manifest",
+	"Advance Shipping Notice",
+	"Sourcing Decision",
+	"Transfer Price Agreement",
+	"Consignment Movement",
+	"Consignment Agreement",
+]
+automotive_audited_doctypes = [
+	"Supplier Onboarding",
+	"Sourcing Decision",
+	"Supplier Delivery Schedule",
+	"Advance Shipping Notice",
+	"Purchase Receipt",
+	"Delivery Note",
+	"Shipment Manifest",
+	"Dealer Registration",
+	"Dealer Order",
+	"Dealer Order Change",
+	"Delivery Acceptance",
+	"Transfer Price Agreement",
+	"Cycle Count",
+]
 automotive_tenant_extensions = ["automotive_supply_chain.setup.tenant.apply"]
-automotive_planning_supplier_resolvers = ["automotive_supply_chain.supplier_collaboration.sourcing.preferred_supplier"]
+automotive_planning_supplier_resolvers = [
+	"automotive_supply_chain.supplier_collaboration.sourcing.preferred_supplier"
+]
 automotive_inbound_handlers = {
 	"asn": "automotive_supply_chain.integrations.handlers.asn",
 	"po_acknowledgement": "automotive_supply_chain.integrations.handlers.po_acknowledgement",
@@ -94,8 +117,16 @@ automotive_metrics = ["automotive_supply_chain.ops_metrics.metrics"]
 
 # Period-close checks (automotive_core.finance_controls.period_close)
 automotive_period_close_checks = [
-	["MATCH-EXCEPTIONS", "No invoice of the period with an open three-way-match exception", False,
-		"automotive_supply_chain.finance_checks.check_match_exceptions"],
-	["INTERCOMPANY", "Intercompany invoices agree with every group partner", True,
-		"automotive_supply_chain.finance_checks.check_intercompany"],
+	[
+		"MATCH-EXCEPTIONS",
+		"No invoice of the period with an open three-way-match exception",
+		False,
+		"automotive_supply_chain.finance_checks.check_match_exceptions",
+	],
+	[
+		"INTERCOMPANY",
+		"Intercompany invoices agree with every group partner",
+		True,
+		"automotive_supply_chain.finance_checks.check_intercompany",
+	],
 ]

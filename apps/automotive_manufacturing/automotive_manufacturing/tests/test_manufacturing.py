@@ -47,8 +47,9 @@ class ManufacturingTestCase(IntegrationTestCase):
 
 	def stock_up(self, vehicles: int = 2, foam_batch: str | None = None):
 		cat = self.cat
-		foam_batch = foam_batch or catalog.make_batch(cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}",
-			"Shiranui Foam Industries")
+		foam_batch = foam_batch or catalog.make_batch(
+			cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries"
+		)
 		catalog.receive(cat["foam"], 3 * vehicles + 3, batch_no=foam_batch, rate=40)
 		catalog.receive(cat["wheel"], 4 * vehicles, rate=120)
 		ecus = [f"TECU-{frappe.generate_hash(length=8).upper()}" for _ in range(vehicles)]
@@ -57,8 +58,9 @@ class ManufacturingTestCase(IntegrationTestCase):
 		seat_wo = catalog.work_order(cat["seat"], 2 * vehicles, fg_warehouse=catalog.LINE_SIDE)
 		seat_batch = catalog.make_batch(cat["seat"], f"TSEAT-{frappe.generate_hash(length=6)}")
 		se = frappe.get_doc(
-			__import__("erpnext.manufacturing.doctype.work_order.work_order", fromlist=["make_stock_entry"])
-			.make_stock_entry(seat_wo.name, "Manufacture", 2 * vehicles)
+			__import__(
+				"erpnext.manufacturing.doctype.work_order.work_order", fromlist=["make_stock_entry"]
+			).make_stock_entry(seat_wo.name, "Manufacture", 2 * vehicles)
 		)
 		for row in se.items:
 			row.use_serial_batch_fields = 1
@@ -89,9 +91,22 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 		old_wo = catalog.work_order(variant, 1)
 		self.assertEqual(old_wo.bom_no, rev_a)
 		with as_user(ENGINEER):
-			eco = frappe.get_doc({"doctype": "Engineering Change Order", "title": "Five wheels (spare)", "company": AICHI,
-				"effective_date": add_days(nowdate(), 1), "changes": [{"change_type": "Change Quantity",
-				"target_bom": rev_a, "component": cat["wheel"], "qty": 5}]}).insert()
+			eco = frappe.get_doc(
+				{
+					"doctype": "Engineering Change Order",
+					"title": "Five wheels (spare)",
+					"company": AICHI,
+					"effective_date": add_days(nowdate(), 1),
+					"changes": [
+						{
+							"change_type": "Change Quantity",
+							"target_bom": rev_a,
+							"component": cat["wheel"],
+							"qty": 5,
+						}
+					],
+				}
+			).insert()
 		from automotive_core.governance.approvals import ApprovalRequiredError
 
 		with as_user(ENGINEER), self.assertRaises(ApprovalRequiredError):
@@ -113,21 +128,34 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 		with self.assertRaises(bom_revisions.EngineeringControlError):
 			frappe.get_doc("BOM", rev_a).cancel()
 		with self.assertRaises(bom_revisions.EngineeringControlError):
-			frappe.get_doc({"doctype": "BOM Update Log", "update_type": "Replace BOM", "current_bom": rev_a,
-				"new_bom": rev_b}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "BOM Update Log",
+					"update_type": "Replace BOM",
+					"current_bom": rev_a,
+					"new_bom": rev_b,
+				}
+			).insert(ignore_permissions=True)
 		# pinning a BOM outside its effectivity is refused
 		with self.assertRaises(bom_revisions.EngineeringControlError):
 			catalog.work_order(variant, 1, bom=rev_b, start_offset_days=0, submit=False, pinned=True)
-
 
 	def test_change_request_becomes_an_eco_the_engineer_completes(self):
 		cat = self.cat
 		bom = cat["vehicle_boms"][("Base", "FWD")]
 		current = frappe.db.get_value("BOM Item", {"parent": bom, "item_code": cat["wheel"]}, "qty")
 		with as_user(ENGINEER):
-			ecr = frappe.get_doc({"doctype": "Engineering Change Request", "title": "Spare wheel",
-				"change_reason": "Customer Request", "description": "Add a spare wheel",
-				"affected_items": [{"item_code": cat["wheel"], "current_bom": bom, "proposed_change": "one more"}]}).insert()
+			ecr = frappe.get_doc(
+				{
+					"doctype": "Engineering Change Request",
+					"title": "Spare wheel",
+					"change_reason": "Customer Request",
+					"description": "Add a spare wheel",
+					"affected_items": [
+						{"item_code": cat["wheel"], "current_bom": bom, "proposed_change": "one more"}
+					],
+				}
+			).insert()
 			ecr.submit()
 			from automotive_manufacturing.product_engineering.change_control import make_eco
 
@@ -154,42 +182,83 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 
 		cat = self.cat
 		wheel = cat["wheel"]
-		[bom] = frappe.db.sql("""select b.name from `tabBOM` b join `tabBOM Item` bi on bi.parent = b.name
+		[bom] = frappe.db.sql(
+			"""select b.name from `tabBOM` b join `tabBOM Item` bi on bi.parent = b.name
 			where bi.item_code = %s and b.docstatus = 1 and b.is_active = 1 and ifnull(b.automotive_superseded_by, '') = ''
-			order by b.name limit 1""", wheel, pluck=True)
+			order by b.name limit 1""",
+			wheel,
+			pluck=True,
+		)
 
 		def wheel_like(code):
-			return catalog._item(code, "Raw Material", has_batch_no=1, create_new_batch=1,
-				batch_number_series=f"{code}-.#####")
+			return catalog._item(
+				code, "Raw Material", has_batch_no=1, create_new_batch=1, batch_number_series=f"{code}-.#####"
+			)
 
 		second_source = wheel_like(f"TWHA-{frappe.generate_hash(length=5).upper()}")
 
 		def consumed(item, on):
-			return frappe.get_doc({"doctype": "Stock Entry", "purpose": "Manufacture", "company": AICHI, "posting_date": on,
-				"items": [{"item_code": item, "original_item": wheel, "qty": 4, "s_warehouse": catalog.LINE_SIDE}]})
+			return frappe.get_doc(
+				{
+					"doctype": "Stock Entry",
+					"purpose": "Manufacture",
+					"company": AICHI,
+					"posting_date": on,
+					"items": [
+						{
+							"item_code": item,
+							"original_item": wheel,
+							"qty": 4,
+							"s_warehouse": catalog.LINE_SIDE,
+						}
+					],
+				}
+			)
 
 		with self.assertRaises(EngineeringControlError):  # nothing approved yet
 			validate_approved_alternatives(consumed(second_source, nowdate()))
 		effective = add_days(nowdate(), 2)
 		with as_user(ENGINEER):
-			eco = frappe.get_doc({"doctype": "Engineering Change Order", "title": "Second-source wheel", "company": AICHI,
-				"effective_date": effective, "changes": [{"change_type": "Approve Alternative", "target_bom": bom,
-				"component": wheel, "new_component": second_source}]}).insert()
+			eco = frappe.get_doc(
+				{
+					"doctype": "Engineering Change Order",
+					"title": "Second-source wheel",
+					"company": AICHI,
+					"effective_date": effective,
+					"changes": [
+						{
+							"change_type": "Approve Alternative",
+							"target_bom": bom,
+							"component": wheel,
+							"new_component": second_source,
+						}
+					],
+				}
+			).insert()
 		approve(eco, ENGINEER, [ENG_MANAGER, QM1])
 		with as_user(ENG_MANAGER):
 			eco.reload()
 			eco.submit()
-		approved = frappe.db.get_value("Item Alternative", {"item_code": wheel, "alternative_item_code": second_source},
-			["automotive_eco", "automotive_valid_from"], as_dict=True)
-		self.assertEqual((approved.automotive_eco, getdate(approved.automotive_valid_from)), (eco.name, getdate(effective)))
+		approved = frappe.db.get_value(
+			"Item Alternative",
+			{"item_code": wheel, "alternative_item_code": second_source},
+			["automotive_eco", "automotive_valid_from"],
+			as_dict=True,
+		)
+		self.assertEqual(
+			(approved.automotive_eco, getdate(approved.automotive_valid_from)), (eco.name, getdate(effective))
+		)
 		eco.reload()
-		self.assertEqual((eco.implementation_status, len(eco.revisions)), ("Implemented", 0))  # no BOM revision
+		self.assertEqual(
+			(eco.implementation_status, len(eco.revisions)), ("Implemented", 0)
+		)  # no BOM revision
 		with self.assertRaises(EngineeringControlError):  # before the change takes effect
 			validate_approved_alternatives(consumed(second_source, nowdate()))
 		validate_approved_alternatives(consumed(second_source, effective))
 		by_hand = wheel_like(f"TWHB-{frappe.generate_hash(length=5).upper()}")
-		frappe.get_doc({"doctype": "Item Alternative", "item_code": wheel, "alternative_item_code": by_hand}).insert(
-			ignore_permissions=True)
+		frappe.get_doc(
+			{"doctype": "Item Alternative", "item_code": wheel, "alternative_item_code": by_hand}
+		).insert(ignore_permissions=True)
 		with self.assertRaises(EngineeringControlError):
 			validate_approved_alternatives(consumed(by_hand, effective))
 
@@ -198,29 +267,60 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 		Operation" releases a revision with the new time or workstation while the old revision, and
 		the orders pinned to it, keep theirs."""
 		cat = self.cat
-		workstation = frappe.db.get_value("Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name")
+		workstation = frappe.db.get_value(
+			"Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name"
+		)
 		if not frappe.db.exists("Operation", "TST Seat trimming"):
-			frappe.get_doc({"doctype": "Operation", "__newname": "TST Seat trimming", "workstation": workstation}).insert(
-				ignore_permissions=True)
-		old = frappe.get_doc({"doctype": "BOM", "item": cat["seat"], "company": AICHI, "quantity": 1, "is_default": 0,
-			"is_active": 1, "with_operations": 1, "items": [{"item_code": cat["foam"], "qty": 1.5}],
-			"operations": [{"operation": "TST Seat trimming", "workstation": workstation, "time_in_mins": 4}]})
+			frappe.get_doc(
+				{"doctype": "Operation", "__newname": "TST Seat trimming", "workstation": workstation}
+			).insert(ignore_permissions=True)
+		old = frappe.get_doc(
+			{
+				"doctype": "BOM",
+				"item": cat["seat"],
+				"company": AICHI,
+				"quantity": 1,
+				"is_default": 0,
+				"is_active": 1,
+				"with_operations": 1,
+				"items": [{"item_code": cat["foam"], "qty": 1.5}],
+				"operations": [
+					{"operation": "TST Seat trimming", "workstation": workstation, "time_in_mins": 4}
+				],
+			}
+		)
 		old.insert(ignore_permissions=True)
 		old.submit()
 		change = {"change_type": "Change Operation", "target_bom": old.name, "operation": "TST Seat trimming"}
 		with as_user(ENGINEER), self.assertRaises(frappe.ValidationError):  # nothing would change
-			frappe.get_doc({"doctype": "Engineering Change Order", "title": "Trimming unchanged", "company": AICHI,
-				"effective_date": add_days(nowdate(), 1), "changes": [{**change, "time_in_mins": 4}]}).insert()
+			frappe.get_doc(
+				{
+					"doctype": "Engineering Change Order",
+					"title": "Trimming unchanged",
+					"company": AICHI,
+					"effective_date": add_days(nowdate(), 1),
+					"changes": [{**change, "time_in_mins": 4}],
+				}
+			).insert()
 		with as_user(ENGINEER):
-			eco = frappe.get_doc({"doctype": "Engineering Change Order", "title": "Slower trimming for the new cover",
-				"company": AICHI, "effective_date": add_days(nowdate(), 1), "changes": [{**change, "time_in_mins": 6}]}).insert()
+			eco = frappe.get_doc(
+				{
+					"doctype": "Engineering Change Order",
+					"title": "Slower trimming for the new cover",
+					"company": AICHI,
+					"effective_date": add_days(nowdate(), 1),
+					"changes": [{**change, "time_in_mins": 6}],
+				}
+			).insert()
 		approve(eco, ENGINEER, [ENG_MANAGER, QM1])
 		with as_user(ENG_MANAGER):
 			eco.reload()
 			eco.submit()
 		eco.reload()
 		new = frappe.get_doc("BOM", eco.revisions[0].new_bom)
-		self.assertEqual([(o.operation, flt(o.time_in_mins)) for o in new.operations], [("TST Seat trimming", 6)])
+		self.assertEqual(
+			[(o.operation, flt(o.time_in_mins)) for o in new.operations], [("TST Seat trimming", 6)]
+		)
 		self.assertEqual(flt(frappe.db.get_value("BOM Operation", {"parent": old.name}, "time_in_mins")), 4)
 		self.assertEqual(frappe.db.get_value("BOM", old.name, "automotive_superseded_by"), new.name)
 
@@ -233,30 +333,75 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 		cat = self.cat
 		wheel = cat["wheel"]
 		before = change_control._open_request_qty([wheel])
-		request = frappe.get_doc({"doctype": "Material Request", "material_request_type": "Purchase", "company": AICHI,
-			"schedule_date": add_days(nowdate(), 7), "items": [{"item_code": wheel, "qty": 5,
-				"schedule_date": add_days(nowdate(), 7), "warehouse": catalog.PARTS_STORE}]})
+		request = frappe.get_doc(
+			{
+				"doctype": "Material Request",
+				"material_request_type": "Purchase",
+				"company": AICHI,
+				"schedule_date": add_days(nowdate(), 7),
+				"items": [
+					{
+						"item_code": wheel,
+						"qty": 5,
+						"schedule_date": add_days(nowdate(), 7),
+						"warehouse": catalog.PARTS_STORE,
+					}
+				],
+			}
+		)
 		request.insert(ignore_permissions=True)
 		request.submit()
 		self.assertEqual(change_control._open_request_qty([wheel]), before + 5)
-		params = frappe.get_doc({"doctype": "Planning Parameter Set", "parameter_set": "AICHI-ECR-IMPACT",
-			"company": AICHI, "plant": catalog.PLANT, "horizon_days": 21, "frozen_zone_days": 0,
-			"lot_sizing": "Lot For Lot", "capacity_check": 0, "respect_holidays": 0, "include_forecast": 0})
+		params = frappe.get_doc(
+			{
+				"doctype": "Planning Parameter Set",
+				"parameter_set": "AICHI-ECR-IMPACT",
+				"company": AICHI,
+				"plant": catalog.PLANT,
+				"horizon_days": 21,
+				"frozen_zone_days": 0,
+				"lot_sizing": "Lot For Lot",
+				"capacity_check": 0,
+				"respect_holidays": 0,
+				"include_forecast": 0,
+			}
+		)
 		params.insert(ignore_permissions=True)
 		approve(params, "Administrator", [DIRECTOR])
 		params.reload()
 		params.submit()
 		# the plant's newest run: one open proposal for the wheel, one rejected, one already released
-		frappe.get_doc({"doctype": "Planning Run", "company": AICHI, "plant": catalog.PLANT, "parameter_set": params.name,
-			"status": "Completed", "proposals": [
-				{"proposal_type": "Purchase", "item_code": wheel, "qty": 7, "decision": "Proposed"},
-				{"proposal_type": "Purchase", "item_code": wheel, "qty": 11, "decision": "Rejected"},
-				{"proposal_type": "Purchase", "item_code": wheel, "qty": 13, "decision": "Approved",
-					"document_type": "Material Request", "document_name": request.name}]}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Planning Run",
+				"company": AICHI,
+				"plant": catalog.PLANT,
+				"parameter_set": params.name,
+				"status": "Completed",
+				"proposals": [
+					{"proposal_type": "Purchase", "item_code": wheel, "qty": 7, "decision": "Proposed"},
+					{"proposal_type": "Purchase", "item_code": wheel, "qty": 11, "decision": "Rejected"},
+					{
+						"proposal_type": "Purchase",
+						"item_code": wheel,
+						"qty": 13,
+						"decision": "Approved",
+						"document_type": "Material Request",
+						"document_name": request.name,
+					},
+				],
+			}
+		).insert(ignore_permissions=True)
 		with as_user(ENGINEER):
-			ecr = frappe.get_doc({"doctype": "Engineering Change Request", "title": "Wheel supplier change",
-				"change_reason": "Cost Reduction", "description": "Second source for the wheel",
-				"affected_items": [{"item_code": wheel, "proposed_change": "second source"}]}).insert()
+			ecr = frappe.get_doc(
+				{
+					"doctype": "Engineering Change Request",
+					"title": "Wheel supplier change",
+					"change_reason": "Cost Reduction",
+					"description": "Second source for the wheel",
+					"affected_items": [{"item_code": wheel, "proposed_change": "second source"}],
+				}
+			).insert()
 			ecr.submit()
 		ecr.reload()
 		self.assertEqual((ecr.open_request_qty, ecr.proposal_qty), (before + 5, 7))
@@ -269,14 +414,22 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 		stock = self.stock_up(2)
 		variant = cat["variants"][("Premium", "AWD")]
 		wo = catalog.work_order(variant, 2)
-		units = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name", order_by="build_sequence")
+		units = frappe.get_all(
+			"Vehicle Unit", filters={"work_order": wo.name}, pluck="name", order_by="build_sequence"
+		)
 		self.assertEqual(len(units), 2)
 		from automotive_manufacturing.engine.vin import is_valid
 
 		self.assertTrue(all(is_valid(v) for v in units))
 		for i, vin in enumerate(units):
-			build_entry(wo.name, 1, components=[{"item_code": cat["ecu"], "serial_no": stock["ecus"][i]},
-				{"item_code": cat["seat"], "batch_no": stock["seat_batch"]}])
+			build_entry(
+				wo.name,
+				1,
+				components=[
+					{"item_code": cat["ecu"], "serial_no": stock["ecus"][i]},
+					{"item_code": cat["seat"], "batch_no": stock["seat_batch"]},
+				],
+			)
 			self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "production_status"), "Built")
 			self.assertEqual(frappe.db.get_value("Serial No", vin, "warehouse"), catalog.FG)
 			self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "Pending Inspection")
@@ -286,8 +439,14 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 		self.assertIn(stock["foam_batch"], {r["component_batch_no"] for r in tree})  # two levels down
 		affected = genealogy.units_containing(cat["foam"], batch_nos=[stock["foam_batch"]])
 		self.assertEqual(sorted(a["serial_no"] for a in affected), sorted(units))
-		recall = frappe.get_doc({"doctype": "Recall Campaign", "title": "Foam lot", "component_item": cat["foam"],
-			"batch_nos": stock["foam_batch"]}).insert()
+		recall = frappe.get_doc(
+			{
+				"doctype": "Recall Campaign",
+				"title": "Foam lot",
+				"component_item": cat["foam"],
+				"batch_nos": stock["foam_batch"],
+			}
+		).insert()
 		from automotive_manufacturing.traceability.recall import analyze
 
 		analyze(recall)
@@ -303,12 +462,17 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 		"""A sub-assembly whose batch is numbered on posting (as the line reports it) still
 		gets its genealogy, so vehicles trace through it to the supplier lots."""
 		cat = self.cat
-		foam_batch = catalog.make_batch(cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		foam_batch = catalog.make_batch(
+			cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries"
+		)
 		catalog.receive(cat["foam"], 2, batch_no=foam_batch, rate=40)
 		wo = catalog.work_order(cat["seat"], 1, fg_warehouse=catalog.LINE_SIDE)
 		se = build_entry(wo.name, 1)
-		links = frappe.get_all("Genealogy Link", filters={"stock_entry": se.name},
-			fields=["parent_batch_no", "component_batch_no"])
+		links = frappe.get_all(
+			"Genealogy Link",
+			filters={"stock_entry": se.name},
+			fields=["parent_batch_no", "component_batch_no"],
+		)
 		self.assertTrue(links and all(link.parent_batch_no for link in links))
 		self.assertIn(foam_batch, {link.component_batch_no for link in links})
 		from automotive_manufacturing.traceability.genealogy import backfill
@@ -324,10 +488,22 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 		vin = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")[0]
 		dn = frappe.new_doc("Delivery Note")
 		dn.company = AICHI
-		dn.customer = frappe.db.get_value("Customer", {"is_internal_customer": 1, "represents_company":
-			"Hinode Automotive Distribution North America"}, "name")
-		dn.append("items", {"item_code": wo.production_item, "qty": 1, "warehouse": catalog.FG,
-			"use_serial_batch_fields": 1, "serial_no": vin, "rate": 1000})
+		dn.customer = frappe.db.get_value(
+			"Customer",
+			{"is_internal_customer": 1, "represents_company": "Hinode Automotive Distribution North America"},
+			"name",
+		)
+		dn.append(
+			"items",
+			{
+				"item_code": wo.production_item,
+				"qty": 1,
+				"warehouse": catalog.FG,
+				"use_serial_batch_fields": 1,
+				"serial_no": vin,
+				"rate": 1000,
+			},
+		)
 		from automotive_manufacturing.quality_control.holds import validate_outbound
 
 		with self.assertRaises(QualityHoldError):
@@ -345,10 +521,22 @@ class TestReworkReinspection(ManufacturingTestCase):
 		vin = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")[0]
 
 		def inspect(status):
-			qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "In Process",
-				"automotive_inspection_stage": "Final", "reference_type": "Stock Entry", "reference_name": se.name,
-				"item_code": wo.production_item, "item_serial_no": vin, "sample_size": 1, "inspected_by": QM1,
-				"status": status, "manual_inspection": 1, "company": AICHI})
+			qi = frappe.get_doc(
+				{
+					"doctype": "Quality Inspection",
+					"inspection_type": "In Process",
+					"automotive_inspection_stage": "Final",
+					"reference_type": "Stock Entry",
+					"reference_name": se.name,
+					"item_code": wo.production_item,
+					"item_serial_no": vin,
+					"sample_size": 1,
+					"inspected_by": QM1,
+					"status": status,
+					"manual_inspection": 1,
+					"company": AICHI,
+				}
+			)
 			qi.insert(ignore_permissions=True)
 			qi.submit()
 			return qi
@@ -365,7 +553,9 @@ class TestReworkReinspection(ManufacturingTestCase):
 			again = frappe.get_doc("Quality Inspection", make_reinspection(rejected.name))
 			again.submit()
 		self.assertEqual(again.child_row_reference, rejected.child_row_reference)
-		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "On Hold")  # hold still active
+		self.assertEqual(
+			frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "On Hold"
+		)  # hold still active
 		doc = frappe.get_doc("Quality Hold", hold)
 		for check in doc.release_checks:
 			check.done = 1
@@ -374,7 +564,9 @@ class TestReworkReinspection(ManufacturingTestCase):
 			holds.release(hold, "Seal replaced; water test passed")
 		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "Released")
 		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "final_inspection"), again.name)
-		self.assertEqual(frappe.db.get_value("Quality Inspection", rejected.name, "status"), "Rejected")  # kept
+		self.assertEqual(
+			frappe.db.get_value("Quality Inspection", rejected.name, "status"), "Rejected"
+		)  # kept
 
 
 class TestRoutedWorkOrders(ManufacturingTestCase):
@@ -389,20 +581,44 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 		from automotive_manufacturing.quality_control.holds import QualityHoldError, raise_hold
 
 		cat = self.cat
-		workstation = frappe.db.get_value("Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name")
+		workstation = frappe.db.get_value(
+			"Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name"
+		)
 		if not frappe.db.exists("Operation", "TST Seat stitching"):
-			frappe.get_doc({"doctype": "Operation", "__newname": "TST Seat stitching", "workstation": workstation}).insert(
-				ignore_permissions=True)
-		bom = frappe.get_doc({"doctype": "BOM", "item": cat["seat"], "company": AICHI, "quantity": 1, "is_default": 0,
-			"is_active": 1, "with_operations": 1, "items": [{"item_code": cat["foam"], "qty": 1.5}],
-			"operations": [{"operation": "TST Seat stitching", "workstation": workstation, "time_in_mins": 3}]})
+			frappe.get_doc(
+				{"doctype": "Operation", "__newname": "TST Seat stitching", "workstation": workstation}
+			).insert(ignore_permissions=True)
+		bom = frappe.get_doc(
+			{
+				"doctype": "BOM",
+				"item": cat["seat"],
+				"company": AICHI,
+				"quantity": 1,
+				"is_default": 0,
+				"is_active": 1,
+				"with_operations": 1,
+				"items": [{"item_code": cat["foam"], "qty": 1.5}],
+				"operations": [
+					{"operation": "TST Seat stitching", "workstation": workstation, "time_in_mins": 3}
+				],
+			}
+		)
 		bom.insert(ignore_permissions=True)
 		bom.submit()
 		wo = catalog.work_order(cat["seat"], 2, bom=bom.name, fg_warehouse=catalog.LINE_SIDE, pinned=True)
 		[card] = frappe.get_all("Job Card", filters={"work_order": wo.name}, pluck="name")
-		employee = frappe.get_doc({"doctype": "Employee", "first_name": "Tst", "last_name": "Stitcher", "gender": "Female",
-			"date_of_birth": "1991-01-01", "date_of_joining": "2021-01-01", "company": AICHI,
-			"create_user_permission": 0}).insert(ignore_permissions=True)
+		employee = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Tst",
+				"last_name": "Stitcher",
+				"gender": "Female",
+				"date_of_birth": "1991-01-01",
+				"date_of_joining": "2021-01-01",
+				"company": AICHI,
+				"create_user_permission": 0,
+			}
+		).insert(ignore_permissions=True)
 		# two days back: clear of the time logs other tests record on the same station now
 		start = add_to_date(now_datetime(), days=-2)
 		end = add_to_date(start, minutes=6)
@@ -423,32 +639,66 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 		from automotive_manufacturing.mes.production import record_operation
 
 		cat = self.cat
-		workstation = frappe.db.get_value("Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name")
+		workstation = frappe.db.get_value(
+			"Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name"
+		)
 		if not frappe.db.exists("Operation", "TST Seat sewing"):
-			frappe.get_doc({"doctype": "Operation", "__newname": "TST Seat sewing", "workstation": workstation}).insert(
-				ignore_permissions=True)
-		bom = frappe.get_doc({"doctype": "BOM", "item": cat["seat"], "company": AICHI, "quantity": 1, "is_default": 0,
-			"is_active": 1, "with_operations": 1, "items": [{"item_code": cat["foam"], "qty": 1.5}],
-			"operations": [{"operation": "TST Seat sewing", "workstation": workstation, "time_in_mins": 4}]})
+			frappe.get_doc(
+				{"doctype": "Operation", "__newname": "TST Seat sewing", "workstation": workstation}
+			).insert(ignore_permissions=True)
+		bom = frappe.get_doc(
+			{
+				"doctype": "BOM",
+				"item": cat["seat"],
+				"company": AICHI,
+				"quantity": 1,
+				"is_default": 0,
+				"is_active": 1,
+				"with_operations": 1,
+				"items": [{"item_code": cat["foam"], "qty": 1.5}],
+				"operations": [
+					{"operation": "TST Seat sewing", "workstation": workstation, "time_in_mins": 4}
+				],
+			}
+		)
 		bom.insert(ignore_permissions=True)
 		bom.submit()
-		foam_batch = catalog.make_batch(cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		foam_batch = catalog.make_batch(
+			cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries"
+		)
 		catalog.receive(cat["foam"], 3, batch_no=foam_batch, rate=40)
 		wo = catalog.work_order(cat["seat"], 2, bom=bom.name, fg_warehouse=catalog.LINE_SIDE, pinned=True)
 		cards = frappe.get_all("Job Card", filters={"work_order": wo.name}, fields=["name", "for_quantity"])
 		self.assertEqual([c.for_quantity for c in cards], [2])
 		with self.assertRaises(frappe.ValidationError):
 			build_entry(wo.name, 1)  # the station has not confirmed anything
-		employee = frappe.get_doc({"doctype": "Employee", "first_name": "Tst", "last_name": "Sewer", "gender": "Female",
-			"date_of_birth": "1990-01-01", "date_of_joining": "2020-01-01", "company": AICHI,
-			"create_user_permission": 0}).insert(ignore_permissions=True)
+		employee = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Tst",
+				"last_name": "Sewer",
+				"gender": "Female",
+				"date_of_birth": "1990-01-01",
+				"date_of_joining": "2020-01-01",
+				"company": AICHI,
+				"create_user_permission": 0,
+			}
+		).insert(ignore_permissions=True)
 		end = now_datetime()
-		self.assertEqual(record_operation(cards[0].name, 2, employee.name, add_to_date(end, minutes=-8), end), "Completed")
+		self.assertEqual(
+			record_operation(cards[0].name, 2, employee.name, add_to_date(end, minutes=-8), end), "Completed"
+		)
 		build_entry(wo.name, 1)
 		build_entry(wo.name, 1)
 		self.assertEqual(frappe.db.get_value("Work Order", wo.name, "produced_qty"), 2)
-		self.assertEqual(frappe.get_all("Job Card Time Log", filters={"parent": cards[0].name, "parentfield": "time_logs"},
-			fields=["employee", "completed_qty"]), [{"employee": employee.name, "completed_qty": 2}])
+		self.assertEqual(
+			frappe.get_all(
+				"Job Card Time Log",
+				filters={"parent": cards[0].name, "parentfield": "time_logs"},
+				fields=["employee", "completed_qty"],
+			),
+			[{"employee": employee.name, "completed_qty": 2}],
+		)
 
 
 AICHI_MES = "mes.aichi.mfg@hinode.example"
@@ -464,30 +714,55 @@ class TestProductionEvents(ManufacturingTestCase):
 		super().setUpClass()
 		for user, code in ((AICHI_MES, "TEST-MES-AICHI"), (KYUSHU_MES, "TEST-MES-KYUSHU")):
 			make_user(user, ["Production Supervisor", "Manufacturing User"])
-			frappe.get_doc({"doctype": "Integration Partner", "partner_code": code, "partner_name": code,
-				"partner_type": "Internal", "adapter": "Local File Drop", "message_format": "JSON",
-				"allowed_message_types": "production_event", "service_user": user}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "Integration Partner",
+					"partner_code": code,
+					"partner_name": code,
+					"partner_type": "Internal",
+					"adapter": "Local File Drop",
+					"message_format": "JSON",
+					"allowed_message_types": "production_event",
+					"service_user": user,
+				}
+			).insert(ignore_permissions=True)
 		# the Kyushu line system's account sees its own plant only
-		frappe.get_doc({"doctype": "User Permission", "user": KYUSHU_MES, "allow": "Plant", "for_value": "KYUSHU-PT",
-			"apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "User Permission",
+				"user": KYUSHU_MES,
+				"allow": "Plant",
+				"for_value": "KYUSHU-PT",
+				"apply_to_all_doctypes": 1,
+			}
+		).insert(ignore_permissions=True)
 
 	def setUp(self):
 		frappe.flags.automotive_pending_inbound = []
 
 	def report(self, partner: str, message_id: str, data: dict):
-		accepted = inbound.accept(partner, json.dumps({"message_id": message_id, "message_type": "production_event",
-			"data": data}))
+		accepted = inbound.accept(
+			partner, json.dumps({"message_id": message_id, "message_type": "production_event", "data": data})
+		)
 		inbound.run_pending_inline()
-		return frappe.db.get_value("Integration Inbound Message", accepted["inbound_id"],
-			["status", "result_doctype", "result_name", "last_error"], as_dict=True)
+		return frappe.db.get_value(
+			"Integration Inbound Message",
+			accepted["inbound_id"],
+			["status", "result_doctype", "result_name", "last_error"],
+			as_dict=True,
+		)
 
 	def test_a_reported_unit_is_built_and_bad_reports_are_rejected(self):
-		self.assertEqual(hook_dict("automotive_inbound_handlers")["production_event"],
-			"automotive_manufacturing.mes.handlers.production_event")
+		self.assertEqual(
+			hook_dict("automotive_inbound_handlers")["production_event"],
+			"automotive_manufacturing.mes.handlers.production_event",
+		)
 		self.stock_up(1)
 		wo = catalog.work_order(self.cat["variants"][("Premium", "AWD")], 1)
 		[vin] = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")
-		built = self.report("TEST-MES-AICHI", "MES-AICHI-0001", {"event": "unit_built", "work_order": wo.name})
+		built = self.report(
+			"TEST-MES-AICHI", "MES-AICHI-0001", {"event": "unit_built", "work_order": wo.name}
+		)
 		self.assertEqual((built.status, built.result_doctype), ("Processed", "Stock Entry"), built.last_error)
 		entry = frappe.get_doc("Stock Entry", built.result_name)
 		self.assertEqual((entry.docstatus, entry.purpose, entry.work_order), (1, "Manufacture", wo.name))
@@ -495,22 +770,29 @@ class TestProductionEvents(ManufacturingTestCase):
 		self.assertEqual(flt(frappe.db.get_value("Work Order", wo.name, "produced_qty")), 1)
 		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "production_status"), "Built")
 		# an order the plant does not know, and a report outside the message contract: never retried
-		unknown = self.report("TEST-MES-AICHI", "MES-AICHI-0002", {"event": "unit_built", "work_order": "WO-NO-SUCH"})
+		unknown = self.report(
+			"TEST-MES-AICHI", "MES-AICHI-0002", {"event": "unit_built", "work_order": "WO-NO-SUCH"}
+		)
 		self.assertEqual(unknown.status, "Rejected")
 		self.assertIn("unknown work order WO-NO-SUCH", unknown.last_error)
-		invalid = self.report("TEST-MES-AICHI", "MES-AICHI-0003", {"event": "batch_built", "work_order": wo.name,
-			"qty": 0})
+		invalid = self.report(
+			"TEST-MES-AICHI", "MES-AICHI-0003", {"event": "batch_built", "work_order": wo.name, "qty": 0}
+		)
 		self.assertEqual(invalid.status, "Rejected")
 		self.assertIn("invalid production_event", invalid.last_error)
 		self.assertEqual(frappe.db.count("Stock Entry", {"work_order": wo.name, "docstatus": 1}), 1)
 
 	def test_a_plant_system_cannot_report_another_plants_order(self):
 		wo = catalog.work_order(self.cat["variants"][("Premium", "AWD")], 1)  # an Aichi order
-		result = self.report("TEST-MES-KYUSHU", "MES-KYU-0001", {"event": "unit_built", "work_order": wo.name})
+		result = self.report(
+			"TEST-MES-KYUSHU", "MES-KYU-0001", {"event": "unit_built", "work_order": wo.name}
+		)
 		self.assertEqual(result.status, "Rejected")
 		self.assertIn(f"may not report on work order {wo.name}", result.last_error)
 		self.assertFalse(frappe.db.exists("Stock Entry", {"work_order": wo.name}))
-		self.assertEqual(frappe.db.get_value("Vehicle Unit", {"work_order": wo.name}, "production_status"), "Planned")
+		self.assertEqual(
+			frappe.db.get_value("Vehicle Unit", {"work_order": wo.name}, "production_status"), "Planned"
+		)
 
 
 class TestShiftHandover(ManufacturingTestCase):
@@ -524,12 +806,25 @@ class TestShiftHandover(ManufacturingTestCase):
 		self.stock_up(1)
 		wo = catalog.work_order(cat["variants"][("Premium", "AWD")], 1)
 		build_entry(wo.name, 1)
-		shift = frappe.get_cached_doc("Shift Pattern", frappe.get_cached_value("Production Line", catalog.LINE,
-			"shift_pattern")).shifts[0].shift_code
+		shift = (
+			frappe.get_cached_doc(
+				"Shift Pattern", frappe.get_cached_value("Production Line", catalog.LINE, "shift_pattern")
+			)
+			.shifts[0]
+			.shift_code
+		)
 		start, _end = shift_window(catalog.LINE, nowdate(), shift)
-		frappe.db.set_value("Vehicle Unit", {"work_order": wo.name}, "built_at", start + datetime.timedelta(hours=1))
-		values = {"doctype": "Shift Handover", "plant": catalog.PLANT, "production_line": catalog.LINE,
-			"shift_date": nowdate(), "shift_code": shift, "handover_notes": "Line running to plan."}
+		frappe.db.set_value(
+			"Vehicle Unit", {"work_order": wo.name}, "built_at", start + datetime.timedelta(hours=1)
+		)
+		values = {
+			"doctype": "Shift Handover",
+			"plant": catalog.PLANT,
+			"production_line": catalog.LINE,
+			"shift_date": nowdate(),
+			"shift_code": shift,
+			"handover_notes": "Line running to plan.",
+		}
 		with as_user(SUPERVISOR), self.assertRaises(frappe.ValidationError):
 			frappe.get_doc({**values, "incoming_supervisor": SUPERVISOR}).insert()
 		with as_user(SUPERVISOR):
@@ -553,28 +848,63 @@ class TestJidoka(ManufacturingTestCase):
 		for parameter in ("TST Rim runout (mm)", "TST Visual"):
 			if not frappe.db.exists("Quality Inspection Parameter", parameter):
 				frappe.get_doc({"doctype": "Quality Inspection Parameter", "parameter": parameter}).insert(
-					ignore_permissions=True)
+					ignore_permissions=True
+				)
 		if not frappe.db.exists("Quality Inspection Template", "TST Incoming Wheels"):
-			frappe.get_doc({"doctype": "Quality Inspection Template", "quality_inspection_template_name": "TST Incoming Wheels",
-				"item_quality_inspection_parameter": [
-					{"specification": "TST Rim runout (mm)", "numeric": 1, "min_value": 0, "max_value": 0.5},
-					{"specification": "TST Visual", "numeric": 0, "value": "OK"}]}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "Quality Inspection Template",
+					"quality_inspection_template_name": "TST Incoming Wheels",
+					"item_quality_inspection_parameter": [
+						{
+							"specification": "TST Rim runout (mm)",
+							"numeric": 1,
+							"min_value": 0,
+							"max_value": 0.5,
+						},
+						{"specification": "TST Visual", "numeric": 0, "value": "OK"},
+					],
+				}
+			).insert(ignore_permissions=True)
 		frappe.db.set_value("Item", cat["wheel"], "quality_inspection_template", "TST Incoming Wheels")
-		batch = catalog.make_batch(cat["wheel"], f"TWHL-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		batch = catalog.make_batch(
+			cat["wheel"], f"TWHL-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries"
+		)
 		receipt = catalog.receive(cat["wheel"], 4, warehouse=catalog.PARTS_STORE, batch_no=batch, rate=120)
 
 		def readings(*runout: str, visual: str = "OK") -> list[dict]:
-			return [{"specification": "TST Rim runout (mm)", "numeric": 1, "min_value": 0, "max_value": 0.5,
-				**{f"reading_{i}": value for i, value in enumerate(runout, 1)}},
-				{"specification": "TST Visual", "numeric": 0, "value": "OK", "reading_value": visual}]
+			return [
+				{
+					"specification": "TST Rim runout (mm)",
+					"numeric": 1,
+					"min_value": 0,
+					"max_value": 0.5,
+					**{f"reading_{i}": value for i, value in enumerate(runout, 1)},
+				},
+				{"specification": "TST Visual", "numeric": 0, "value": "OK", "reading_value": visual},
+			]
 
-		qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "Incoming",
-			"automotive_inspection_stage": "Incoming", "reference_type": "Stock Entry", "reference_name": receipt,
-			"item_code": cat["wheel"], "batch_no": batch, "sample_size": 2, "inspected_by": "Administrator",
-			"quality_inspection_template": "TST Incoming Wheels", "manual_inspection": 0, "company": AICHI,
-			"readings": readings("0.21", "0.74")})
+		qi = frappe.get_doc(
+			{
+				"doctype": "Quality Inspection",
+				"inspection_type": "Incoming",
+				"automotive_inspection_stage": "Incoming",
+				"reference_type": "Stock Entry",
+				"reference_name": receipt,
+				"item_code": cat["wheel"],
+				"batch_no": batch,
+				"sample_size": 2,
+				"inspected_by": "Administrator",
+				"quality_inspection_template": "TST Incoming Wheels",
+				"manual_inspection": 0,
+				"company": AICHI,
+				"readings": readings("0.21", "0.74"),
+			}
+		)
 		qi.insert(ignore_permissions=True)
-		self.assertEqual((qi.status, qi.readings[0].status, qi.readings[1].status), ("Rejected", "Rejected", "Accepted"))
+		self.assertEqual(
+			(qi.status, qi.readings[0].status, qi.readings[1].status), ("Rejected", "Rejected", "Accepted")
+		)
 		qi.submit()
 		qi.reload()
 		self.assertEqual(frappe.db.get_value("Quality Hold", qi.automotive_quality_hold, "status"), "Active")
@@ -586,46 +916,106 @@ class TestJidoka(ManufacturingTestCase):
 
 	def test_rejected_batch_is_held_until_dispositioned(self):
 		cat = self.cat
-		batch = catalog.make_batch(cat["wheel"], f"TWHL-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		batch = catalog.make_batch(
+			cat["wheel"], f"TWHL-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries"
+		)
 		receipt = catalog.receive(cat["wheel"], 8, warehouse=catalog.PARTS_STORE, batch_no=batch, rate=120)
-		qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "Incoming",
-			"automotive_inspection_stage": "Incoming", "reference_type": "Stock Entry", "reference_name": receipt,
-			"item_code": cat["wheel"], "batch_no": batch, "sample_size": 2, "inspected_by": "Administrator",
-			"status": "Rejected", "manual_inspection": 1, "company": AICHI})
+		qi = frappe.get_doc(
+			{
+				"doctype": "Quality Inspection",
+				"inspection_type": "Incoming",
+				"automotive_inspection_stage": "Incoming",
+				"reference_type": "Stock Entry",
+				"reference_name": receipt,
+				"item_code": cat["wheel"],
+				"batch_no": batch,
+				"sample_size": 2,
+				"inspected_by": "Administrator",
+				"status": "Rejected",
+				"manual_inspection": 1,
+				"company": AICHI,
+			}
+		)
 		qi.insert(ignore_permissions=True)
 		qi.submit()
 		qi.reload()
 		hold = qi.automotive_quality_hold
 		self.assertEqual(frappe.db.get_value("Quality Hold", hold, "status"), "Active")
 		self.assertTrue(qi.automotive_nonconformance)
-		move = frappe.get_doc({"doctype": "Stock Entry", "purpose": "Material Transfer",
-			"stock_entry_type": "Material Transfer", "company": AICHI,
-			"items": [{"item_code": cat["wheel"], "qty": 8, "s_warehouse": catalog.PARTS_STORE,
-				"t_warehouse": catalog.LINE_SIDE, "use_serial_batch_fields": 1, "batch_no": batch}]})
+		move = frappe.get_doc(
+			{
+				"doctype": "Stock Entry",
+				"purpose": "Material Transfer",
+				"stock_entry_type": "Material Transfer",
+				"company": AICHI,
+				"items": [
+					{
+						"item_code": cat["wheel"],
+						"qty": 8,
+						"s_warehouse": catalog.PARTS_STORE,
+						"t_warehouse": catalog.LINE_SIDE,
+						"use_serial_batch_fields": 1,
+						"batch_no": batch,
+					}
+				],
+			}
+		)
 		with self.assertRaises(QualityHoldError):
 			move.insert(ignore_permissions=True)
 		# segregating into quarantine is always allowed
-		quarantine = frappe.get_doc({"doctype": "Stock Entry", "purpose": "Material Transfer",
-			"stock_entry_type": "Material Transfer", "company": AICHI,
-			"items": [{"item_code": cat["wheel"], "qty": 8, "s_warehouse": catalog.PARTS_STORE,
-				"t_warehouse": catalog.QUARANTINE, "use_serial_batch_fields": 1, "batch_no": batch}]})
+		quarantine = frappe.get_doc(
+			{
+				"doctype": "Stock Entry",
+				"purpose": "Material Transfer",
+				"stock_entry_type": "Material Transfer",
+				"company": AICHI,
+				"items": [
+					{
+						"item_code": cat["wheel"],
+						"qty": 8,
+						"s_warehouse": catalog.PARTS_STORE,
+						"t_warehouse": catalog.QUARANTINE,
+						"use_serial_batch_fields": 1,
+						"batch_no": batch,
+					}
+				],
+			}
+		)
 		quarantine.insert(ignore_permissions=True)
 		quarantine.submit()
 		with as_user(QM1):
-			disposition = frappe.get_doc({"doctype": "Quality Disposition", "quality_hold": hold,
-				"nonconformance": qi.automotive_nonconformance, "company": AICHI, "decision": "Scrap",
-				"item_code": cat["wheel"], "batch_no": batch, "qty": 8, "from_warehouse": catalog.QUARANTINE,
-				"justification": "Cracked rims on 2 of 2 samples"}).insert()
+			disposition = frappe.get_doc(
+				{
+					"doctype": "Quality Disposition",
+					"quality_hold": hold,
+					"nonconformance": qi.automotive_nonconformance,
+					"company": AICHI,
+					"decision": "Scrap",
+					"item_code": cat["wheel"],
+					"batch_no": batch,
+					"qty": 8,
+					"from_warehouse": catalog.QUARANTINE,
+					"justification": "Cracked rims on 2 of 2 samples",
+				}
+			).insert()
 		approve(disposition, QM1, [QM2])
 		with as_user(QM1):
 			disposition.reload()
 			disposition.submit()
 		disposition.reload()
-		self.assertEqual(frappe.db.get_value("Stock Entry", disposition.stock_entry, "automotive_source_name"),
-			disposition.name)
+		self.assertEqual(
+			frappe.db.get_value("Stock Entry", disposition.stock_entry, "automotive_source_name"),
+			disposition.name,
+		)
 		self.assertEqual(frappe.db.get_value("Quality Hold", hold, "status"), "Dispositioned")
-		self.assertEqual(flt(frappe.db.get_value("Bin", {"item_code": cat["wheel"], "warehouse": catalog.QUARANTINE},
-			"actual_qty")), 0)
+		self.assertEqual(
+			flt(
+				frappe.db.get_value(
+					"Bin", {"item_code": cat["wheel"], "warehouse": catalog.QUARANTINE}, "actual_qty"
+				)
+			),
+			0,
+		)
 		nc = frappe.get_doc("Non Conformance", qi.automotive_nonconformance)
 		nc.status = "Resolved"
 		with as_user(QM2), self.assertRaises(frappe.ValidationError):
@@ -637,9 +1027,17 @@ class TestJidoka(ManufacturingTestCase):
 		wo = catalog.work_order(cat["variants"][("Premium", "AWD")], 1)
 		make_user("operator.mfg@hinode.example", ["Line Operator"])
 		with as_user("operator.mfg@hinode.example"):
-			andon = frappe.get_doc({"doctype": "Andon Event", "production_line": catalog.LINE,
-				"workstation": "AICHI-FA1-S30", "reason_code": "Q-DEFECT", "stop_type": "Line Stop",
-				"work_order": wo.name, "description": "Loose harness"}).insert()
+			andon = frappe.get_doc(
+				{
+					"doctype": "Andon Event",
+					"production_line": catalog.LINE,
+					"workstation": "AICHI-FA1-S30",
+					"reason_code": "Q-DEFECT",
+					"stop_type": "Line Stop",
+					"work_order": wo.name,
+					"description": "Loose harness",
+				}
+			).insert()
 		andon.reload()
 		self.assertTrue(andon.quality_hold)
 		with self.assertRaises(QualityHoldError):
@@ -669,21 +1067,37 @@ class TestKanban(ManufacturingTestCase):
 	def test_consumption_trigger_and_internal_replenishment(self):
 		cat = self.cat
 		catalog.receive(cat["wheel"], 40, warehouse=catalog.PARTS_STORE, rate=120)
-		loop = frappe.get_doc({"doctype": "Kanban Loop", "loop_code": "KL-TEST-WHEEL", "item_code": cat["wheel"],
-			"plant": catalog.PLANT, "production_line": catalog.LINE, "supply_type": "Internal Transfer",
-			"line_side_warehouse": catalog.LINE_SIDE, "source_warehouse": catalog.PARTS_STORE, "container_qty": 4,
-			"number_of_cards": 3, "lead_time_hours": 2, "daily_demand": 24,
-			"delivery_windows": [{"weekday": d, "window_start": "08:00:00", "window_end": "20:00:00"}
-				for d in ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")]}).insert(
-			ignore_permissions=True)
+		loop = frappe.get_doc(
+			{
+				"doctype": "Kanban Loop",
+				"loop_code": "KL-TEST-WHEEL",
+				"item_code": cat["wheel"],
+				"plant": catalog.PLANT,
+				"production_line": catalog.LINE,
+				"supply_type": "Internal Transfer",
+				"line_side_warehouse": catalog.LINE_SIDE,
+				"source_warehouse": catalog.PARTS_STORE,
+				"container_qty": 4,
+				"number_of_cards": 3,
+				"lead_time_hours": 2,
+				"daily_demand": 24,
+				"delivery_windows": [
+					{"weekday": d, "window_start": "08:00:00", "window_end": "20:00:00"}
+					for d in ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+				],
+			}
+		).insert(ignore_permissions=True)
 		self.assertEqual(frappe.db.count("Kanban Card", {"kanban_loop": loop.name, "status": "Full"}), 3)
 		stock = self.stock_up(1)  # puts 4 wheels at line side
 		catalog.receive(cat["wheel"], 8, rate=120)  # 12 wheels = 3 containers at line side
 		wo = catalog.work_order(cat["variants"][("Premium", "AWD")], 1)
 		build_entry(wo.name, 1, components=[{"item_code": cat["ecu"], "serial_no": stock["ecus"][0]}])
 		# 4 wheels consumed -> 8 left -> only 2 containers -> one card signals
-		signals = frappe.get_all("Kanban Signal", filters={"kanban_loop": loop.name}, fields=["name", "status",
-			"stock_entry", "signal_source"])
+		signals = frappe.get_all(
+			"Kanban Signal",
+			filters={"kanban_loop": loop.name},
+			fields=["name", "status", "stock_entry", "signal_source"],
+		)
 		self.assertEqual(len(signals), 1)
 		self.assertEqual(signals[0].signal_source, "Consumption Trigger")
 		transfer = frappe.get_doc("Stock Entry", signals[0].stock_entry)
@@ -703,35 +1117,72 @@ class TestKanbanEscalation(ManufacturingTestCase):
 		notifications.ensure_templates()
 		# a supervisor of its own: the plant assignment scopes the user (User Permissions, cached)
 		lead = make_user("line.lead.mfg@hinode.example", ["Production Supervisor", "Manufacturing User"])
-		employee = frappe.get_doc({"doctype": "Employee", "first_name": "Ren", "last_name": "Hoshino",
-			"gender": "Female", "date_of_birth": "1988-02-03", "date_of_joining": "2016-04-01", "company": AICHI,
-			"user_id": lead}).insert(ignore_permissions=True)
-		frappe.get_doc({"doctype": "Plant Assignment", "employee": employee.name, "plant": catalog.PLANT,
-			"assignment_role": "Supervisor", "from_date": add_days(nowdate(), -30)}).insert(ignore_permissions=True)
+		employee = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Ren",
+				"last_name": "Hoshino",
+				"gender": "Female",
+				"date_of_birth": "1988-02-03",
+				"date_of_joining": "2016-04-01",
+				"company": AICHI,
+				"user_id": lead,
+			}
+		).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Plant Assignment",
+				"employee": employee.name,
+				"plant": catalog.PLANT,
+				"assignment_role": "Supervisor",
+				"from_date": add_days(nowdate(), -30),
+			}
+		).insert(ignore_permissions=True)
 		catalog.receive(self.cat["wheel"], 8, warehouse=catalog.PARTS_STORE, rate=120)
-		loop = frappe.get_doc({"doctype": "Kanban Loop", "loop_code": "KL-TEST-ESCALATE", "item_code": self.cat["wheel"],
-			"plant": catalog.PLANT, "production_line": catalog.LINE, "supply_type": "Internal Transfer",
-			"line_side_warehouse": catalog.LINE_SIDE, "source_warehouse": catalog.PARTS_STORE, "container_qty": 4,
-			"number_of_cards": 2, "lead_time_hours": 2}).insert(ignore_permissions=True)
+		loop = frappe.get_doc(
+			{
+				"doctype": "Kanban Loop",
+				"loop_code": "KL-TEST-ESCALATE",
+				"item_code": self.cat["wheel"],
+				"plant": catalog.PLANT,
+				"production_line": catalog.LINE,
+				"supply_type": "Internal Transfer",
+				"line_side_warehouse": catalog.LINE_SIDE,
+				"source_warehouse": catalog.PARTS_STORE,
+				"container_qty": 4,
+				"number_of_cards": 2,
+				"lead_time_hours": 2,
+			}
+		).insert(ignore_permissions=True)
 		late = kanban.scan_card(f"{loop.name}-01")
 		on_time = kanban.scan_card(f"{loop.name}-02")
 		self.assertEqual((late["status"], on_time["status"]), ("Ordered", "Ordered"))  # transfers requested
 		frappe.db.set_value("Kanban Signal", late["signal"], "due_by", add_to_date(now_datetime(), hours=-3))
 		kanban.escalate_overdue()
 		kanban.escalate_overdue()  # the next run, five minutes later
-		signal = frappe.db.get_value("Kanban Signal", late["signal"], ["status", "escalation_level", "escalation_note"],
-			as_dict=True)
+		signal = frappe.db.get_value(
+			"Kanban Signal", late["signal"], ["status", "escalation_level", "escalation_note"], as_dict=True
+		)
 		self.assertEqual((signal.status, cint(signal.escalation_level)), ("Escalated", 1))
 		self.assertIn("Overdue since", signal.escalation_note)
-		pending = frappe.db.get_value("Kanban Signal", on_time["signal"], ["status", "escalation_level"], as_dict=True)
+		pending = frappe.db.get_value(
+			"Kanban Signal", on_time["signal"], ["status", "escalation_level"], as_dict=True
+		)
 		self.assertEqual((pending.status, cint(pending.escalation_level)), ("Ordered", 0))
 		self.assertEqual(frappe.db.get_value("Kanban Card", f"{loop.name}-01", "status"), "Signaled")
 		# told once: a desk alert (the event sends no e-mail by default), not repeated by the second run
-		told = frappe.get_all("Notification Dispatch", filters={"event": "kanban.overdue", "recipient": lead},
-			fields=["reference_name", "channel", "status"])
-		self.assertEqual(sorted((r.reference_name, r.channel, r.status) for r in told),
-			[(late["signal"], "Email", "Suppressed"), (late["signal"], "In-App", "Delivered")])
-		self.assertTrue(frappe.db.exists("Notification Log", {"for_user": lead, "document_name": late["signal"]}))
+		told = frappe.get_all(
+			"Notification Dispatch",
+			filters={"event": "kanban.overdue", "recipient": lead},
+			fields=["reference_name", "channel", "status"],
+		)
+		self.assertEqual(
+			sorted((r.reference_name, r.channel, r.status) for r in told),
+			[(late["signal"], "Email", "Suppressed"), (late["signal"], "In-App", "Delivered")],
+		)
+		self.assertTrue(
+			frappe.db.exists("Notification Log", {"for_user": lead, "document_name": late["signal"]})
+		)
 
 
 class TestPlanning(ManufacturingTestCase):
@@ -740,24 +1191,49 @@ class TestPlanning(ManufacturingTestCase):
 		(its worker died) into Failed, to be started again; a run still working is left alone."""
 		from automotive_manufacturing.production_planning import planning_run
 
-		params = frappe.get_doc({"doctype": "Planning Parameter Set", "parameter_set": "AICHI-STALL",
-			"company": AICHI, "plant": catalog.PLANT, "horizon_days": 7, "frozen_zone_days": 0,
-			"lot_sizing": "Lot For Lot", "capacity_check": 0, "respect_holidays": 0, "include_forecast": 0})
+		params = frappe.get_doc(
+			{
+				"doctype": "Planning Parameter Set",
+				"parameter_set": "AICHI-STALL",
+				"company": AICHI,
+				"plant": catalog.PLANT,
+				"horizon_days": 7,
+				"frozen_zone_days": 0,
+				"lot_sizing": "Lot For Lot",
+				"capacity_check": 0,
+				"respect_holidays": 0,
+				"include_forecast": 0,
+			}
+		)
 		params.insert(ignore_permissions=True)
 		approve(params, "Administrator", [DIRECTOR])
 		params.reload()
 		params.submit()
 
 		def running():
-			return frappe.get_doc({"doctype": "Planning Run", "company": AICHI, "plant": catalog.PLANT,
-				"parameter_set": params.name, "status": "Running"}).insert(ignore_permissions=True).name
+			return (
+				frappe.get_doc(
+					{
+						"doctype": "Planning Run",
+						"company": AICHI,
+						"plant": catalog.PLANT,
+						"parameter_set": params.name,
+						"status": "Running",
+					}
+				)
+				.insert(ignore_permissions=True)
+				.name
+			)
 
 		stalled, working = running(), running()
-		frappe.db.set_value("Planning Run", stalled, "modified", add_to_date(now_datetime(), hours=-3),
-			update_modified=False)
+		frappe.db.set_value(
+			"Planning Run", stalled, "modified", add_to_date(now_datetime(), hours=-3), update_modified=False
+		)
 		planning_run.recover_stalled()
-		self.assertEqual(frappe.db.get_value("Planning Run", stalled, ["status", "error"]),
-			("Failed", "worker stopped; retry the run"))
+		self.assertEqual(
+			frappe.db.get_value("Planning Run", stalled, ["status", "error"]),
+			("Failed", "worker stopped; retry the run"),
+		)
 		self.assertEqual(frappe.db.get_value("Planning Run", working, "status"), "Running")
 
 	def test_the_weekly_production_plan_sets_work_orders_against_orders_and_capacity(self):
@@ -776,8 +1252,10 @@ class TestPlanning(ManufacturingTestCase):
 		capacity = int(line.max_units_per_day or 0) * days
 
 		def week():
-			rows = run("Weekly Production Plan", filters={"company": AICHI, "plant": catalog.PLANT,
-				"from_date": str(monday), "weeks": 1})["result"]
+			rows = run(
+				"Weekly Production Plan",
+				filters={"company": AICHI, "plant": catalog.PLANT, "from_date": str(monday), "weeks": 1},
+			)["result"]
 			return next(r for r in rows if r["production_line"] == catalog.LINE)
 
 		before = week()
@@ -787,13 +1265,33 @@ class TestPlanning(ManufacturingTestCase):
 		self.assertEqual(after["planned_qty"], before["planned_qty"] + 2)
 		customer = "Weekly Plan Test Dealer"
 		if not frappe.db.exists("Customer", customer):
-			frappe.get_doc({"doctype": "Customer", "customer_name": customer,
-				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
-				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "Customer",
+					"customer_name": customer,
+					"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+					"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				}
+			).insert(ignore_permissions=True)
 		due = add_days(nowdate(), offset)
-		order = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": customer,
-			"transaction_date": nowdate(), "delivery_date": due, "items": [{"item_code": variant,
-				"qty": after["planned_qty"] + 3, "rate": 2_000_000, "warehouse": catalog.FG, "delivery_date": due}]})
+		order = frappe.get_doc(
+			{
+				"doctype": "Sales Order",
+				"company": AICHI,
+				"customer": customer,
+				"transaction_date": nowdate(),
+				"delivery_date": due,
+				"items": [
+					{
+						"item_code": variant,
+						"qty": after["planned_qty"] + 3,
+						"rate": 2_000_000,
+						"warehouse": catalog.FG,
+						"delivery_date": due,
+					}
+				],
+			}
+		)
 		order.insert(ignore_permissions=True)
 		order.submit()
 		short = week()
@@ -811,55 +1309,137 @@ class TestPlanning(ManufacturingTestCase):
 		week1, week2 = monday + datetime.timedelta(days=1), monday + datetime.timedelta(days=8)
 		customer = "Forecast Test Dealer"
 		if not frappe.db.exists("Customer", customer):
-			frappe.get_doc({"doctype": "Customer", "customer_name": customer,
-				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
-				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
-		order = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": customer,
-			"transaction_date": nowdate(), "delivery_date": week1, "items": [{"item_code": variant, "qty": 2,
-				"rate": 2_000_000, "warehouse": catalog.FG, "delivery_date": week1}]})
+			frappe.get_doc(
+				{
+					"doctype": "Customer",
+					"customer_name": customer,
+					"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+					"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				}
+			).insert(ignore_permissions=True)
+		order = frappe.get_doc(
+			{
+				"doctype": "Sales Order",
+				"company": AICHI,
+				"customer": customer,
+				"transaction_date": nowdate(),
+				"delivery_date": week1,
+				"items": [
+					{
+						"item_code": variant,
+						"qty": 2,
+						"rate": 2_000_000,
+						"warehouse": catalog.FG,
+						"delivery_date": week1,
+					}
+				],
+			}
+		)
 		order.insert(ignore_permissions=True)
 		order.submit()
-		mps = frappe.get_doc({"doctype": "Master Production Schedule", "company": AICHI, "posting_date": nowdate(),
-			"from_date": nowdate(), "items": [
-				{"item_code": variant, "warehouse": catalog.FG, "delivery_date": week1, "planned_qty": 5, "uom": "Nos"},
-				{"item_code": variant, "warehouse": catalog.FG, "delivery_date": week2, "planned_qty": 3, "uom": "Nos"}]})
+		mps = frappe.get_doc(
+			{
+				"doctype": "Master Production Schedule",
+				"company": AICHI,
+				"posting_date": nowdate(),
+				"from_date": nowdate(),
+				"items": [
+					{
+						"item_code": variant,
+						"warehouse": catalog.FG,
+						"delivery_date": week1,
+						"planned_qty": 5,
+						"uom": "Nos",
+					},
+					{
+						"item_code": variant,
+						"warehouse": catalog.FG,
+						"delivery_date": week2,
+						"planned_qty": 3,
+						"uom": "Nos",
+					},
+				],
+			}
+		)
 		mps.insert(ignore_permissions=True)
-		run = frappe._dict(as_of=nowdate(), company=AICHI, plant=catalog.PLANT, master_production_schedule=mps.name)
+		run = frappe._dict(
+			as_of=nowdate(), company=AICHI, plant=catalog.PLANT, master_production_schedule=mps.name
+		)
 
 		def demand(**params):
-			rows = [d for d in snapshot.collect(run, frappe._dict(horizon_days=28, **params))["demand"]
-				if d["item_code"] == variant]
-			firm = sum(d["qty"] for d in rows if d["source"].startswith("SO:")
-				and getdate(d["date"]).isocalendar()[1] == week1.isocalendar()[1])
+			rows = [
+				d
+				for d in snapshot.collect(run, frappe._dict(horizon_days=28, **params))["demand"]
+				if d["item_code"] == variant
+			]
+			firm = sum(
+				d["qty"]
+				for d in rows
+				if d["source"].startswith("SO:")
+				and getdate(d["date"]).isocalendar()[1] == week1.isocalendar()[1]
+			)
 			return firm, sorted((d["date"], d["qty"]) for d in rows if d["source"] == f"MPS:{mps.name}")
 
 		firm, forecast = demand(include_forecast=1, consume_forecast=1)
 		self.assertGreaterEqual(firm, 2)
-		self.assertEqual(forecast, [(str(week1), max(5 - firm, 0)), (str(week2), 3)] if firm < 5 else
-			[(str(week2), 3)])
-		self.assertEqual(demand(include_forecast=1, consume_forecast=0)[1], [(str(week1), 5), (str(week2), 3)])
+		self.assertEqual(
+			forecast, [(str(week1), max(5 - firm, 0)), (str(week2), 3)] if firm < 5 else [(str(week2), 3)]
+		)
+		self.assertEqual(
+			demand(include_forecast=1, consume_forecast=0)[1], [(str(week1), 5), (str(week2), 3)]
+		)
 		self.assertEqual(demand(include_forecast=0, consume_forecast=1)[1], [])
 
 	def test_planning_run_is_reproducible_and_releases_native_documents(self):
 		from automotive_manufacturing.production_planning import planning_run
 
 		cat = self.cat
-		params = frappe.get_doc({"doctype": "Planning Parameter Set", "parameter_set": "AICHI-TEST",
-			"company": AICHI, "plant": catalog.PLANT, "horizon_days": 21, "frozen_zone_days": 0,
-			"lot_sizing": "Lot For Lot", "capacity_check": 1, "respect_holidays": 0, "include_forecast": 0})
+		params = frappe.get_doc(
+			{
+				"doctype": "Planning Parameter Set",
+				"parameter_set": "AICHI-TEST",
+				"company": AICHI,
+				"plant": catalog.PLANT,
+				"horizon_days": 21,
+				"frozen_zone_days": 0,
+				"lot_sizing": "Lot For Lot",
+				"capacity_check": 1,
+				"respect_holidays": 0,
+				"include_forecast": 0,
+			}
+		)
 		params.insert(ignore_permissions=True)
 		approve(params, "Administrator", [DIRECTOR])
 		params.reload()
 		params.submit()
 		customer = "Planning Test Dealer"
 		if not frappe.db.exists("Customer", customer):
-			frappe.get_doc({"doctype": "Customer", "customer_name": customer,
-				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
-				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
-		so = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": customer,
-			"transaction_date": nowdate(), "delivery_date": add_days(nowdate(), 14),
-			"items": [{"item_code": cat["variants"][("Premium", "AWD")], "qty": 3, "rate": 2_500_000,
-				"warehouse": catalog.FG, "delivery_date": add_days(nowdate(), 14)}]})
+			frappe.get_doc(
+				{
+					"doctype": "Customer",
+					"customer_name": customer,
+					"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+					"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				}
+			).insert(ignore_permissions=True)
+		so = frappe.get_doc(
+			{
+				"doctype": "Sales Order",
+				"company": AICHI,
+				"customer": customer,
+				"transaction_date": nowdate(),
+				"delivery_date": add_days(nowdate(), 14),
+				"items": [
+					{
+						"item_code": cat["variants"][("Premium", "AWD")],
+						"qty": 3,
+						"rate": 2_500_000,
+						"warehouse": catalog.FG,
+						"delivery_date": add_days(nowdate(), 14),
+					}
+				],
+			}
+		)
 		so.insert(ignore_permissions=True)
 		so.submit()
 		frappe.flags.automotive_inline_planning = True
@@ -890,7 +1470,6 @@ class TestPlanning(ManufacturingTestCase):
 		self.assertEqual(wo.production_plan, run.production_plan)
 
 
-
 class TestSequencing(ManufacturingTestCase):
 	def test_daily_schedule_is_leveled_and_changes_are_audited(self):
 		from automotive_manufacturing.production_planning import schedule
@@ -910,7 +1489,9 @@ class TestSequencing(ManufacturingTestCase):
 		with self.assertRaises(frappe.ValidationError):
 			schedule.resequence(name, [6, 5, 4, 3, 2, 1], "")
 		schedule.resequence(name, [6, 5, 4, 3, 2, 1], "Paint shop delay on AWD bodies")
-		changes = frappe.get_all("Plant Schedule Change", filters={"plant_schedule": name}, pluck="change_type")
+		changes = frappe.get_all(
+			"Plant Schedule Change", filters={"plant_schedule": name}, pluck="change_type"
+		)
 		self.assertEqual(sorted(changes), ["Release", "Resequence"])
 
 
@@ -927,8 +1508,15 @@ class TestPlantScopedActions(ManufacturingTestCase):
 		super().setUpClass()
 		make_user(cls.KYUSHU_SUPERVISOR, ["Production Supervisor", "Manufacturing User"])
 		if not frappe.db.exists("User Permission", {"user": cls.KYUSHU_SUPERVISOR, "allow": "Plant"}):
-			frappe.get_doc({"doctype": "User Permission", "user": cls.KYUSHU_SUPERVISOR, "allow": "Plant",
-				"for_value": "KYUSHU-PT", "apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "User Permission",
+					"user": cls.KYUSHU_SUPERVISOR,
+					"allow": "Plant",
+					"for_value": "KYUSHU-PT",
+					"apply_to_all_doctypes": 1,
+				}
+			).insert(ignore_permissions=True)
 
 	def test_another_plant_s_documents_are_out_of_reach(self):
 		from automotive_manufacturing.production_planning import schedule
@@ -936,9 +1524,16 @@ class TestPlantScopedActions(ManufacturingTestCase):
 
 		operator = make_user("operator.scope.mfg@hinode.example", ["Line Operator"])
 		with as_user(operator):
-			andon = frappe.get_doc({"doctype": "Andon Event", "production_line": catalog.LINE,
-				"workstation": "AICHI-FA1-S30", "reason_code": "P-HELP", "stop_type": "Call",
-				"description": "Help needed with the harness routing"}).insert()
+			andon = frappe.get_doc(
+				{
+					"doctype": "Andon Event",
+					"production_line": catalog.LINE,
+					"workstation": "AICHI-FA1-S30",
+					"reason_code": "P-HELP",
+					"stop_type": "Call",
+					"description": "Help needed with the harness routing",
+				}
+			).insert()
 		with as_user(self.KYUSHU_SUPERVISOR), self.assertRaises(frappe.PermissionError):
 			andon_service.acknowledge(andon.name)
 		self.assertEqual(frappe.db.get_value("Andon Event", andon.name, "status"), "Raised")
@@ -951,6 +1546,8 @@ class TestPlantScopedActions(ManufacturingTestCase):
 		for outsider in (self.KYUSHU_SUPERVISOR, portal):
 			with self.subTest(outsider), as_user(outsider), self.assertRaises(frappe.PermissionError):
 				schedule.build(catalog.LINE, day)
-		self.assertFalse(frappe.db.exists("Plant Schedule", {"production_line": catalog.LINE, "schedule_date": day}))
+		self.assertFalse(
+			frappe.db.exists("Plant Schedule", {"production_line": catalog.LINE, "schedule_date": day})
+		)
 		with as_user(PLANNER):
 			self.assertTrue(schedule.build(catalog.LINE, day))

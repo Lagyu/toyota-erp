@@ -20,29 +20,61 @@ from automotive_core.governance import audit
 
 
 def _blanket_rates(blanket_order: str) -> dict[str, float]:
-	return {row.item_code: flt(row.rate) for row in frappe.get_all("Blanket Order Item",
-		filters={"parent": blanket_order}, fields=["item_code", "rate"])}
+	return {
+		row.item_code: flt(row.rate)
+		for row in frappe.get_all(
+			"Blanket Order Item", filters={"parent": blanket_order}, fields=["item_code", "rate"]
+		)
+	}
 
 
 def validate_agreement(doc) -> None:
 	if getdate(doc.valid_to) < getdate(doc.valid_from):
 		frappe.throw(_("Valid To must be on or after Valid From."))
-	warehouse = frappe.db.get_value("Warehouse", doc.consignment_warehouse,
-		["company", "automotive_warehouse_role", "automotive_plant"], as_dict=True)
-	if not warehouse or warehouse.company != doc.company or warehouse.automotive_warehouse_role != "Consignment":
-		frappe.throw(_("{0} is not a consignment warehouse of {1}.").format(doc.consignment_warehouse, doc.company))
+	warehouse = frappe.db.get_value(
+		"Warehouse",
+		doc.consignment_warehouse,
+		["company", "automotive_warehouse_role", "automotive_plant"],
+		as_dict=True,
+	)
+	if (
+		not warehouse
+		or warehouse.company != doc.company
+		or warehouse.automotive_warehouse_role != "Consignment"
+	):
+		frappe.throw(
+			_("{0} is not a consignment warehouse of {1}.").format(doc.consignment_warehouse, doc.company)
+		)
 	if warehouse.automotive_plant and warehouse.automotive_plant != doc.plant:
-		frappe.throw(_("{0} belongs to plant {1}.").format(doc.consignment_warehouse, warehouse.automotive_plant))
-	blanket = frappe.db.get_value("Blanket Order", doc.blanket_order, ["supplier", "company", "docstatus",
-		"blanket_order_type"], as_dict=True)
-	if not blanket or blanket.docstatus != 1 or blanket.supplier != doc.supplier or blanket.company != doc.company \
-			or blanket.blanket_order_type != "Purchasing":
-		frappe.throw(_("{0} is not a submitted purchasing blanket order of {1} with {2}.").format(
-			doc.blanket_order, doc.company, doc.supplier))
+		frappe.throw(
+			_("{0} belongs to plant {1}.").format(doc.consignment_warehouse, warehouse.automotive_plant)
+		)
+	blanket = frappe.db.get_value(
+		"Blanket Order",
+		doc.blanket_order,
+		["supplier", "company", "docstatus", "blanket_order_type"],
+		as_dict=True,
+	)
+	if (
+		not blanket
+		or blanket.docstatus != 1
+		or blanket.supplier != doc.supplier
+		or blanket.company != doc.company
+		or blanket.blanket_order_type != "Purchasing"
+	):
+		frappe.throw(
+			_("{0} is not a submitted purchasing blanket order of {1} with {2}.").format(
+				doc.blanket_order, doc.company, doc.supplier
+			)
+		)
 	rates = _blanket_rates(doc.blanket_order)
 	for row in doc.items:
 		if row.item_code not in rates:
-			frappe.throw(_("Row {0}: {1} is not on blanket order {2}.").format(row.idx, row.item_code, doc.blanket_order))
+			frappe.throw(
+				_("Row {0}: {1} is not on blanket order {2}.").format(
+					row.idx, row.item_code, doc.blanket_order
+				)
+			)
 		if flt(row.max_qty) and flt(row.min_qty) > flt(row.max_qty):
 			frappe.throw(_("Row {0}: minimum exceeds maximum.").format(row.idx))
 		row.agreed_rate = rates[row.item_code]
@@ -52,8 +84,13 @@ def validate_agreement(doc) -> None:
 
 def on_agreement_submit(doc) -> None:
 	doc.db_set("status", "Active")
-	audit.record("consignment.agreement_active", doc.doctype, doc.name, {"supplier": doc.supplier,
-		"items": [r.item_code for r in doc.items]}, company=doc.company)
+	audit.record(
+		"consignment.agreement_active",
+		doc.doctype,
+		doc.name,
+		{"supplier": doc.supplier, "items": [r.item_code for r in doc.items]},
+		company=doc.company,
+	)
 
 
 def on_agreement_cancel(doc) -> None:
@@ -77,35 +114,65 @@ def validate_movement(doc) -> None:
 	for row in doc.items:
 		term = allowed.get(row.item_code)
 		if not term:
-			frappe.throw(_("Row {0}: {1} is not covered by {2}.").format(row.idx, row.item_code, agreement.name))
+			frappe.throw(
+				_("Row {0}: {1} is not covered by {2}.").format(row.idx, row.item_code, agreement.name)
+			)
 		if doc.movement_type == "Receipt Into Consignment":
-			if flt(term.max_qty) and on_hand(agreement.name, row.item_code) + flt(row.qty) > flt(term.max_qty) + 1e-9:
-				frappe.throw(_("Row {0}: {1} would exceed the agreed maximum of {2}.").format(
-					row.idx, row.item_code, term.max_qty))
+			if (
+				flt(term.max_qty)
+				and on_hand(agreement.name, row.item_code) + flt(row.qty) > flt(term.max_qty) + 1e-9
+			):
+				frappe.throw(
+					_("Row {0}: {1} would exceed the agreed maximum of {2}.").format(
+						row.idx, row.item_code, term.max_qty
+					)
+				)
 		else:
 			if flt(row.qty) > on_hand(agreement.name, row.item_code) + 1e-9:
-				frappe.throw(_("Row {0}: only {1} of {2} on consignment.").format(
-					row.idx, on_hand(agreement.name, row.item_code), row.item_code))
+				frappe.throw(
+					_("Row {0}: only {1} of {2} on consignment.").format(
+						row.idx, on_hand(agreement.name, row.item_code), row.item_code
+					)
+				)
 			if doc.movement_type == "Withdrawal" and not row.target_warehouse:
 				frappe.throw(_("Row {0}: choose the warehouse the parts are withdrawn to.").format(row.idx))
-			if row.target_warehouse and frappe.db.get_value("Warehouse", row.target_warehouse, "company") != doc.company:
-				frappe.throw(_("Row {0}: {1} is not a warehouse of {2}.").format(row.idx, row.target_warehouse,
-					doc.company))
+			if (
+				row.target_warehouse
+				and frappe.db.get_value("Warehouse", row.target_warehouse, "company") != doc.company
+			):
+				frappe.throw(
+					_("Row {0}: {1} is not a warehouse of {2}.").format(
+						row.idx, row.target_warehouse, doc.company
+					)
+				)
 
 
 def _stock_entry(doc, agreement, purpose: str) -> str:
 	"""Zero-value move in or out of the consignment warehouse (the stock is not ours)."""
-	se = frappe.get_doc({
-		"doctype": "Stock Entry", "purpose": purpose, "stock_entry_type": purpose, "company": doc.company,
-		"posting_date": doc.posting_date, "set_posting_time": 1,
-		"remarks": _("Consignment {0} ({1})").format(doc.name, doc.movement_type),
-		"items": [{
-			"item_code": row.item_code, "qty": row.qty, "use_serial_batch_fields": 1, "batch_no": row.batch_no,
-			"s_warehouse": agreement.consignment_warehouse if purpose == "Material Issue" else None,
-			"t_warehouse": agreement.consignment_warehouse if purpose == "Material Receipt" else None,
-			"basic_rate": 0, "allow_zero_valuation_rate": 1,
-		} for row in doc.items],
-	})
+	se = frappe.get_doc(
+		{
+			"doctype": "Stock Entry",
+			"purpose": purpose,
+			"stock_entry_type": purpose,
+			"company": doc.company,
+			"posting_date": doc.posting_date,
+			"set_posting_time": 1,
+			"remarks": _("Consignment {0} ({1})").format(doc.name, doc.movement_type),
+			"items": [
+				{
+					"item_code": row.item_code,
+					"qty": row.qty,
+					"use_serial_batch_fields": 1,
+					"batch_no": row.batch_no,
+					"s_warehouse": agreement.consignment_warehouse if purpose == "Material Issue" else None,
+					"t_warehouse": agreement.consignment_warehouse if purpose == "Material Receipt" else None,
+					"basic_rate": 0,
+					"allow_zero_valuation_rate": 1,
+				}
+				for row in doc.items
+			],
+		}
+	)
 	se.flags.ignore_permissions = True
 	se.insert()
 	se.submit()
@@ -117,12 +184,21 @@ def _take_ownership(doc, agreement) -> tuple[str, str]:
 
 	from automotive_supply_chain.supplier_collaboration.schedules import make_calloff
 
-	lines = [{"item_code": row.item_code, "qty": row.qty, "schedule_date": doc.posting_date,
-		"warehouse": row.target_warehouse} for row in doc.items]
+	lines = [
+		{
+			"item_code": row.item_code,
+			"qty": row.qty,
+			"schedule_date": doc.posting_date,
+			"warehouse": row.target_warehouse,
+		}
+		for row in doc.items
+	]
 	po_name = make_calloff(doc.company, doc.supplier, agreement.plant, lines)
 	if not po_name:
 		frappe.throw(_("No blanket-order price for the withdrawn items."))
-	frappe.db.set_value("Purchase Order", po_name, "automotive_ack_status", "Not Requested")  # consumed, not ordered
+	frappe.db.set_value(
+		"Purchase Order", po_name, "automotive_ack_status", "Not Requested"
+	)  # consumed, not ordered
 	pr = make_purchase_receipt(po_name)
 	pr.posting_date = doc.posting_date
 	pr.set_posting_time = 1
@@ -148,16 +224,23 @@ def on_movement_submit(doc) -> None:
 		stock_entry = _stock_entry(doc, agreement, "Material Issue")
 		po_name, pr_name = _take_ownership(doc, agreement)
 		doc.db_set({"stock_entry": stock_entry, "purchase_order": po_name, "purchase_receipt": pr_name})
-	audit.record("consignment." + frappe.scrub(doc.movement_type), doc.doctype, doc.name, {
-		"agreement": doc.agreement, "lines": [{"item": r.item_code, "qty": flt(r.qty)} for r in doc.items]},
-		company=doc.company)
+	audit.record(
+		"consignment." + frappe.scrub(doc.movement_type),
+		doc.doctype,
+		doc.name,
+		{"agreement": doc.agreement, "lines": [{"item": r.item_code, "qty": flt(r.qty)} for r in doc.items]},
+		company=doc.company,
+	)
 
 
 def on_movement_cancel(doc) -> None:
 	from automotive_core.governance.cancellation import cancel_linked
 
 	reason = _("Consignment movement {0} cancelled").format(doc.name)
-	for doctype, name in (("Purchase Receipt", doc.purchase_receipt), ("Purchase Order", doc.purchase_order),
-			("Stock Entry", doc.stock_entry)):
+	for doctype, name in (
+		("Purchase Receipt", doc.purchase_receipt),
+		("Purchase Order", doc.purchase_order),
+		("Stock Entry", doc.stock_entry),
+	):
 		if name and frappe.db.get_value(doctype, name, "docstatus") == 1:
 			cancel_linked(doctype, name, reason)

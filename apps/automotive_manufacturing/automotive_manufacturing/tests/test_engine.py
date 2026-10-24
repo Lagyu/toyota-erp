@@ -32,31 +32,57 @@ class TestVin(unittest.TestCase):
 
 class TestOptionRules(unittest.TestCase):
 	RULES = [
-		options.Rule("R1", "Requires", "drivetrain", frozenset({"AWD"}), "powertrain", frozenset({"EV-DUAL"})),
-		options.Rule("R2", "Excludes", "trim", frozenset({"BASE"}), "package", frozenset({"TECH"}),
-			message="Tech package needs a higher trim"),
+		options.Rule(
+			"R1", "Requires", "drivetrain", frozenset({"AWD"}), "powertrain", frozenset({"EV-DUAL"})
+		),
+		options.Rule(
+			"R2",
+			"Excludes",
+			"trim",
+			frozenset({"BASE"}),
+			"package",
+			frozenset({"TECH"}),
+			message="Tech package needs a higher trim",
+		),
 		options.Rule("R3", "Allowed Values", "market", frozenset({"JP", "US"})),
 	]
 
 	def test_valid_configuration(self):
-		sel = {"market": "JP", "powertrain": "EV-DUAL", "drivetrain": "AWD", "trim": "PREMIUM", "package": "TECH"}
+		sel = {
+			"market": "JP",
+			"powertrain": "EV-DUAL",
+			"drivetrain": "AWD",
+			"trim": "PREMIUM",
+			"package": "TECH",
+		}
 		self.assertEqual(options.evaluate(sel, self.RULES), [])
 
 	def test_each_rule_type_reports(self):
-		sel = {"market": "EU", "powertrain": "EV-DUAL", "drivetrain": "FWD", "trim": "BASE", "package": "TECH"}
+		sel = {
+			"market": "EU",
+			"powertrain": "EV-DUAL",
+			"drivetrain": "FWD",
+			"trim": "BASE",
+			"package": "TECH",
+		}
 		codes = [v.rule for v in options.evaluate(sel, self.RULES, required=["color"])]
 		self.assertEqual(codes, ["required", "R1", "R2", "R3"])
 		self.assertIn("Tech package", [v.message for v in options.evaluate(sel, self.RULES)][1])
 
 	def test_key_is_order_independent(self):
-		self.assertEqual(options.configuration_key("H2", {"b": "2", "a": "1"}),
-			options.configuration_key("H2", {"a": "1", "b": "2"}))
+		self.assertEqual(
+			options.configuration_key("H2", {"b": "2", "a": "1"}),
+			options.configuration_key("H2", {"a": "1", "b": "2"}),
+		)
 
 
 class TestSequencing(unittest.TestCase):
 	def test_goal_chasing_levels_the_mix(self):
-		units = [sequencing.Unit(f"A{i}", "H1-FWD") for i in range(6)] + [
-			sequencing.Unit(f"B{i}", "H2-AWD") for i in range(3)] + [sequencing.Unit("C0", "H1-AWD")]
+		units = (
+			[sequencing.Unit(f"A{i}", "H1-FWD") for i in range(6)]
+			+ [sequencing.Unit(f"B{i}", "H2-AWD") for i in range(3)]
+			+ [sequencing.Unit("C0", "H1-AWD")]
+		)
 		seq = sequencing.goal_chasing(units)
 		self.assertEqual(len(seq), 10)
 		self.assertEqual(sorted(u.ref for u in seq), sorted(u.ref for u in units))
@@ -70,26 +96,60 @@ class TestSequencing(unittest.TestCase):
 def base_snapshot():
 	return {
 		"as_of": "2026-04-06",
-		"parameters": {"horizon_days": 30, "frozen_zone_days": 2, "lot_sizing": "Minimum Order Qty Multiples",
-			"capacity_check": True},
-		"working_days": [f"2026-04-{d:02d}" for d in (6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24)],
+		"parameters": {
+			"horizon_days": 30,
+			"frozen_zone_days": 2,
+			"lot_sizing": "Minimum Order Qty Multiples",
+			"capacity_check": True,
+		},
+		"working_days": [
+			f"2026-04-{d:02d}" for d in (6, 7, 8, 9, 10, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24)
+		],
 		"items": {
 			"CAR": {"lead_time_days": 2, "is_purchased": False, "line": "FA", "uom": "Nos"},
 			"SEAT": {"lead_time_days": 1, "is_purchased": False, "uom": "Nos"},
-			"FOAM": {"lead_time_days": 5, "is_purchased": True, "supplier": "Foam KK", "min_order_qty": 50, "uom": "Kg"},
-			"BOLT": {"lead_time_days": 3, "is_purchased": True, "supplier": "Bolt KK", "safety_stock": 100, "uom": "Nos"},
+			"FOAM": {
+				"lead_time_days": 5,
+				"is_purchased": True,
+				"supplier": "Foam KK",
+				"min_order_qty": 50,
+				"uom": "Kg",
+			},
+			"BOLT": {
+				"lead_time_days": 3,
+				"is_purchased": True,
+				"supplier": "Bolt KK",
+				"safety_stock": 100,
+				"uom": "Nos",
+			},
 		},
 		"boms": {
-			"BOM-CAR-A": {"item": "CAR", "quantity": 1, "is_default": 1, "effective_to": "2026-04-14",
-				"lines": [{"item_code": "SEAT", "qty": 2}, {"item_code": "BOLT", "qty": 10}]},
-			"BOM-CAR-B": {"item": "CAR", "quantity": 1, "effective_from": "2026-04-15",
-				"lines": [{"item_code": "SEAT", "qty": 2}, {"item_code": "BOLT", "qty": 12}]},
-			"BOM-SEAT": {"item": "SEAT", "quantity": 1, "is_default": 1, "lines": [{"item_code": "FOAM", "qty": 1.5}]},
+			"BOM-CAR-A": {
+				"item": "CAR",
+				"quantity": 1,
+				"is_default": 1,
+				"effective_to": "2026-04-14",
+				"lines": [{"item_code": "SEAT", "qty": 2}, {"item_code": "BOLT", "qty": 10}],
+			},
+			"BOM-CAR-B": {
+				"item": "CAR",
+				"quantity": 1,
+				"effective_from": "2026-04-15",
+				"lines": [{"item_code": "SEAT", "qty": 2}, {"item_code": "BOLT", "qty": 12}],
+			},
+			"BOM-SEAT": {
+				"item": "SEAT",
+				"quantity": 1,
+				"is_default": 1,
+				"lines": [{"item_code": "FOAM", "qty": 1.5}],
+			},
 		},
 		"on_hand": {"BOLT": 150, "SEAT": 4},
 		"scheduled_receipts": [{"item_code": "FOAM", "qty": 20, "date": "2026-04-08", "source": "PO-1"}],
-		"demand": [{"item_code": "CAR", "qty": 10, "date": "2026-04-13", "source": "SO-1"},
-			{"item_code": "CAR", "qty": 5, "date": "2026-04-20", "source": "SO-2"}],
+		"demand": [
+			{"item_code": "CAR", "qty": 10, "date": "2026-04-13", "source": "SO-1"},
+			{"item_code": "CAR", "qty": 5, "date": "2026-04-20", "source": "SO-2"},
+		],
 		"lines": {"FA": {"daily_capacity": 8}},
 	}
 
@@ -98,8 +158,10 @@ class TestMrp(unittest.TestCase):
 	def test_netting_explosion_effectivity_and_lot_sizing(self):
 		out = mrp.plan(base_snapshot())
 		cars = [p for p in out["proposals"] if p["item_code"] == "CAR"]
-		self.assertEqual([(p["qty"], p["need_date"], p["release_date"], p["bom_no"]) for p in cars],
-			[(10, "2026-04-13", "2026-04-09", "BOM-CAR-A"), (5, "2026-04-20", "2026-04-16", "BOM-CAR-B")])
+		self.assertEqual(
+			[(p["qty"], p["need_date"], p["release_date"], p["bom_no"]) for p in cars],
+			[(10, "2026-04-13", "2026-04-09", "BOM-CAR-A"), (5, "2026-04-20", "2026-04-16", "BOM-CAR-B")],
+		)
 		seats = [p for p in out["proposals"] if p["item_code"] == "SEAT"]
 		self.assertEqual(sum(p["qty"] for p in seats), 30 - 4)  # 15 cars x 2 seats, net of 4 on hand
 		bolt = [p for p in out["proposals"] if p["item_code"] == "BOLT"]
@@ -151,7 +213,11 @@ class TestMrp(unittest.TestCase):
 
 	def test_bom_cycle_is_rejected(self):
 		snapshot = base_snapshot()
-		snapshot["boms"]["BOM-FOAM"] = {"item": "FOAM", "quantity": 1, "lines": [{"item_code": "CAR", "qty": 1}]}
+		snapshot["boms"]["BOM-FOAM"] = {
+			"item": "FOAM",
+			"quantity": 1,
+			"lines": [{"item_code": "CAR", "qty": 1}],
+		}
 		with self.assertRaises(ValueError):
 			mrp.plan(snapshot)
 

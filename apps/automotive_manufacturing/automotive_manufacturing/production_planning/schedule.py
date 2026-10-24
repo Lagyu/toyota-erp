@@ -26,16 +26,21 @@ OPEN_WO = ("Not Started", "In Process", "Material Transferred")
 
 def mix_key(item_code: str) -> str:
 	template = frappe.get_cached_value("Item", item_code, "variant_of") or item_code
-	drivetrain = frappe.db.get_value("Item Variant Attribute", {"parent": item_code, "attribute": "Drivetrain"},
-		"attribute_value")
+	drivetrain = frappe.db.get_value(
+		"Item Variant Attribute", {"parent": item_code, "attribute": "Drivetrain"}, "attribute_value"
+	)
 	return f"{template}:{drivetrain}" if drivetrain else template
 
 
 def _units(line: str, day) -> list[sequencing.Unit]:
 	orders = frappe.get_all(
 		"Work Order",
-		filters={"automotive_production_line": line, "docstatus": 1, "status": ("in", OPEN_WO),
-			"planned_start_date": ("between", (f"{day} 00:00:00", f"{day} 23:59:59"))},
+		filters={
+			"automotive_production_line": line,
+			"docstatus": 1,
+			"status": ("in", OPEN_WO),
+			"planned_start_date": ("between", (f"{day} 00:00:00", f"{day} 23:59:59")),
+		},
 		fields=["name", "production_item", "qty", "produced_qty"],
 		order_by="name asc",
 	)
@@ -72,9 +77,18 @@ def _snapshot(doc) -> str:
 
 
 def log_change(doc, change_type: str, reason: str | None, before: str | None) -> None:
-	entry = frappe.get_doc({"doctype": "Plant Schedule Change", "plant_schedule": doc.name, "change_type": change_type,
-		"changed_by": frappe.session.user, "changed_at": now_datetime(), "reason": reason, "before_json": before,
-		"after_json": _snapshot(doc)})
+	entry = frappe.get_doc(
+		{
+			"doctype": "Plant Schedule Change",
+			"plant_schedule": doc.name,
+			"change_type": change_type,
+			"changed_by": frappe.session.user,
+			"changed_at": now_datetime(),
+			"reason": reason,
+			"before_json": before,
+			"after_json": _snapshot(doc),
+		}
+	)
 	entry.flags.ignore_permissions = True
 	entry.insert()
 
@@ -83,7 +97,9 @@ def log_change(doc, change_type: str, reason: str | None, before: str | None) ->
 def build(production_line: str, schedule_date: str, reason: str | None = None) -> str:
 	line = get_scoped_doc("Production Line", production_line)  # a line of the caller's own plant
 	day = getdate(schedule_date)
-	name = frappe.db.get_value("Plant Schedule", {"production_line": production_line, "schedule_date": day}, "name")
+	name = frappe.db.get_value(
+		"Plant Schedule", {"production_line": production_line, "schedule_date": day}, "name"
+	)
 	# the schedule is saved past the DocType permissions (slots are the service's): the caller's role
 	# must be one that may create schedules, or change an existing one
 	frappe.has_permission("Plant Schedule", "write" if name else "create", throw=True)
@@ -97,35 +113,46 @@ def build(production_line: str, schedule_date: str, reason: str | None = None) -
 	is_working = day.isoformat() in set(working_days(line.plant, day, day))
 	capacity = int(line.max_units_per_day or 0) if is_working else 0
 	times = _slot_times(line, day, len(units))
-	doc.update({
-		"plant": line.plant,
-		"production_line": production_line,
-		"schedule_date": day,
-		"takt_time_seconds": line.takt_time_seconds,
-		"available_minutes": frappe.get_cached_value("Shift Pattern", line.shift_pattern, "available_minutes_per_day")
-			if is_working else 0,
-		"capacity_units": capacity,
-		"planned_units": len(units),
-		"leveling_score": sequencing.leveling_deviation(units),
-	})
+	doc.update(
+		{
+			"plant": line.plant,
+			"production_line": production_line,
+			"schedule_date": day,
+			"takt_time_seconds": line.takt_time_seconds,
+			"available_minutes": frappe.get_cached_value(
+				"Shift Pattern", line.shift_pattern, "available_minutes_per_day"
+			)
+			if is_working
+			else 0,
+			"capacity_units": capacity,
+			"planned_units": len(units),
+			"leveling_score": sequencing.leveling_deviation(units),
+		}
+	)
 	vins: dict[str, list[str]] = {}
 	slots = []
 	for seq, (unit, (shift, start, end)) in enumerate(zip(units, times, strict=True), start=1):
 		wo = unit.ref.split("#")[0]
 		if wo not in vins:
-			vins[wo] = frappe.get_all("Vehicle Unit", filters={"work_order": wo, "production_status": "Planned"},
-				pluck="name", order_by="build_sequence asc")
-		slots.append({
-			"sequence_no": seq,
-			"work_order": wo,
-			"item_code": frappe.db.get_value("Work Order", wo, "production_item"),
-			"mix_key": unit.mix_key,
-			"shift_code": shift,
-			"planned_start": start,
-			"planned_end": end,
-			"vehicle_unit": vins[wo].pop(0) if vins[wo] else None,
-			"slot_status": "Planned",
-		})
+			vins[wo] = frappe.get_all(
+				"Vehicle Unit",
+				filters={"work_order": wo, "production_status": "Planned"},
+				pluck="name",
+				order_by="build_sequence asc",
+			)
+		slots.append(
+			{
+				"sequence_no": seq,
+				"work_order": wo,
+				"item_code": frappe.db.get_value("Work Order", wo, "production_item"),
+				"mix_key": unit.mix_key,
+				"shift_code": shift,
+				"planned_start": start,
+				"planned_end": end,
+				"vehicle_unit": vins[wo].pop(0) if vins[wo] else None,
+				"slot_status": "Planned",
+			}
+		)
 	doc.set("slots", slots)
 	conflicts = []
 	if not is_working and units:
@@ -143,8 +170,14 @@ def build(production_line: str, schedule_date: str, reason: str | None = None) -
 
 @frappe.whitelist(methods=["POST"])
 def set_status(name: str, status: str, reason: str | None = None) -> str:
-	transitions = {("Draft", "Released"): "Release", ("Released", "Frozen"): "Freeze", ("Frozen", "Released"): "Reopen",
-		("Released", "Draft"): "Reopen", ("Frozen", "Completed"): "Freeze", ("Released", "Completed"): "Freeze"}
+	transitions = {
+		("Draft", "Released"): "Release",
+		("Released", "Frozen"): "Freeze",
+		("Frozen", "Released"): "Reopen",
+		("Released", "Draft"): "Reopen",
+		("Frozen", "Completed"): "Freeze",
+		("Released", "Completed"): "Freeze",
+	}
 	doc = frappe.get_doc("Plant Schedule", name)
 	doc.check_permission("write")
 	change = transitions.get((doc.status, status))
@@ -179,11 +212,22 @@ def resequence(name: str, order: str | list, reason: str) -> str:
 	reordered = []
 	for seq, (old_no, (shift, start, end)) in enumerate(zip(order, times, strict=True), start=1):
 		slot = current[old_no]
-		reordered.append({**{k: slot.get(k) for k in ("work_order", "item_code", "mix_key", "vehicle_unit",
-			"slot_status")}, "sequence_no": seq, "shift_code": shift, "planned_start": start, "planned_end": end})
+		reordered.append(
+			{
+				**{
+					k: slot.get(k)
+					for k in ("work_order", "item_code", "mix_key", "vehicle_unit", "slot_status")
+				},
+				"sequence_no": seq,
+				"shift_code": shift,
+				"planned_start": start,
+				"planned_end": end,
+			}
+		)
 	doc.set("slots", reordered)
 	doc.leveling_score = sequencing.leveling_deviation(
-		[sequencing.Unit(s["work_order"], s["mix_key"]) for s in reordered])
+		[sequencing.Unit(s["work_order"], s["mix_key"]) for s in reordered]
+	)
 	doc.flags.automotive_schedule_service = True
 	doc.save()
 	log_change(doc, "Resequence", reason, before)
@@ -197,5 +241,9 @@ def mark_built(vin: str) -> None:
 def validate(doc) -> None:
 	if not doc.is_new() and not doc.flags.get("automotive_schedule_service"):
 		before = doc.get_doc_before_save()
-		if before and before.status in ("Released", "Frozen", "Completed") and _snapshot(before) != _snapshot(doc):
+		if (
+			before
+			and before.status in ("Released", "Frozen", "Completed")
+			and _snapshot(before) != _snapshot(doc)
+		):
 			raise frappe.PermissionError(_("Change a released schedule through Resequence (with a reason)."))

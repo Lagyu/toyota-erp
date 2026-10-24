@@ -22,14 +22,32 @@ class TestDesk(IntegrationTestCase):
 	def setUpClass(cls):
 		super().setUpClass()
 		for day in (add_days(nowdate(), -40), nowdate()):
-			if not frappe.db.exists("Currency Exchange", {"date": day, "from_currency": "USD", "to_currency": "JPY"}):
-				frappe.get_doc({"doctype": "Currency Exchange", "date": day, "from_currency": "USD", "to_currency": "JPY",
-					"exchange_rate": 150, "for_buying": 1, "for_selling": 1}).insert(ignore_permissions=True)
+			if not frappe.db.exists(
+				"Currency Exchange", {"date": day, "from_currency": "USD", "to_currency": "JPY"}
+			):
+				frappe.get_doc(
+					{
+						"doctype": "Currency Exchange",
+						"date": day,
+						"from_currency": "USD",
+						"to_currency": "JPY",
+						"exchange_rate": 150,
+						"for_buying": 1,
+						"for_selling": 1,
+					}
+				).insert(ignore_permissions=True)
 		cls.controller = make_user("controller.desk@hinode.example", ["Group Controller", "Accounts Manager"])
 		cls.aichi_user = make_user("auditor.aichi.desk@hinode.example", ["Auditor"])
 		if not frappe.db.exists("User Permission", {"user": cls.aichi_user, "allow": "Company"}):
-			frappe.get_doc({"doctype": "User Permission", "user": cls.aichi_user, "allow": "Company",
-				"for_value": AICHI, "apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "User Permission",
+					"user": cls.aichi_user,
+					"allow": "Company",
+					"for_value": AICHI,
+					"apply_to_all_doctypes": 1,
+				}
+			).insert(ignore_permissions=True)
 
 	def test_every_report_a_persona_is_offered_runs_for_them(self):
 		"""ERP-12.2, GATE-1: workspaces and sidebars offer the reports a user's roles may open; each
@@ -48,8 +66,11 @@ class TestDesk(IntegrationTestCase):
 			user = make_user(f"reports.{profile.lower().replace(' ', '-')}@hinode.example", roles)
 			with as_user(user):
 				offered = DeskViews.get_allowed_reports(user=user)
-				dead = sorted(name for name, row in offered.items()
-					if row.get("ref_doctype") and not frappe.has_permission(row["ref_doctype"], "report"))
+				dead = sorted(
+					name
+					for name, row in offered.items()
+					if row.get("ref_doctype") and not frappe.has_permission(row["ref_doctype"], "report")
+				)
 			self.assertEqual(dead, [], profile)
 
 	def test_workspaces_render(self):
@@ -59,7 +80,9 @@ class TestDesk(IntegrationTestCase):
 			page = get_desktop_page(json.dumps({"name": name, "title": name}))
 			self.assertIn("cards", page, name)
 		governance = get_desktop_page(json.dumps({"name": "Governance", "title": "Governance"}))
-		self.assertIn("Pending Approvals", {c.get("number_card_name") for c in governance["number_cards"]["items"]})
+		self.assertIn(
+			"Pending Approvals", {c.get("number_card_name") for c in governance["number_cards"]["items"]}
+		)
 
 	def test_kpi_card_uses_the_kpi_service(self):
 		with as_user(self.controller):
@@ -70,7 +93,9 @@ class TestDesk(IntegrationTestCase):
 
 	def test_consolidation_translates_and_balances_in_company_currency(self):
 		with as_user(self.controller):
-			result = run("Group Consolidation", filters={"to_date": nowdate(), "presentation_currency": "JPY"})
+			result = run(
+				"Group Consolidation", filters={"to_date": nowdate(), "presentation_currency": "JPY"}
+			)
 		lines = {row["line"]: row for row in result["result"]}
 		self.assertIn("Currency Translation Difference", lines)
 		aichi = frappe.scrub(AICHI)
@@ -80,8 +105,10 @@ class TestDesk(IntegrationTestCase):
 	def test_reports_refuse_out_of_scope_company(self):
 		with as_user(self.aichi_user):
 			result = run("Group Consolidation", filters={"to_date": nowdate()})
-			self.assertEqual([c["label"] for c in result["columns"][1:2]],
-				[frappe.get_cached_value("Company", AICHI, "abbr")])
+			self.assertEqual(
+				[c["label"] for c in result["columns"][1:2]],
+				[frappe.get_cached_value("Company", AICHI, "abbr")],
+			)
 			with self.assertRaises(frappe.PermissionError):
 				run("Group Consolidation", filters={"to_date": nowdate(), "company": NA})
 
@@ -99,8 +126,9 @@ class TestDesk(IntegrationTestCase):
 def _remove_prepared_report(name: str, user: str) -> None:
 	"""The worker commits its status: what the test wrote stays unless removed."""
 	frappe.db.delete("Notification Log", {"for_user": user, "document_type": "Report"})
-	for file_name in frappe.get_all("File", filters={"attached_to_doctype": "Prepared Report", "attached_to_name": name},
-			pluck="name"):
+	for file_name in frappe.get_all(
+		"File", filters={"attached_to_doctype": "Prepared Report", "attached_to_name": name}, pluck="name"
+	):
 		frappe.delete_doc("File", file_name, force=1, ignore_permissions=True)
 	frappe.delete_doc_if_exists("Prepared Report", name, force=1)
 	frappe.db.commit()
@@ -116,24 +144,41 @@ class TestPreparedReports(IntegrationTestCase):
 		from frappe.desk.query_report import get_prepared_report_result
 
 		modules = frappe.get_all("Module Def", filters={"app_name": ("like", "automotive_%")}, pluck="name")
-		reports = frappe.get_all("Report", filters={"module": ("in", modules), "report_type": "Script Report"},
-			fields=["name", "disable_prepared_report_automation"])
+		reports = frappe.get_all(
+			"Report",
+			filters={"module": ("in", modules), "report_type": "Script Report"},
+			fields=["name", "disable_prepared_report_automation"],
+		)
 		self.assertGreaterEqual(len(reports), 14)
 		self.assertEqual([r.name for r in reports if r.disable_prepared_report_automation], [])
 
 		auditor = make_user("auditor.prepared@hinode.example", ["Auditor"])
 		# the job is recorded, not handed to the test bench's worker: the test runs it itself
-		with as_user(auditor), patch("frappe.core.doctype.prepared_report.prepared_report.enqueue") as enqueue:
+		with (
+			as_user(auditor),
+			patch("frappe.core.doctype.prepared_report.prepared_report.enqueue") as enqueue,
+		):
 			name = make_prepared_report("Segregation of Duties Review", {})["name"]
 		self.addCleanup(_remove_prepared_report, name, auditor)
 		self.assertEqual(frappe.db.get_value("Prepared Report", name, "status"), "Queued")
-		self.assertEqual((enqueue.call_args.kwargs["queue"], enqueue.call_args.kwargs["prepared_report"]), ("long", name))
+		self.assertEqual(
+			(enqueue.call_args.kwargs["queue"], enqueue.call_args.kwargs["prepared_report"]), ("long", name)
+		)
 		with as_user(auditor):
 			generate_report(name)  # what the long-queue worker runs
-			result = get_prepared_report_result(frappe.get_doc("Report", "Segregation of Duties Review"), {}, name,
-				auditor)
+			result = get_prepared_report_result(
+				frappe.get_doc("Report", "Segregation of Duties Review"), {}, name, auditor
+			)
 		self.assertEqual(result["doc"].status, "Completed")
 		self.assertTrue(result["columns"])
 		self.assertIsInstance(result["result"], list)
-		self.assertTrue(frappe.db.exists("Notification Log", {"for_user": auditor, "document_type": "Report",
-			"document_name": "Segregation of Duties Review"}))
+		self.assertTrue(
+			frappe.db.exists(
+				"Notification Log",
+				{
+					"for_user": auditor,
+					"document_type": "Report",
+					"document_name": "Segregation of Duties Review",
+				},
+			)
+		)

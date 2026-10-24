@@ -38,7 +38,9 @@ def compute(secret: str, body: bytes, timestamp: int, nonce: str) -> str:
 	return hmac.new(secret.encode(), message, hashlib.sha256).hexdigest()
 
 
-def build_header(key_id: str, secret: str, body: bytes, timestamp: int | None = None, nonce: str | None = None) -> str:
+def build_header(
+	key_id: str, secret: str, body: bytes, timestamp: int | None = None, nonce: str | None = None
+) -> str:
 	timestamp = int(time.time()) if timestamp is None else timestamp
 	nonce = nonce or secrets.token_hex(16)
 	return f"t={timestamp},kid={key_id},n={nonce},v1={compute(secret, body, timestamp, nonce)}"
@@ -58,7 +60,9 @@ def parse_header(value: str | None) -> Signature:
 		raise SignatureError("malformed signature header") from exc
 
 
-def verify(header: str | None, body: bytes, secret: str, tolerance_seconds: int, now: int | None = None) -> Signature:
+def verify(
+	header: str | None, body: bytes, secret: str, tolerance_seconds: int, now: int | None = None
+) -> Signature:
 	sig = parse_header(header)
 	now = int(time.time()) if now is None else now
 	if abs(now - sig.timestamp) > tolerance_seconds:

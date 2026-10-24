@@ -81,7 +81,9 @@ class ApprovalAuthorityError(frappe.PermissionError):
 
 def governed_doctypes() -> frozenset[str]:
 	def load() -> list[str]:
-		return frappe.get_all("Approval Policy", filters={"is_active": 1}, pluck="reference_doctype", distinct=True)
+		return frappe.get_all(
+			"Approval Policy", filters={"is_active": 1}, pluck="reference_doctype", distinct=True
+		)
 
 	return frozenset(frappe.cache.get_value(GOVERNED_CACHE_KEY, generator=load) or [])
 
@@ -107,8 +109,15 @@ def find_policy(doc) -> Any | None:
 	policies = frappe.get_all(
 		"Approval Policy",
 		filters={"reference_doctype": doc.doctype, "is_active": 1},
-		fields=["name", "applies_to_company", "amount_field", "min_amount", "max_amount", "category_field",
-			"category_values"],
+		fields=[
+			"name",
+			"applies_to_company",
+			"amount_field",
+			"min_amount",
+			"max_amount",
+			"category_field",
+			"category_values",
+		],
 		order_by="priority desc, name asc",
 	)
 	for p in policies:
@@ -170,7 +179,9 @@ def latest_request(doctype: str, name: str, statuses: tuple[str, ...] | None = N
 	filters: dict[str, Any] = {"reference_doctype": doctype, "reference_name": name}
 	if statuses:
 		filters["status"] = ("in", statuses)
-	found = frappe.get_all("Approval Request", filters=filters, order_by="creation desc", limit=1, pluck="name")
+	found = frappe.get_all(
+		"Approval Request", filters=filters, order_by="creation desc", limit=1, pluck="name"
+	)
 	return frappe.get_doc("Approval Request", found[0]) if found else None
 
 
@@ -201,7 +212,11 @@ def request_approval(doctype: str, name: str, remarks: str | None = None) -> dic
 		_invalidate(existing, _("Superseded by a new request after the document changed."))
 
 	amount = document_amount(doc, policy.amount_field)
-	steps = [s for s in sorted(policy.steps, key=lambda s: s.step_no) if not s.min_amount or amount >= flt(s.min_amount)]
+	steps = [
+		s
+		for s in sorted(policy.steps, key=lambda s: s.step_no)
+		if not s.min_amount or amount >= flt(s.min_amount)
+	]
 	if not steps:
 		frappe.throw(_("Policy {0} has no step for an amount of {1}.").format(policy.name, amount))
 
@@ -260,8 +275,14 @@ def _request_summary(req) -> dict:
 		"status": req.status,
 		"current_step": req.current_step,
 		"steps": [
-			{"step_no": s.step_no, "step_name": s.step_name, "role": s.approver_role, "status": s.status,
-			 "decided_by": s.decided_by, "on_behalf_of": s.on_behalf_of}
+			{
+				"step_no": s.step_no,
+				"step_name": s.step_name,
+				"role": s.approver_role,
+				"status": s.status,
+				"decided_by": s.decided_by,
+				"on_behalf_of": s.on_behalf_of,
+			}
 			for s in req.steps
 		],
 	}
@@ -272,7 +293,12 @@ def _invalidate(req, reason: str) -> None:
 	req.completed_at = now_datetime()
 	req.remarks = reason
 	_save_request(req)
-	audit.record("approval.invalidated", req.reference_doctype, req.reference_name, {"request": req.name, "reason": reason})
+	audit.record(
+		"approval.invalidated",
+		req.reference_doctype,
+		req.reference_name,
+		{"request": req.name, "reason": reason},
+	)
 
 
 @frappe.whitelist(methods=["POST"])
@@ -280,13 +306,21 @@ def withdraw(request: str, reason: str | None = None) -> dict:
 	req = frappe.get_doc("Approval Request", request, for_update=True)
 	if req.status != "Pending":
 		frappe.throw(_("Only pending requests can be withdrawn."))
-	if frappe.session.user not in (req.requested_by, "Administrator") and "System Manager" not in frappe.get_roles():
+	if (
+		frappe.session.user not in (req.requested_by, "Administrator")
+		and "System Manager" not in frappe.get_roles()
+	):
 		raise frappe.PermissionError(_("Only the requester can withdraw an approval request."))
 	req.status = "Withdrawn"
 	req.completed_at = now_datetime()
 	req.remarks = reason
 	_save_request(req)
-	audit.record("approval.withdrawn", req.reference_doctype, req.reference_name, {"request": req.name, "reason": reason})
+	audit.record(
+		"approval.withdrawn",
+		req.reference_doctype,
+		req.reference_name,
+		{"request": req.name, "reason": reason},
+	)
 	return _request_summary(req)
 
 
@@ -324,7 +358,9 @@ def resolve_authority(user: str, step, req, doc) -> tuple[str | None, str | None
 		if delegation:
 			return delegation.delegator, delegation.name
 	raise ApprovalAuthorityError(
-		_("You are not authorised to approve step {0} ({1}) of {2}.").format(step.step_no, step.approver_role, req.name)
+		_("You are not authorised to approve step {0} ({1}) of {2}.").format(
+			step.step_no, step.approver_role, req.name
+		)
 	)
 
 
@@ -333,12 +369,18 @@ def _check_separation(user: str, on_behalf_of: str | None, req, doc, policy) -> 
 	if policy.maker_cannot_approve:
 		for actor in filter(None, (user, on_behalf_of)):
 			if actor in makers:
-				raise ApprovalAuthorityError(_("The maker of {0} cannot approve it (maker/checker).").format(doc.name))
+				raise ApprovalAuthorityError(
+					_("The maker of {0} cannot approve it (maker/checker).").format(doc.name)
+				)
 	if policy.distinct_approvers:
-		previous = {s.decided_by for s in req.steps if s.decided_by} | {s.on_behalf_of for s in req.steps if s.on_behalf_of}
+		previous = {s.decided_by for s in req.steps if s.decided_by} | {
+			s.on_behalf_of for s in req.steps if s.on_behalf_of
+		}
 		for actor in filter(None, (user, on_behalf_of)):
 			if actor in previous:
-				raise ApprovalAuthorityError(_("Each step of {0} must be approved by a different person.").format(req.name))
+				raise ApprovalAuthorityError(
+					_("Each step of {0} must be approved by a different person.").format(req.name)
+				)
 
 
 @frappe.whitelist(methods=["POST"])
@@ -365,7 +407,9 @@ def decide(request: str, decision: str, comment: str | None = None) -> dict:
 	current_hash = document_hash(doc, policy)
 	if policy.bind_to_document_hash and current_hash != req.document_hash:
 		_invalidate(req, _("The document changed after approval was requested."))
-		return _request_summary(req) | {"message": _("The document changed; a new approval request is needed.")}
+		return _request_summary(req) | {
+			"message": _("The document changed; a new approval request is needed.")
+		}
 
 	decided_at = now_datetime()
 	decision_doc = frappe.get_doc(
@@ -471,11 +515,14 @@ def actionable_for(user: str | None = None) -> list[str]:
 			continue
 		if row.approver_user:
 			if row.approver_user == user or any(
-				d.delegator == row.approver_user and d.role == row.approver_role and d.applies(row) for d in delegated
+				d.delegator == row.approver_user and d.role == row.approver_role and d.applies(row)
+				for d in delegated
 			):
 				result.append(row.name)
 			continue
-		if row.approver_role in roles or any(d.role == row.approver_role and d.applies(row) for d in delegated):
+		if row.approver_role in roles or any(
+			d.role == row.approver_role and d.applies(row) for d in delegated
+		):
 			result.append(row.name)
 	return result
 
@@ -488,8 +535,17 @@ def get_inbox() -> list[dict]:
 	return frappe.get_all(
 		"Approval Request",
 		filters={"name": ("in", names)},
-		fields=["name", "reference_doctype", "reference_name", "company", "amount", "currency", "current_step",
-			"requested_by", "requested_at"],
+		fields=[
+			"name",
+			"reference_doctype",
+			"reference_name",
+			"company",
+			"amount",
+			"currency",
+			"current_step",
+			"requested_by",
+			"requested_at",
+		],
 		order_by="requested_at asc",
 	)
 
@@ -500,7 +556,11 @@ def get_status(doctype: str, name: str) -> dict:
 	doc.check_permission("read")
 	policy = find_policy(doc) if doc.docstatus == 0 else None
 	req = latest_request(doctype, name)
-	summary: dict[str, Any] = {"policy": policy.name if policy else None, "request": None, "can_decide": False}
+	summary: dict[str, Any] = {
+		"policy": policy.name if policy else None,
+		"request": None,
+		"can_decide": False,
+	}
 	if req:
 		summary["request"] = _request_summary(req)
 		summary["hash_matches"] = bool(policy) and document_hash(doc, policy) == req.document_hash
@@ -515,8 +575,15 @@ def _notify_step(req) -> None:
 	if not step:
 		return
 	users = [step.approver_user] if step.approver_user else _users_with_role(step.approver_role, req.company)
-	notify("approval.requested", users, "Approval Request", req.name, step_no=step.step_no, step_name=step.step_name,
-		requester=frappe.utils.get_fullname(req.requested_by))
+	notify(
+		"approval.requested",
+		users,
+		"Approval Request",
+		req.name,
+		step_no=step.step_no,
+		step_name=step.step_name,
+		requester=frappe.utils.get_fullname(req.requested_by),
+	)
 
 
 def _notify_requester(req) -> None:
@@ -544,7 +611,9 @@ def escalate_overdue(now=None) -> list[str]:
 
 	now = get_datetime(now or now_datetime())
 	escalated = []
-	for name in frappe.get_all("Approval Request", filters={"status": "Pending"}, pluck="name", order_by="requested_at"):
+	for name in frappe.get_all(
+		"Approval Request", filters={"status": "Pending"}, pluck="name", order_by="requested_at"
+	):
 		req = frappe.get_doc("Approval Request", name)
 		step = _current_step(req)
 		if not step or step.escalated_at or cint(step.escalate_after_hours) <= 0:
@@ -552,18 +621,44 @@ def escalate_overdue(now=None) -> list[str]:
 		waited = (now - get_datetime(_step_started(req, step))).total_seconds() / 3600
 		if waited < cint(step.escalate_after_hours):
 			continue
-		later = [s for s in sorted(req.steps, key=lambda s: s.step_no) if s.step_no > step.step_no and s.status == "Pending"]
+		later = [
+			s
+			for s in sorted(req.steps, key=lambda s: s.step_no)
+			if s.step_no > step.step_no and s.status == "Pending"
+		]
 		if later:
-			above = [later[0].approver_user] if later[0].approver_user else _users_with_role(later[0].approver_role, req.company)
+			above = (
+				[later[0].approver_user]
+				if later[0].approver_user
+				else _users_with_role(later[0].approver_role, req.company)
+			)
 		else:
 			above = _users_with_role(ESCALATION_ROLE, req.company)
-		approvers = [step.approver_user] if step.approver_user else _users_with_role(step.approver_role, req.company)
-		frappe.db.set_value("Approval Request Step", step.name, {"escalated_at": now,
-			"escalated_to": "\n".join(above)}, update_modified=False)
-		notify("approval.escalated", sorted(set(approvers) | set(above)), "Approval Request", req.name,
-			step_no=step.step_no, step_name=step.step_name, hours=int(waited))
-		audit.record("approval.escalated", req.reference_doctype, req.reference_name,
-			{"request": req.name, "step": step.step_no, "hours": int(waited), "escalated_to": above}, company=req.company)
+		approvers = (
+			[step.approver_user] if step.approver_user else _users_with_role(step.approver_role, req.company)
+		)
+		frappe.db.set_value(
+			"Approval Request Step",
+			step.name,
+			{"escalated_at": now, "escalated_to": "\n".join(above)},
+			update_modified=False,
+		)
+		notify(
+			"approval.escalated",
+			sorted(set(approvers) | set(above)),
+			"Approval Request",
+			req.name,
+			step_no=step.step_no,
+			step_name=step.step_name,
+			hours=int(waited),
+		)
+		audit.record(
+			"approval.escalated",
+			req.reference_doctype,
+			req.reference_name,
+			{"request": req.name, "step": step.step_no, "hours": int(waited), "escalated_to": above},
+			company=req.company,
+		)
 		escalated.append(req.name)
 	return escalated
 
@@ -572,7 +667,11 @@ def _users_with_role(role: str, company: str | None) -> list[str]:
 	users = frappe.get_all(
 		"Has Role", filters={"role": role, "parenttype": "User"}, pluck="parent", distinct=True
 	)
-	enabled = set(frappe.get_all("User", filters={"name": ("in", users), "enabled": 1}, pluck="name")) if users else set()
+	enabled = (
+		set(frappe.get_all("User", filters={"name": ("in", users), "enabled": 1}, pluck="name"))
+		if users
+		else set()
+	)
 	return sorted(u for u in enabled if u not in ("Administrator", "Guest"))[:50]
 
 

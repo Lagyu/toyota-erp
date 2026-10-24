@@ -66,8 +66,18 @@ def days_sales_outstanding(company: str, from_date, to_date, plant: str | None =
 	days = date_diff(to_date, from_date) + 1
 	daily = sales / days if days else 0
 	value = round(balance / daily, 2) if daily else None
-	return KpiResult(value, balance, daily, {"company": company, "from": str(from_date), "to": str(to_date),
-		"receivable": balance, "credit_sales": sales})
+	return KpiResult(
+		value,
+		balance,
+		daily,
+		{
+			"company": company,
+			"from": str(from_date),
+			"to": str(to_date),
+			"receivable": balance,
+			"credit_sales": sales,
+		},
+	)
 
 
 def reconcile_receivables(company: str, from_date, to_date, plant, result: KpiResult) -> tuple[bool, str]:
@@ -106,8 +116,12 @@ def gross_margin(company: str, from_date, to_date, plant: str | None = None) -> 
 			(company, from_date, to_date),
 		)[0][0]
 	)
-	return KpiResult(ratio(income - cogs, income), income - cogs, income,
-		{"company": company, "from": str(from_date), "to": str(to_date), "income": income, "cogs": cogs})
+	return KpiResult(
+		ratio(income - cogs, income),
+		income - cogs,
+		income,
+		{"company": company, "from": str(from_date), "to": str(to_date), "income": income, "cogs": cogs},
+	)
 
 
 def reconcile_revenue(company: str, from_date, to_date, plant, result: KpiResult) -> tuple[bool, str]:
@@ -119,7 +133,9 @@ def reconcile_revenue(company: str, from_date, to_date, plant, result: KpiResult
 		)[0][0]
 	)
 	income = flt(result.denominator)
-	count = frappe.db.count("Sales Invoice", {"company": company, "docstatus": 1,
-		"posting_date": ("between", (from_date, to_date))})
+	count = frappe.db.count(
+		"Sales Invoice",
+		{"company": company, "docstatus": 1, "posting_date": ("between", (from_date, to_date))},
+	)
 	ok = abs(income - invoices) <= max(1, count)
 	return ok, f"GL income {income:.2f} vs invoice net totals {invoices:.2f} ({count} invoices)"

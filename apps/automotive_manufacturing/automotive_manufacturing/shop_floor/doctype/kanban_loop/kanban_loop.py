@@ -12,7 +12,10 @@ from automotive_manufacturing.shop_floor.kanban import ensure_cards, recommended
 class KanbanLoop(Document):
 	def validate(self):
 		self.loop_code = (self.loop_code or "").strip().upper()
-		if frappe.get_cached_value("Warehouse", self.line_side_warehouse, "automotive_warehouse_role") != "Line Side":
+		if (
+			frappe.get_cached_value("Warehouse", self.line_side_warehouse, "automotive_warehouse_role")
+			!= "Line Side"
+		):
 			frappe.throw(_("{0} is not a line-side warehouse.").format(self.line_side_warehouse))
 		plant = frappe.get_cached_value("Warehouse", self.line_side_warehouse, "automotive_plant")
 		if plant != self.plant:
@@ -23,11 +26,15 @@ class KanbanLoop(Document):
 			frappe.throw(_("Container quantity must be positive."))
 		uom = frappe.get_cached_value("Item", self.item_code, "stock_uom")
 		if frappe.get_cached_value("UOM", uom, "must_be_whole_number") and flt(self.container_qty) % 1:
-			frappe.throw(_("Container quantity {0} must be a whole number of {1}.").format(self.container_qty, uom))
+			frappe.throw(
+				_("Container quantity {0} must be a whole number of {1}.").format(self.container_qty, uom)
+			)
 		if self.flags.get("ignore_card_reduction") is None and not self.is_new():
 			before = self.get_doc_before_save()
 			if before and self.number_of_cards < before.number_of_cards:
-				in_flight = frappe.db.count("Kanban Card", {"kanban_loop": self.name, "status": ("!=", "Full")})
+				in_flight = frappe.db.count(
+					"Kanban Card", {"kanban_loop": self.name, "status": ("!=", "Full")}
+				)
 				if in_flight:
 					frappe.throw(_("Reduce cards only when all are Full ({0} in flight).").format(in_flight))
 		self.recommended_cards = recommended_cards(self)

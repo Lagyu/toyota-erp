@@ -20,10 +20,12 @@ from typing import Any
 import frappe
 import frappe.utils.background_jobs as background_jobs
 
-SKIPPED = frozenset({
-	"frappe.search.website_search.build_index_for_all_routes",
-	"frappe.website.doctype.website_route_meta.website_route_meta.build_index_for_all_routes",
-})
+SKIPPED = frozenset(
+	{
+		"frappe.search.website_search.build_index_for_all_routes",
+		"frappe.website.doctype.website_route_meta.website_route_meta.build_index_for_all_routes",
+	}
+)
 
 
 def _method_name(method: str | Callable) -> str:
@@ -32,11 +34,24 @@ def _method_name(method: str | Callable) -> str:
 	return f"{method.__module__}.{method.__qualname__}"
 
 
-def _inline(method: str | Callable, queue: str = "default", timeout: int | None = None, event: str | None = None,
-		is_async: bool = True, job_name: str | None = None, now: bool = False, enqueue_after_commit: bool = False,
-		*, on_success: Callable | None = None, on_failure: Callable | None = None, at_front: bool = False,
-		job_id: str | None = None, deduplicate: bool = False, at_front_when_starved: bool = False,
-		**kwargs: Any) -> Any:
+def _inline(
+	method: str | Callable,
+	queue: str = "default",
+	timeout: int | None = None,
+	event: str | None = None,
+	is_async: bool = True,
+	job_name: str | None = None,
+	now: bool = False,
+	enqueue_after_commit: bool = False,
+	*,
+	on_success: Callable | None = None,
+	on_failure: Callable | None = None,
+	at_front: bool = False,
+	job_id: str | None = None,
+	deduplicate: bool = False,
+	at_front_when_starved: bool = False,
+	**kwargs: Any,
+) -> Any:
 	kwargs.pop("async", None)
 	name = _method_name(method)
 	if name in SKIPPED or name.endswith(".build_index_for_all_routes"):

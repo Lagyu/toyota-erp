@@ -36,9 +36,19 @@ def start(company: str, plant: str, parameter_set: str, master_production_schedu
 	if params.docstatus != 1:
 		frappe.throw(_("Only submitted (approved) parameter versions can be used."))
 	if params.plant != plant or params.company != company:
-		frappe.throw(_("Parameter set {0} is for {1} / {2}.").format(parameter_set, params.company, params.plant))
-	run = frappe.get_doc({"doctype": "Planning Run", "company": company, "plant": plant, "parameter_set": parameter_set,
-		"master_production_schedule": master_production_schedule, "status": "Queued"})
+		frappe.throw(
+			_("Parameter set {0} is for {1} / {2}.").format(parameter_set, params.company, params.plant)
+		)
+	run = frappe.get_doc(
+		{
+			"doctype": "Planning Run",
+			"company": company,
+			"plant": plant,
+			"parameter_set": parameter_set,
+			"master_production_schedule": master_production_schedule,
+			"status": "Queued",
+		}
+	)
 	run.insert()
 	enqueue(run.name)
 	return run.name
@@ -48,8 +58,15 @@ def enqueue(name: str) -> None:
 	if frappe.flags.in_test or frappe.flags.automotive_inline_planning:
 		execute(name)
 		return
-	frappe.enqueue("automotive_manufacturing.production_planning.planning_run.execute", queue="long", timeout=3600,
-		job_id=f"planning-run-{name}", deduplicate=True, enqueue_after_commit=True, name=name)
+	frappe.enqueue(
+		"automotive_manufacturing.production_planning.planning_run.execute",
+		queue="long",
+		timeout=3600,
+		job_id=f"planning-run-{name}",
+		deduplicate=True,
+		enqueue_after_commit=True,
+		name=name,
+	)
 
 
 def _progress(run, percent: int) -> None:
@@ -81,19 +98,21 @@ def execute(name: str) -> str:
 		run.set("proposals", [{**p, "decision": "Proposed"} for p in result["proposals"]])
 		run.set("shortages", result["shortages"])
 		run.set("capacity", result["capacity"])
-		run.update({
-			"inputs_file": file_url,
-			"inputs_sha256": inputs_sha,
-			"outputs_sha256": outputs_hash(result),
-			"horizon_start": snap["as_of"],
-			"horizon_end": frappe.utils.add_days(snap["as_of"], snap["parameters"]["horizon_days"]),
-			"demand_lines": len(snap["demand"]),
-			"proposal_count": len(result["proposals"]),
-			"shortage_count": len(result["shortages"]),
-			"capacity_conflicts": sum(c["conflict"] for c in result["capacity"]),
-			"status": "Completed",
-			"progress": 100,
-		})
+		run.update(
+			{
+				"inputs_file": file_url,
+				"inputs_sha256": inputs_sha,
+				"outputs_sha256": outputs_hash(result),
+				"horizon_start": snap["as_of"],
+				"horizon_end": frappe.utils.add_days(snap["as_of"], snap["parameters"]["horizon_days"]),
+				"demand_lines": len(snap["demand"]),
+				"proposal_count": len(result["proposals"]),
+				"shortage_count": len(result["shortages"]),
+				"capacity_conflicts": sum(c["conflict"] for c in result["capacity"]),
+				"status": "Completed",
+				"progress": 100,
+			}
+		)
 		if run.replay_of:
 			original = frappe.db.get_value("Planning Run", run.replay_of, "outputs_sha256")
 			run.replay_result = "Identical" if original == run.outputs_sha256 else "Different"
@@ -106,7 +125,9 @@ def execute(name: str) -> str:
 		commit()
 	except Exception:
 		frappe.db.rollback()
-		frappe.db.set_value("Planning Run", name, {"status": "Failed", "error": traceback.format_exc()[-4000:]})
+		frappe.db.set_value(
+			"Planning Run", name, {"status": "Failed", "error": traceback.format_exc()[-4000:]}
+		)
 		commit()
 		if frappe.flags.in_test:
 			raise
@@ -137,9 +158,17 @@ def load_snapshot(run_name: str) -> dict:
 def replay(name: str) -> str:
 	frappe.only_for((*PLANNER_ROLES, "Auditor"))
 	original = get_scoped_doc("Planning Run", name)
-	run = frappe.get_doc({"doctype": "Planning Run", "company": original.company, "plant": original.plant,
-		"parameter_set": original.parameter_set, "replay_of": original.name, "status": "Queued",
-		"as_of": original.as_of})
+	run = frappe.get_doc(
+		{
+			"doctype": "Planning Run",
+			"company": original.company,
+			"plant": original.plant,
+			"parameter_set": original.parameter_set,
+			"replay_of": original.name,
+			"status": "Queued",
+			"as_of": original.as_of,
+		}
+	)
 	run.insert(ignore_permissions=True)
 	enqueue(run.name)
 	return run.name
@@ -153,9 +182,14 @@ def request_cancel(name: str) -> None:
 
 def recover_stalled() -> None:
 	"""Hourly: runs left Running by a dead worker for > 2 hours become Failed (safe to retry)."""
-	for name in frappe.get_all("Planning Run", filters={"status": "Running",
-			"modified": ("<", add_to_date(now_datetime(), hours=-2))}, pluck="name"):
-		frappe.db.set_value("Planning Run", name, {"status": "Failed", "error": "worker stopped; retry the run"})
+	for name in frappe.get_all(
+		"Planning Run",
+		filters={"status": "Running", "modified": ("<", add_to_date(now_datetime(), hours=-2))},
+		pluck="name",
+	):
+		frappe.db.set_value(
+			"Planning Run", name, {"status": "Failed", "error": "worker stopped; retry the run"}
+		)
 	commit()
 
 
@@ -187,17 +221,46 @@ def release(name: str) -> dict:
 		pp.for_warehouse = plant.raw_material_warehouse
 		for p in manufacture:
 			if p.bom_level == top:
-				pp.append("po_items", {"item_code": p.item_code, "bom_no": p.bom_no, "planned_qty": p.qty,
-					"planned_start_date": p.release_date, "warehouse": plant.finished_goods_warehouse,
-					"stock_uom": p.uom, "item_reference": p.name})
+				pp.append(
+					"po_items",
+					{
+						"item_code": p.item_code,
+						"bom_no": p.bom_no,
+						"planned_qty": p.qty,
+						"planned_start_date": p.release_date,
+						"warehouse": plant.finished_goods_warehouse,
+						"stock_uom": p.uom,
+						"item_reference": p.name,
+					},
+				)
 		for p in manufacture:
 			if p.bom_level != top:
-				pp.append("sub_assembly_items", {"production_item": p.item_code, "bom_no": p.bom_no, "qty": p.qty,
-					"schedule_date": p.release_date, "fg_warehouse": plant.wip_warehouse or plant.finished_goods_warehouse,
-					"type_of_manufacturing": "In House", "stock_uom": p.uom, "uom": p.uom, "bom_level": p.bom_level})
+				pp.append(
+					"sub_assembly_items",
+					{
+						"production_item": p.item_code,
+						"bom_no": p.bom_no,
+						"qty": p.qty,
+						"schedule_date": p.release_date,
+						"fg_warehouse": plant.wip_warehouse or plant.finished_goods_warehouse,
+						"type_of_manufacturing": "In House",
+						"stock_uom": p.uom,
+						"uom": p.uom,
+						"bom_level": p.bom_level,
+					},
+				)
 		for p in purchase:
-			pp.append("mr_items", {"item_code": p.item_code, "quantity": p.qty, "warehouse": p.warehouse,
-				"material_request_type": "Purchase", "schedule_date": p.need_date, "uom": p.uom})
+			pp.append(
+				"mr_items",
+				{
+					"item_code": p.item_code,
+					"quantity": p.qty,
+					"warehouse": p.warehouse,
+					"material_request_type": "Purchase",
+					"schedule_date": p.need_date,
+					"uom": p.uom,
+				},
+			)
 		pp.flags.ignore_permissions = True
 		pp.insert()
 		pp.submit()
@@ -209,8 +272,9 @@ def release(name: str) -> dict:
 			pp.make_material_request()
 		run.production_plan = pp.name
 		created["Work Order"] = _post_process_work_orders(pp.name, run, plant)
-		created["Material Request"] = frappe.get_all("Material Request Item", filters={"production_plan": pp.name},
-			pluck="parent", distinct=True)
+		created["Material Request"] = frappe.get_all(
+			"Material Request Item", filters={"production_plan": pp.name}, pluck="parent", distinct=True
+		)
 	elif purchase:
 		created["Material Request"] = [_material_request(run, purchase)]
 	_link_proposals(run, created)
@@ -219,10 +283,19 @@ def release(name: str) -> dict:
 	run.released_by = frappe.session.user
 	run.flags.ignore_permissions = True
 	run.save()
-	audit.record("planning.released", run.doctype, run.name,
-		{"production_plan": run.production_plan, "work_orders": len(created["Work Order"]),
-		 "material_requests": len(created["Material Request"]), "inputs": run.inputs_sha256,
-		 "outputs": run.outputs_sha256}, company=run.company)
+	audit.record(
+		"planning.released",
+		run.doctype,
+		run.name,
+		{
+			"production_plan": run.production_plan,
+			"work_orders": len(created["Work Order"]),
+			"material_requests": len(created["Material Request"]),
+			"inputs": run.inputs_sha256,
+			"outputs": run.outputs_sha256,
+		},
+		company=run.company,
+	)
 	return created
 
 
@@ -232,7 +305,9 @@ def _post_process_work_orders(production_plan: str, run, plant) -> list[str]:
 	Finished items go to the plant's FG warehouse; sub-assemblies are produced into the
 	line-side warehouse of the line that consumes them, and every order backflushes
 	its components from its own line side (skip_transfer)."""
-	names = frappe.get_all("Work Order", filters={"production_plan": production_plan}, pluck="name", order_by="name asc")
+	names = frappe.get_all(
+		"Work Order", filters={"production_plan": production_plan}, pluck="name", order_by="name asc"
+	)
 	manufacture = [p for p in run.proposals if p.proposal_type == "Manufacture" and p.decision == "Approved"]
 	top_level = min((p.bom_level for p in manufacture), default=0)
 	top_items = {p.item_code for p in manufacture if p.bom_level == top_level}
@@ -246,15 +321,19 @@ def _post_process_work_orders(production_plan: str, run, plant) -> list[str]:
 		line_side = frappe.get_cached_value("Production Line", line, "line_side_warehouse") if line else None
 		source = line_side or consuming_line_side or plant.raw_material_warehouse
 		is_top = wo.production_item in top_items
-		wo.update({
-			"automotive_plant": plant.name,
-			"automotive_production_line": line or (top_lines[0] if top_lines and not is_top else None),
-			"automotive_planning_run": run.name,
-			"source_warehouse": source,
-			"wip_warehouse": plant.wip_warehouse,
-			"fg_warehouse": plant.finished_goods_warehouse if is_top else (consuming_line_side or plant.wip_warehouse),
-			"skip_transfer": 1,
-		})
+		wo.update(
+			{
+				"automotive_plant": plant.name,
+				"automotive_production_line": line or (top_lines[0] if top_lines and not is_top else None),
+				"automotive_planning_run": run.name,
+				"source_warehouse": source,
+				"wip_warehouse": plant.wip_warehouse,
+				"fg_warehouse": plant.finished_goods_warehouse
+				if is_top
+				else (consuming_line_side or plant.wip_warehouse),
+				"skip_transfer": 1,
+			}
+		)
 		for row in wo.required_items:
 			row.source_warehouse = source
 		wo.flags.ignore_permissions = True
@@ -268,8 +347,16 @@ def _material_request(run, purchase) -> str:
 	mr.company = run.company
 	mr.schedule_date = min(getdate(p.need_date) for p in purchase)
 	for p in purchase:
-		mr.append("items", {"item_code": p.item_code, "qty": p.qty, "schedule_date": p.need_date,
-			"warehouse": p.warehouse, "uom": p.uom})
+		mr.append(
+			"items",
+			{
+				"item_code": p.item_code,
+				"qty": p.qty,
+				"schedule_date": p.need_date,
+				"warehouse": p.warehouse,
+				"uom": p.uom,
+			},
+		)
 	mr.flags.ignore_permissions = True
 	mr.insert()
 	mr.submit()

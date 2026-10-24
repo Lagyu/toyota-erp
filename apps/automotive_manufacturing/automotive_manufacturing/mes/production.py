@@ -24,7 +24,9 @@ from automotive_manufacturing.traceability.vehicle_units import planned_vins
 MES_ROLES = ("Production Supervisor", "Line Operator", "Manufacturing User", "System Manager")
 
 
-def record_operation(job_card: str, qty: float, employee: str | None = None, from_time=None, to_time=None) -> str:
+def record_operation(
+	job_card: str, qty: float, employee: str | None = None, from_time=None, to_time=None
+) -> str:
 	"""An operation confirmation from the station (ERP-04.1, labour record): ``qty`` units done
 	on the job card's operation between ``from_time`` and ``to_time`` by ``employee``. The job
 	card is submitted once its quantity is complete, which is what lets the work order post
@@ -34,24 +36,43 @@ def record_operation(job_card: str, qty: float, employee: str | None = None, fro
 		frappe.throw(_("Job Card {0} is already {1}.").format(job_card, doc.status))
 	remaining = flt(doc.for_quantity) - flt(doc.total_completed_qty)
 	if flt(qty) <= 0 or flt(qty) > remaining + 1e-9:
-		frappe.throw(_("Job Card {0}: {1} unit(s) left to confirm, not {2}.").format(job_card, remaining, qty))
-	doc.append("time_logs", {"from_time": from_time or now_datetime(), "to_time": to_time or now_datetime(),
-		"completed_qty": qty, "employee": employee})
+		frappe.throw(
+			_("Job Card {0}: {1} unit(s) left to confirm, not {2}.").format(job_card, remaining, qty)
+		)
+	doc.append(
+		"time_logs",
+		{
+			"from_time": from_time or now_datetime(),
+			"to_time": to_time or now_datetime(),
+			"completed_qty": qty,
+			"employee": employee,
+		},
+	)
 	doc.save()
 	if flt(doc.total_completed_qty) >= flt(doc.for_quantity) - 1e-9:
 		doc.submit()
 	return doc.status
 
 
-def build_entry(work_order: str, qty: float = 1, serial_nos: list[str] | None = None,
-		components: list[dict] | None = None, posting_date=None, posting_time=None):
+def build_entry(
+	work_order: str,
+	qty: float = 1,
+	serial_nos: list[str] | None = None,
+	components: list[dict] | None = None,
+	posting_date=None,
+	posting_time=None,
+):
 	from erpnext.manufacturing.doctype.work_order.work_order import make_stock_entry
 
 	wo = frappe.get_doc("Work Order", work_order)
 	if wo.docstatus != 1 or wo.status in ("Completed", "Stopped", "Closed"):
 		frappe.throw(_("Work Order {0} is {1}.").format(work_order, wo.status))
 	if flt(wo.produced_qty) + flt(qty) > flt(wo.qty) + 1e-9:
-		frappe.throw(_("Work Order {0}: only {1} left to build.").format(work_order, flt(wo.qty) - flt(wo.produced_qty)))
+		frappe.throw(
+			_("Work Order {0}: only {1} left to build.").format(
+				work_order, flt(wo.qty) - flt(wo.produced_qty)
+			)
+		)
 	data = make_stock_entry(work_order, "Manufacture", qty)
 	se = frappe.get_doc(data)
 	if posting_date:
@@ -66,8 +87,11 @@ def build_entry(work_order: str, qty: float = 1, serial_nos: list[str] | None = 
 			serials = planned_vins(work_order, int(qty))  # vehicles: the VINs reserved in build sequence
 		# other serialized products (powertrains, engines) take the next numbers of their series
 		if serials is not None and len(serials) != int(qty):
-			frappe.throw(_("Work Order {0}: {1} serial number(s) needed, {2} available.").format(
-				work_order, int(qty), len(serials)))
+			frappe.throw(
+				_("Work Order {0}: {1} serial number(s) needed, {2} available.").format(
+					work_order, int(qty), len(serials)
+				)
+			)
 	for row in se.items:
 		if row.is_finished_item:
 			row.use_serial_batch_fields = 1
@@ -86,11 +110,15 @@ def build_entry(work_order: str, qty: float = 1, serial_nos: list[str] | None = 
 			row.serial_no = "\n".join(serials)
 		batches = {p["batch_no"] for p in picks if p.get("batch_no")}
 		if len(batches) > 1:
-			frappe.throw(_("{0}: one batch per component row (got {1}).").format(row.item_code, sorted(batches)))
+			frappe.throw(
+				_("{0}: one batch per component row (got {1}).").format(row.item_code, sorted(batches))
+			)
 		if batches:
 			row.batch_no = batches.pop()
 	if scanned:
-		frappe.throw(_("Scanned components are not in the BOM of {0}: {1}").format(work_order, sorted(scanned)))
+		frappe.throw(
+			_("Scanned components are not in the BOM of {0}: {1}").format(work_order, sorted(scanned))
+		)
 	se.flags.ignore_permissions = True
 	se.insert()
 	se.submit()
@@ -99,15 +127,21 @@ def build_entry(work_order: str, qty: float = 1, serial_nos: list[str] | None = 
 
 @frappe.whitelist(methods=["POST"])
 @idempotent("mes.report_unit_built")
-def report_unit_built(work_order: str, components: str | list | None = None, serial_no: str | None = None) -> dict[str, Any]:
+def report_unit_built(
+	work_order: str, components: str | list | None = None, serial_no: str | None = None
+) -> dict[str, Any]:
 	"""Station/MES call: one unit finished. components: [{"item_code","serial_no"|"batch_no"}]."""
 	frappe.only_for(MES_ROLES)
 	if isinstance(components, str):
 		components = json.loads(components)
 	se = build_entry(work_order, 1, [serial_no] if serial_no else None, components)
 	built = [r.serial_no for r in se.items if r.is_finished_item]
-	return {"stock_entry": se.name, "serial_no": (built[0] or "").strip() if built else None,
-		"work_order": work_order, "posted_at": str(now_datetime())}
+	return {
+		"stock_entry": se.name,
+		"serial_no": (built[0] or "").strip() if built else None,
+		"work_order": work_order,
+		"posted_at": str(now_datetime()),
+	}
 
 
 @frappe.whitelist(methods=["POST"])
@@ -120,8 +154,13 @@ def report_batch_built(work_order: str, qty: float) -> dict[str, Any]:
 
 @frappe.whitelist(methods=["POST"])
 @idempotent("mes.complete_operation")
-def complete_operation(job_card: str, completed_qty: float, employee: str | None = None,
-		from_time: str | None = None, to_time: str | None = None) -> dict[str, Any]:
+def complete_operation(
+	job_card: str,
+	completed_qty: float,
+	employee: str | None = None,
+	from_time: str | None = None,
+	to_time: str | None = None,
+) -> dict[str, Any]:
 	"""Log a finished operation on a Job Card (time log + quantity) and submit it when done."""
 	frappe.only_for(MES_ROLES)
 	jc = get_scoped_doc("Job Card", job_card)
@@ -129,8 +168,10 @@ def complete_operation(job_card: str, completed_qty: float, employee: str | None
 		frappe.throw(_("Job Card {0} is already closed.").format(job_card))
 	start = from_time or now_datetime()
 	end = to_time or now_datetime()
-	jc.append("time_logs", {"from_time": start, "to_time": end, "completed_qty": flt(completed_qty),
-		"employee": employee})
+	jc.append(
+		"time_logs",
+		{"from_time": start, "to_time": end, "completed_qty": flt(completed_qty), "employee": employee},
+	)
 	jc.flags.ignore_permissions = True
 	jc.save()
 	if flt(jc.total_completed_qty) >= flt(jc.for_quantity):

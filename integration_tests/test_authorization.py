@@ -67,13 +67,23 @@ def call(client: Client, path: str, method: str, op: dict):
 	headers = {"Idempotency-Key": str(uuid.uuid4())}
 	if method in ("GET", "DELETE"):
 		params = [resolve(SPEC, p) for p in op.get("parameters", [])]
-		query = {p["name"]: placeholder(p.get("schema")) for p in params if p.get("in") == "query" and p.get("required")}
+		query = {
+			p["name"]: placeholder(p.get("schema"))
+			for p in params
+			if p.get("in") == "query" and p.get("required")
+		}
 		return client.request(method, path, params=query or None, headers=headers)
-	schema = resolve(SPEC, next(iter(op.get("requestBody", {}).get("content", {}).values()), {}).get("schema", {}))
-	body = {name: placeholder(prop) for name, prop in schema.get("properties", {}).items()
-		if name in schema.get("required", [])}
-	return client.request(method, path, body=json.dumps(body).encode(),
-		headers={**headers, "Content-Type": "application/json"})
+	schema = resolve(
+		SPEC, next(iter(op.get("requestBody", {}).get("content", {}).values()), {}).get("schema", {})
+	)
+	body = {
+		name: placeholder(prop)
+		for name, prop in schema.get("properties", {}).items()
+		if name in schema.get("required", [])
+	}
+	return client.request(
+		method, path, body=json.dumps(body).encode(), headers={**headers, "Content-Type": "application/json"}
+	)
 
 
 class TestAuthorization(unittest.TestCase):
@@ -84,8 +94,12 @@ class TestAuthorization(unittest.TestCase):
 			raise unittest.SkipTest("no personas (INTEGRATION_CREDENTIALS)")
 		credentials = json.loads(Path(path).read_text())
 		cls.clients = {}
-		for persona, page in (("operator", "/desk"), ("supplier", "/supplier-portal"), ("dealer", "/dealer-portal"),
-				("kyushu_logistics", "/desk")):
+		for persona, page in (
+			("operator", "/desk"),
+			("supplier", "/supplier-portal"),
+			("dealer", "/dealer-portal"),
+			("kyushu_logistics", "/desk"),
+		):
 			user = credentials["users"].get(persona)
 			if not user:
 				raise unittest.SkipTest(f"no {persona} persona")
@@ -106,7 +120,9 @@ class TestAuthorization(unittest.TestCase):
 	def test_methods_refuse_users_without_the_roles_they_name(self):
 		guarded = [o for o in operations() if o[2].get("x-roles")]
 		self.assertGreater(len(guarded), 20)
-		wrong = self.refusals("operator", [o for o in guarded if not set(o[2]["x-roles"]) & self.operator_roles])
+		wrong = self.refusals(
+			"operator", [o for o in guarded if not set(o[2]["x-roles"]) & self.operator_roles]
+		)
 		wrong += self.refusals("dealer", guarded)
 		self.assertEqual(wrong, [])
 
@@ -122,28 +138,50 @@ class TestAuthorization(unittest.TestCase):
 		admin = Client()
 		admin.login(os.environ.get("INTEGRATION_USER", "Administrator"), os.environ["INTEGRATION_PASSWORD"])
 		aichi = json.dumps({"automotive_plant": "AICHI-VA"})
-		status, data = admin.request("GET", "/api/method/frappe.client.get_list", params={"doctype": "Stock Entry",
-			"filters": aichi, "fields": json.dumps(["name"]), "limit_page_length": 1})
+		status, data = admin.request(
+			"GET",
+			"/api/method/frappe.client.get_list",
+			params={
+				"doctype": "Stock Entry",
+				"filters": aichi,
+				"fields": json.dumps(["name"]),
+				"limit_page_length": 1,
+			},
+		)
 		self.assertEqual(status, 200, data)
 		if not data["message"]:
 			self.skipTest("no Aichi stock entry in this dataset")
 		entry = data["message"][0]["name"]
 		kyushu = self.clients["kyushu_logistics"]
-		status, data = kyushu.request("GET", "/api/method/frappe.client.get_count",
-			params={"doctype": "Stock Entry", "filters": aichi})
+		status, data = kyushu.request(
+			"GET", "/api/method/frappe.client.get_count", params={"doctype": "Stock Entry", "filters": aichi}
+		)
 		self.assertEqual((status, data.get("message")), (200, 0), str(data)[:200])
-		status, data = kyushu.request("GET", "/api/method/frappe.client.get",
-			params={"doctype": "Stock Entry", "name": entry})
+		status, data = kyushu.request(
+			"GET", "/api/method/frappe.client.get", params={"doctype": "Stock Entry", "name": entry}
+		)
 		self.assertEqual(status, 403, str(data)[:200])
+
 	def test_an_export_holds_only_the_user_s_own_plant(self):
 		"""Report-view exports run the same permission query as the lists: a Kyushu user exporting
 		Aichi stock entries gets no row (or no export at all without the export right)."""
+
 		def export(client: Client):
-			body = urllib.parse.urlencode({"doctype": "Stock Entry", "file_format_type": "CSV", "title": "Stock Entry",
-				"fields": json.dumps(["`tabStock Entry`.`name`", "`tabStock Entry`.`automotive_plant`"]),
-				"filters": json.dumps({"automotive_plant": "AICHI-VA"})}).encode()
-			status, data = client.request("POST", "/api/method/frappe.desk.reportview.export_query", body=body,
-				headers={"Content-Type": "application/x-www-form-urlencoded"})
+			body = urllib.parse.urlencode(
+				{
+					"doctype": "Stock Entry",
+					"file_format_type": "CSV",
+					"title": "Stock Entry",
+					"fields": json.dumps(["`tabStock Entry`.`name`", "`tabStock Entry`.`automotive_plant`"]),
+					"filters": json.dumps({"automotive_plant": "AICHI-VA"}),
+				}
+			).encode()
+			status, data = client.request(
+				"POST",
+				"/api/method/frappe.desk.reportview.export_query",
+				body=body,
+				headers={"Content-Type": "application/x-www-form-urlencoded"},
+			)
 			rows = list(csv.reader(io.StringIO(data))) if status == 200 and isinstance(data, str) else []
 			return status, rows[1:]
 

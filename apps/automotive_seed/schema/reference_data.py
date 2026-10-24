@@ -29,8 +29,15 @@ DOCTYPES = [
 		fields=[
 			select("profile", "Profile", ["small", "standard", "large"], reqd=1, in_list_view=1),
 			int_("seed", "Seed", reqd=1, in_list_view=1),
-			select("status", "Status", ["Queued", "Running", "Paused", "Completed", "Failed", "Validated",
-				"Validation Failed"], default="Queued", read_only=1, in_list_view=1, in_standard_filter=1),
+			select(
+				"status",
+				"Status",
+				["Queued", "Running", "Paused", "Completed", "Failed", "Validated", "Validation Failed"],
+				default="Queued",
+				read_only=1,
+				in_list_view=1,
+				in_standard_filter=1,
+			),
 			data("stage", "Current Stage", read_only=1, in_list_view=1),
 			date("simulated_date", "Simulated Date", read_only=1, in_list_view=1),
 			column(),
@@ -55,7 +62,9 @@ DOCTYPES = [
 		child=True,
 		fields=[
 			data("stage", "Stage", in_list_view=1, read_only=1),
-			select("stage_status", "Status", ["Pending", "Done"], default="Pending", in_list_view=1, read_only=1),
+			select(
+				"stage_status", "Status", ["Pending", "Done"], default="Pending", in_list_view=1, read_only=1
+			),
 			datetime("completed_at", "Completed At", in_list_view=1, read_only=1),
 			int_("documents", "Documents", in_list_view=1, read_only=1),
 			small_text("note", "Note", read_only=1),

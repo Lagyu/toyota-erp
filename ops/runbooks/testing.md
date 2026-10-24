@@ -26,14 +26,20 @@ The tool images (Syft, Trivy, Playwright) are pinned in `infra/ci-tools.env`.
 
 `./scripts/ci/lint.sh` runs every step and fails if any step failed:
 
-1. `ruff check apps scripts integration_tests perf ops` (including the `S` security rules).
+1. `ruff check apps scripts integration_tests perf ops` (including the `S` security rules), and
+   `ruff format --check` on the same paths (tabs, double quotes, 110 columns; `ruff.toml`). Run
+   `ruff format apps scripts integration_tests perf ops` before committing.
 2. `shellcheck -x -S warning` on every `*.sh` under `scripts/` and `ops/`.
-3. Schema and desk JSON are generated from the specs: `python3 scripts/dev/schema/generate.py --check`.
-4. The OpenAPI contract matches the whitelisted methods: `python3 scripts/dev/openapi.py --check`. The output is `apps/automotive_core/automotive_core/integration_hub/openapi.json`.
-5. YAML and JSON syntax of every file, except `.git`, `.local`, `node_modules` and `dist`.
-6. Identity boundary: `python3 scripts/ci/identity_check.py`, so no protected third-party names appear in customer-facing assets.
-7. Translations: `scripts/dev/check_po.py --require-complete apps/*/*/locale/ja.po` (every string translated, placeholders and HTML tags kept).
-8. GitHub workflows: actionlint.
+3. GitHub workflows: actionlint.
+4. Schema and desk JSON are generated from the specs: `python3 scripts/dev/schema/generate.py --check`.
+5. The OpenAPI contract matches the whitelisted methods: `python3 scripts/dev/openapi.py --check`. The output is `apps/automotive_core/automotive_core/integration_hub/openapi.json`.
+6. The contract's version follows its changes (D-034): `openapi.py --compat` against the contract of `CONTRACT_BASE` (the commit before the push, or a pull request's base; skipped when unset).
+7. Actions that write past the DocType permissions load their document with the caller's scope: `python3 scripts/dev/check_scoped_actions.py` (C-10).
+8. Translations: `scripts/dev/check_po.py --require-complete apps/*/*/locale/ja.po` (every string translated, placeholders and HTML tags kept).
+9. YAML and JSON syntax of every file, except `.git`, `.local`, `node_modules` and `dist`.
+10. The alert rules' unit tests: `promtool test rules infra/deploy/monitoring/alerts.test.yml` in the pinned Prometheus image (skipped without Docker).
+11. The e2e suite's TypeScript type check: `npm ci` and `tsc --noEmit` in `e2e/` (skipped without npm).
+12. Identity boundary: `python3 scripts/ci/identity_check.py`, so no protected third-party names appear in customer-facing assets.
 
 In CI the lint job also runs `scripts/ci/compose-check.sh`: the deploy compose as Docker Compose resolves it, for each TLS mode, must give every service a restart policy (the one-shot configurator none) and mount no Docker socket.
 
@@ -43,7 +49,7 @@ In CI the lint job also runs `scripts/ci/compose-check.sh`: the deploy compose a
 ./scripts/ci/unit.sh
 ```
 
-This runs `python3 -s -m unittest automotive_manufacturing.tests.test_engine -v` in `apps/automotive_manufacturing`. It covers the pure engines (MRP planning, line sequencing, option rules, VIN) without Frappe or a database.
+This runs, without Frappe or a database, `automotive_manufacturing.tests.test_engine` (the pure engines: MRP planning, line sequencing, option rules, VIN), `ops/backup/test_binlog.py` (binary-log positions, replay order, gaps, mirror retention) and `scripts/dev/test_openapi.py` (which contract changes are breaking, and the version each needs).
 
 ## Integration (real ERPNext, MariaDB, Redis)
 

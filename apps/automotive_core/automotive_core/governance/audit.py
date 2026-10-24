@@ -171,9 +171,13 @@ def verify_chain(batch: int = 5000) -> dict[str, Any]:
 		for row in rows:
 			expected_index = last_index + 1
 			if int(row["chain_index"]) != expected_index:
-				return _result(False, checked, f"missing chain index {expected_index} (found {row['chain_index']})")
+				return _result(
+					False, checked, f"missing chain index {expected_index} (found {row['chain_index']})"
+				)
 			if row["previous_hash"] != head or _hash(head, row) != row["event_hash"]:
-				return _result(False, checked, f"hash mismatch at chain index {row['chain_index']} (event {row['name']})")
+				return _result(
+					False, checked, f"hash mismatch at chain index {row['chain_index']} (event {row['name']})"
+				)
 			head = row["event_hash"]
 			last_index = expected_index
 			checked += 1

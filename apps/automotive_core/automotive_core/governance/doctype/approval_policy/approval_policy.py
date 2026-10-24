@@ -12,14 +12,22 @@ class ApprovalPolicy(Document):
 	def validate(self):
 		meta = frappe.get_meta(self.reference_doctype)
 		if not meta.is_submittable:
-			frappe.throw(_("{0} is not submittable; approval policies govern submission.").format(self.reference_doctype))
+			frappe.throw(
+				_("{0} is not submittable; approval policies govern submission.").format(
+					self.reference_doctype
+				)
+			)
 		if self.amount_field and not meta.has_field(self.amount_field):
 			frappe.throw(_("{0} has no field {1}.").format(self.reference_doctype, self.amount_field))
 		if self.category_field:
 			table, _sep, column = self.category_field.partition(".")
 			if column:
 				child = meta.get_field(table)
-				if not child or child.fieldtype != "Table" or not frappe.get_meta(child.options).has_field(column):
+				if (
+					not child
+					or child.fieldtype != "Table"
+					or not frappe.get_meta(child.options).has_field(column)
+				):
 					frappe.throw(_("{0} is not a valid child-table field path.").format(self.category_field))
 			elif not meta.has_field(table):
 				frappe.throw(_("{0} has no field {1}.").format(self.reference_doctype, table))

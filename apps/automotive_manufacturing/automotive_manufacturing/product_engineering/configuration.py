@@ -22,8 +22,17 @@ def rules_for(model: str, on_date=None) -> list[options.Rule]:
 	rows = frappe.get_all(
 		"Vehicle Option Rule",
 		filters={"vehicle_model": model, "is_active": 1},
-		fields=["rule_code", "rule_type", "if_attribute", "if_values", "then_attribute", "then_values", "message",
-			"effective_from", "effective_to"],
+		fields=[
+			"rule_code",
+			"rule_type",
+			"if_attribute",
+			"if_values",
+			"then_attribute",
+			"then_values",
+			"message",
+			"effective_from",
+			"effective_to",
+		],
 	)
 	rules = []
 	for r in rows:
@@ -31,8 +40,17 @@ def rules_for(model: str, on_date=None) -> list[options.Rule]:
 			continue
 		if r.effective_to and getdate(r.effective_to) < day:
 			continue
-		rules.append(options.Rule(r.rule_code, r.rule_type, r.then_attribute, _split(r.then_values),
-			r.if_attribute or None, _split(r.if_values), r.message or None))
+		rules.append(
+			options.Rule(
+				r.rule_code,
+				r.rule_type,
+				r.then_attribute,
+				_split(r.then_values),
+				r.if_attribute or None,
+				_split(r.if_values),
+				r.message or None,
+			)
+		)
 	return rules
 
 
@@ -52,7 +70,9 @@ def model_attributes(model: str) -> tuple[list[str], list[str], dict[str, set[st
 def check_selections(model: str, selections: dict[str, str], on_date=None) -> dict[str, Any]:
 	attributes, required, domains = model_attributes(model)
 	unknown = sorted(set(selections) - set(attributes))
-	violations = [options.Violation("unknown", a, _("{0} is not an option of {1}").format(a, model)) for a in unknown]
+	violations = [
+		options.Violation("unknown", a, _("{0} is not an option of {1}").format(a, model)) for a in unknown
+	]
 	violations += options.evaluate(selections, rules_for(model, on_date), required, domains)
 	return {
 		"valid": not violations,
@@ -69,10 +89,13 @@ def find_variant(template: str, selections: dict[str, str]) -> str | None:
 	get_variant."""
 	candidates = None
 	for attribute, value in sorted(selections.items()):
-		rows = set(frappe.db.sql_list(
-			"""select iva.parent from `tabItem Variant Attribute` iva join `tabItem` i on i.name = iva.parent
+		rows = set(
+			frappe.db.sql_list(
+				"""select iva.parent from `tabItem Variant Attribute` iva join `tabItem` i on i.name = iva.parent
 			where i.variant_of = %s and iva.attribute = %s and iva.attribute_value = %s and i.disabled = 0""",
-			(template, attribute, value)))
+				(template, attribute, value),
+			)
+		)
 		candidates = rows if candidates is None else candidates & rows
 		if not candidates:
 			return None
@@ -134,8 +157,12 @@ def configure(vehicle_model: str, selections: str | dict) -> dict[str, Any]:
 	if isinstance(selections, str):
 		selections = json.loads(selections)
 	key = options.configuration_key(vehicle_model, selections)
-	existing = frappe.db.get_value("Vehicle Configuration", {"configuration_key": key, "status": "Valid"},
-		["name", "variant_item"], as_dict=True)
+	existing = frappe.db.get_value(
+		"Vehicle Configuration",
+		{"configuration_key": key, "status": "Valid"},
+		["name", "variant_item"],
+		as_dict=True,
+	)
 	if existing:
 		return {"configuration": existing.name, "variant_item": existing.variant_item}
 	doc = frappe.get_doc(

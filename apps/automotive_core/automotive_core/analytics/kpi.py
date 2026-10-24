@@ -57,15 +57,24 @@ def compute(kpi_code: str, company: str, from_date, to_date, plant: str | None =
 	return fn(company=company, from_date=getdate(from_date), to_date=getdate(to_date), plant=plant)
 
 
-def reconcile(kpi_code: str, company: str, from_date, to_date, plant: str | None, result: KpiResult) -> tuple[bool, str]:
+def reconcile(
+	kpi_code: str, company: str, from_date, to_date, plant: str | None, result: KpiResult
+) -> tuple[bool, str]:
 	definition = frappe.get_cached_doc("KPI Definition", kpi_code)
 	fn = frappe.get_attr(definition.reconciliation_method)
-	return fn(company=company, from_date=getdate(from_date), to_date=getdate(to_date), plant=plant, result=result)
+	return fn(
+		company=company, from_date=getdate(from_date), to_date=getdate(to_date), plant=plant, result=result
+	)
 
 
 @frappe.whitelist()
-def get_kpi(kpi_code: str, company: str, from_date: str | None = None, to_date: str | None = None,
-		plant: str | None = None) -> dict[str, Any]:
+def get_kpi(
+	kpi_code: str,
+	company: str,
+	from_date: str | None = None,
+	to_date: str | None = None,
+	plant: str | None = None,
+) -> dict[str, Any]:
 	frappe.has_permission("KPI Definition", "read", throw=True)
 	_authorised_scope(company, plant)
 	to_date = getdate(to_date or nowdate())
@@ -119,7 +128,9 @@ def refresh_daily() -> None:
 	to_date = add_days(getdate(nowdate()), -1)
 	from_date = add_days(to_date, -29)
 	companies = frappe.get_all("Company", pluck="name")
-	for kpi in frappe.get_all("KPI Definition", filters={"is_active": 1, "refresh_policy": "Daily"}, pluck="name"):
+	for kpi in frappe.get_all(
+		"KPI Definition", filters={"is_active": 1, "refresh_policy": "Daily"}, pluck="name"
+	):
 		for company in companies:
 			try:
 				snapshot(kpi, company, from_date, to_date)

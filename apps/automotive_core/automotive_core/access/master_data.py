@@ -44,12 +44,16 @@ def _check(doc, name_field: str, label: str) -> None:
 			doctype, {"tax_id": doc.tax_id, "name": ("!=", doc.name), "disabled": 0}, "name"
 		)
 		if clash:
-			raise DuplicateMasterDataError(_("{0} {1} already uses tax id {2}.").format(label, clash, doc.tax_id))
+			raise DuplicateMasterDataError(
+				_("{0} {1} already uses tax id {2}.").format(label, clash, doc.tax_id)
+			)
 	code = doc.get("automotive_partner_code")
 	if code:
 		doc.automotive_partner_code = code.strip().upper()
 		clash = frappe.db.get_value(
-			doctype, {"automotive_partner_code": doc.automotive_partner_code, "name": ("!=", doc.name)}, "name"
+			doctype,
+			{"automotive_partner_code": doc.automotive_partner_code, "name": ("!=", doc.name)},
+			"name",
 		)
 		if clash:
 			raise DuplicateMasterDataError(_("Partner code {0} is already used by {1}.").format(code, clash))
@@ -58,7 +62,9 @@ def _check(doc, name_field: str, label: str) -> None:
 	target = normalise_name(doc.get(name_field))
 	if not target:
 		return
-	candidates = frappe.get_all(doctype, filters={"disabled": 0, "name": ("!=", doc.name or "")}, fields=["name", name_field])
+	candidates = frappe.get_all(
+		doctype, filters={"disabled": 0, "name": ("!=", doc.name or "")}, fields=["name", name_field]
+	)
 	for row in candidates:
 		score = fuzz.token_sort_ratio(target, normalise_name(row.get(name_field)))
 		if score >= SIMILARITY_THRESHOLD:
@@ -97,20 +103,37 @@ def validate_item(doc, method=None) -> None:
 	for row in doc.get("supplier_items") or []:
 		if not (row.supplier and row.supplier_part_no):
 			continue
-		clash = frappe.db.sql("""select isup.parent from `tabItem Supplier` isup join `tabItem` i on i.name = isup.parent
+		clash = frappe.db.sql(
+			"""select isup.parent from `tabItem Supplier` isup join `tabItem` i on i.name = isup.parent
 			where isup.supplier = %s and isup.supplier_part_no = %s and isup.parent != %s and i.disabled = 0 limit 1""",
-			(row.supplier, row.supplier_part_no.strip(), doc.name or ""))
+			(row.supplier, row.supplier_part_no.strip(), doc.name or ""),
+		)
 		if clash:
-			raise DuplicateMasterDataError(_("Part number {0} of supplier {1} is already item {2}.").format(
-				row.supplier_part_no, row.supplier, clash[0][0]))
-	if doc.variant_of or not (doc.is_new() or doc.has_value_changed("item_name") or doc.has_value_changed("item_group")):
+			raise DuplicateMasterDataError(
+				_("Part number {0} of supplier {1} is already item {2}.").format(
+					row.supplier_part_no, row.supplier, clash[0][0]
+				)
+			)
+	if doc.variant_of or not (
+		doc.is_new() or doc.has_value_changed("item_name") or doc.has_value_changed("item_group")
+	):
 		return
-	clash = frappe.db.get_value("Item", {"item_name": (doc.item_name or "").strip(), "item_group": doc.item_group,
-		"disabled": 0, "variant_of": ("is", "not set"), "name": ("!=", doc.name or "")}, "name")
+	clash = frappe.db.get_value(
+		"Item",
+		{
+			"item_name": (doc.item_name or "").strip(),
+			"item_group": doc.item_group,
+			"disabled": 0,
+			"variant_of": ("is", "not set"),
+			"name": ("!=", doc.name or ""),
+		},
+		"name",
+	)
 	if not clash:
 		return
 	if doc.flags.get("accept_similar_name"):
 		_accept_similar(doc, clash, 100)
 		return
-	raise DuplicateMasterDataError(_("Item {0} in {1} already has the name {2}.").format(clash, doc.item_group,
-		doc.item_name))
+	raise DuplicateMasterDataError(
+		_("Item {0} in {1} already has the name {2}.").format(clash, doc.item_group, doc.item_name)
+	)

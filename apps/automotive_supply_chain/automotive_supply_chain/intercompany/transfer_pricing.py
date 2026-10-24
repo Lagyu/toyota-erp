@@ -35,15 +35,19 @@ def agreed_price(seller: str, buyer: str, item_code: str, on_date) -> tuple[floa
 	if tpa.pricing_method == "Fixed Price":
 		return flt(tpa.price), tpa.currency, tpa.name
 	cost = flt(frappe.get_cached_value("Item", item_code, "automotive_standard_cost")) or flt(
-		frappe.get_cached_value("Item", item_code, "valuation_rate"))
+		frappe.get_cached_value("Item", item_code, "valuation_rate")
+	)
 	cost_currency = frappe.get_cached_value("Company", seller, "default_currency")
 	if cost_currency != tpa.currency:
 		from erpnext.setup.utils import get_exchange_rate
 
 		rate = flt(get_exchange_rate(cost_currency, tpa.currency, str(getdate(on_date))))
 		if not rate:
-			frappe.throw(_("No {0}/{1} exchange rate on {2} for transfer price {3}.").format(
-				cost_currency, tpa.currency, on_date, tpa.name))
+			frappe.throw(
+				_("No {0}/{1} exchange rate on {2} for transfer price {3}.").format(
+					cost_currency, tpa.currency, on_date, tpa.name
+				)
+			)
 		cost = cost * rate
 	return flt(cost * (1 + flt(tpa.markup_percent) / 100), 2), tpa.currency, tpa.name
 
@@ -52,25 +56,38 @@ def _check(doc, seller: str, buyer: str, date_field: str) -> None:
 	for row in doc.items:
 		price = agreed_price(seller, buyer, row.item_code, doc.get(date_field))
 		if not price:
-			frappe.throw(_("Row {0}: no transfer price agreement {1} -> {2} for {3}.").format(
-				row.idx, seller, buyer, row.item_code))
+			frappe.throw(
+				_("Row {0}: no transfer price agreement {1} -> {2} for {3}.").format(
+					row.idx, seller, buyer, row.item_code
+				)
+			)
 		rate, currency, name = price
 		if currency != doc.currency:
-			frappe.throw(_("Row {0}: agreement {1} is in {2}, the order in {3}.").format(row.idx, name, currency,
-				doc.currency))
+			frappe.throw(
+				_("Row {0}: agreement {1} is in {2}, the order in {3}.").format(
+					row.idx, name, currency, doc.currency
+				)
+			)
 		if abs(flt(row.rate) - rate) > 0.005:
-			frappe.throw(_("Row {0}: intercompany rate {1} differs from transfer price {2} ({3}).").format(
-				row.idx, row.rate, rate, name))
+			frappe.throw(
+				_("Row {0}: intercompany rate {1} differs from transfer price {2} ({3}).").format(
+					row.idx, row.rate, rate, name
+				)
+			)
 
 
 def validate_purchase_order(doc, method=None) -> None:
-	internal = frappe.db.get_value("Supplier", doc.supplier, ["is_internal_supplier", "represents_company"], as_dict=True)
+	internal = frappe.db.get_value(
+		"Supplier", doc.supplier, ["is_internal_supplier", "represents_company"], as_dict=True
+	)
 	if internal and internal.is_internal_supplier and doc.docstatus < 2:
 		_check(doc, internal.represents_company, doc.company, "transaction_date")
 
 
 def validate_sales_order(doc, method=None) -> None:
-	internal = frappe.db.get_value("Customer", doc.customer, ["is_internal_customer", "represents_company"], as_dict=True)
+	internal = frappe.db.get_value(
+		"Customer", doc.customer, ["is_internal_customer", "represents_company"], as_dict=True
+	)
 	if internal and internal.is_internal_customer and doc.docstatus < 2:
 		_check(doc, doc.company, internal.represents_company, "transaction_date")
 
@@ -89,18 +106,29 @@ def reconciliation(seller: str, buyer: str, to_date: str | None = None) -> dict:
 	"""Seller's receivable from the buyer vs the buyer's payable to the seller (invoice level)."""
 	frappe.only_for(("Group Controller", "Accounts Manager", "Auditor", "System Manager"))
 	to_date = to_date or frappe.utils.nowdate()
-	customer = frappe.db.get_value("Customer", {"is_internal_customer": 1, "represents_company": buyer}, "name")
-	supplier = frappe.db.get_value("Supplier", {"is_internal_supplier": 1, "represents_company": seller}, "name")
-	sales = frappe.get_all("Sales Invoice", filters={"company": seller, "customer": customer, "docstatus": 1,
-		"posting_date": ("<=", to_date)}, fields=["name", "grand_total", "outstanding_amount", "currency",
-		"inter_company_invoice_reference"])
-	purchases = frappe.get_all("Purchase Invoice", filters={"company": buyer, "supplier": supplier, "docstatus": 1,
-		"posting_date": ("<=", to_date)}, fields=["name", "grand_total", "outstanding_amount", "currency",
-		"inter_company_invoice_reference"])
+	customer = frappe.db.get_value(
+		"Customer", {"is_internal_customer": 1, "represents_company": buyer}, "name"
+	)
+	supplier = frappe.db.get_value(
+		"Supplier", {"is_internal_supplier": 1, "represents_company": seller}, "name"
+	)
+	sales = frappe.get_all(
+		"Sales Invoice",
+		filters={"company": seller, "customer": customer, "docstatus": 1, "posting_date": ("<=", to_date)},
+		fields=["name", "grand_total", "outstanding_amount", "currency", "inter_company_invoice_reference"],
+	)
+	purchases = frappe.get_all(
+		"Purchase Invoice",
+		filters={"company": buyer, "supplier": supplier, "docstatus": 1, "posting_date": ("<=", to_date)},
+		fields=["name", "grand_total", "outstanding_amount", "currency", "inter_company_invoice_reference"],
+	)
 	by_ref = {p.inter_company_invoice_reference: p for p in purchases if p.inter_company_invoice_reference}
 	unmatched_sales = [s.name for s in sales if s.name not in by_ref]
-	mismatched = [(s.name, by_ref[s.name].name, flt(s.grand_total), flt(by_ref[s.name].grand_total))
-		for s in sales if s.name in by_ref and abs(flt(s.grand_total) - flt(by_ref[s.name].grand_total)) > 0.01]
+	mismatched = [
+		(s.name, by_ref[s.name].name, flt(s.grand_total), flt(by_ref[s.name].grand_total))
+		for s in sales
+		if s.name in by_ref and abs(flt(s.grand_total) - flt(by_ref[s.name].grand_total)) > 0.01
+	]
 	matched_ids = {s.name for s in sales}
 	unmatched_purchases = [p.name for p in purchases if p.inter_company_invoice_reference not in matched_ids]
 	ar = sum(flt(s.outstanding_amount) for s in sales)
@@ -111,13 +139,19 @@ def reconciliation(seller: str, buyer: str, to_date: str | None = None) -> dict:
 	buyer_currency = frappe.get_cached_value("Company", buyer, "default_currency")
 	outstanding_comparable = seller_currency == buyer_currency
 	return {
-		"seller": seller, "buyer": buyer, "to_date": str(to_date),
-		"receivable_outstanding": ar, "payable_outstanding": ap,
+		"seller": seller,
+		"buyer": buyer,
+		"to_date": str(to_date),
+		"receivable_outstanding": ar,
+		"payable_outstanding": ap,
 		"invoiced_by_seller": sum(flt(s.grand_total) for s in sales),
 		"booked_by_buyer": sum(flt(p.grand_total) for p in purchases),
-		"unmatched_sales_invoices": unmatched_sales, "unmatched_purchase_invoices": unmatched_purchases,
+		"unmatched_sales_invoices": unmatched_sales,
+		"unmatched_purchase_invoices": unmatched_purchases,
 		"amount_mismatches": mismatched,
 		"outstanding_comparable": outstanding_comparable,
-		"balanced": not unmatched_sales and not unmatched_purchases and not mismatched
+		"balanced": not unmatched_sales
+		and not unmatched_purchases
+		and not mismatched
 		and (abs(ar - ap) <= 0.01 or not outstanding_comparable),
 	}

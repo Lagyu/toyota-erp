@@ -24,8 +24,13 @@ TIER_ORDER = {"A": 0, "B": 1, "C": 2, None: 3, "": 3}
 
 
 def _rule(company: str) -> dict | None:
-	rules = frappe.get_all("Allocation Rule", filters={"company": company, "is_active": 1},
-		fields=["name", "method"], order_by="priority desc, name asc", limit=1)
+	rules = frappe.get_all(
+		"Allocation Rule",
+		filters={"company": company, "is_active": 1},
+		fields=["name", "method"],
+		order_by="priority desc, name asc",
+		limit=1,
+	)
 	return rules[0] if rules else None
 
 
@@ -73,22 +78,24 @@ def _reserve(line, vehicle) -> str:
 	)
 
 	company = frappe.db.get_value("Sales Order", line.parent, "company")
-	sre = frappe.get_doc({
-		"doctype": "Stock Reservation Entry",
-		"item_code": line.item_code,
-		"warehouse": vehicle.current_warehouse,
-		"voucher_type": "Sales Order",
-		"voucher_no": line.parent,
-		"voucher_detail_no": line.name,
-		"available_qty": get_available_qty_to_reserve(line.item_code, vehicle.current_warehouse),
-		"voucher_qty": line.stock_qty,
-		"reserved_qty": 1,
-		"stock_uom": frappe.get_cached_value("Item", line.item_code, "stock_uom"),
-		"company": company,
-		"has_serial_no": 1,
-		"reservation_based_on": "Serial and Batch",
-		"sb_entries": [{"serial_no": vehicle.name, "qty": 1, "warehouse": vehicle.current_warehouse}],
-	})
+	sre = frappe.get_doc(
+		{
+			"doctype": "Stock Reservation Entry",
+			"item_code": line.item_code,
+			"warehouse": vehicle.current_warehouse,
+			"voucher_type": "Sales Order",
+			"voucher_no": line.parent,
+			"voucher_detail_no": line.name,
+			"available_qty": get_available_qty_to_reserve(line.item_code, vehicle.current_warehouse),
+			"voucher_qty": line.stock_qty,
+			"reserved_qty": 1,
+			"stock_uom": frappe.get_cached_value("Item", line.item_code, "stock_uom"),
+			"company": company,
+			"has_serial_no": 1,
+			"reservation_based_on": "Serial and Batch",
+			"sb_entries": [{"serial_no": vehicle.name, "qty": 1, "warehouse": vehicle.current_warehouse}],
+		}
+	)
 	sre.flags.ignore_permissions = True
 	sre.insert()
 	sre.submit()
@@ -102,8 +109,14 @@ def allocate(company: str | None = None) -> list[str]:
 		rule = _rule(comp)
 		method = rule.method if rule else "Order Date (FIFO)"
 		lines = sorted(open_lines(comp), key=_sort_key(method))
-		need = {line.name: int(flt(line.stock_qty) - flt(line.delivered_qty) * flt(line.conversion_factor)
-			- flt(line.allocated)) for line in lines}
+		need = {
+			line.name: int(
+				flt(line.stock_qty)
+				- flt(line.delivered_qty) * flt(line.conversion_factor)
+				- flt(line.allocated)
+			)
+			for line in lines
+		}
 		by_line = {line.name: line for line in lines}
 		pool: dict[str, list] = {}
 		# built to order: the vehicle planned for a line serves that line
@@ -125,20 +138,44 @@ def allocate(company: str | None = None) -> list[str]:
 
 def _allocate_one(line, vehicle, rule: str | None) -> str:
 	sre = _reserve(line, vehicle)
-	allocation = frappe.get_doc({
-		"doctype": "Vehicle Allocation", "vehicle_unit": vehicle.name, "sales_order": line.parent,
-		"sales_order_item": line.name, "dealer": line.customer, "variant_item": line.item_code,
-		"warehouse": vehicle.current_warehouse, "stock_reservation_entry": sre, "allocation_rule": rule,
-		"allocated_at": now_datetime(), "status": "Allocated",
-	})
+	allocation = frappe.get_doc(
+		{
+			"doctype": "Vehicle Allocation",
+			"vehicle_unit": vehicle.name,
+			"sales_order": line.parent,
+			"sales_order_item": line.name,
+			"dealer": line.customer,
+			"variant_item": line.item_code,
+			"warehouse": vehicle.current_warehouse,
+			"stock_reservation_entry": sre,
+			"allocation_rule": rule,
+			"allocated_at": now_datetime(),
+			"status": "Allocated",
+		}
+	)
 	allocation.flags.ignore_permissions = True
 	allocation.insert()
-	frappe.db.set_value("Vehicle Unit", vehicle.name, {"inventory_status": "Reserved", "dealer": line.customer,
-		"sales_order": line.parent, "automotive_allocation": allocation.name})
-	frappe.db.sql("""update `tabSales Order Item` set automotive_allocated_qty = ifnull(automotive_allocated_qty, 0) + 1
-		where name = %s""", line.name)
-	audit.record("allocation.created", "Vehicle Allocation", allocation.name, {"vin": vehicle.name,
-		"sales_order": line.parent, "dealer": line.customer, "rule": rule})
+	frappe.db.set_value(
+		"Vehicle Unit",
+		vehicle.name,
+		{
+			"inventory_status": "Reserved",
+			"dealer": line.customer,
+			"sales_order": line.parent,
+			"automotive_allocation": allocation.name,
+		},
+	)
+	frappe.db.sql(
+		"""update `tabSales Order Item` set automotive_allocated_qty = ifnull(automotive_allocated_qty, 0) + 1
+		where name = %s""",
+		line.name,
+	)
+	audit.record(
+		"allocation.created",
+		"Vehicle Allocation",
+		allocation.name,
+		{"vin": vehicle.name, "sales_order": line.parent, "dealer": line.customer, "rule": rule},
+	)
 	return allocation.name
 
 
@@ -152,25 +189,41 @@ def release(allocation_name: str, reason: str) -> None:
 			sre.flags.ignore_permissions = True
 			sre.cancel()
 	allocation.db_set({"status": "Released", "release_reason": reason})
-	frappe.db.set_value("Vehicle Unit", allocation.vehicle_unit, {"inventory_status": "In Stock", "dealer": None,
-		"sales_order": None, "automotive_allocation": None})
-	frappe.db.sql("""update `tabSales Order Item` set automotive_allocated_qty = greatest(ifnull(automotive_allocated_qty, 0) - 1, 0)
-		where name = %s""", allocation.sales_order_item)
-	audit.record("allocation.released", "Vehicle Allocation", allocation.name, {"vin": allocation.vehicle_unit,
-		"reason": reason})
+	frappe.db.set_value(
+		"Vehicle Unit",
+		allocation.vehicle_unit,
+		{"inventory_status": "In Stock", "dealer": None, "sales_order": None, "automotive_allocation": None},
+	)
+	frappe.db.sql(
+		"""update `tabSales Order Item` set automotive_allocated_qty = greatest(ifnull(automotive_allocated_qty, 0) - 1, 0)
+		where name = %s""",
+		allocation.sales_order_item,
+	)
+	audit.record(
+		"allocation.released",
+		"Vehicle Allocation",
+		allocation.name,
+		{"vin": allocation.vehicle_unit, "reason": reason},
+	)
 
 
 def release_for_line(sales_order: str, so_item: str, count: int, reason: str) -> int:
-	names = frappe.get_all("Vehicle Allocation", filters={"sales_order": sales_order, "sales_order_item": so_item,
-		"status": "Allocated"}, pluck="name", order_by="allocated_at desc", limit=max(count, 0))
+	names = frappe.get_all(
+		"Vehicle Allocation",
+		filters={"sales_order": sales_order, "sales_order_item": so_item, "status": "Allocated"},
+		pluck="name",
+		order_by="allocated_at desc",
+		limit=max(count, 0),
+	)
 	for name in names:
 		release(name, reason)
 	return len(names)
 
 
 def release_for_sales_order(sales_order: str, reason: str) -> int:
-	names = frappe.get_all("Vehicle Allocation", filters={"sales_order": sales_order, "status": "Allocated"},
-		pluck="name")
+	names = frappe.get_all(
+		"Vehicle Allocation", filters={"sales_order": sales_order, "status": "Allocated"}, pluck="name"
+	)
 	for name in names:
 		release(name, reason)
 	return len(names)
@@ -186,8 +239,12 @@ def on_sales_order_cancel(doc, method=None) -> None:
 	# ERPNext's own on_cancel resets ignore_linked_doctypes; doc events run after it and
 	# before the back-link check, so extend it here. These records reference the order by
 	# design and keep the history of the cancelled order.
-	doc.ignore_linked_doctypes = (*tuple(doc.get("ignore_linked_doctypes") or ()), "Dealer Order",
-		"Dealer Order Change", "Vehicle Allocation")
+	doc.ignore_linked_doctypes = (
+		*tuple(doc.get("ignore_linked_doctypes") or ()),
+		"Dealer Order",
+		"Dealer Order Change",
+		"Vehicle Allocation",
+	)
 
 
 def allocate_all() -> None:

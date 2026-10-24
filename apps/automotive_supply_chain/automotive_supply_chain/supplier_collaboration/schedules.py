@@ -35,7 +35,9 @@ def _blanket_order_for(supplier: str, company: str, item_code: str, on_date) -> 
 	return (row[0][0], flt(row[0][1])) if row else None
 
 
-def _open_requests(company: str, plant: str, supplier: str | None = None, kanban_only: bool = False) -> list[dict]:
+def _open_requests(
+	company: str, plant: str, supplier: str | None = None, kanban_only: bool = False
+) -> list[dict]:
 	rows = frappe.db.sql(
 		f"""select mr.name mr, mri.name mri, mri.item_code, (mri.stock_qty - mri.ordered_qty) qty, mri.schedule_date,
 			mri.warehouse, mr.automotive_kanban_signal kanban_signal
@@ -67,27 +69,39 @@ def supplier_for_request(row, plant: str) -> str | None:
 	return entries[0].supplier if entries else None
 
 
-def make_calloff(company: str, supplier: str, plant: str, lines: list[dict], schedule: str | None = None) -> str | None:
+def make_calloff(
+	company: str, supplier: str, plant: str, lines: list[dict], schedule: str | None = None
+) -> str | None:
 	po = frappe.new_doc("Purchase Order")
-	po.update({"company": company, "supplier": supplier, "transaction_date": nowdate(),
-		"automotive_release_type": "Blanket Call-Off", "automotive_plant": plant,
-		"automotive_supplier_schedule": schedule})
+	po.update(
+		{
+			"company": company,
+			"supplier": supplier,
+			"transaction_date": nowdate(),
+			"automotive_release_type": "Blanket Call-Off",
+			"automotive_plant": plant,
+			"automotive_supplier_schedule": schedule,
+		}
+	)
 	for line in lines:
 		blanket = _blanket_order_for(supplier, company, line["item_code"], getdate(nowdate()))
 		if not blanket:
 			continue
-		po.append("items", {
-			"item_code": line["item_code"],
-			"qty": flt(line["qty"]),
-			"schedule_date": max(getdate(line["schedule_date"]), getdate(nowdate())),
-			"warehouse": line["warehouse"],
-			"rate": blanket[1],
-			"blanket_order": blanket[0],
-			"blanket_order_rate": blanket[1],
-			"against_blanket_order": 1,
-			"material_request": line.get("mr"),
-			"material_request_item": line.get("mri"),
-		})
+		po.append(
+			"items",
+			{
+				"item_code": line["item_code"],
+				"qty": flt(line["qty"]),
+				"schedule_date": max(getdate(line["schedule_date"]), getdate(nowdate())),
+				"warehouse": line["warehouse"],
+				"rate": blanket[1],
+				"blanket_order": blanket[0],
+				"blanket_order_rate": blanket[1],
+				"against_blanket_order": 1,
+				"material_request": line.get("mr"),
+				"material_request_item": line.get("mri"),
+			},
+		)
 	if not po.items:
 		po.automotive_release_type = "Standard"
 		return None
@@ -97,7 +111,9 @@ def make_calloff(company: str, supplier: str, plant: str, lines: list[dict], sch
 	po.submit()
 	for line in lines:
 		if line.get("kanban_signal"):
-			frappe.db.set_value("Kanban Signal", line["kanban_signal"], {"purchase_order": po.name, "status": "Ordered"})
+			frappe.db.set_value(
+				"Kanban Signal", line["kanban_signal"], {"purchase_order": po.name, "status": "Ordered"}
+			)
 	return po.name
 
 
@@ -139,55 +155,113 @@ def generate(supplier: str, plant: str) -> str:
 	firm_days = int(settings.schedule_firm_days or 10)
 	# Kanban parts are pulled by their cards and called off as cards empty; scheduling them
 	# as well would order them twice
-	lines = [r for r in _open_requests(company, plant, supplier) if getdate(r["schedule_date"]) <= end
-		and not r.get("kanban_signal")]
+	lines = [
+		r
+		for r in _open_requests(company, plant, supplier)
+		if getdate(r["schedule_date"]) <= end and not r.get("kanban_signal")
+	]
 	if not lines:
 		frappe.throw(_("No open requirements for {0} at {1}.").format(supplier, plant))
-	doc = frappe.get_doc({
-		"doctype": "Supplier Delivery Schedule",
-		"supplier": supplier,
-		"company": company,
-		"plant": plant,
-		"horizon_start": start,
-		"horizon_end": end,
-		"firm_days": firm_days,
-		"lines": [{
-			"item_code": r["item_code"], "delivery_date": r["schedule_date"], "qty": r["qty"],
-			"firm": int(getdate(r["schedule_date"]) <= add_days(start, firm_days)), "warehouse": r["warehouse"],
-			"material_request": r["mr"], "material_request_item": r["mri"],
-		} for r in lines],
-	})
+	doc = frappe.get_doc(
+		{
+			"doctype": "Supplier Delivery Schedule",
+			"supplier": supplier,
+			"company": company,
+			"plant": plant,
+			"horizon_start": start,
+			"horizon_end": end,
+			"firm_days": firm_days,
+			"lines": [
+				{
+					"item_code": r["item_code"],
+					"delivery_date": r["schedule_date"],
+					"qty": r["qty"],
+					"firm": int(getdate(r["schedule_date"]) <= add_days(start, firm_days)),
+					"warehouse": r["warehouse"],
+					"material_request": r["mr"],
+					"material_request_item": r["mri"],
+				}
+				for r in lines
+			],
+		}
+	)
 	doc.insert()
 	return doc.name
 
 
 def before_insert_schedule(doc) -> None:
-	latest = frappe.db.sql("""select max(schedule_version) from `tabSupplier Delivery Schedule`
-		where supplier=%s and plant=%s""", (doc.supplier, doc.plant))[0][0]
+	latest = frappe.db.sql(
+		"""select max(schedule_version) from `tabSupplier Delivery Schedule`
+		where supplier=%s and plant=%s""",
+		(doc.supplier, doc.plant),
+	)[0][0]
 	doc.schedule_version = int(latest or 0) + 1
 
 
 def on_schedule_submit(doc) -> None:
-	previous = frappe.get_all("Supplier Delivery Schedule", filters={"supplier": doc.supplier, "plant": doc.plant,
-		"docstatus": 1, "name": ("!=", doc.name), "status": ("in", ("Published", "Acknowledged"))}, pluck="name")
+	previous = frappe.get_all(
+		"Supplier Delivery Schedule",
+		filters={
+			"supplier": doc.supplier,
+			"plant": doc.plant,
+			"docstatus": 1,
+			"name": ("!=", doc.name),
+			"status": ("in", ("Published", "Acknowledged")),
+		},
+		pluck="name",
+	)
 	for name in previous:
-		frappe.db.set_value("Supplier Delivery Schedule", name, {"status": "Superseded", "superseded_by": doc.name})
+		frappe.db.set_value(
+			"Supplier Delivery Schedule", name, {"status": "Superseded", "superseded_by": doc.name}
+		)
 	# each line orders against its own request line (a request may hold several lines of one item)
-	firm = [{"item_code": ln.item_code, "qty": ln.qty, "schedule_date": ln.delivery_date, "warehouse": ln.warehouse,
-		"mr": ln.material_request, "mri": ln.material_request_item or (frappe.db.get_value("Material Request Item",
-			{"parent": ln.material_request, "item_code": ln.item_code}, "name") if ln.material_request else None),
-		"kanban_signal": frappe.db.get_value("Material Request", ln.material_request, "automotive_kanban_signal")
-			if ln.material_request else None}
-		for ln in doc.lines if ln.firm and not ln.purchase_order]
+	firm = [
+		{
+			"item_code": ln.item_code,
+			"qty": ln.qty,
+			"schedule_date": ln.delivery_date,
+			"warehouse": ln.warehouse,
+			"mr": ln.material_request,
+			"mri": ln.material_request_item
+			or (
+				frappe.db.get_value(
+					"Material Request Item",
+					{"parent": ln.material_request, "item_code": ln.item_code},
+					"name",
+				)
+				if ln.material_request
+				else None
+			),
+			"kanban_signal": frappe.db.get_value(
+				"Material Request", ln.material_request, "automotive_kanban_signal"
+			)
+			if ln.material_request
+			else None,
+		}
+		for ln in doc.lines
+		if ln.firm and not ln.purchase_order
+	]
 	po = make_calloff(doc.company, doc.supplier, doc.plant, firm, schedule=doc.name) if firm else None
 	if po:
 		for ln in doc.lines:
 			if ln.firm:
 				ln.db_set("purchase_order", po)
 	doc.db_set({"status": "Published", "published_at": now_datetime()})
-	outbox.publish("supplier_schedule.published", {"schedule": doc.name, "version": doc.schedule_version,
-		"lines": [{"item": ln.item_code, "date": str(ln.delivery_date), "qty": ln.qty, "firm": ln.firm}
-			for ln in doc.lines]}, doc.doctype, doc.name, party_type="Supplier", party=doc.supplier)
+	outbox.publish(
+		"supplier_schedule.published",
+		{
+			"schedule": doc.name,
+			"version": doc.schedule_version,
+			"lines": [
+				{"item": ln.item_code, "date": str(ln.delivery_date), "qty": ln.qty, "firm": ln.firm}
+				for ln in doc.lines
+			],
+		},
+		doc.doctype,
+		doc.name,
+		party_type="Supplier",
+		party=doc.supplier,
+	)
 
 
 @frappe.whitelist(methods=["POST"])
@@ -198,7 +272,9 @@ def acknowledge_schedule(name: str) -> str:
 	assert_party_access("Supplier", doc.supplier)
 	if doc.status != "Published":
 		frappe.throw(_("Schedule {0} is {1}.").format(name, doc.status))
-	doc.db_set({"status": "Acknowledged", "acknowledged_at": now_datetime(), "acknowledged_by": frappe.session.user})
+	doc.db_set(
+		{"status": "Acknowledged", "acknowledged_at": now_datetime(), "acknowledged_by": frappe.session.user}
+	)
 	return "Acknowledged"
 
 
@@ -211,12 +287,32 @@ def on_purchase_order_submit(doc, method=None) -> None:
 	if frappe.db.get_value("Supplier", doc.supplier, "is_internal_supplier"):
 		return
 	doc.db_set("automotive_ack_status", "Awaiting")
-	outbox.publish("purchase_order.submitted", {
-		"purchase_order": doc.name, "supplier": doc.supplier, "company": doc.company,
-		"release_type": doc.get("automotive_release_type"), "currency": doc.currency,
-		"lines": [{"row": i.name, "item_code": i.item_code, "qty": i.qty, "uom": i.uom, "rate": i.rate,
-			"schedule_date": str(i.schedule_date), "warehouse": i.warehouse} for i in doc.items],
-	}, doc.doctype, doc.name, party_type="Supplier", party=doc.supplier)
+	outbox.publish(
+		"purchase_order.submitted",
+		{
+			"purchase_order": doc.name,
+			"supplier": doc.supplier,
+			"company": doc.company,
+			"release_type": doc.get("automotive_release_type"),
+			"currency": doc.currency,
+			"lines": [
+				{
+					"row": i.name,
+					"item_code": i.item_code,
+					"qty": i.qty,
+					"uom": i.uom,
+					"rate": i.rate,
+					"schedule_date": str(i.schedule_date),
+					"warehouse": i.warehouse,
+				}
+				for i in doc.items
+			],
+		},
+		doc.doctype,
+		doc.name,
+		party_type="Supplier",
+		party=doc.supplier,
+	)
 
 
 def validate_acknowledgement(doc) -> None:
@@ -227,17 +323,30 @@ def validate_acknowledgement(doc) -> None:
 	rows = {i.name: i for i in po.items}
 	if not doc.lines and doc.ack_type == "Accepted":
 		for item in po.items:
-			doc.append("lines", {"po_item": item.name, "item_code": item.item_code, "ordered_qty": item.qty,
-				"confirmed_qty": item.qty, "promised_date": item.schedule_date})
+			doc.append(
+				"lines",
+				{
+					"po_item": item.name,
+					"item_code": item.item_code,
+					"ordered_qty": item.qty,
+					"confirmed_qty": item.qty,
+					"promised_date": item.schedule_date,
+				},
+			)
 	for line in doc.lines:
 		row = rows.get(line.po_item)
 		if not row:
 			frappe.throw(_("Line {0}: {1} is not a row of {2}.").format(line.idx, line.po_item, po.name))
 		line.item_code, line.ordered_qty = row.item_code, row.qty
 		if flt(line.confirmed_qty) < 0 or flt(line.confirmed_qty) > flt(row.qty):
-			frappe.throw(_("Line {0}: confirmed quantity must be between 0 and {1}.").format(line.idx, row.qty))
-	changed = any(flt(ln.confirmed_qty) != flt(ln.ordered_qty)
-		or getdate(ln.promised_date) != getdate(rows[ln.po_item].schedule_date) for ln in doc.lines)
+			frappe.throw(
+				_("Line {0}: confirmed quantity must be between 0 and {1}.").format(line.idx, row.qty)
+			)
+	changed = any(
+		flt(ln.confirmed_qty) != flt(ln.ordered_qty)
+		or getdate(ln.promised_date) != getdate(rows[ln.po_item].schedule_date)
+		for ln in doc.lines
+	)
 	if doc.ack_type == "Accepted" and changed:
 		doc.ack_type = "Accepted With Changes"  # a revised quantity or delivery promise
 	if doc.is_new():
@@ -247,9 +356,21 @@ def validate_acknowledgement(doc) -> None:
 
 def on_acknowledgement_submit(doc) -> None:
 	for line in doc.lines:
-		frappe.db.set_value("Purchase Order Item", line.po_item, "automotive_promised_date", line.promised_date,
-			update_modified=False)
-	frappe.db.set_value("Purchase Order", doc.purchase_order, {"automotive_ack_status": doc.ack_type,
-		"automotive_ack_at": doc.acknowledged_at})
-	audit.record("supplier.po_acknowledged", "Purchase Order", doc.purchase_order,
-		{"acknowledgement": doc.name, "type": doc.ack_type})
+		frappe.db.set_value(
+			"Purchase Order Item",
+			line.po_item,
+			"automotive_promised_date",
+			line.promised_date,
+			update_modified=False,
+		)
+	frappe.db.set_value(
+		"Purchase Order",
+		doc.purchase_order,
+		{"automotive_ack_status": doc.ack_type, "automotive_ack_at": doc.acknowledged_at},
+	)
+	audit.record(
+		"supplier.po_acknowledged",
+		"Purchase Order",
+		doc.purchase_order,
+		{"acknowledgement": doc.name, "type": doc.ack_type},
+	)

@@ -57,7 +57,7 @@ class Calendar:
 		while n > 0:
 			current -= dt.timedelta(days=1)
 			known = bool(self.days) and current >= self.days[0]
-			if (self.is_working(current) if known else current.weekday() < 5):
+			if self.is_working(current) if known else current.weekday() < 5:
 				n -= 1
 		return current
 
@@ -109,7 +109,9 @@ def _assert_acyclic(children: dict[str, set[str]]) -> None:
 				stack.append((child, iter(sorted(children.get(child, ())))))
 
 
-def bom_for(item: str, on: dt.date, boms_by_item: dict[str, list[tuple[str, dict]]]) -> tuple[str, dict] | None:
+def bom_for(
+	item: str, on: dt.date, boms_by_item: dict[str, list[tuple[str, dict]]]
+) -> tuple[str, dict] | None:
 	candidates = []
 	for name, bom in boms_by_item.get(item, []):
 		start = _d(bom["effective_from"]) if bom.get("effective_from") else dt.date.min
@@ -152,7 +154,9 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 			gross[row["item_code"]].append((max(day, as_of), float(row["qty"]), row.get("source", "demand")))
 	receipts: dict[str, list[tuple[dt.date, float, str]]] = defaultdict(list)
 	for row in snapshot.get("scheduled_receipts", []):
-		receipts[row["item_code"]].append((max(_d(row["date"]), as_of), float(row["qty"]), row.get("source", "receipt")))
+		receipts[row["item_code"]].append(
+			(max(_d(row["date"]), as_of), float(row["qty"]), row.get("source", "receipt"))
+		)
 
 	proposals: list[dict[str, Any]] = []
 	shortages: list[dict[str, Any]] = []
@@ -200,16 +204,43 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 				"pegging": "; ".join(sorted(set(pending_sources)))[:500],
 			}
 			if release < as_of:
-				shortages.append(_shortage(item_code, day, need, projected, as_of + dt.timedelta(days=lead),
-					"Lead Time", f"expedite: order/start {(as_of - release).days} day(s) late"))
+				shortages.append(
+					_shortage(
+						item_code,
+						day,
+						need,
+						projected,
+						as_of + dt.timedelta(days=lead),
+						"Lead Time",
+						f"expedite: order/start {(as_of - release).days} day(s) late",
+					)
+				)
 			elif manufactured and release < frozen_until:
-				shortages.append(_shortage(item_code, day, need, projected, frozen_until, "Frozen Zone",
-					"needs a start inside the frozen zone; replan or expedite"))
+				shortages.append(
+					_shortage(
+						item_code,
+						day,
+						need,
+						projected,
+						frozen_until,
+						"Frozen Zone",
+						"needs a start inside the frozen zone; replan or expedite",
+					)
+				)
 			if manufactured:
 				chosen = bom_for(item_code, max(release, as_of), boms_by_item)
 				if not chosen:
-					shortages.append(_shortage(item_code, day, need, projected, None, "No BOM",
-						"release a BOM before planning this item"))
+					shortages.append(
+						_shortage(
+							item_code,
+							day,
+							need,
+							projected,
+							None,
+							"No BOM",
+							"release a BOM before planning this item",
+						)
+					)
 				else:
 					bom_no, bom = chosen
 					proposal["bom_no"] = bom_no
@@ -220,41 +251,66 @@ def plan(snapshot: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
 						qty = lot_size(qty / (1 - loss), item, "Lot For Lot")
 						output = _r(qty * (1 - loss))
 						proposal["qty"] = qty
-						proposal["pegging"] = (f"yield {_r((1 - loss) * 100)}%: {output} good; "
-							+ proposal["pegging"])[:500]
+						proposal["pegging"] = (
+							f"yield {_r((1 - loss) * 100)}%: {output} good; " + proposal["pegging"]
+						)[:500]
 					factor = qty / float(bom.get("quantity") or 1)
 					start = max(release, as_of)
 					for line in bom["lines"]:
-						gross[line["item_code"]].append((start, _r(float(line["qty"]) * factor),
-							f"{item_code}@{day.isoformat()}"))
+						gross[line["item_code"]].append(
+							(start, _r(float(line["qty"]) * factor), f"{item_code}@{day.isoformat()}")
+						)
 					if item.get("line"):
 						line_load[(item["line"], start)] += qty
 			elif not item.get("supplier"):
-				shortages.append(_shortage(item_code, day, need, projected, None, "No Supply Source",
-					"assign an approved supplier"))
+				shortages.append(
+					_shortage(
+						item_code,
+						day,
+						need,
+						projected,
+						None,
+						"No Supply Source",
+						"assign an approved supplier",
+					)
+				)
 			proposals.append(proposal)
 			projected += output
 			pending_sources = []
 
 	capacity = []
 	if params.get("capacity_check"):
-		for (line, day) in sorted(line_load):
+		for line, day in sorted(line_load):
 			daily = float(snapshot.get("lines", {}).get(line, {}).get("daily_capacity") or 0)
 			available = daily if calendar.is_working(day) else 0.0
 			required = line_load[(line, day)]
-			capacity.append({
-				"production_line": line,
-				"bucket_date": day.isoformat(),
-				"required_units": _r(required),
-				"available_units": _r(available),
-				"load_percent": _r(required / available * 100) if available else 100.0,
-				"conflict": int(required > available + EPS),
-			})
+			capacity.append(
+				{
+					"production_line": line,
+					"bucket_date": day.isoformat(),
+					"required_units": _r(required),
+					"available_units": _r(available),
+					"load_percent": _r(required / available * 100) if available else 100.0,
+					"conflict": int(required > available + EPS),
+				}
+			)
 			if required > available + EPS:
-				shortages.append(_shortage(None, day, required, available, None, "Capacity",
-					"level the load to adjacent working days or add overtime", production_line=line))
+				shortages.append(
+					_shortage(
+						None,
+						day,
+						required,
+						available,
+						None,
+						"Capacity",
+						"level the load to adjacent working days or add overtime",
+						production_line=line,
+					)
+				)
 	proposals.sort(key=lambda p: (p["bom_level"], p["item_code"], p["need_date"]))
-	shortages.sort(key=lambda s: (s["need_date"], s["item_code"] or "", s["production_line"] or "", s["cause"]))
+	shortages.sort(
+		key=lambda s: (s["need_date"], s["item_code"] or "", s["production_line"] or "", s["cause"])
+	)
 	return {"proposals": proposals, "shortages": shortages, "capacity": capacity}
 
 
@@ -264,8 +320,16 @@ def _lead_time(item: dict[str, Any], params: dict[str, Any]) -> int:
 	return int(item.get("lead_time_days") or 0)
 
 
-def _shortage(item_code: str | None, day: dt.date, required: float, available: float, earliest, cause: str,
-		action: str, production_line: str | None = None) -> dict[str, Any]:
+def _shortage(
+	item_code: str | None,
+	day: dt.date,
+	required: float,
+	available: float,
+	earliest,
+	cause: str,
+	action: str,
+	production_line: str | None = None,
+) -> dict[str, Any]:
 	return {
 		"item_code": item_code,
 		"production_line": production_line,

@@ -20,14 +20,21 @@ SYSTEM_USER = "Administrator"
 
 
 @contextlib.contextmanager
-def on_behalf_of(purpose: str, reference_doctype: str | None = None,
-		reference_name: str | None = None) -> Iterator[str]:
+def on_behalf_of(
+	purpose: str, reference_doctype: str | None = None, reference_name: str | None = None
+) -> Iterator[str]:
 	requester = frappe.session.user
 	if requester == SYSTEM_USER:
 		yield requester
 		return
-	audit.record("system.on_behalf_of", reference_doctype, reference_name, {"purpose": purpose},
-		actor=SYSTEM_USER, on_behalf_of=requester)
+	audit.record(
+		"system.on_behalf_of",
+		reference_doctype,
+		reference_name,
+		{"purpose": purpose},
+		actor=SYSTEM_USER,
+		on_behalf_of=requester,
+	)
 	frappe.set_user(SYSTEM_USER)
 	try:
 		yield requester

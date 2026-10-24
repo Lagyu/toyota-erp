@@ -85,11 +85,15 @@ def idempotent(endpoint: str, required: bool = True):
 				frappe.clear_messages()  # the duplicate entry message is not this request's answer
 				existing = _load(scope)
 				if not existing:
-					raise IdempotencyInProgressError(_("A request with this Idempotency-Key is still being processed."))
+					raise IdempotencyInProgressError(
+						_("A request with this Idempotency-Key is still being processed.")
+					)
 				return _replay(existing, request_hash)
 			result = fn(*args, **kwargs)
-			record.db_set({"status": "Completed", "response": json.dumps(result, default=str), "http_status": 200},
-				update_modified=False)
+			record.db_set(
+				{"status": "Completed", "response": json.dumps(result, default=str), "http_status": 200},
+				update_modified=False,
+			)
 			return result
 
 		wrapper.automotive_idempotent_endpoint = endpoint
@@ -100,7 +104,10 @@ def idempotent(endpoint: str, required: bool = True):
 
 def _load(scope: str):
 	return frappe.db.get_value(
-		"Idempotency Record", {"scope_key": scope}, ["name", "status", "request_sha256", "response"], as_dict=True
+		"Idempotency Record",
+		{"scope_key": scope},
+		["name", "status", "request_sha256", "response"],
+		as_dict=True,
 	)
 
 

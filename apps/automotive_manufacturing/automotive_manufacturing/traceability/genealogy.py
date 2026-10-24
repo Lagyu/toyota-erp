@@ -22,8 +22,9 @@ from frappe.utils import now_datetime
 def _bundle(row) -> str | None:
 	"""The row's Serial and Batch Bundle. Serials and batches numbered automatically are
 	bundled while the entry posts, after the in-memory row was built: read it back."""
-	return row.serial_and_batch_bundle or (frappe.db.get_value("Stock Entry Detail", row.name,
-		"serial_and_batch_bundle") if row.name else None)
+	return row.serial_and_batch_bundle or (
+		frappe.db.get_value("Stock Entry Detail", row.name, "serial_and_batch_bundle") if row.name else None
+	)
 
 
 def _consumed(stock_entry) -> list[dict]:
@@ -31,7 +32,12 @@ def _consumed(stock_entry) -> list[dict]:
 
 	rows = []
 	for row in stock_entry.items:
-		if not row.s_warehouse or row.is_finished_item or row.get("is_scrap_item") or row.get("type") == "Scrap":
+		if (
+			not row.s_warehouse
+			or row.is_finished_item
+			or row.get("is_scrap_item")
+			or row.get("type") == "Scrap"
+		):
 			continue
 		serials = [s.strip() for s in (row.serial_no or "").split("\n") if s.strip()]
 		batches = {row.batch_no: row.transfer_qty or row.qty} if row.batch_no else {}
@@ -125,7 +131,9 @@ def backfill(limit: int | None = None) -> int:
 	names = frappe.db.sql_list(
 		"""select se.name from `tabStock Entry` se where se.docstatus = 1 and se.purpose in ('Manufacture', 'Repack')
 		and not exists (select 1 from `tabGenealogy Link` gl where gl.stock_entry = se.name)
-		order by se.posting_date, se.posting_time, se.creation limit %(limit)s""", {"limit": int(limit or 10**9)})
+		order by se.posting_date, se.posting_time, se.creation limit %(limit)s""",
+		{"limit": int(limit or 10**9)},
+	)
 	for name in names:
 		on_stock_entry_submit(frappe.get_doc("Stock Entry", name))
 	return len(names)
@@ -163,9 +171,21 @@ def components_of(serial_no: str, max_depth: int = 8) -> list[dict]:
 			continue
 		seen.add((serial, batch))
 		filters = {"parent_serial_no": serial} if serial else {"parent_batch_no": batch}
-		links = frappe.get_all("Genealogy Link", filters=filters,
-			fields=["parent_item", "component_item", "component_serial_no", "component_batch_no", "qty", "supplier",
-				"supplier_lot", "stock_entry"], order_by="component_item asc, component_serial_no asc")
+		links = frappe.get_all(
+			"Genealogy Link",
+			filters=filters,
+			fields=[
+				"parent_item",
+				"component_item",
+				"component_serial_no",
+				"component_batch_no",
+				"qty",
+				"supplier",
+				"supplier_lot",
+				"stock_entry",
+			],
+			order_by="component_item asc, component_serial_no asc",
+		)
 		for link in links:
 			result.append({"level": depth + 1, "parent": serial or batch, **link})
 			if link.component_serial_no:
@@ -175,8 +195,13 @@ def components_of(serial_no: str, max_depth: int = 8) -> list[dict]:
 	return result
 
 
-def units_containing(item_code: str | None = None, batch_nos: list[str] | None = None,
-		serial_nos: list[str] | None = None, supplier: str | None = None, max_depth: int = 8) -> list[dict]:
+def units_containing(
+	item_code: str | None = None,
+	batch_nos: list[str] | None = None,
+	serial_nos: list[str] | None = None,
+	supplier: str | None = None,
+	max_depth: int = 8,
+) -> list[dict]:
 	"""Every top-level unit (serial with no further parent) built from the given components."""
 	frontier = set()
 	values: dict = {}
@@ -209,7 +234,9 @@ def units_containing(item_code: str | None = None, batch_nos: list[str] | None =
 	for row in start:
 		key = (row.parent_serial_no, row.parent_batch_no)
 		frontier.add(key)
-		paths[key] = f"{row.component_item}:{row.via} -> {row.parent_item}:{row.parent_serial_no or row.parent_batch_no}"
+		paths[key] = (
+			f"{row.component_item}:{row.via} -> {row.parent_item}:{row.parent_serial_no or row.parent_batch_no}"
+		)
 	finished: dict[str, dict] = {}
 	depth = 0
 	while frontier and depth < max_depth:
@@ -217,17 +244,26 @@ def units_containing(item_code: str | None = None, batch_nos: list[str] | None =
 		next_frontier = set()
 		for serial, batch in sorted(frontier, key=lambda k: (k[0] or "", k[1] or "")):
 			field, value = ("component_serial_no", serial) if serial else ("component_batch_no", batch)
-			parents = frappe.get_all("Genealogy Link", filters={field: value},
-				fields=["parent_item", "parent_serial_no", "parent_batch_no"])
+			parents = frappe.get_all(
+				"Genealogy Link",
+				filters={field: value},
+				fields=["parent_item", "parent_serial_no", "parent_batch_no"],
+			)
 			if not parents:
 				if serial:
 					item = frappe.db.get_value("Serial No", serial, "item_code")
-					finished[serial] = {"serial_no": serial, "item_code": item, "path": paths[(serial, batch)]}
+					finished[serial] = {
+						"serial_no": serial,
+						"item_code": item,
+						"path": paths[(serial, batch)],
+					}
 				continue
 			for p in parents:
 				key = (p.parent_serial_no, p.parent_batch_no)
 				if key not in paths:
-					paths[key] = f"{paths[(serial, batch)]} -> {p.parent_item}:{p.parent_serial_no or p.parent_batch_no}"
+					paths[key] = (
+						f"{paths[(serial, batch)]} -> {p.parent_item}:{p.parent_serial_no or p.parent_batch_no}"
+					)
 				next_frontier.add(key)
 		frontier = next_frontier
 	return [finished[k] for k in sorted(finished)]
@@ -240,7 +276,9 @@ def get_components(serial_no: str) -> list[dict]:
 
 
 @frappe.whitelist()
-def get_affected_units(item_code: str, batch_nos: str | None = None, serial_nos: str | None = None) -> list[dict]:
+def get_affected_units(
+	item_code: str, batch_nos: str | None = None, serial_nos: str | None = None
+) -> list[dict]:
 	frappe.has_permission("Genealogy Link", "read", throw=True)
 	split = lambda text: [v.strip() for v in (text or "").replace(",", "\n").splitlines() if v.strip()]  # noqa: E731
 	return units_containing(item_code, split(batch_nos), split(serial_nos))

@@ -38,12 +38,26 @@ class Client:
 		self.opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(self.jar))
 		self.csrf_token: str | None = None
 
-	def request(self, method: str, path: str, params: dict | None = None, body: bytes | None = None,
-			headers: dict | None = None) -> tuple[int, Any]:
+	def request(
+		self,
+		method: str,
+		path: str,
+		params: dict | None = None,
+		body: bytes | None = None,
+		headers: dict | None = None,
+	) -> tuple[int, Any]:
 		url = self.url + path + (("?" + urllib.parse.urlencode(params)) if params else "")
-		request = urllib.request.Request(url, data=body, method=method, headers={  # noqa: S310 (http(s) only, see __init__)
-			"Accept": "application/json", **({"Host": self.host} if self.host else {}),
-			**({"X-Frappe-CSRF-Token": self.csrf_token} if self.csrf_token else {}), **(headers or {})})
+		request = urllib.request.Request(  # noqa: S310 (http(s) only, see __init__)
+			url,
+			data=body,
+			method=method,
+			headers={
+				"Accept": "application/json",
+				**({"Host": self.host} if self.host else {}),
+				**({"X-Frappe-CSRF-Token": self.csrf_token} if self.csrf_token else {}),
+				**(headers or {}),
+			},
+		)
 		try:
 			with self.opener.open(request, timeout=60) as response:
 				status, raw = response.status, response.read()
@@ -57,12 +71,17 @@ class Client:
 
 	def login(self, user: str, password: str) -> None:
 		body = urllib.parse.urlencode({"usr": user, "pwd": password}).encode()
-		status, data = self.request("POST", "/api/method/login", body=body,
-			headers={"Content-Type": "application/x-www-form-urlencoded"})
+		status, data = self.request(
+			"POST",
+			"/api/method/login",
+			body=body,
+			headers={"Content-Type": "application/x-www-form-urlencoded"},
+		)
 		if status != 200:
-			message = data.get("message") or data.get("exc_type") if isinstance(data, dict) else str(data)[:200]
+			message = (
+				data.get("message") or data.get("exc_type") if isinstance(data, dict) else str(data)[:200]
+			)
 			raise AssertionError(f"login as {user} failed ({status}: {message})")
-
 
 	def csrf(self, path: str) -> None:
 		"""The session's CSRF token from a page (the desk or a portal), sent with every later
@@ -112,9 +131,12 @@ def encode_edi(envelope: dict) -> str:
 	control = hashlib.sha256(envelope["message_id"].encode()).hexdigest()[:9]
 	leaves: list = []
 	flatten("", envelope.get("data") or {}, leaves)
-	segments = [["ISA", "HINODE", "1", control], ["ST", envelope["message_type"], envelope["message_id"]],
+	segments = [
+		["ISA", "HINODE", "1", control],
+		["ST", envelope["message_type"], envelope["message_id"]],
 		["BGN", envelope.get("schema_version", "v1"), envelope.get("sent_at", "")],
-		*(["DTA", path, kind, value] for path, kind, value in leaves)]
+		*(["DTA", path, kind, value] for path, kind, value in leaves),
+	]
 	segments.append(["SE", str(len(segments)), envelope["message_id"]])
 	segments.append(["IEA", "1", control])
 	return "".join("*".join(escape(part) for part in segment) + "~\n" for segment in segments)

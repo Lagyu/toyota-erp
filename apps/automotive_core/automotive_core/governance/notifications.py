@@ -58,9 +58,16 @@ def ensure_templates() -> None:
 		if frappe.db.exists("Email Template", name):
 			continue
 		stem = event.replace(".", "_")
-		frappe.get_doc({"doctype": "Email Template", "name": name, "__newname": name, "use_html": 1,
-			"subject": (TEMPLATES / f"{stem}.subject.html").read_text().strip(),
-			"response_html": (TEMPLATES / f"{stem}.html").read_text()}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Email Template",
+				"name": name,
+				"__newname": name,
+				"use_html": 1,
+				"subject": (TEMPLATES / f"{stem}.subject.html").read_text().strip(),
+				"response_html": (TEMPLATES / f"{stem}.html").read_text(),
+			}
+		).insert(ignore_permissions=True)
 
 
 @contextlib.contextmanager
@@ -75,23 +82,39 @@ def _language(lang: str):
 
 def _preference(user: str, event: str) -> tuple[bool, bool]:
 	spec = EVENTS[event]
-	row = frappe.db.get_value("Notification Preference Event", {"parent": user, "event": event},
-		["in_app", "email"], as_dict=True)
+	row = frappe.db.get_value(
+		"Notification Preference Event", {"parent": user, "event": event}, ["in_app", "email"], as_dict=True
+	)
 	in_app, email = (bool(row.in_app), bool(row.email)) if row else (True, spec.email)
 	return in_app or spec.mandatory, email
 
 
 def _render(event: str, doctype: str | None, name: str | None, context: dict) -> tuple[str, str]:
 	template = frappe.get_cached_doc("Email Template", template_name(event))
-	args = {"doc": frappe.get_doc(doctype, name).as_dict() if doctype and name else {},
-		"link": get_url_to_form(doctype, name) if doctype and name else "", **context}
-	return frappe.render_template(template.subject, args).strip(), frappe.render_template(template.response_html, args)
+	args = {
+		"doc": frappe.get_doc(doctype, name).as_dict() if doctype and name else {},
+		"link": get_url_to_form(doctype, name) if doctype and name else "",
+		**context,
+	}
+	return frappe.render_template(template.subject, args).strip(), frappe.render_template(
+		template.response_html, args
+	)
 
 
 def _dispatch(event, user, channel, status, doctype, name, subject, **values) -> str:
-	doc = frappe.get_doc({"doctype": "Notification Dispatch", "event": event, "recipient": user, "channel": channel,
-		"status": status, "reference_doctype": doctype, "reference_name": name, "subject": (subject or "")[:140],
-		**values})
+	doc = frappe.get_doc(
+		{
+			"doctype": "Notification Dispatch",
+			"event": event,
+			"recipient": user,
+			"channel": channel,
+			"status": status,
+			"reference_doctype": doctype,
+			"reference_name": name,
+			"subject": (subject or "")[:140],
+			**values,
+		}
+	)
 	doc.insert(ignore_permissions=True)
 	return doc.name
 
@@ -113,8 +136,16 @@ def notify(event: str, users, doctype: str | None = None, name: str | None = Non
 			subject, body = _render(event, doctype, name, context)
 			off = _("Turned off in the recipient's notification preferences")
 		if in_app:
-			enqueue_create_notification([user], {"type": "Alert", "document_type": doctype, "document_name": name,
-				"subject": subject, "from_user": frappe.session.user})
+			enqueue_create_notification(
+				[user],
+				{
+					"type": "Alert",
+					"document_type": doctype,
+					"document_name": name,
+					"subject": subject,
+					"from_user": frappe.session.user,
+				},
+			)
 			rows.append(_dispatch(event, user, "In-App", "Delivered", doctype, name, subject))
 		else:
 			rows.append(_dispatch(event, user, "In-App", "Suppressed", doctype, name, subject, detail=off))
@@ -123,18 +154,42 @@ def notify(event: str, users, doctype: str | None = None, name: str | None = Non
 			continue
 		address = frappe.db.get_value("User", user, "email")
 		try:
-			queue = frappe.sendmail(recipients=[address], subject=subject, message=body, reference_doctype=doctype,
-				reference_name=name, delayed=True) if address else None
+			queue = (
+				frappe.sendmail(
+					recipients=[address],
+					subject=subject,
+					message=body,
+					reference_doctype=doctype,
+					reference_name=name,
+					delayed=True,
+				)
+				if address
+				else None
+			)
 		except frappe.OutgoingEmailError as exc:
 			# no outgoing account (a new site): the business step goes on, the failure is on record
 			frappe.clear_last_message()
-			rows.append(_dispatch(event, user, "Email", "Failed", doctype, name, subject, detail=str(exc)[:1000]))
+			rows.append(
+				_dispatch(event, user, "Email", "Failed", doctype, name, subject, detail=str(exc)[:1000])
+			)
 			continue
 		if queue:
-			rows.append(_dispatch(event, user, "Email", "Queued", doctype, name, subject, email_queue=queue.name))
+			rows.append(
+				_dispatch(event, user, "Email", "Queued", doctype, name, subject, email_queue=queue.name)
+			)
 		else:
-			rows.append(_dispatch(event, user, "Email", "Suppressed", doctype, name, subject,
-				detail=_("No e-mail address, or the address unsubscribed")))
+			rows.append(
+				_dispatch(
+					event,
+					user,
+					"Email",
+					"Suppressed",
+					doctype,
+					name,
+					subject,
+					detail=_("No e-mail address, or the address unsubscribed"),
+				)
+			)
 	return rows
 
 
@@ -143,8 +198,9 @@ def users_with_role(role: str, plant: str | None = None) -> list[str]:
 	users = set(frappe.get_all("Has Role", filters={"role": role, "parenttype": "User"}, pluck="parent"))
 	users &= set(frappe.get_all("User", filters={"enabled": 1, "user_type": "System User"}, pluck="name"))
 	if plant:
-		assigned = users & set(frappe.get_all("Plant Assignment", filters={"plant": plant, "status": "Active"},
-			pluck="user"))
+		assigned = users & set(
+			frappe.get_all("Plant Assignment", filters={"plant": plant, "status": "Active"}, pluck="user")
+		)
 		users = assigned or users
 	return sorted(users - {"Administrator", "Guest"})[:50]
 
@@ -159,11 +215,17 @@ EMAIL_RESULT = {"Sent": "Sent", "Partially Sent": "Sent", "Error": "Failed"}
 
 def sync_email_results() -> int:
 	"""Scheduled: record what the Email Queue did with queued notification e-mails."""
-	rows = frappe.db.sql("""select d.name, q.status, q.error, q.modified from `tabNotification Dispatch` d
+	rows = frappe.db.sql(
+		"""select d.name, q.status, q.error, q.modified from `tabNotification Dispatch` d
 		join `tabEmail Queue` q on q.name = d.email_queue where d.status = 'Queued' and q.status in %s""",
-		(tuple(EMAIL_RESULT),), as_dict=True)
+		(tuple(EMAIL_RESULT),),
+		as_dict=True,
+	)
 	for row in rows:
-		values = {"status": EMAIL_RESULT[row.status], "sent_at": row.modified if row.status != "Error" else None}
+		values = {
+			"status": EMAIL_RESULT[row.status],
+			"sent_at": row.modified if row.status != "Error" else None,
+		}
 		if row.status == "Error":
 			values["detail"] = (row.error or "")[-1000:]
 		frappe.db.set_value("Notification Dispatch", row.name, values, update_modified=True)
@@ -176,8 +238,11 @@ def set_my_preference(event: str, in_app: int = 1, email: int = 1) -> dict:
 	if event not in EVENTS:
 		frappe.throw(_("Unknown notification event {0}").format(event))
 	user = frappe.session.user
-	doc = frappe.get_doc("Notification Preference", user) if frappe.db.exists("Notification Preference", user) else \
-		frappe.get_doc({"doctype": "Notification Preference", "user": user})
+	doc = (
+		frappe.get_doc("Notification Preference", user)
+		if frappe.db.exists("Notification Preference", user)
+		else frappe.get_doc({"doctype": "Notification Preference", "user": user})
+	)
 	row = next((r for r in doc.events if r.event == event), None) or doc.append("events", {"event": event})
 	row.in_app = 1 if EVENTS[event].mandatory else int(in_app)
 	row.email = int(email)

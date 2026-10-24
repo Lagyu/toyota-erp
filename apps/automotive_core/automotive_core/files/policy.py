@@ -59,8 +59,11 @@ class AutomotiveFile(File):
 		except Exception as exc:
 			if type(exc).__module__.split(".")[0] != "pypdf":
 				raise
-			raise AttachmentRejectedError(_("The file content does not match its .{0} extension.").format(
-				_extension(self.file_name or self.file_url) or "?")) from exc
+			raise AttachmentRejectedError(
+				_("The file content does not match its .{0} extension.").format(
+					_extension(self.file_name or self.file_url) or "?"
+				)
+			) from exc
 
 
 def _settings():
@@ -89,7 +92,9 @@ def validate_file(doc, method=None) -> None:
 		return
 	settings = _settings()
 	rule = rule_for(doc.attached_to_doctype)
-	allowed = (rule.allowed_extensions if rule and rule.allowed_extensions else settings.allowed_extensions) or ""
+	allowed = (
+		rule.allowed_extensions if rule and rule.allowed_extensions else settings.allowed_extensions
+	) or ""
 	allowed_set = {e.strip().lower().lstrip(".") for e in allowed.split(",") if e.strip()}
 	ext = _extension(doc.file_name or doc.file_url)
 	if allowed_set and ext not in allowed_set:
@@ -103,7 +108,9 @@ def validate_file(doc, method=None) -> None:
 			content = content.encode()
 		kind = filetype.guess(content[:8192]) if content else None
 		if not kind or kind.mime not in SNIFFED[ext]:
-			raise AttachmentRejectedError(_("The file content does not match its .{0} extension.").format(ext))
+			raise AttachmentRejectedError(
+				_("The file content does not match its .{0} extension.").format(ext)
+			)
 	if doc.attached_to_doctype and (not rule or rule.private_only) and not doc.is_private:
 		frappe.throw(_("Attachments to business documents must be private."), AttachmentRejectedError)
 
@@ -114,16 +121,21 @@ def after_insert(doc, method=None) -> None:
 	content = doc.get_content()
 	if isinstance(content, str):
 		content = content.encode()
-	frappe.db.set_value("File", doc.name, "automotive_sha256", sha256_hex(content or b""), update_modified=False)
+	frappe.db.set_value(
+		"File", doc.name, "automotive_sha256", sha256_hex(content or b""), update_modified=False
+	)
 	mode = _settings().virus_scan_mode
 	if mode == "Disabled":
 		frappe.db.set_value("File", doc.name, "automotive_scan_status", "Not Scanned", update_modified=False)
 		return
 	if not _settings().clamd_host:
-		frappe.db.set_value("File", doc.name, "automotive_scan_status", "Scanner Not Configured", update_modified=False)
+		frappe.db.set_value(
+			"File", doc.name, "automotive_scan_status", "Scanner Not Configured", update_modified=False
+		)
 		return
-	frappe.enqueue("automotive_core.files.policy.scan_file", queue="short", file_name=doc.name,
-		enqueue_after_commit=True)
+	frappe.enqueue(
+		"automotive_core.files.policy.scan_file", queue="short", file_name=doc.name, enqueue_after_commit=True
+	)
 
 
 def scan_file(file_name: str) -> str:
@@ -141,11 +153,19 @@ def scan_file(file_name: str) -> str:
 		status, signature = "Scan Failed", str(exc)
 	except OSError as exc:  # the file's content is gone from the disk
 		status, signature = "Scan Failed", f"content unreadable: {exc}"
-	frappe.db.set_value("File", doc.name, {"automotive_scan_status": status, "automotive_scanned_at": now_datetime()},
-		update_modified=False)
+	frappe.db.set_value(
+		"File",
+		doc.name,
+		{"automotive_scan_status": status, "automotive_scanned_at": now_datetime()},
+		update_modified=False,
+	)
 	if status != "Clean":
-		audit.record("file.scan_" + status.lower().replace(" ", "_"), "File", doc.name,
-			{"signature": signature, "attached_to": [doc.attached_to_doctype, doc.attached_to_name]})
+		audit.record(
+			"file.scan_" + status.lower().replace(" ", "_"),
+			"File",
+			doc.name,
+			{"signature": signature, "attached_to": [doc.attached_to_doctype, doc.attached_to_name]},
+		)
 	commit()
 	return status
 
@@ -168,11 +188,14 @@ def rescan_pending(limit: int = RESCAN_BATCH) -> int:
 	if not ping(settings.clamd_host, cint(settings.clamd_port) or 3310):
 		return 0
 	# a remote file (a URL) has no content here to scan
-	names = frappe.db.sql("""select name from `tabFile` where is_folder = 0 and ifnull(file_url, '') not like 'http%%'
+	names = frappe.db.sql(
+		"""select name from `tabFile` where is_folder = 0 and ifnull(file_url, '') not like 'http%%'
 		and ifnull(automotive_scan_status, '') in %(pending)s
 		and ifnull(attached_to_doctype, '') not in %(system)s
 		order by ifnull(automotive_scanned_at, '2000-01-01'), creation limit %(limit)s""",
-		{"pending": PENDING, "system": tuple(SYSTEM_ATTACHMENT_DOCTYPES) or ("",), "limit": cint(limit)}, pluck=True)
+		{"pending": PENDING, "system": tuple(SYSTEM_ATTACHMENT_DOCTYPES) or ("",), "limit": cint(limit)},
+		pluck=True,
+	)
 	for name in names:
 		scan_file(name)
 	return len(names)
@@ -193,19 +216,30 @@ def has_permission(doc, ptype=None, user=None, debug=False):
 
 
 # the default period never purges the system's own attachments, nor master data's
-KEPT_DOCTYPES = SYSTEM_ATTACHMENT_DOCTYPES | {"Company", "Print Heading", "Web Form", "Email Template", "Workspace",
-	"Address Template"}
+KEPT_DOCTYPES = SYSTEM_ATTACHMENT_DOCTYPES | {
+	"Company",
+	"Print Heading",
+	"Web Form",
+	"Email Template",
+	"Workspace",
+	"Address Template",
+}
 
 
 def _purge(filters: list, days: int, label: str) -> int:
 	cutoff = add_days(nowdate(), -cint(days))
-	names = frappe.get_all("File", filters=[*filters, ["creation", "<", cutoff], ["is_folder", "=", 0]],
-		pluck="name", limit=1000)
+	names = frappe.get_all(
+		"File", filters=[*filters, ["creation", "<", cutoff], ["is_folder", "=", 0]], pluck="name", limit=1000
+	)
 	for name in names:
 		frappe.delete_doc("File", name, ignore_permissions=True, force=True)
 	if names:
-		audit.record("file.retention_purge", "DocType", label if frappe.db.exists("DocType", label) else None,
-			{"deleted": len(names), "cutoff": str(cutoff), "rule": label})
+		audit.record(
+			"file.retention_purge",
+			"DocType",
+			label if frappe.db.exists("DocType", label) else None,
+			{"deleted": len(names), "cutoff": str(cutoff), "rule": label},
+		)
 	return len(names)
 
 
@@ -218,11 +252,19 @@ def apply_retention() -> int:
 	for rule in settings.attachment_rules or []:
 		ruled.add(rule.reference_doctype)
 		if cint(rule.retention_days):
-			deleted += _purge([["attached_to_doctype", "=", rule.reference_doctype]], rule.retention_days,
-				rule.reference_doctype)
+			deleted += _purge(
+				[["attached_to_doctype", "=", rule.reference_doctype]],
+				rule.retention_days,
+				rule.reference_doctype,
+			)
 	if cint(settings.default_retention_days):
-		deleted += _purge([["attached_to_doctype", "is", "set"],
-			["attached_to_doctype", "not in", sorted(ruled | set(KEPT_DOCTYPES))]],
-			settings.default_retention_days, "default")
+		deleted += _purge(
+			[
+				["attached_to_doctype", "is", "set"],
+				["attached_to_doctype", "not in", sorted(ruled | set(KEPT_DOCTYPES))],
+			],
+			settings.default_retention_days,
+			"default",
+		)
 	commit()
 	return deleted

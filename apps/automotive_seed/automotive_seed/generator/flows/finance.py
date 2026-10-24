@@ -44,11 +44,29 @@ class Finance:
 		if not frappe.db.exists("Integration Partner", BANK_PARTNER):
 			user = "statements@settlement-bank.example"
 			if not frappe.db.exists("User", user):
-				frappe.get_doc({"doctype": "User", "email": user, "first_name": "Statements", "last_name": BANK,
-					"user_type": "Website User", "send_welcome_email": 0}).insert(ignore_permissions=True)
-			frappe.get_doc({"doctype": "Integration Partner", "partner_code": BANK_PARTNER, "partner_name": BANK,
-				"partner_type": "Bank", "bank": BANK, "adapter": "HTTPS Webhook", "message_format": "JSON",
-				"allowed_message_types": "bank_statement", "service_user": user}).insert(ignore_permissions=True)
+				frappe.get_doc(
+					{
+						"doctype": "User",
+						"email": user,
+						"first_name": "Statements",
+						"last_name": BANK,
+						"user_type": "Website User",
+						"send_welcome_email": 0,
+					}
+				).insert(ignore_permissions=True)
+			frappe.get_doc(
+				{
+					"doctype": "Integration Partner",
+					"partner_code": BANK_PARTNER,
+					"partner_name": BANK,
+					"partner_type": "Bank",
+					"bank": BANK,
+					"adapter": "HTTPS Webhook",
+					"message_format": "JSON",
+					"allowed_message_types": "bank_statement",
+					"service_user": user,
+				}
+			).insert(ignore_permissions=True)
 		return BANK_PARTNER
 
 	def _company_account(self, company: str) -> tuple[str, str, str]:
@@ -56,11 +74,25 @@ class Finance:
 		gl = company_bank_account(company)
 		abbr = COMPANY_ABBR[company]
 		number = f"HSB-{abbr}-0001"
-		name = frappe.db.get_value("Bank Account", {"bank_account_no": number, "is_company_account": 1}, "name")
+		name = frappe.db.get_value(
+			"Bank Account", {"bank_account_no": number, "is_company_account": 1}, "name"
+		)
 		if not name:
-			name = frappe.get_doc({"doctype": "Bank Account", "account_name": f"{abbr} Settlement", "bank": BANK,
-				"company": company, "is_company_account": 1, "account": gl, "bank_account_no": number}).insert(
-				ignore_permissions=True).name
+			name = (
+				frappe.get_doc(
+					{
+						"doctype": "Bank Account",
+						"account_name": f"{abbr} Settlement",
+						"bank": BANK,
+						"company": company,
+						"is_company_account": 1,
+						"account": gl,
+						"bank_account_no": number,
+					}
+				)
+				.insert(ignore_permissions=True)
+				.name
+			)
 		return name, number, gl
 
 	def bank_statements(self, day: dt.date, month_end: bool = False) -> None:
@@ -81,41 +113,90 @@ class Finance:
 			bank_account, number, gl = self._company_account(company)
 			abbr = COMPANY_ABBR[company]
 			entries = []
-			for pe in frappe.db.sql("""select name, paid_from, paid_to, paid_amount, received_amount, reference_no,
+			for pe in frappe.db.sql(
+				"""select name, paid_from, paid_to, paid_amount, received_amount, reference_no,
 					party_name from `tabPayment Entry` where docstatus = 1 and company = %s and posting_date = %s
-					and (paid_from = %s or paid_to = %s) order by name""", (company, day, gl, gl), as_dict=True):
+					and (paid_from = %s or paid_to = %s) order by name""",
+				(company, day, gl, gl),
+				as_dict=True,
+			):
 				amount = flt(pe.received_amount) if pe.paid_to == gl else -flt(pe.paid_amount)
-				entries.append({"entry_id": f"HSB-{abbr}-{pe.name}", "booking_date": str(day), "amount": amount,
-					"reference": pe.reference_no, "counterparty_name": pe.party_name})
+				entries.append(
+					{
+						"entry_id": f"HSB-{abbr}-{pe.name}",
+						"booking_date": str(day),
+						"amount": amount,
+						"reference": pe.reference_no,
+						"counterparty_name": pe.party_name,
+					}
+				)
 			fee_id = f"HSB-{abbr}-FEE-{day:%Y%m}"
 			if month_end:
-				entries.append({"entry_id": fee_id, "booking_date": str(day), "amount": -MONTHLY_FEE[company],
-					"description": "ACCOUNT MAINTENANCE FEE"})
+				entries.append(
+					{
+						"entry_id": fee_id,
+						"booking_date": str(day),
+						"amount": -MONTHLY_FEE[company],
+						"description": "ACCOUNT MAINTENANCE FEE",
+					}
+				)
 			if not entries:
 				continue
 			if company not in balances:  # the bank's balance before its first statement is our ledger's
-				balances[company] = flt(frappe.db.sql("""select sum(debit_in_account_currency)
+				balances[company] = flt(
+					frappe.db.sql(
+						"""select sum(debit_in_account_currency)
 					- sum(credit_in_account_currency) from `tabGL Entry` where account = %s and is_cancelled = 0
-					and posting_date < %s""", (gl, day))[0][0])
+					and posting_date < %s""",
+						(gl, day),
+					)[0][0]
+				)
 			opening = balances[company]
 			closing = round(opening + sum(e["amount"] for e in entries), 2)
-			body = json.dumps({"message_id": f"STMT-{abbr}-{day.isoformat()}", "message_type": "bank_statement",
-				"data": {"statement_id": f"{number}/{day.isoformat()}", "account_number": number,
-					"currency": frappe.get_cached_value("Account", gl, "account_currency"), "from_date": str(day),
-					"to_date": str(day), "opening_balance": opening, "closing_balance": closing, "entries": entries}})
+			body = json.dumps(
+				{
+					"message_id": f"STMT-{abbr}-{day.isoformat()}",
+					"message_type": "bank_statement",
+					"data": {
+						"statement_id": f"{number}/{day.isoformat()}",
+						"account_number": number,
+						"currency": frappe.get_cached_value("Account", gl, "account_currency"),
+						"from_date": str(day),
+						"to_date": str(day),
+						"opening_balance": opening,
+						"closing_balance": closing,
+						"entries": entries,
+					},
+				}
+			)
 			with ctx.step(23, 30):
 				inbound.accept(partner, body, source="HTTPS")
 				inbound.run_pending_inline()
 			ctx.count("Bank Transaction", len(entries))
 			balances[company] = closing
-			fee = month_end and frappe.db.get_value("Bank Transaction", {"bank_account": bank_account,
-				"transaction_id": fee_id, "status": "Unreconciled", "docstatus": 1}, "name")
+			fee = month_end and frappe.db.get_value(
+				"Bank Transaction",
+				{
+					"bank_account": bank_account,
+					"transaction_id": fee_id,
+					"status": "Unreconciled",
+					"docstatus": 1,
+				},
+				"name",
+			)
 			if fee:
 				with ctx.step(23, 45), ctx.as_user(self.sim.person("AP Clerk")):
-					create_bank_entry_and_reconcile(fee, day, day, fee_id, [
-						{"account": gl, "bank_account": bank_account, "credit": MONTHLY_FEE[company]},
-						{"account": f"Bank Charges - {abbr}", "debit": MONTHLY_FEE[company]}],
-						user_remark="Account maintenance fee (bank statement)")
+					create_bank_entry_and_reconcile(
+						fee,
+						day,
+						day,
+						fee_id,
+						[
+							{"account": gl, "bank_account": bank_account, "credit": MONTHLY_FEE[company]},
+							{"account": f"Bank Charges - {abbr}", "debit": MONTHLY_FEE[company]},
+						],
+						user_remark="Account maintenance fee (bank statement)",
+					)
 				ctx.count("Journal Entry")
 
 	def revalue(self, day: dt.date) -> None:
@@ -148,17 +229,36 @@ class Finance:
 		ctx = self.ctx
 		for company in (AICHI, KYUSHU, NA):
 			fy = frappe.db.get_value("Fiscal Year", {"year_end_date": day}, "name")
-			if not fy or frappe.db.exists("Period Closing Voucher", {"company": company, "fiscal_year": fy, "docstatus": 1}):
+			if not fy or frappe.db.exists(
+				"Period Closing Voucher", {"company": company, "fiscal_year": fy, "docstatus": 1}
+			):
 				continue
-			closing = frappe.db.get_value("Account", {"company": company, "root_type": "Liability", "is_group": 0,
-				"account_name": ("like", "%Retained%")}, "name") or frappe.db.get_value("Account", {"company": company,
-				"root_type": "Equity", "is_group": 0}, "name")
+			closing = frappe.db.get_value(
+				"Account",
+				{
+					"company": company,
+					"root_type": "Liability",
+					"is_group": 0,
+					"account_name": ("like", "%Retained%"),
+				},
+				"name",
+			) or frappe.db.get_value(
+				"Account", {"company": company, "root_type": "Equity", "is_group": 0}, "name"
+			)
 			with ctx.step(23, 30):
 				with ctx.as_user(self.sim.person("Group Controller")):
-					pcv = frappe.get_doc({"doctype": "Period Closing Voucher", "company": company, "fiscal_year": fy,
-						"transaction_date": day, "period_start_date": frappe.db.get_value("Fiscal Year", fy, "year_start_date"),
-						"period_end_date": day, "closing_account_head": closing,
-						"remarks": f"Year-end close {fy}"})
+					pcv = frappe.get_doc(
+						{
+							"doctype": "Period Closing Voucher",
+							"company": company,
+							"fiscal_year": fy,
+							"transaction_date": day,
+							"period_start_date": frappe.db.get_value("Fiscal Year", fy, "year_start_date"),
+							"period_end_date": day,
+							"closing_account_head": closing,
+							"remarks": f"Year-end close {fy}",
+						}
+					)
 					pcv.insert()
 					pcv.submit()
 			ctx.count("Period Closing Voucher")

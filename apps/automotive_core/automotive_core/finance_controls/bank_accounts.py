@@ -25,8 +25,14 @@ class UnverifiedBankAccountError(frappe.ValidationError):
 
 
 def fingerprint(doc) -> str:
-	return sha256_hex(canonical_json({f: (doc.get(f) or "").strip() if isinstance(doc.get(f), str) else doc.get(f)
-		for f in IDENTIFYING_FIELDS}))
+	return sha256_hex(
+		canonical_json(
+			{
+				f: (doc.get(f) or "").strip() if isinstance(doc.get(f), str) else doc.get(f)
+				for f in IDENTIFYING_FIELDS
+			}
+		)
+	)
 
 
 def validate_bank_account(doc, method=None) -> None:
@@ -40,9 +46,17 @@ def validate_bank_account(doc, method=None) -> None:
 		doc.automotive_verified_by = None
 		doc.automotive_verified_at = None
 		if not doc.is_new():
-			audit.record("bank_account.changed", doc.doctype, doc.name,
-				{"party_type": doc.party_type, "party": doc.party, "previous_fingerprint": changed_from,
-				 "fingerprint": new_fp})
+			audit.record(
+				"bank_account.changed",
+				doc.doctype,
+				doc.name,
+				{
+					"party_type": doc.party_type,
+					"party": doc.party,
+					"previous_fingerprint": changed_from,
+					"fingerprint": new_fp,
+				},
+			)
 
 
 @frappe.whitelist(methods=["POST"])
@@ -53,19 +67,28 @@ def verify(bank_account: str, comment: str | None = None) -> dict:
 		return {"status": "Verified"}
 	user = frappe.session.user
 	last_change = frappe.get_all(
-		"Version", filters={"ref_doctype": "Bank Account", "docname": doc.name}, fields=["owner"],
-		order_by="creation desc", limit=1,
+		"Version",
+		filters={"ref_doctype": "Bank Account", "docname": doc.name},
+		fields=["owner"],
+		order_by="creation desc",
+		limit=1,
 	)
 	makers = {doc.owner, doc.modified_by} | {v.owner for v in last_change}
 	if user in makers:
 		raise frappe.PermissionError(_("The person who entered or changed the account cannot verify it."))
-	doc.db_set({
-		"automotive_verification_status": "Verified",
-		"automotive_verified_by": user,
-		"automotive_verified_at": now_datetime(),
-	})
-	audit.record("bank_account.verified", doc.doctype, doc.name,
-		{"fingerprint": doc.automotive_account_fingerprint, "comment": comment})
+	doc.db_set(
+		{
+			"automotive_verification_status": "Verified",
+			"automotive_verified_by": user,
+			"automotive_verified_at": now_datetime(),
+		}
+	)
+	audit.record(
+		"bank_account.verified",
+		doc.doctype,
+		doc.name,
+		{"fingerprint": doc.automotive_account_fingerprint, "comment": comment},
+	)
 	return {"status": "Verified"}
 
 
@@ -79,7 +102,9 @@ def validate_payment_entry(doc, method=None) -> None:
 	if doc.payment_type != "Pay" or doc.party_type != "Supplier" or not _is_bank_transfer(doc):
 		return
 	if not doc.party_bank_account:
-		raise UnverifiedBankAccountError(_("Bank transfers to suppliers need the supplier's verified bank account."))
+		raise UnverifiedBankAccountError(
+			_("Bank transfers to suppliers need the supplier's verified bank account.")
+		)
 	status = frappe.db.get_value("Bank Account", doc.party_bank_account, "automotive_verification_status")
 	if status != "Verified":
 		raise UnverifiedBankAccountError(

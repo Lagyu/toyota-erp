@@ -8,8 +8,12 @@ from frappe import _
 
 def party_of_user(user: str | None = None) -> tuple[str, str] | None:
 	user = user or frappe.session.user
-	row = frappe.db.get_value("Partner User Access", {"user": user, "status": "Active"},
-		["party_type", "supplier", "customer"], as_dict=True)
+	row = frappe.db.get_value(
+		"Partner User Access",
+		{"user": user, "status": "Active"},
+		["party_type", "supplier", "customer"],
+		as_dict=True,
+	)
 	if not row:
 		return None
 	return row.party_type, (row.supplier if row.party_type == "Supplier" else row.customer)
@@ -68,8 +72,9 @@ CAPABILITIES: dict[str, dict[str, frozenset[str]]] = {
 
 
 def portal_role(user: str | None = None) -> str | None:
-	return frappe.db.get_value("Partner User Access", {"user": user or frappe.session.user, "status": "Active"},
-		"partner_role")
+	return frappe.db.get_value(
+		"Partner User Access", {"user": user or frappe.session.user, "status": "Active"}, "partner_role"
+	)
 
 
 def capabilities(party_type: str, user: str | None = None) -> list[str]:
@@ -82,6 +87,7 @@ def require_capability(party_type: str, capability: str) -> str:
 	"""The caller's own party, if their portal role allows ``capability`` (ERP-10.4)."""
 	party = require_party(party_type)
 	if capability not in capabilities(party_type):
-		raise frappe.PermissionError(_("Your portal role ({0}) does not allow this.").format(
-			_(portal_role() or "Viewer")))
+		raise frappe.PermissionError(
+			_("Your portal role ({0}) does not allow this.").format(_(portal_role() or "Viewer"))
+		)
 	return party

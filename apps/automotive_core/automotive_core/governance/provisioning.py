@@ -47,11 +47,14 @@ def validate(doc) -> None:
 		if blocking:
 			raise SegregationOfDutiesError(
 				_("The requested roles violate segregation of duties: {0}").format(
-					", ".join(f"{r.role_a} + {r.role_b}" for r in blocking))
+					", ".join(f"{r.role_a} + {r.role_b}" for r in blocking)
+				)
 			)
 	for scope in doc.get("scopes") or []:
 		if not frappe.db.exists(scope.allow, scope.for_value):
-			frappe.throw(_("Row {0}: {1} {2} does not exist.").format(scope.idx, scope.allow, scope.for_value))
+			frappe.throw(
+				_("Row {0}: {1} {2} does not exist.").format(scope.idx, scope.allow, scope.for_value)
+			)
 	if doc.access_expiry_date and getdate(doc.access_expiry_date) < getdate(nowdate()):
 		frappe.throw(_("Access expiry cannot be in the past."))
 	if doc.docstatus == 0:
@@ -65,9 +68,13 @@ def on_submit(doc) -> None:
 		f"user.{doc.request_type.lower()}",
 		"User",
 		doc.email,
-		{"request": doc.name, "role_profile": doc.role_profile, "roles": sorted(desired_roles(doc)),
-		 "scopes": [(s.allow, s.for_value) for s in doc.get("scopes") or []],
-		 "expires": str(doc.access_expiry_date or "")},
+		{
+			"request": doc.name,
+			"role_profile": doc.role_profile,
+			"roles": sorted(desired_roles(doc)),
+			"scopes": [(s.allow, s.for_value) for s in doc.get("scopes") or []],
+			"expires": str(doc.access_expiry_date or ""),
+		},
 	)
 
 

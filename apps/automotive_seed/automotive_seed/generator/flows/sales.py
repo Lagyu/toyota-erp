@@ -44,10 +44,16 @@ class Sales:
 		share = (1 - float(ctx.v("na_share"))) if region == "JP" else float(ctx.v("na_share"))
 		lines = max(0, round(rng.gauss(float(ctx.v("dealer_order_lines_per_day")) * share, 2)))
 		market = region
-		variants = [v for v, info in sorted(self.structure["variants"].items()) if info["selections"]["Market"] == market]
-		liaisons = [u for u in self.sim.roster.get("Dealer Liaison", [])
-			if ctx.cache.get("plant_of", {}).get(u) in ((None,) if region == "JP" else ("NA-PDC",))] or \
-			self.sim.roster["Dealer Liaison"]
+		variants = [
+			v
+			for v, info in sorted(self.structure["variants"].items())
+			if info["selections"]["Market"] == market
+		]
+		liaisons = [
+			u
+			for u in self.sim.roster.get("Dealer Liaison", [])
+			if ctx.cache.get("plant_of", {}).get(u) in ((None,) if region == "JP" else ("NA-PDC",))
+		] or self.sim.roster["Dealer Liaison"]
 		orders: dict[str, list] = defaultdict(list)
 		for _ in range(lines):
 			orders[rng.choice(dealers)].append(rng.choice(variants))
@@ -59,23 +65,52 @@ class Sales:
 			if frappe.db.exists("Dealer Order", {"dealer": dealer, "dealer_reference": reference}):
 				continue
 			with ctx.step(13, 0):
-				partner = frappe.db.get_value("Integration Partner", {"party_type": "Customer", "party": dealer}, "name")
+				partner = frappe.db.get_value(
+					"Integration Partner", {"party_type": "Customer", "party": dealer}, "name"
+				)
 				lines_spec = []
 				for variant in picks:
 					info = self.structure["variants"][variant]
-					lines_spec.append({"vehicle_model": info["model"], "selections": info["selections"], "qty": 1})
+					lines_spec.append(
+						{"vehicle_model": info["model"], "selections": info["selections"], "qty": 1}
+					)
 				if partner:
-					self.sim.procurement._edi(partner, "dealer_order", f"DO-{reference}", {"dealer_reference": reference,
-						"company": REGION_COMPANY[region], "requested_delivery_date": str(add_days(day, 30)),
-						"lines": lines_spec})
-					order = frappe.db.get_value("Dealer Order", {"dealer": dealer, "dealer_reference": reference}, "name")
+					self.sim.procurement._edi(
+						partner,
+						"dealer_order",
+						f"DO-{reference}",
+						{
+							"dealer_reference": reference,
+							"company": REGION_COMPANY[region],
+							"requested_delivery_date": str(add_days(day, 30)),
+							"lines": lines_spec,
+						},
+					)
+					order = frappe.db.get_value(
+						"Dealer Order", {"dealer": dealer, "dealer_reference": reference}, "name"
+					)
 				else:
 					with ctx.as_user(user):
-						items = [{"vehicle_model": ln["vehicle_model"], "qty": 1, "configuration":
-							configure(ln["vehicle_model"], ln["selections"])["configuration"]} for ln in lines_spec]
-						doc = frappe.get_doc({"doctype": "Dealer Order", "dealer": dealer, "dealer_reference": reference,
-							"company": REGION_COMPANY[region], "requested_delivery_date": add_days(day, 30),
-							"items": items}).insert()
+						items = [
+							{
+								"vehicle_model": ln["vehicle_model"],
+								"qty": 1,
+								"configuration": configure(ln["vehicle_model"], ln["selections"])[
+									"configuration"
+								],
+							}
+							for ln in lines_spec
+						]
+						doc = frappe.get_doc(
+							{
+								"doctype": "Dealer Order",
+								"dealer": dealer,
+								"dealer_reference": reference,
+								"company": REGION_COMPANY[region],
+								"requested_delivery_date": add_days(day, 30),
+								"items": items,
+							}
+						).insert()
 						doc.submit()
 					order = doc.name
 				ctx.count("Dealer Order")
@@ -84,8 +119,12 @@ class Sales:
 				if discount:
 					with ctx.as_user(liaison):
 						# negotiated fleet discount, granted internally before acceptance
-						for row in frappe.get_all("Dealer Order Item", filters={"parent": order}, pluck="name"):
-							frappe.db.set_value("Dealer Order Item", row, "discount_percent", rng.choice((2, 3.5, 4)))
+						for row in frappe.get_all(
+							"Dealer Order Item", filters={"parent": order}, pluck="name"
+						):
+							frappe.db.set_value(
+								"Dealer Order Item", row, "discount_percent", rng.choice((2, 3.5, 4))
+							)
 				with ctx.as_user(liaison):
 					result = accept(order)
 				if result["needs_approval"]:
@@ -114,10 +153,14 @@ class Sales:
 			with ctx.as_user(self.sim.person("Dealer Liaison", plant if plant == "NA-PDC" else None)):
 				allocate(company)
 		# deliver allocations older than a day, grouped by sales order
-		ready = frappe.db.sql("""select va.name, va.sales_order, va.sales_order_item, va.vehicle_unit, va.dealer
+		ready = frappe.db.sql(
+			"""select va.name, va.sales_order, va.sales_order_item, va.vehicle_unit, va.dealer
 			from `tabVehicle Allocation` va join `tabSales Order` so on so.name = va.sales_order
 			where va.status = 'Allocated' and so.company = %s and date(va.allocated_at) < %s
-			order by va.allocated_at""", (company, day), as_dict=True)
+			order by va.allocated_at""",
+			(company, day),
+			as_dict=True,
+		)
 		by_so: dict[str, list] = defaultdict(list)
 		for row in ready:
 			by_so[row.sales_order].append(row)
@@ -142,17 +185,36 @@ class Sales:
 				notes.append(dn.name)
 		carriers = self.sim.state["carriers"]
 		for i in range(0, len(notes), 2):
-			load = notes[i:i + 2]
+			load = notes[i : i + 2]
 			with ctx.step(15, 0):
 				with ctx.as_user(logistics):
-					booking = frappe.get_doc({"doctype": "Transport Booking", "carrier": carriers[i % len(carriers)],
-						"company": company, "plant": plant, "direction": "Outbound", "vehicle_type": "Car Carrier",
-						"pickup_window_start": f"{day} 15:00:00", "pickup_window_end": f"{day} 18:00:00",
-						"delivery_window_end": f"{add_days(day, 2)} 18:00:00", "destination": "Dealer network",
-						"capacity_units": 16}).insert()
-					manifest = frappe.get_doc({"doctype": "Shipment Manifest", "company": company, "plant": plant,
-						"transport_booking": booking.name, "carrier": booking.carrier, "departure": f"{day} 17:00:00",
-						"seal_no": f"S{rng.randint(100000, 999999)}", "items": [{"delivery_note": dn} for dn in load]}).insert()
+					booking = frappe.get_doc(
+						{
+							"doctype": "Transport Booking",
+							"carrier": carriers[i % len(carriers)],
+							"company": company,
+							"plant": plant,
+							"direction": "Outbound",
+							"vehicle_type": "Car Carrier",
+							"pickup_window_start": f"{day} 15:00:00",
+							"pickup_window_end": f"{day} 18:00:00",
+							"delivery_window_end": f"{add_days(day, 2)} 18:00:00",
+							"destination": "Dealer network",
+							"capacity_units": 16,
+						}
+					).insert()
+					manifest = frappe.get_doc(
+						{
+							"doctype": "Shipment Manifest",
+							"company": company,
+							"plant": plant,
+							"transport_booking": booking.name,
+							"carrier": booking.carrier,
+							"departure": f"{day} 17:00:00",
+							"seal_no": f"S{rng.randint(100000, 999999)}",
+							"items": [{"delivery_note": dn} for dn in load],
+						}
+					).insert()
 					manifest.submit()
 				ctx.count("Shipment Manifest")
 				self.s.setdefault("in_delivery", {})[manifest.name] = str(add_days(day, 1))
@@ -170,17 +232,28 @@ class Sales:
 			with ctx.step(16, 0):
 				with ctx.as_user(logistics):
 					record_delivery(manifest, "Dealer yard manager")
-				for dn in sorted({r.delivery_note for r in frappe.get_all("Shipment Manifest Item",
-						filters={"parent": manifest}, fields=["delivery_note"])}):
+				for dn in sorted(
+					{
+						r.delivery_note
+						for r in frappe.get_all(
+							"Shipment Manifest Item", filters={"parent": manifest}, fields=["delivery_note"]
+						)
+					}
+				):
 					dealer = frappe.db.get_value("Delivery Note", dn, "customer")
 					user = self.portal_user(dealer)
 					if not user:
 						continue
 					damaged = rng.random() < 0.02
 					with ctx.as_user(user):
-						acc = frappe.get_doc({"doctype": "Delivery Acceptance", "delivery_note": dn,
-							"condition": "Accepted With Damage" if damaged else "Accepted",
-							"damage_notes": "Scratch on rear bumper" if damaged else None}).insert()
+						acc = frappe.get_doc(
+							{
+								"doctype": "Delivery Acceptance",
+								"delivery_note": dn,
+								"condition": "Accepted With Damage" if damaged else "Accepted",
+								"damage_notes": "Scratch on rear bumper" if damaged else None,
+							}
+						).insert()
 						acc.submit()
 					ctx.count("Delivery Acceptance")
 			self.s["in_delivery"].pop(manifest, None)
@@ -191,9 +264,13 @@ class Sales:
 		ctx = self.ctx
 		company = REGION_COMPANY[region]
 		cutoff = add_days(day, -int(ctx.v("dealer_payment_days")))
-		rows = frappe.db.sql("""select si.name from `tabSales Invoice` si join `tabCustomer` c on c.name = si.customer
+		rows = frappe.db.sql(
+			"""select si.name from `tabSales Invoice` si join `tabCustomer` c on c.name = si.customer
 			where si.docstatus = 1 and si.company = %s and si.outstanding_amount > 0 and si.posting_date <= %s
-			and c.is_internal_customer = 0 order by si.posting_date""", (company, cutoff), pluck=True)
+			and c.is_internal_customer = 0 order by si.posting_date""",
+			(company, cutoff),
+			pluck=True,
+		)
 		for name in rows:
 			with ctx.step(16, 30):
 				with ctx.as_user(self.sim.person("AP Clerk")):
@@ -218,38 +295,75 @@ class Sales:
 
 		ctx = self.ctx
 		rng = ctx.rng("na-replenishment", day)
-		us_variants = [v for v, info in sorted(self.structure["variants"].items()) if info["selections"]["Market"] == "US"]
+		us_variants = [
+			v
+			for v, info in sorted(self.structure["variants"].items())
+			if info["selections"]["Market"] == "US"
+		]
 		weekly = round(float(ctx.v("aichi_vehicles_per_day")) * 5 * float(ctx.v("na_share")))
-		internal_supplier = frappe.db.get_value("Supplier", {"is_internal_supplier": 1, "represents_company": AICHI}, "name")
+		internal_supplier = frappe.db.get_value(
+			"Supplier", {"is_internal_supplier": 1, "represents_company": AICHI}, "name"
+		)
 		picks = defaultdict(int)
 		for _ in range(weekly):
 			picks[rng.choice(us_variants)] += 1
 		lines = []
 		for variant, qty in sorted(picks.items()):
 			price = agreed_price(AICHI, NA, variant, nowdate())
-			lines.append({"item_code": variant, "qty": qty, "rate": price[0], "warehouse": fg_for("NA-PDC"),
-				"schedule_date": add_days(day, 28)})
+			lines.append(
+				{
+					"item_code": variant,
+					"qty": qty,
+					"rate": price[0],
+					"warehouse": fg_for("NA-PDC"),
+					"schedule_date": add_days(day, 28),
+				}
+			)
 		with ctx.step(15, 0):
 			buyer = self.sim.person("Buyer")
-			po = self.sim.procurement.purchase_order(internal_supplier, NA, lines, "NA-PDC", buyer,
-				extra={"buying_price_list": "Intercompany USD", "currency": "USD"})
+			po = self.sim.procurement.purchase_order(
+				internal_supplier,
+				NA,
+				lines,
+				"NA-PDC",
+				buyer,
+				extra={"buying_price_list": "Intercompany USD", "currency": "USD"},
+			)
 			with ctx.as_user(self.sim.person("Dealer Liaison")):
-				so = frappe.get_doc("Sales Order", create_seller_order(po, add_days(day, 7), fg_for("AICHI-VA")))
+				so = frappe.get_doc(
+					"Sales Order", create_seller_order(po, add_days(day, 7), fg_for("AICHI-VA"))
+				)
 				so.submit()
 			ctx.count("Sales Order")
 		# ship released, unallocated vehicles against open export lines (FIFO)
-		customer = frappe.db.get_value("Customer", {"is_internal_customer": 1, "represents_company": NA}, "name")
-		open_lines = frappe.db.sql("""select soi.name, soi.parent, soi.item_code, soi.qty - soi.delivered_qty open_qty
+		customer = frappe.db.get_value(
+			"Customer", {"is_internal_customer": 1, "represents_company": NA}, "name"
+		)
+		open_lines = frappe.db.sql(
+			"""select soi.name, soi.parent, soi.item_code, soi.qty - soi.delivered_qty open_qty
 			from `tabSales Order Item` soi join `tabSales Order` so on so.name = soi.parent
 			where so.docstatus = 1 and so.customer = %s and so.status not in ('Closed', 'Completed')
-			and soi.qty > soi.delivered_qty order by so.transaction_date, soi.idx""", customer, as_dict=True)
+			and soi.qty > soi.delivered_qty order by so.transaction_date, soi.idx""",
+			customer,
+			as_dict=True,
+		)
 		by_so: dict[str, list] = defaultdict(list)
 		taken: set[str] = set()  # open lines of several weeks' orders can ask for the same variant
 		for line in open_lines:
-			vins = frappe.get_all("Vehicle Unit", filters={"variant_item": line.item_code, "quality_status": "Released",
-				"inventory_status": "In Stock", "automotive_allocation": ("is", "not set"),
-				"current_warehouse": fg_for("AICHI-VA"), "name": ("not in", sorted(taken) or [""])}, pluck="name",
-				order_by="built_at asc", limit=int(line.open_qty))
+			vins = frappe.get_all(
+				"Vehicle Unit",
+				filters={
+					"variant_item": line.item_code,
+					"quality_status": "Released",
+					"inventory_status": "In Stock",
+					"automotive_allocation": ("is", "not set"),
+					"current_warehouse": fg_for("AICHI-VA"),
+					"name": ("not in", sorted(taken) or [""]),
+				},
+				pluck="name",
+				order_by="built_at asc",
+				limit=int(line.open_qty),
+			)
 			if vins:
 				taken.update(vins)
 				by_so[line.parent].append((line.name, vins))
@@ -267,7 +381,9 @@ class Sales:
 					dn.insert()
 					dn.submit()
 				ctx.count("Delivery Note")
-				self.s.setdefault("ic_transit", {})[dn.name] = str(add_days(day, int(ctx.v("ocean_transit_days"))))
+				self.s.setdefault("ic_transit", {})[dn.name] = str(
+					add_days(day, int(ctx.v("ocean_transit_days")))
+				)
 				self.intercompany_invoice(dn.name)
 
 	def na_receiving(self, day: dt.date) -> None:
@@ -275,14 +391,26 @@ class Sales:
 		ctx = self.ctx
 		for pr in list(self.s.get("pdi", [])):
 			inspector = self.sim.person("Quality Inspector", "NA-PDC")
-			for row in frappe.get_all("Purchase Receipt Item", filters={"parent": pr},
-					fields=["name", "item_code", "serial_no"]):
+			for row in frappe.get_all(
+				"Purchase Receipt Item", filters={"parent": pr}, fields=["name", "item_code", "serial_no"]
+			):
 				for vin in filter(None, (row.serial_no or "").split("\n")):
 					with ctx.step(10, 0):  # one inspection per vehicle on the shared receipt row
-						self.sim.quality._qi(row.item_code, "Purchase Receipt", pr, "Pre-Delivery", inspector, "Accepted",
-							NA, serial=vin, remarks="PDI: transport check, accessory fit", child_row=row.name,
-							template="Pre-Delivery - Vehicle" if frappe.db.exists("Quality Inspection Template",
-								"Pre-Delivery - Vehicle") else None)
+						self.sim.quality._qi(
+							row.item_code,
+							"Purchase Receipt",
+							pr,
+							"Pre-Delivery",
+							inspector,
+							"Accepted",
+							NA,
+							serial=vin,
+							remarks="PDI: transport check, accessory fit",
+							child_row=row.name,
+							template="Pre-Delivery - Vehicle"
+							if frappe.db.exists("Quality Inspection Template", "Pre-Delivery - Vehicle")
+							else None,
+						)
 			self.s["pdi"].remove(pr)
 		# vehicles that arrived on non-working days are received on the next NA working day
 		self.sim.procurement.intercompany_receipts(day)
@@ -294,16 +422,36 @@ class Sales:
 		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
 
 		ctx = self.ctx
-		customer = frappe.db.get_value("Customer", {"is_internal_customer": 1, "represents_company": AICHI}, "name")
+		customer = frappe.db.get_value(
+			"Customer", {"is_internal_customer": 1, "represents_company": AICHI}, "name"
+		)
 		fg = fg_for("KYUSHU-PT")
-		for so_name in frappe.get_all("Sales Order", filters={"customer": customer, "company": KYUSHU, "docstatus": 1,
-				"status": ("not in", ("Closed", "Completed"))}, pluck="name", order_by="transaction_date asc"):
+		for so_name in frappe.get_all(
+			"Sales Order",
+			filters={
+				"customer": customer,
+				"company": KYUSHU,
+				"docstatus": 1,
+				"status": ("not in", ("Closed", "Completed")),
+			},
+			pluck="name",
+			order_by="transaction_date asc",
+		):
 			so = frappe.get_doc("Sales Order", so_name)
 			lines = {}
 			for item in so.items:
 				open_qty = int(flt(item.qty) - flt(item.delivered_qty))
-				available = frappe.get_all("Serial No", filters={"item_code": item.item_code, "warehouse": fg,
-					"status": "Active"}, pluck="name", order_by="creation asc", limit=open_qty) if open_qty else []
+				available = (
+					frappe.get_all(
+						"Serial No",
+						filters={"item_code": item.item_code, "warehouse": fg, "status": "Active"},
+						pluck="name",
+						order_by="creation asc",
+						limit=open_qty,
+					)
+					if open_qty
+					else []
+				)
 				if available:
 					lines[item.name] = available
 			if not lines:

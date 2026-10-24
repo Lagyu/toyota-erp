@@ -22,8 +22,12 @@ class PartnerUserAccess(Document):
 
 	def on_update(self):
 		on_partner_access_change(self)
-		audit.record("access.partner." + self.status.lower(), self.doctype, self.name,
-			{"user": self.user, "party_type": self.party_type, "party": self.supplier or self.customer})
+		audit.record(
+			"access.partner." + self.status.lower(),
+			self.doctype,
+			self.name,
+			{"user": self.user, "party_type": self.party_type, "party": self.supplier or self.customer},
+		)
 
 	def revoke(self):
 		self.status = "Revoked"

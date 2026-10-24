@@ -56,14 +56,18 @@ def item_revisions(item_code: str, exclude: str | None = None) -> list[str]:
 def before_validate(doc, method=None) -> None:
 	for row in doc.items:
 		if flt(row.automotive_net_qty):
-			row.qty = flt(flt(row.automotive_net_qty) * (1 + flt(row.automotive_scrap_factor_percent) / 100), 6)
+			row.qty = flt(
+				flt(row.automotive_net_qty) * (1 + flt(row.automotive_scrap_factor_percent) / 100), 6
+			)
 
 
 def validate(doc, method=None) -> None:
 	if not doc.automotive_revision:
 		doc.automotive_revision = next_revision(item_revisions(doc.item, exclude=doc.name))
-	if doc.automotive_effective_from and doc.automotive_effective_to and getdate(doc.automotive_effective_to) < getdate(
+	if (
 		doc.automotive_effective_from
+		and doc.automotive_effective_to
+		and getdate(doc.automotive_effective_to) < getdate(doc.automotive_effective_from)
 	):
 		frappe.throw(_("Effective To cannot be before Effective From."))
 
@@ -88,31 +92,53 @@ def on_update_after_submit(doc, method=None) -> None:
 	before = doc.get_doc_before_save()
 	if not before:
 		return
-	for field in ("automotive_effective_from", "automotive_effective_to", "automotive_superseded_by",
-			"automotive_revision", "automotive_engineering_status"):
+	for field in (
+		"automotive_effective_from",
+		"automotive_effective_to",
+		"automotive_superseded_by",
+		"automotive_revision",
+		"automotive_engineering_status",
+	):
 		if before.get(field) != doc.get(field):
-			raise EngineeringControlError(_("{0} of a released BOM changes only through an Engineering Change Order.").format(
-				doc.meta.get_label(field)))
+			raise EngineeringControlError(
+				_("{0} of a released BOM changes only through an Engineering Change Order.").format(
+					doc.meta.get_label(field)
+				)
+			)
 	if before.is_active and not doc.is_active:
-		open_orders = frappe.get_all("Work Order", filters={"bom_no": doc.name, "docstatus": 1,
-			"status": ("not in", ("Completed", "Closed", "Stopped", "Cancelled"))}, pluck="name", limit=5)
+		open_orders = frappe.get_all(
+			"Work Order",
+			filters={
+				"bom_no": doc.name,
+				"docstatus": 1,
+				"status": ("not in", ("Completed", "Closed", "Stopped", "Cancelled")),
+			},
+			pluck="name",
+			limit=5,
+		)
 		if open_orders:
-			raise EngineeringControlError(_("BOM {0} still feeds open Work Orders: {1}").format(doc.name, ", ".join(open_orders)))
+			raise EngineeringControlError(
+				_("BOM {0} still feeds open Work Orders: {1}").format(doc.name, ", ".join(open_orders))
+			)
 
 
 def before_cancel(doc, method=None) -> None:
 	used = frappe.get_all("Work Order", filters={"bom_no": doc.name, "docstatus": 1}, pluck="name", limit=1)
 	if used:
 		raise EngineeringControlError(
-			_("BOM {0} was used by Work Order {1}; it is part of production history and cannot be cancelled. "
-			  "Supersede it with an Engineering Change Order.").format(doc.name, used[0])
+			_(
+				"BOM {0} was used by Work Order {1}; it is part of production history and cannot be cancelled. "
+				"Supersede it with an Engineering Change Order."
+			).format(doc.name, used[0])
 		)
 
 
 def guard_bom_update_tool(doc, method=None) -> None:
 	if not frappe.flags.get("automotive_eco_context"):
 		raise EngineeringControlError(
-			_("Replacing BOMs inside released BOMs is done through an Engineering Change Order, not the BOM Update Tool.")
+			_(
+				"Replacing BOMs inside released BOMs is done through an Engineering Change Order, not the BOM Update Tool."
+			)
 		)
 
 
@@ -147,11 +173,15 @@ def validate_work_order_bom(doc, method=None) -> None:
 		return
 	# ERPNext copies a routed BOM's operations only from the desk form: do it for orders created by
 	# code too (planning release, API, MES), so they get their job cards on submit
-	if frappe.get_meta("Work Order").has_field("operations") and (doc.flags.get("automotive_bom_reselected")
-			or (not doc.operations and frappe.db.get_value("BOM", doc.bom_no, "with_operations"))):
+	if frappe.get_meta("Work Order").has_field("operations") and (
+		doc.flags.get("automotive_bom_reselected")
+		or (not doc.operations and frappe.db.get_value("BOM", doc.bom_no, "with_operations"))
+	):
 		doc.set_work_order_operations()
 	status, start, end = frappe.db.get_value(
-		"BOM", doc.bom_no, ["automotive_engineering_status", "automotive_effective_from", "automotive_effective_to"]
+		"BOM",
+		doc.bom_no,
+		["automotive_engineering_status", "automotive_effective_from", "automotive_effective_to"],
 	)
 	day = getdate(doc.planned_start_date or nowdate())
 	if status not in ("Released", "Superseded", None, ""):
@@ -159,7 +189,12 @@ def validate_work_order_bom(doc, method=None) -> None:
 	if (start and getdate(start) > day) or (end and getdate(end) < day):
 		frappe.throw(
 			_("BOM {0} (revision {1}) is not effective on {2}. Effective {3} to {4}.").format(
-				doc.bom_no, frappe.db.get_value("BOM", doc.bom_no, "automotive_revision"), day, start or "-", end or "-"),
+				doc.bom_no,
+				frappe.db.get_value("BOM", doc.bom_no, "automotive_revision"),
+				day,
+				start or "-",
+				end or "-",
+			),
 			EngineeringControlError,
 		)
 
@@ -169,8 +204,13 @@ def apply_effectivity() -> None:
 	today = getdate(nowdate())
 	for bom in frappe.get_all(
 		"BOM",
-		filters={"docstatus": 1, "is_active": 1, "automotive_effective_from": ("<=", today),
-			"automotive_engineering_status": "Released", "automotive_supersedes": ("is", "set")},
+		filters={
+			"docstatus": 1,
+			"is_active": 1,
+			"automotive_effective_from": ("<=", today),
+			"automotive_engineering_status": "Released",
+			"automotive_supersedes": ("is", "set"),
+		},
 		fields=["name", "item", "automotive_supersedes", "is_default"],
 	):
 		if not bom.is_default:

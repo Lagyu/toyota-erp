@@ -32,7 +32,9 @@ def guard_cancel(doc, method=None) -> None:
 	reason = doc.flags.get("cancel_reason") or frappe.flags.get("automotive_cancel_reason")
 	if not reason:
 		raise CancelReasonRequiredError(
-			_("Cancelling {0} {1} requires a reason (use Cancel With Reason).").format(_(doc.doctype), doc.name)
+			_("Cancelling {0} {1} requires a reason (use Cancel With Reason).").format(
+				_(doc.doctype), doc.name
+			)
 		)
 	doc.flags.cancel_reason = reason
 

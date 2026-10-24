@@ -61,8 +61,10 @@ class TestHealth(IntegrationTestCase):
 		from automotive_core.observability import timing
 
 		def samples():
-			return {(m[0], m[2].get("le") or m[2].get("class"), m[2]["kind"], m[2].get("verb")): m[3]
-				for m in timing.metrics()}
+			return {
+				(m[0], m[2].get("le") or m[2].get("class"), m[2]["kind"], m[2].get("verb")): m[3]
+				for m in timing.metrics()
+			}
 
 		before = samples()
 		timing.observe(0.3, "/api/method/automotive_portals.api.dealer.place_order", "POST", 201)

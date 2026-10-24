@@ -22,8 +22,9 @@ PLANT_VIN_CODES = {"AICHI-VA": "A", "KYUSHU-PT": "K", "NA-PDC": "N"}
 
 
 def _model_for_item(item_code: str) -> str | None:
-	item = frappe.get_cached_value("Item", item_code, ["automotive_vehicle_model", "variant_of", "has_serial_no"],
-		as_dict=True)
+	item = frappe.get_cached_value(
+		"Item", item_code, ["automotive_vehicle_model", "variant_of", "has_serial_no"], as_dict=True
+	)
 	if not item or not item.has_serial_no:
 		return None
 	model = item.automotive_vehicle_model
@@ -85,8 +86,9 @@ def on_work_order_submit(doc, method=None) -> None:
 
 
 def on_work_order_cancel(doc, method=None) -> None:
-	for name in frappe.get_all("Vehicle Unit", filters={"work_order": doc.name, "production_status": "Planned"},
-			pluck="name"):
+	for name in frappe.get_all(
+		"Vehicle Unit", filters={"work_order": doc.name, "production_status": "Planned"}, pluck="name"
+	):
 		frappe.delete_doc("Vehicle Unit", name, ignore_permissions=True, force=True)
 
 
@@ -124,14 +126,18 @@ def on_stock_entry_submit(doc, method=None) -> None:
 		if not frappe.db.exists("Vehicle Unit", serial):
 			continue
 		warehouse = frappe.db.get_value("Serial No", serial, "warehouse")
-		frappe.db.set_value("Vehicle Unit", serial, {
-			"production_status": "Built",
-			"built_at": now_datetime(),
-			"serial_no": serial,
-			"inventory_status": "In Stock",
-			"current_warehouse": warehouse,
-			"quality_status": "Pending Inspection",
-		})
+		frappe.db.set_value(
+			"Vehicle Unit",
+			serial,
+			{
+				"production_status": "Built",
+				"built_at": now_datetime(),
+				"serial_no": serial,
+				"inventory_status": "In Stock",
+				"current_warehouse": warehouse,
+				"quality_status": "Pending Inspection",
+			},
+		)
 		frappe.db.set_value("Serial No", serial, "automotive_vehicle_unit", serial, update_modified=False)
 
 
@@ -140,15 +146,34 @@ def on_stock_entry_cancel(doc, method=None) -> None:
 		return
 	for _item, serial in units_for_entry(doc):
 		if frappe.db.exists("Vehicle Unit", serial):
-			frappe.db.set_value("Vehicle Unit", serial, {"production_status": "Planned", "built_at": None,
-				"inventory_status": "Not In Stock", "current_warehouse": None})
+			frappe.db.set_value(
+				"Vehicle Unit",
+				serial,
+				{
+					"production_status": "Planned",
+					"built_at": None,
+					"inventory_status": "Not In Stock",
+					"current_warehouse": None,
+				},
+			)
 
 
 def set_state(vin: str, **states) -> None:
 	"""Single entry point for other modules to move a unit's state machines."""
-	allowed = {"production_status", "quality_status", "inventory_status", "shipment_status", "invoice_status",
-		"current_warehouse", "final_inspection", "sales_order", "dealer", "warranty_start_date", "warranty_end_date",
-		"warranty_reference"}
+	allowed = {
+		"production_status",
+		"quality_status",
+		"inventory_status",
+		"shipment_status",
+		"invoice_status",
+		"current_warehouse",
+		"final_inspection",
+		"sales_order",
+		"dealer",
+		"warranty_start_date",
+		"warranty_end_date",
+		"warranty_reference",
+	}
 	unknown = set(states) - allowed
 	if unknown:
 		raise ValueError(f"unknown vehicle unit fields {unknown}")

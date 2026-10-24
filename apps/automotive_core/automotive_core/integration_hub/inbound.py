@@ -118,17 +118,29 @@ def accept(partner_code: str, raw_body: bytes | str, source: str = "Internal") -
 		frappe.clear_messages()
 		existing = _existing(partner.name, envelope.message_id)
 		if not existing:
-			raise ConcurrentDeliveryError(_("Message {0} is being stored by another delivery; retry.").format(
-				envelope.message_id)) from None
+			raise ConcurrentDeliveryError(
+				_("Message {0} is being stored by another delivery; retry.").format(envelope.message_id)
+			) from None
 		return _duplicate_response(existing, payload_hash)
 	except frappe.QueryDeadlockError:
-		raise ConcurrentDeliveryError(_("Message {0} is being stored by another delivery; retry.").format(
-			envelope.message_id)) from None
-	log("integration.inbound.accepted", partner=partner.name, message_id=envelope.message_id,
-		message_type=envelope.message_type, inbound=msg.name)
+		raise ConcurrentDeliveryError(
+			_("Message {0} is being stored by another delivery; retry.").format(envelope.message_id)
+		) from None
+	log(
+		"integration.inbound.accepted",
+		partner=partner.name,
+		message_id=envelope.message_id,
+		message_type=envelope.message_type,
+		inbound=msg.name,
+	)
 	_enqueue(msg.name)
-	return {"status": "accepted", "inbound_id": msg.name, "processing_status": msg.status,
-		"result_doctype": None, "result_name": None}
+	return {
+		"status": "accepted",
+		"inbound_id": msg.name,
+		"processing_status": msg.status,
+		"result_doctype": None,
+		"result_name": None,
+	}
 
 
 def _parse(partner, raw_body: bytes) -> InboundEnvelope:
@@ -160,8 +172,13 @@ def _duplicate_response(existing, payload_hash: str) -> dict[str, Any]:
 		raise PayloadConflictError(
 			_("Message id already used with a different payload (inbound {0}).").format(existing.name)
 		)
-	return {"status": "duplicate", "inbound_id": existing.name, "processing_status": existing.status,
-		"result_doctype": existing.result_doctype, "result_name": existing.result_name}
+	return {
+		"status": "duplicate",
+		"inbound_id": existing.name,
+		"processing_status": existing.status,
+		"result_doctype": existing.result_doctype,
+		"result_name": existing.result_name,
+	}
 
 
 def _enqueue(name: str) -> None:
@@ -190,8 +207,12 @@ def receive() -> dict[str, Any]:
 	body = request.get_data(cache=True) or b""
 	if not partner_code or not frappe.db.exists("Integration Partner", partner_code):
 		# probing with guessed partner codes shows in the log (the code as sent, shortened)
-		log("integration.inbound.unknown_partner", level="warning", partner=partner_code[:64],
-			ip=getattr(frappe.local, "request_ip", None))
+		log(
+			"integration.inbound.unknown_partner",
+			level="warning",
+			partner=partner_code[:64],
+			ip=getattr(frappe.local, "request_ip", None),
+		)
 		raise frappe.AuthenticationError(_("Unknown partner."))
 	partner = frappe.get_doc("Integration Partner", partner_code)
 	try:
@@ -244,7 +265,9 @@ def _rate_limit(partner: str, refused: bool = False) -> None:
 
 def _remember_nonce(partner: str, nonce: str) -> None:
 	key = sha256_hex(f"{partner}:{nonce}")
-	doc = frappe.get_doc({"doctype": "Integration Nonce", "nonce_key": key, "partner": partner, "seen_at": now_datetime()})
+	doc = frappe.get_doc(
+		{"doctype": "Integration Nonce", "nonce_key": key, "partner": partner, "seen_at": now_datetime()}
+	)
 	doc.flags.ignore_permissions = True
 	try:
 		frappe.db.savepoint("inbound_nonce")
@@ -286,7 +309,8 @@ def process(name: str, automotive_correlation_id: str | None = None) -> str:
 		if msg.attempts >= max_attempts:
 			return _finish(msg, "Dead Letter", error=error)
 		msg.next_attempt_at = add_to_date(
-			now_datetime(), seconds=backoff_seconds(msg.attempts, cint(_settings().outbox_base_backoff_seconds) or 30)
+			now_datetime(),
+			seconds=backoff_seconds(msg.attempts, cint(_settings().outbox_base_backoff_seconds) or 30),
 		)
 		return _finish(msg, "Failed", error=error)
 	result_doctype, result_name = result if result else (None, None)
@@ -302,14 +326,24 @@ def _finish(msg, status: str, error: str | None = None) -> str:
 	msg.flags.ignore_permissions = True
 	msg.save()
 	if status in ("Dead Letter", "Rejected"):
-		audit.record(f"integration.inbound.{status.lower().replace(' ', '_')}", msg.doctype, msg.name,
-			{"partner": msg.partner, "message_id": msg.message_id, "error": msg.last_error})
+		audit.record(
+			f"integration.inbound.{status.lower().replace(' ', '_')}",
+			msg.doctype,
+			msg.name,
+			{"partner": msg.partner, "message_id": msg.message_id, "error": msg.last_error},
+		)
 	if status == "Dead Letter":
 		from automotive_core.governance.notifications import dead_letter
 
 		dead_letter(msg.doctype, msg.name)
-	log("integration.inbound." + status.lower().replace(" ", "_"), inbound=msg.name, partner=msg.partner,
-		message_id=msg.message_id, attempts=msg.attempts, error=msg.last_error)
+	log(
+		"integration.inbound." + status.lower().replace(" ", "_"),
+		inbound=msg.name,
+		partner=msg.partner,
+		message_id=msg.message_id,
+		attempts=msg.attempts,
+		error=msg.last_error,
+	)
 	commit()
 	return status
 
@@ -330,7 +364,10 @@ def retry_due() -> None:
 	)
 	stale = frappe.get_all(
 		"Integration Inbound Message",
-		filters={"status": ("in", ("Received", "Processing")), "modified": ("<", add_to_date(now, minutes=-5))},
+		filters={
+			"status": ("in", ("Received", "Processing")),
+			"modified": ("<", add_to_date(now, minutes=-5)),
+		},
 		pluck="name",
 		limit=200,
 	)
@@ -370,10 +407,16 @@ def reconciliation() -> dict[str, Any]:
 		where m.status = 'Processed' and m.result_name is not null""",
 		as_dict=True,
 	)
-	orphans = [m.name for m in missing if m.result_doctype and not frappe.db.exists(m.result_doctype, m.result_name)]
+	orphans = [
+		m.name for m in missing if m.result_doctype and not frappe.db.exists(m.result_doctype, m.result_name)
+	]
 	shared = frappe.db.sql(
 		"""select result_doctype, result_name, count(*) c from `tabIntegration Inbound Message`
 		where status='Processed' and result_name is not null group by result_doctype, result_name having c > 1"""
 	)
-	return {"by_status": by_status, "processed_without_result_document": orphans,
-		"deduplicated_by_business_reference": [list(r) for r in shared], "ok": not orphans}
+	return {
+		"by_status": by_status,
+		"processed_without_result_document": orphans,
+		"deduplicated_by_business_reference": [list(r) for r in shared],
+		"ok": not orphans,
+	}

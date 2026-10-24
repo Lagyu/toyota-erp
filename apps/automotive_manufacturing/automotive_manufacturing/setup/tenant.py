@@ -22,13 +22,24 @@ ANDON_REASONS = [
 ]
 
 POLICIES = [
-	{"name": "Engineering Change Release", "doctype": "Engineering Change Order",
-	 "steps": [{"step": 1, "name": "Engineering manager", "role": "Engineering Manager"},
-		{"step": 2, "name": "Quality sign-off", "role": "Quality Manager"}]},
-	{"name": "Quality Disposition Approval", "doctype": "Quality Disposition",
-	 "steps": [{"step": 1, "name": "Quality manager", "role": "Quality Manager"}]},
-	{"name": "Planning Parameter Release", "doctype": "Planning Parameter Set",
-	 "steps": [{"step": 1, "name": "Plant director", "role": "Plant Director"}]},
+	{
+		"name": "Engineering Change Release",
+		"doctype": "Engineering Change Order",
+		"steps": [
+			{"step": 1, "name": "Engineering manager", "role": "Engineering Manager"},
+			{"step": 2, "name": "Quality sign-off", "role": "Quality Manager"},
+		],
+	},
+	{
+		"name": "Quality Disposition Approval",
+		"doctype": "Quality Disposition",
+		"steps": [{"step": 1, "name": "Quality manager", "role": "Quality Manager"}],
+	},
+	{
+		"name": "Planning Parameter Release",
+		"doctype": "Planning Parameter Set",
+		"steps": [{"step": 1, "name": "Plant director", "role": "Plant Director"}],
+	},
 ]
 
 
@@ -38,7 +49,15 @@ def apply(definition, log) -> None:
 			continue
 		if not log.change(f"andon reason {code}"):
 			continue
-		frappe.get_doc({"doctype": "Andon Reason Code", "reason_code": code, "description": description,
-			"category": category, "raises_quality_hold": raises_hold, "stops_line": stops}).insert(ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Andon Reason Code",
+				"reason_code": code,
+				"description": description,
+				"category": category,
+				"raises_quality_hold": raises_hold,
+				"stops_line": stops,
+			}
+		).insert(ignore_permissions=True)
 	for policy in POLICIES:
 		approval_policy(policy, log)

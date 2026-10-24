@@ -28,7 +28,7 @@ from dsl import DocType, class_name, scrub
 REPO = Path(__file__).resolve().parents[3]
 APPS_DIR = REPO / "apps"
 
-CONTROLLER_STUB = '''# Copyright (c) 2026, Toyota ERP Clone contributors
+CONTROLLER_STUB = """# Copyright (c) 2026, Toyota ERP Clone contributors
 # License: GNU General Public License v3. See license.txt
 
 from frappe.model.document import Document
@@ -36,7 +36,7 @@ from frappe.model.document import Document
 
 class {cls}(Document):
 	pass
-'''
+"""
 
 
 def load_specs(app_dir: Path) -> tuple[list[DocType], list]:
@@ -99,10 +99,17 @@ def process_app(app_dir: Path, check: bool, problems: list[str]) -> int:
 		module_dir = package / scrub(spec.module)
 		doctype_dir = module_dir / "doctype" / spec.scrubbed
 		json_path = doctype_dir / f"{spec.scrubbed}.json"
-		for init in (module_dir / "__init__.py", module_dir / "doctype" / "__init__.py", doctype_dir / "__init__.py"):
+		for init in (
+			module_dir / "__init__.py",
+			module_dir / "doctype" / "__init__.py",
+			doctype_dir / "__init__.py",
+		):
 			ensure_file(init, "", check, problems)
 		ensure_file(
-			doctype_dir / f"{spec.scrubbed}.py", CONTROLLER_STUB.format(cls=class_name(spec.name)), check, problems
+			doctype_dir / f"{spec.scrubbed}.py",
+			CONTROLLER_STUB.format(cls=class_name(spec.name)),
+			check,
+			problems,
 		)
 		existing = json.loads(json_path.read_text()) if json_path.exists() else None
 		try:
@@ -121,8 +128,9 @@ def process_app(app_dir: Path, check: bool, problems: list[str]) -> int:
 	return written + process_desk(app, package, declared_modules, desk_specs, check, problems)
 
 
-def process_desk(app: str, package: Path, declared_modules: set[str], desk_specs: list, check: bool,
-		problems: list[str]) -> int:
+def process_desk(
+	app: str, package: Path, declared_modules: set[str], desk_specs: list, check: bool, problems: list[str]
+) -> int:
 	written = 0
 	seen: set[tuple[str, str]] = set()
 	for spec in desk_specs:
@@ -139,7 +147,9 @@ def process_desk(app: str, package: Path, declared_modules: set[str], desk_specs
 					ensure_file(init, "", check, problems)
 				for suffix in (".py", ".js") if folder == "report" else (".js",):
 					if not (target_dir / f"{stem}{suffix}").exists():
-						problems.append(f"{app}: {folder} {doc['name']} needs {stem}{suffix} (written by hand)")
+						problems.append(
+							f"{app}: {folder} {doc['name']} needs {stem}{suffix} (written by hand)"
+						)
 			json_path = target_dir / f"{stem}.json"
 			existing = json.loads(json_path.read_text()) if json_path.exists() else None
 			rendered = render_record(doc, existing)
@@ -166,7 +176,9 @@ def render_record(doc: dict, existing: dict | None) -> dict:
 
 
 def main() -> int:
-	parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+	parser = argparse.ArgumentParser(
+		description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+	)
 	parser.add_argument("--check", action="store_true", help="fail if generated files are missing or stale")
 	parser.add_argument("--app", help="only this app")
 	args = parser.parse_args()

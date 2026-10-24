@@ -20,7 +20,11 @@ class ProductionLine(Document):
 			if warehouse:
 				plant = frappe.db.get_value("Warehouse", warehouse, "automotive_plant")
 				if plant and plant != self.plant:
-					frappe.throw(_("{0} {1} belongs to plant {2}.").format(self.meta.get_label(field), warehouse, plant))
+					frappe.throw(
+						_("{0} {1} belongs to plant {2}.").format(
+							self.meta.get_label(field), warehouse, plant
+						)
+					)
 		seen_codes, seen_sequence = set(), set()
 		for station in self.stations:
 			if station.station_code in seen_codes:
@@ -38,11 +42,17 @@ class ProductionLine(Document):
 
 	def on_update(self):
 		for station in self.stations:
-			frappe.db.set_value("Workstation", station.workstation,
-				{"automotive_plant": self.plant, "automotive_production_line": self.name})
+			frappe.db.set_value(
+				"Workstation",
+				station.workstation,
+				{"automotive_plant": self.plant, "automotive_production_line": self.name},
+			)
 		if self.default_workstation:
-			frappe.db.set_value("Workstation", self.default_workstation,
-				{"automotive_plant": self.plant, "automotive_production_line": self.name})
+			frappe.db.set_value(
+				"Workstation",
+				self.default_workstation,
+				{"automotive_plant": self.plant, "automotive_production_line": self.name},
+			)
 
 	def builds(self, item_code: str) -> bool:
 		"""True when the line is configured to build this item (directly, via template or item group)."""

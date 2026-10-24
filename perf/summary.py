@@ -70,9 +70,13 @@ class Aggregate:
 
 	def row(self) -> dict:
 		count = sum(self.times.values())
-		out = {"requests": self.requests, "failures": self.failures,
+		out = {
+			"requests": self.requests,
+			"failures": self.failures,
 			"fail_ratio": self.failures / self.requests if self.requests else 0.0,
-			"mean_ms": round(self.total / self.requests) if self.requests else 0, "max_ms": round(self.max)}
+			"mean_ms": round(self.total / self.requests) if self.requests else 0,
+			"max_ms": round(self.max),
+		}
 		for share in PERCENTILES:
 			out[f"p{share * 100:g}_ms"] = percentile(self.times, count, share) if count else 0
 		return out
@@ -126,6 +130,7 @@ def bound(le: str) -> float:
 def histogram_delta(before: list, after: list) -> dict[tuple[str, str], dict]:
 	"""Requests the server timed during the run, per (kind, verb): bucket counts of the
 	second snapshot minus the first."""
+
 	def buckets(samples):
 		out: dict[tuple[str, str], dict[str, float]] = {}
 		for name, labels, value in samples:
@@ -178,22 +183,35 @@ def server_side(results: Path, targets: dict[str, float]) -> dict | None:
 		target = targets.get(verb)
 		rows[f"{kind}/{verb}"] = {
 			"requests": int(data["count"]),
-			**{f"p{share * 100:g}_ms": round(histogram_quantile(data["buckets"], share) * 1000) for share in PERCENTILES},
+			**{
+				f"p{share * 100:g}_ms": round(histogram_quantile(data["buckets"], share) * 1000)
+				for share in PERCENTILES
+			},
 			"share_within_target": share_within(data["buckets"], target) if target else None,
 			"target_s": target,
 		}
-	return {"histogram": rows, "failed_jobs_before": failed_jobs(first), "failed_jobs_after": failed_jobs(second)}
+	return {
+		"histogram": rows,
+		"failed_jobs_before": failed_jobs(first),
+		"failed_jobs_after": failed_jobs(second),
+	}
 
 
 def scrape(url: str, token_file: str, output: str) -> int:
 	import requests
 
 	token = Path(token_file).read_text().strip()
-	response = requests.get(f"{url.rstrip('/')}/api/method/automotive_core.ops.health.metrics",
-		headers={"X-Hinode-Metrics-Token": token}, timeout=60)
+	response = requests.get(
+		f"{url.rstrip('/')}/api/method/automotive_core.ops.health.metrics",
+		headers={"X-Hinode-Metrics-Token": token},
+		timeout=60,
+	)
 	if response.status_code != 200 or HISTOGRAM not in response.text:
-		print(f"metrics endpoint answered HTTP {response.status_code} without the request histogram "
-			"(wrong token, or no automotive_metrics_token on the site)", file=sys.stderr)
+		print(
+			f"metrics endpoint answered HTTP {response.status_code} without the request histogram "
+			"(wrong token, or no automotive_metrics_token on the site)",
+			file=sys.stderr,
+		)
 		return 1
 	Path(output).write_text(response.text)
 	return 0
@@ -205,8 +223,15 @@ def scrape(url: str, token_file: str, output: str) -> int:
 
 
 def table(title: str, rows: dict[str, dict], extra: list[tuple[str, str]] | None = None) -> list[str]:
-	columns = [("requests", "requests"), ("fail %", "fail_ratio"), ("p50", "p50_ms"), ("p95", "p95_ms"),
-		("p99", "p99_ms"), ("max", "max_ms"), *(extra or [])]
+	columns = [
+		("requests", "requests"),
+		("fail %", "fail_ratio"),
+		("p50", "p50_ms"),
+		("p95", "p95_ms"),
+		("p99", "p99_ms"),
+		("max", "max_ms"),
+		*(extra or []),
+	]
 	width = max([len(name) for name in rows] + [len(title.split(" (")[0]), 12])
 	lines = [title, f"{'':<{width}}  " + "  ".join(f"{label:>9}" for label, _ in columns)]
 	for name, row in rows.items():
@@ -228,7 +253,9 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 	if not stats_file.exists():
 		print(f"no {stats_file}: the run did not finish (see locust.log)", file=sys.stderr)
 		return 2
-	entries = [e for e in json.loads(stats_file.read_text()) if e.get("num_requests") or e.get("num_failures")]
+	entries = [
+		e for e in json.loads(stats_file.read_text()) if e.get("num_requests") or e.get("num_failures")
+	]
 	if not entries:
 		print("no requests were made", file=sys.stderr)
 		return 2
@@ -251,42 +278,77 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 		if row["result"] != "ok":
 			reasons.append(f"{group} p95 {row['p95_ms']} ms > {target:g} s")
 	if total and failures / total > max_fail_ratio:
-		reasons.append(f"{failures} of {total} requests failed ({failures / total:.2%} > {max_fail_ratio:.2%})")
+		reasons.append(
+			f"{failures} of {total} requests failed ({failures / total:.2%} > {max_fail_ratio:.2%})"
+		)
 	if exceptions:
 		reasons.append(f"{exceptions} errors inside the test itself (locust_exceptions.csv)")
-	over = {name: row for name, row in requests.items()
-		if group_of(name) in targets_s and row["p95_ms"] > targets_s[group_of(name)] * 1000}
+	over = {
+		name: row
+		for name, row in requests.items()
+		if group_of(name) in targets_s and row["p95_ms"] > targets_s[group_of(name)] * 1000
+	}
 	slowest = dict(sorted(requests.items(), key=lambda item: -item[1]["p95_ms"])[:15])
 	server = server_side(results, {"read": targets_s.get("read"), "write": targets_s.get("write")})
 
 	lines = []
 	if run:
-		lines += [f"Run {results.name}: {run.get('users')} users (+{run.get('spawn_rate')}/s) for {run.get('duration')} "
+		lines += [
+			f"Run {results.name}: {run.get('users')} users (+{run.get('spawn_rate')}/s) for {run.get('duration')} "
 			f"against {run.get('url')}; commit {run.get('git_commit')}{' (dirty)' if run.get('git_dirty') else ''}"
-			+ (f"; {run['label']}" if run.get("label") else ""), ""]
+			+ (f"; {run['label']}" if run.get("label") else ""),
+			"",
+		]
 	reads = groups.get("read", {}).get("requests", 0)
 	writes = groups.get("write", {}).get("requests", 0)
-	lines += table("Request groups (client-side response time, ms)", groups,
-		[("target", "target_p95_ms"), ("result", "result")])
+	lines += table(
+		"Request groups (client-side response time, ms)",
+		groups,
+		[("target", "target_p95_ms"), ("result", "result")],
+	)
 	if reads + writes:
-		lines += [f"Mix: {reads} reads / {writes} writes ({reads / (reads + writes):.0%} / {writes / (reads + writes):.0%})", ""]
+		lines += [
+			f"Mix: {reads} reads / {writes} writes ({reads / (reads + writes):.0%} / {writes / (reads + writes):.0%})",
+			"",
+		]
 	lines += table("Operations", operations)
 	lines += table("Slowest requests by p95", slowest)
 	if over:
 		lines += table("Requests over their group's p95 target", over)
 	if server:
-		lines += table("Server side: erp_http_request_duration_seconds over the run (ms, bucket estimates)",
-			server["histogram"], [("in target", "share_within_target")])
-		lines += [f"Failed background jobs (erp_queue_failed_jobs): {server['failed_jobs_before']:g} before, "
-			f"{server['failed_jobs_after']:g} after", ""]
+		lines += table(
+			"Server side: erp_http_request_duration_seconds over the run (ms, bucket estimates)",
+			server["histogram"],
+			[("in target", "share_within_target")],
+		)
+		lines += [
+			f"Failed background jobs (erp_queue_failed_jobs): {server['failed_jobs_before']:g} before, "
+			f"{server['failed_jobs_after']:g} after",
+			"",
+		]
 	lines.append("RESULT: " + ("targets met" if not reasons else "FAILED - " + "; ".join(reasons)))
 	text = "\n".join(lines)
 	print(text)
 	(results / "summary.txt").write_text(text + "\n")
-	(results / "summary.json").write_text(json.dumps({
-		"run": run, "targets_p95_s": targets_s, "max_fail_ratio": max_fail_ratio, "passed": not reasons,
-		"reasons": reasons, "exceptions": exceptions, "groups": groups, "operations": operations,
-		"requests": requests, "server": server}, indent=1, sort_keys=True) + "\n")
+	(results / "summary.json").write_text(
+		json.dumps(
+			{
+				"run": run,
+				"targets_p95_s": targets_s,
+				"max_fail_ratio": max_fail_ratio,
+				"passed": not reasons,
+				"reasons": reasons,
+				"exceptions": exceptions,
+				"groups": groups,
+				"operations": operations,
+				"requests": requests,
+				"server": server,
+			},
+			indent=1,
+			sort_keys=True,
+		)
+		+ "\n"
+	)
 	return 0 if not reasons else 1
 
 
@@ -300,7 +362,9 @@ def main(argv: list[str]) -> int:
 	parser.add_argument("results", type=Path)
 	parser.add_argument("--read-p95", type=float, default=2.0, help="seconds (default 2)")
 	parser.add_argument("--write-p95", type=float, default=4.0, help="seconds (default 4)")
-	parser.add_argument("--max-fail-ratio", type=float, default=0.01, help="share of failed requests (default 0.01)")
+	parser.add_argument(
+		"--max-fail-ratio", type=float, default=0.01, help="share of failed requests (default 0.01)"
+	)
 	args = parser.parse_args(argv)
 	return evaluate(args.results, {"read": args.read_p95, "write": args.write_p95}, args.max_fail_ratio)
 

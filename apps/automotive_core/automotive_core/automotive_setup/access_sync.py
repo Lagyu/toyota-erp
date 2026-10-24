@@ -73,8 +73,13 @@ def on_plant_assignment_change(doc) -> None:
 		order_by="from_date desc",
 		limit=1,
 	)
-	frappe.db.set_value("Employee", doc.employee, "automotive_plant", employee_plant[0] if employee_plant else None,
-		update_modified=False)
+	frappe.db.set_value(
+		"Employee",
+		doc.employee,
+		"automotive_plant",
+		employee_plant[0] if employee_plant else None,
+		update_modified=False,
+	)
 
 
 # Partner access ----------------------------------------------------------------------
@@ -149,13 +154,20 @@ def remove_contact_link(doc) -> None:
 		return
 	still_active = frappe.db.exists(
 		"Partner User Access",
-		{"user": doc.user, "status": "Active", "name": ("!=", doc.name), "party_type": party_type,
-		 "supplier" if party_type == "Supplier" else "customer": party},
+		{
+			"user": doc.user,
+			"status": "Active",
+			"name": ("!=", doc.name),
+			"party_type": party_type,
+			"supplier" if party_type == "Supplier" else "customer": party,
+		},
 	)
 	if still_active:
 		return
 	contact = frappe.get_doc("Contact", contact_name)
-	contact.links = [lnk for lnk in contact.links if not (lnk.link_doctype == party_type and lnk.link_name == party)]
+	contact.links = [
+		lnk for lnk in contact.links if not (lnk.link_doctype == party_type and lnk.link_name == party)
+	]
 	contact.flags.ignore_permissions = True
 	contact.save()
 
@@ -183,8 +195,11 @@ def validate_partner_access(doc) -> None:
 	)
 	for row in other_party:
 		if party_of(row) != (party_type, party):
-			frappe.throw(_("{0} already represents {1}; a portal user belongs to exactly one partner.").format(
-				doc.user, party_of(row)[1]))
+			frappe.throw(
+				_("{0} already represents {1}; a portal user belongs to exactly one partner.").format(
+					doc.user, party_of(row)[1]
+				)
+			)
 	if doc.to_date and getdate(doc.to_date) < getdate(doc.from_date):
 		frappe.throw(_("To Date must be on or after From Date."))
 
@@ -200,8 +215,11 @@ def refresh_assignments() -> None:
 			doc.db_set("status", status, update_modified=False)
 			on_plant_assignment_change(doc)
 			audit.record("access.plant_assignment." + status.lower(), "Plant Assignment", row.name)
-	for row in frappe.get_all("Partner User Access", filters={"status": ("!=", "Revoked")},
-			fields=["name", "status", "from_date", "to_date"]):
+	for row in frappe.get_all(
+		"Partner User Access",
+		filters={"status": ("!=", "Revoked")},
+		fields=["name", "status", "from_date", "to_date"],
+	):
 		status = effective_status(row.from_date, row.to_date)
 		if status != row.status:
 			doc = frappe.get_doc("Partner User Access", row.name)
