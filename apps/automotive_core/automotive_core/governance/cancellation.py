@@ -50,3 +50,16 @@ def cancel_with_reason(doctype: str, name: str, reason: str) -> dict:
 	doc.cancel()
 	doc.add_comment("Info", _("Cancelled with reason: {0}").format(reason))
 	return {"name": doc.name, "docstatus": doc.docstatus}
+
+
+def cancel_linked(doctype: str, name: str, reason: str) -> None:
+	"""Cancel a document created by (and owned by the lifecycle of) another document that
+	is being cancelled; the parent's cancellation — already authorised and justified —
+	carries the reason down."""
+	doc = frappe.get_doc(doctype, name)
+	if doc.docstatus != 1:
+		return
+	doc.flags.cancel_reason = reason
+	doc.flags.ignore_permissions = True
+	doc.cancel()
+	doc.add_comment("Info", _("Cancelled with {0}").format(reason))

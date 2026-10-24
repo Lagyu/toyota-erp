@@ -13,7 +13,7 @@ from frappe.utils import add_days, flt, nowdate
 
 from automotive_core.governance.approvals import ApprovalRequiredError
 from automotive_core.integration_hub import inbound
-from automotive_core.tests.utils import AICHI, KYUSHU, approve, as_user
+from automotive_core.tests.utils import AICHI, KYUSHU, approve, as_user, make_user
 from automotive_manufacturing.mes.production import build_entry
 from automotive_manufacturing.tests import catalog
 from automotive_supply_chain.tests import helpers as h
@@ -179,10 +179,7 @@ class TestIntercompanyJourney(JourneyTestCase):
 	def test_intercompany_shipment_balances(self):
 		from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_inter_company_purchase_invoice
 		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
-		from erpnext.stock.doctype.delivery_note.delivery_note import (
-			make_inter_company_purchase_receipt,
-			make_sales_invoice,
-		)
+		from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_invoice
 
 		from automotive_supply_chain.intercompany.transfer_pricing import reconciliation
 
@@ -213,7 +210,7 @@ class TestIntercompanyJourney(JourneyTestCase):
 		with as_user(h.BUYER):
 			po.reload()
 			po.submit()
-		from automotive_supply_chain.intercompany.orders import create_seller_order
+		from automotive_supply_chain.intercompany.handoff import create_buyer_receipt, create_seller_order
 
 		with as_user(h.SALES_MGR):  # the seller's desk may not read Aichi's PO; the mapping is a system step
 			so = frappe.get_doc("Sales Order", create_seller_order(po.name, add_days(nowdate(), 2), h.KYUSHU_FG))
@@ -234,11 +231,16 @@ class TestIntercompanyJourney(JourneyTestCase):
 		dn = make_delivery_note(so.name)
 		dn.insert(ignore_permissions=True)
 		dn.submit()
-		pr = make_inter_company_purchase_receipt(dn.name)
-		for item in pr.items:
-			item.warehouse = catalog.PARTS_STORE
-		pr.insert(ignore_permissions=True)
-		pr.submit()
+		receiver = "receiving.aichi.sc@hinode.example"
+		make_user(receiver, ["Warehouse Clerk", "Stock User"])
+		frappe.get_doc({"doctype": "User Permission", "user": receiver, "allow": "Company", "for_value": AICHI,
+			"apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
+		with as_user(receiver):  # Aichi-scoped clerk: Kyushu's delivery note is out of their scope
+			with self.assertRaises(frappe.PermissionError):
+				frappe.get_doc("Delivery Note", dn.name).check_permission("read")
+			pr = frappe.get_doc("Purchase Receipt", create_buyer_receipt(dn.name, catalog.PARTS_STORE))
+			pr.submit()
+		self.assertEqual((pr.owner, pr.company), (receiver, AICHI))
 		si = make_sales_invoice(dn.name)
 		si.insert(ignore_permissions=True)
 		si.submit()

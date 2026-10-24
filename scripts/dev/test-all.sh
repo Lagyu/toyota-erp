@@ -2,7 +2,11 @@
 # Run every app's integration tests on the test site; summary per app; non-zero on failure.
 set -uo pipefail
 source "$(dirname "$0")/../lib/common.sh"
-apps=(${@:-automotive_core automotive_manufacturing automotive_supply_chain automotive_portals automotive_seed})
+if (($#)); then
+	apps=("$@")
+else
+	apps=(automotive_core automotive_manufacturing automotive_supply_chain automotive_portals automotive_seed)
+fi
 status=0
 for app in "${apps[@]}"; do
 	log=/home/frappe/dev/logs/test-$app.log

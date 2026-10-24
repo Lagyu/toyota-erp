@@ -1,0 +1,24 @@
+# ClamAV daemon for upload scanning (automotive_core.files: Automotive Settings ->
+# virus scan mode "Required", clamd host "clamav"). Enabled with CLAMAV=1 (default in
+# production and staging). Needs ~2 GB RAM and outbound access for signature updates.
+services:
+  clamav:
+    image: ${CLAMAV_IMAGE:?}
+    restart: unless-stopped
+    networks: [backend, egress]   # egress: signature updates (freshclam)
+    logging:
+      driver: local
+      options: { max-size: 20m, max-file: "5" }
+    healthcheck:
+      test: ["CMD", "clamdcheck.sh"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 300s
+    volumes:
+      - clamav-db:/var/lib/clamav
+    mem_limit: ${CLAMAV_MEM_LIMIT:-2g}
+
+
+volumes:
+  clamav-db:

@@ -80,6 +80,8 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	# Receiving: ERPNext validates the supplier's payable account currency on every receipt,
 	# which needs "select" on Account (ERPNext grants it to Stock Manager but not Stock User).
 	("Account", "Warehouse Clerk", ("select",)),
+	# receiving registers supplier lots as batches
+	("Batch", "Warehouse Clerk", WRITE),
 	# Logistics: shipments and dispatch.
 	("Shipment", "Logistics Coordinator", SUBMIT),
 	("Delivery Note", "Logistics Coordinator", READ),

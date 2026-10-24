@@ -208,6 +208,10 @@ approval_policies:
     category_values: [Journal Entry, Inter Company Journal Entry]
     steps:
       - {step: 1, name: Group controller, role: Group Controller}
+  - name: Period Close Approval
+    doctype: Period Close Checklist
+    steps:
+      - {step: 1, name: Second controller review, role: Group Controller}
   - name: Account Provisioning
     doctype: User Provisioning Request
     steps:
@@ -226,11 +230,19 @@ settings:
     # ERPNext's hard stop would prevent recording the rejected quantity at all
     action_if_quality_inspection_is_rejected: Warn
     action_if_quality_inspection_is_not_submitted: Stop
+    # pre-delivery inspection at the North American centre inspects vehicles already received
+    allow_to_make_quality_inspection_after_purchase_or_delivery: 1
   Buying Settings:
     po_required: "Yes"
     pr_required: "Yes"
     # rate differences are governed by the three-way match tolerances (automotive_supply_chain)
     maintain_same_rate: 0
+  Accounts Settings:
+    # Hard ceiling on billing above the received value. Price variances beyond the
+    # three-way-match tolerance (2%) already block the invoice until a procurement manager
+    # accepts them (automotive_supply_chain); ERPNext refuses anything above this ceiling
+    # even when accepted, which forces an order amendment instead.
+    over_billing_allowance: 10
   Manufacturing Settings:
     backflush_raw_materials_based_on: BOM
     overproduction_percentage_for_work_order: 0

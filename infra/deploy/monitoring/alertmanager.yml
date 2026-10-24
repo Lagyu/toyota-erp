@@ -1,0 +1,18 @@
+# Alertmanager routing. Replace the receiver with the operations team's channel before
+# go-live (ALERTMANAGER_CONFIG may point to a file kept outside the repository).
+route:
+  receiver: operations
+  group_by: [alertname]
+  group_wait: 1m
+  group_interval: 10m
+  repeat_interval: 4h
+  routes:
+    - matchers: [severity="critical"]
+      receiver: operations
+      repeat_interval: 1h
+
+receivers:
+  - name: operations
+    webhook_configs:
+      - url: http://127.0.0.1:9/replace-with-operations-webhook
+        send_resolved: true

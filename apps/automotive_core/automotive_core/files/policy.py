@@ -26,6 +26,12 @@ SYSTEM_ATTACHMENT_DOCTYPES = {
 	"Email Queue",
 	"Communication",
 	"User",
+	# ERPNext internals: reposting keeps its affected-transaction log as a gzip attachment
+	# (stock_ledger.update_args_in_repost_item_valuation); statement imports keep their CSV
+	"Repost Item Valuation",
+	"Bank Statement Import",
+	"Bank Statement Import Log",
+	"Code List",
 }
 # Extensions whose magic bytes we can and must verify.
 SNIFFED = {

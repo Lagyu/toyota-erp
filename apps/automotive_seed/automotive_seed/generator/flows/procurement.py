@@ -202,7 +202,7 @@ class Procurement:
 		self.returns(day)
 
 	def intercompany_receipts(self, day: dt.date) -> None:
-		from erpnext.stock.doctype.delivery_note.delivery_note import make_inter_company_purchase_receipt
+		from automotive_supply_chain.intercompany.handoff import create_buyer_receipt
 
 		ctx = self.ctx
 		for dn, arrival in sorted(self.s.get("ic_transit", {}).items()):
@@ -216,12 +216,9 @@ class Procurement:
 			clerk = self.sim.person("Warehouse Clerk", plant)
 			with ctx.step(6, 15):
 				with ctx.as_user(clerk):
-					pr = make_inter_company_purchase_receipt(dn)
 					target = store_for(plant) if buyer_company != NA else frappe.get_cached_value("Plant", plant,
 						"finished_goods_warehouse")
-					for row in pr.items:
-						row.warehouse = target
-					pr.insert()
+					pr = frappe.get_doc("Purchase Receipt", create_buyer_receipt(dn, target))
 					pr.submit()
 			ctx.count("Purchase Receipt")
 			self.s["ic_transit"].pop(dn, None)
@@ -297,8 +294,8 @@ class Procurement:
 					raise RuntimeError(f"Planning Run {run} {doc.status}: {(doc.error or '')[-800:]}")
 				purchases = 0
 				for p in doc.proposals:
-					is_buy = p.proposal_type == "Purchase" and p.supplier and not frappe.db.get_value(
-						"Supplier", p.supplier, "is_internal_supplier")
+					is_buy = bool(p.proposal_type == "Purchase" and p.supplier and not frappe.db.get_value(
+						"Supplier", p.supplier, "is_internal_supplier"))
 					p.decision = "Approved" if is_buy else "Rejected"
 					purchases += int(is_buy)
 				with ctx.as_user(planner):
@@ -333,7 +330,7 @@ class Procurement:
 
 	def intercompany_powertrains(self, day: dt.date) -> None:
 		"""Aichi's weekly order for Kyushu powertrains (transfer-priced); Kyushu's mirrored sales order."""
-		from automotive_supply_chain.intercompany.orders import create_seller_order
+		from automotive_supply_chain.intercompany.handoff import create_seller_order
 
 		ctx = self.ctx
 		need = self.sim.production.powertrain_need(add_days(day, 5))

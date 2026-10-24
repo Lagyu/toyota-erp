@@ -5,7 +5,8 @@
 * Accepted final / pre-delivery inspection of a vehicle: quality status *Released*,
   unless an active hold still covers the unit.
 Inspections are submittable and therefore immutable; a correction is a cancel (with
-reason, audited) and an amended inspection.
+reason, audited) and an amended inspection. After rework a unit is inspected again with a
+new inspection of the same document row (``make_reinspection``); the rejected one stays.
 """
 
 from __future__ import annotations
@@ -102,3 +103,35 @@ def on_cancel(doc, method=None) -> None:
 	serial = doc.get("item_serial_no")
 	if serial and frappe.db.get_value("Vehicle Unit", serial, "final_inspection") == doc.name:
 		frappe.db.set_value("Vehicle Unit", serial, {"quality_status": "Pending Inspection", "final_inspection": None})
+
+
+@frappe.whitelist(methods=["POST"])
+def make_reinspection(quality_inspection: str, status: str = "Accepted", remarks: str | None = None) -> str:
+	"""Re-inspect a unit/lot after rework: a new inspection of the same document row as the
+	rejected one (ERPNext allows one inspection per row unless the row is named explicitly).
+	Returns the draft inspection; the inspector submits it."""
+	frappe.has_permission("Quality Inspection", "create", throw=True)
+	original = frappe.get_doc("Quality Inspection", quality_inspection)
+	if original.docstatus != 1 or original.status != "Rejected":
+		frappe.throw(_("Only a submitted, rejected inspection can be re-inspected ({0} is {1}).").format(
+			original.name, original.status))
+	doc = frappe.get_doc({
+		"doctype": "Quality Inspection",
+		"inspection_type": original.inspection_type,
+		"automotive_inspection_stage": original.get("automotive_inspection_stage"),
+		"reference_type": original.reference_type,
+		"reference_name": original.reference_name,
+		"child_row_reference": original.child_row_reference,
+		"item_code": original.item_code,
+		"item_serial_no": original.item_serial_no,
+		"batch_no": original.batch_no,
+		"sample_size": original.sample_size,
+		"company": original.company,
+		"quality_inspection_template": original.quality_inspection_template,
+		"inspected_by": frappe.session.user,
+		"manual_inspection": 1,
+		"status": status,
+		"remarks": remarks or _("Re-inspection after rework of {0}").format(original.name),
+	})
+	doc.insert()
+	return doc.name

@@ -1,4 +1,4 @@
-// Desk extensions shared by every Toyota ERP Clone app:
+// Desk extensions shared by every Hinode ERP app:
 //  * approval panel on DocTypes governed by an Approval Policy
 //  * "cancel with reason" for DocTypes whose cancellation must be justified
 frappe.provide("automotive");
@@ -149,4 +149,30 @@ $(document).on("app_ready", () => {
 			},
 		});
 	});
+});
+
+// Period close (ERP-09): run the ledger checks, waive a failed check with a reason.
+frappe.ui.form.on("Period Close Checklist", {
+	refresh(frm) {
+		if (frm.is_new() || frm.doc.docstatus !== 0) return;
+		const m = "automotive_core.finance_controls.period_close.";
+		frm.add_custom_button(__("Run Checks"), () =>
+			automotive.call(m + "run_checks", { name: frm.docname }).then(() => frm.reload_doc())
+		);
+		const failed = (frm.doc.tasks || []).filter((t) => t.status === "Failed");
+		if (failed.length) {
+			frm.add_custom_button(__("Waive a Check"), () =>
+				frappe.prompt(
+					[
+						{ fieldname: "check_code", fieldtype: "Select", label: __("Check"), reqd: 1,
+							options: failed.map((t) => t.check_code).join("\n") },
+						{ fieldname: "reason", fieldtype: "Small Text", label: __("Reason"), reqd: 1 },
+					],
+					(v) => automotive.call(m + "waive", { name: frm.docname, ...v }).then(() => frm.reload_doc()),
+					__("Waive a failed check"),
+					__("Waive")
+				)
+			);
+		}
+	},
 });

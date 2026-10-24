@@ -265,3 +265,21 @@ def _repost_pending() -> None:
 def request_stop(run: str) -> None:
 	frappe.only_for("System Manager")
 	frappe.db.set_value("Seed Run", run, "stop_requested", 1)
+
+
+def revalidate(profile: str = "small", seed: int | None = None) -> dict:
+	"""Re-run the invariant checks of a finished run and store the result on its Seed Run."""
+	guard()
+	frappe.set_user("Administrator")
+	from automotive_seed.generator import validate
+
+	spec = load_profile(profile)
+	if seed is not None:
+		spec["seed"] = int(seed)
+	name = f"SEED-{spec['profile']}-{spec['seed']}"
+	ctx = SeedContext(name, spec)
+	result = validate.run(ctx, load_state(name))
+	frappe.db.set_value("Seed Run", name, {"validation": json.dumps(result, indent=1, default=str),
+		"status": "Validated" if result["ok"] else "Validation Failed"})
+	frappe.db.commit()
+	return {"ok": result["ok"], "failed": [c["check"] for c in result["checks"] if not c["ok"]]}

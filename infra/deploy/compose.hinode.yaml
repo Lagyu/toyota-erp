@@ -1,0 +1,190 @@
+# Hinode production/staging override, applied on top of the pinned frappe_docker files:
+#
+#   frappe_docker/compose.yaml
+#   frappe_docker/overrides/compose.mariadb.yaml        (+ compose.mariadb-secrets.yaml)
+#   frappe_docker/overrides/compose.redis.yaml
+#   frappe_docker/overrides/compose.https.yaml          (Let's Encrypt)  or  compose.tls-files.yaml
+#   infra/deploy/compose.hinode.yaml                    (this file)
+#   infra/deploy/compose.monitoring.yaml                (optional)
+#
+# Assembled by scripts/deploy/compose.sh <environment>. It adds: the immutable application
+# image, private networks (the database and Redis have no route out), resource limits,
+# health checks, container hardening, MariaDB/Redis tuning and the scheduled, encrypted
+# off-host backup job. ClamAV: compose.clamav.yaml.
+
+x-app: &app
+  image: ${CUSTOM_IMAGE:?set CUSTOM_IMAGE}:${CUSTOM_TAG:?set CUSTOM_TAG}
+  pull_policy: ${PULL_POLICY:-missing}
+  init: true
+  security_opt: [no-new-privileges:true]
+  cap_drop: [ALL]
+  tmpfs: [/tmp:size=512m]
+  logging: &logging
+    driver: local
+    options: { max-size: 20m, max-file: "5" }
+  networks: [backend, egress]
+
+x-site-health: &site-health
+  interval: 30s
+  timeout: 5s
+  retries: 3
+  start_period: 60s
+
+services:
+  configurator:
+    <<: *app
+    networks: [backend]
+
+  backend:
+    <<: *app
+    environment:
+      SITE_NAME: ${SITE_NAME:?}
+      GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
+      GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
+      GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
+    healthcheck:
+      <<: *site-health
+      test: ["CMD-SHELL", "curl -fsS -H \"Host: $$SITE_NAME\" http://127.0.0.1:8000/api/method/automotive_core.ops.health.live >/dev/null"]
+    mem_limit: ${BACKEND_MEM_LIMIT:-3g}
+    cpus: ${BACKEND_CPUS:-4}
+    pids_limit: 512
+
+  frontend:
+    <<: *app
+    networks: [edge, backend]
+    cap_drop: [ALL]
+    environment:
+      SITE_NAME: ${SITE_NAME:?}
+      BACKEND: backend:8000
+      SOCKETIO: websocket:9000
+      FRAPPE_SITE_NAME_HEADER: ${FRAPPE_SITE_NAME_HEADER:-$$host}
+      UPSTREAM_REAL_IP_ADDRESS: ${UPSTREAM_REAL_IP_ADDRESS:-0.0.0.0/0}
+      UPSTREAM_REAL_IP_HEADER: X-Forwarded-For
+      UPSTREAM_REAL_IP_RECURSIVE: "on"
+      PROXY_READ_TIMEOUT: ${PROXY_READ_TIMEOUT:-120}
+      CLIENT_MAX_BODY_SIZE: ${CLIENT_MAX_BODY_SIZE:-25m}
+    healthcheck:
+      <<: *site-health
+      test: ["CMD-SHELL", "curl -fsS -H \"Host: $$SITE_NAME\" http://127.0.0.1:8080/api/method/automotive_core.ops.health.live >/dev/null"]
+    mem_limit: ${FRONTEND_MEM_LIMIT:-256m}
+    cpus: ${FRONTEND_CPUS:-1}
+
+  websocket:
+    <<: *app
+    networks: [backend]
+    healthcheck:
+      <<: *site-health
+      test: ["CMD", "node", "-e", "require('net').connect(9000,'127.0.0.1').on('connect',()=>process.exit(0)).on('error',()=>process.exit(1))"]
+    mem_limit: ${WEBSOCKET_MEM_LIMIT:-512m}
+    cpus: 1
+
+  queue-short:
+    <<: *app
+    command: bench worker --queue short,default
+    mem_limit: ${WORKER_MEM_LIMIT:-2g}
+    cpus: ${WORKER_CPUS:-2}
+
+  queue-long:
+    <<: *app
+    command: bench worker --queue long,default,short
+    mem_limit: ${WORKER_MEM_LIMIT:-2g}
+    cpus: ${WORKER_CPUS:-2}
+
+  scheduler:
+    <<: *app
+    mem_limit: 512m
+    cpus: 1
+    labels:
+      ofelia.enabled: "true"
+      # nightly encrypted backup to the off-host restic repository
+      ofelia.job-exec.backup.schedule: "${BACKUP_SCHEDULE:-0 30 2 * * *}"
+      ofelia.job-exec.backup.command: "bash /opt/hinode/ops/backup/backup.sh"
+      ofelia.job-exec.backup.user: "frappe"
+      # weekly restore drill into a scratch site (evidence in sites/<site>/private/backups/drills/)
+      ofelia.job-exec.restore-drill.schedule: "${RESTORE_DRILL_SCHEDULE:-0 30 4 * * 0}"
+      ofelia.job-exec.restore-drill.command: "bash /opt/hinode/ops/backup/restore-drill.sh"
+      ofelia.job-exec.restore-drill.user: "frappe"
+    environment:
+      SITE_NAME: ${SITE_NAME:?}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY:?set RESTIC_REPOSITORY (off-host)}
+      RESTIC_PASSWORD_FILE: /run/secrets/restic_password
+      RESTIC_KEEP_DAILY: ${RESTIC_KEEP_DAILY:-14}
+      RESTIC_KEEP_WEEKLY: ${RESTIC_KEEP_WEEKLY:-8}
+      RESTIC_KEEP_MONTHLY: ${RESTIC_KEEP_MONTHLY:-12}
+      AWS_ACCESS_KEY_ID: ${RESTIC_AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${RESTIC_AWS_SECRET_ACCESS_KEY:-}
+      DB_ROOT_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [restic_password, db_password]
+    volumes:
+      - ../../ops/backup:/opt/hinode/ops/backup:ro
+
+  cron:
+    image: ${OFELIA_IMAGE:?}
+    restart: unless-stopped
+    command: daemon --docker
+    depends_on: [scheduler]
+    security_opt: [no-new-privileges:true]
+    logging: *logging
+    networks: [backend]
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    mem_limit: 128m
+
+  db:
+    image: ${MARIADB_IMAGE:?}
+    networks: [backend]
+    logging: *logging
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --innodb-buffer-pool-size=${DB_BUFFER_POOL:-2G}
+      - --innodb-log-file-size=512M
+      - --max-connections=${DB_MAX_CONNECTIONS:-400}
+      - --max-allowed-packet=256M
+      # binary log: point-in-time recovery between nightly backups
+      - --log-bin=mariadb-bin
+      - --binlog-format=ROW
+      - --binlog-expire-logs-seconds=${DB_BINLOG_RETENTION_SECONDS:-1209600}
+      # the immutability triggers (automotive_core.setup.db_guards) are created by the site user
+      - --log-bin-trust-function-creators=1
+    mem_limit: ${DB_MEM_LIMIT:-6g}
+    cpus: ${DB_CPUS:-4}
+
+  redis-cache:
+    image: ${REDIS_IMAGE:?}
+    networks: [backend]
+    logging: *logging
+    command: ["redis-server", "--maxmemory", "${REDIS_CACHE_MAXMEMORY:-768mb}", "--maxmemory-policy", "allkeys-lru",
+      "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1g
+
+  redis-queue:
+    image: ${REDIS_IMAGE:?}
+    networks: [backend]
+    logging: *logging
+    # jobs survive a restart: append-only file, fsync every second
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+
+networks:
+  edge: {}
+  backend:
+    internal: true
+  egress: {}
+
+secrets:
+  restic_password:
+    file: ${RESTIC_PASSWORD_FILE:?set RESTIC_PASSWORD_FILE}

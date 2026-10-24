@@ -1,0 +1,101 @@
+# syntax=docker/dockerfile:1
+#
+# Immutable application image (frappe_docker "layered" pattern): Frappe and ERPNext at
+# the commits pinned in infra/versions.env, the automotive apps from this repository,
+# production assets and compiled translations built in. One image serves every
+# process (gunicorn, workers, scheduler, socket.io, nginx front end, one-off jobs).
+#
+#   scripts/image/build.sh                 production flavour (no synthetic-data app)
+#   scripts/image/build.sh --reference     adds automotive_seed for reference/staging sites
+#
+# Build context: the repository root (.dockerignore keeps it to apps/ and infra/image/);
+# named context `frappe_docker`: the pinned frappe_docker checkout (entrypoint, start.sh).
+
+ARG BUILD_IMAGE=docker.io/frappe/build:version-16
+ARG BASE_IMAGE=docker.io/frappe/base:version-16
+
+FROM ${BUILD_IMAGE} AS builder
+
+ARG FRAPPE_REPO
+ARG FRAPPE_REF
+ARG FRAPPE_COMMIT
+ARG ERPNEXT_REPO
+ARG ERPNEXT_REF
+ARG ERPNEXT_COMMIT
+ARG INCLUDE_SEED=0
+
+USER frappe
+WORKDIR /home/frappe
+
+# Python dependencies resolve to the versions the test suite ran against.
+COPY --chown=frappe:0 infra/image/constraints.txt /opt/frappe/constraints.txt
+# (bench installs with uv when available, pip otherwise; both read their own variable)
+ENV PIP_CONSTRAINT=/opt/frappe/constraints.txt \
+    UV_CONSTRAINT=/opt/frappe/constraints.txt \
+    UV_NO_CACHE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+RUN bench init \
+      --frappe-path="${FRAPPE_REPO}" \
+      --frappe-branch="${FRAPPE_REF}" \
+      --no-procfile \
+      --no-backups \
+      --skip-redis-config-generation \
+      --skip-assets \
+      --verbose \
+      /home/frappe/frappe-bench \
+  && cd /home/frappe/frappe-bench \
+  && test "$(git -C apps/frappe rev-parse HEAD)" = "${FRAPPE_COMMIT}" \
+  && bench get-app --branch="${ERPNEXT_REF}" --skip-assets "${ERPNEXT_REPO}" \
+  && test "$(git -C apps/erpnext rev-parse HEAD)" = "${ERPNEXT_COMMIT}"
+
+COPY --chown=frappe:0 apps/ /tmp/custom-apps/
+
+RUN cd /home/frappe/frappe-bench \
+  && apps="automotive_core automotive_manufacturing automotive_supply_chain automotive_portals" \
+  && if [ "${INCLUDE_SEED}" = "1" ]; then apps="${apps} automotive_seed"; fi \
+  && for app in ${apps}; do \
+       cp -r "/tmp/custom-apps/${app}" "apps/${app}" \
+       && rm -rf "apps/${app}/.ruff_cache" \
+       && env/bin/pip install -e "apps/${app}" || exit 1; \
+     done \
+  && env/bin/pip check \
+  && printf '%s\n' frappe erpnext ${apps} > sites/apps.txt \
+  && FRAPPE_ENV=production bench build --production \
+  && echo "{}" > sites/common_site_config.json \
+  && find apps -mindepth 1 -maxdepth 2 -name .git -prune -exec rm -rf {} + \
+  && rm -rf /tmp/custom-apps \
+  && chmod -R g=u /home/frappe/frappe-bench
+
+FROM ${BASE_IMAGE} AS backend
+
+ARG VERSION=dev
+ARG GIT_SHA=unknown
+ARG INCLUDE_SEED=0
+LABEL org.opencontainers.image.title="Toyota ERP Clone (Hinode Automotive Group)" \
+      org.opencontainers.image.description="ERPNext v16 with the automotive_* apps" \
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.revision="${GIT_SHA}" \
+      org.opencontainers.image.licenses="GPL-3.0-only" \
+      com.hinode.erp.includes-seed="${INCLUDE_SEED}"
+
+USER frappe
+COPY --from=builder --chown=frappe:0 /home/frappe/frappe-bench /home/frappe/frappe-bench
+WORKDIR /home/frappe/frappe-bench
+
+# Built assets live in the image layer; the entrypoint links them into the sites volume.
+RUN chmod g=u /home/frappe/frappe-bench \
+  && cp -r sites/assets assets \
+  && rm -rf sites/assets
+
+VOLUME ["/home/frappe/frappe-bench/sites", "/home/frappe/frappe-bench/logs"]
+
+USER root
+COPY --from=frappe_docker resources/core/main-entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY --from=frappe_docker resources/core/start.sh /usr/local/bin/start.sh
+RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/start.sh
+
+USER frappe
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["start.sh"]

@@ -213,7 +213,7 @@ class Sales:
 		"""NA replenishes its stock by an intercompany order; Aichi ships released vehicles against it."""
 		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
 
-		from automotive_supply_chain.intercompany.orders import create_seller_order
+		from automotive_supply_chain.intercompany.handoff import create_seller_order
 		from automotive_supply_chain.intercompany.transfer_pricing import agreed_price
 
 		ctx = self.ctx
@@ -272,11 +272,12 @@ class Sales:
 		ctx = self.ctx
 		for pr in list(self.s.get("pdi", [])):
 			inspector = self.sim.person("Quality Inspector", "NA-PDC")
-			for row in frappe.get_all("Purchase Receipt Item", filters={"parent": pr}, fields=["item_code", "serial_no"]):
+			for row in frappe.get_all("Purchase Receipt Item", filters={"parent": pr},
+					fields=["name", "item_code", "serial_no"]):
 				for vin in filter(None, (row.serial_no or "").split("\n")):
-					with ctx.step(10, 0):
+					with ctx.step(10, 0):  # one inspection per vehicle on the shared receipt row
 						self.sim.quality._qi(row.item_code, "Purchase Receipt", pr, "Pre-Delivery", inspector, "Accepted",
-							NA, serial=vin, remarks="PDI: transport check, accessory fit")
+							NA, serial=vin, remarks="PDI: transport check, accessory fit", child_row=row.name)
 			self.s["pdi"].remove(pr)
 		# vehicles that arrived on non-working days are received on the next NA working day
 		self.sim.procurement.intercompany_receipts(day)

@@ -168,6 +168,49 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 			validate_outbound(dn)
 
 
+class TestReworkReinspection(ManufacturingTestCase):
+	def test_rejected_vehicle_is_released_only_after_reinspection(self):
+		from automotive_manufacturing.quality_control import holds
+		from automotive_manufacturing.quality_control.inspections import make_reinspection
+
+		self.stock_up(1)
+		wo = catalog.work_order(self.cat["variants"][("Premium", "AWD")], 1)
+		se = build_entry(wo.name, 1)
+		vin = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")[0]
+
+		def inspect(status):
+			qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "In Process",
+				"automotive_inspection_stage": "Final", "reference_type": "Stock Entry", "reference_name": se.name,
+				"item_code": wo.production_item, "item_serial_no": vin, "sample_size": 1, "inspected_by": QM1,
+				"status": status, "manual_inspection": 1, "company": AICHI})
+			qi.insert(ignore_permissions=True)
+			qi.submit()
+			return qi
+
+		rejected = inspect("Rejected")
+		hold = frappe.db.get_value("Quality Hold", {"serial_no": vin, "status": "Active"}, "name")
+		self.assertTrue(hold)
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "On Hold")
+		with self.assertRaises(frappe.ValidationError):  # ERPNext: one inspection per row unless named
+			inspect("Accepted")
+		with self.assertRaises(frappe.ValidationError):  # only rejected inspections are re-inspected
+			make_reinspection(frappe.get_doc("Quality Inspection", rejected.name).amended_from or "MISSING")
+		with as_user(QM2):
+			again = frappe.get_doc("Quality Inspection", make_reinspection(rejected.name))
+			again.submit()
+		self.assertEqual(again.child_row_reference, rejected.child_row_reference)
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "On Hold")  # hold still active
+		doc = frappe.get_doc("Quality Hold", hold)
+		for check in doc.release_checks:
+			check.done = 1
+		doc.save(ignore_permissions=True)
+		with as_user(QM2):
+			holds.release(hold, "Seal replaced; water test passed")
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "quality_status"), "Released")
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "final_inspection"), again.name)
+		self.assertEqual(frappe.db.get_value("Quality Inspection", rejected.name, "status"), "Rejected")  # kept
+
+
 class TestJidoka(ManufacturingTestCase):
 	def test_rejected_batch_is_held_until_dispositioned(self):
 		cat = self.cat

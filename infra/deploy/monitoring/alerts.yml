@@ -1,0 +1,72 @@
+# Alert rules for the Hinode ERP stack. Thresholds are starting points for the 50/150
+# user profiles (ops/runbooks/monitoring.md explains each alert and its first response).
+groups:
+  - name: erp-availability
+    rules:
+      - alert: ErpBackendDown
+        expr: up{job="erp"} == 0
+        for: 5m
+        labels: { severity: critical }
+        annotations:
+          summary: "ERP backend is not answering the metrics endpoint for 5 minutes"
+      - alert: ErpSchedulerStalled
+        expr: time() - max(erp_scheduler_last_job_timestamp_seconds) > 1800
+        for: 10m
+        labels: { severity: critical }
+        annotations:
+          summary: "No scheduled job completed for 30 minutes (scheduler or workers down)"
+      - alert: MariaDBDown
+        expr: mysql_up == 0
+        for: 2m
+        labels: { severity: critical }
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 2m
+        labels: { severity: critical }
+
+  - name: erp-work
+    rules:
+      - alert: ErpQueueBacklog
+        expr: max by (queue) (erp_queue_jobs) > 500
+        for: 15m
+        labels: { severity: warning }
+        annotations:
+          summary: "Queue {{ $labels.queue }} has had more than 500 waiting jobs for 15 minutes"
+      - alert: ErpFailedJobsGrowing
+        expr: increase(sum(erp_queue_failed_jobs)[1h:]) > 20
+        labels: { severity: warning }
+      - alert: ErpOutboxDeadLetters
+        expr: max(erp_outbox_messages{status="Dead Letter"}) > 0
+        for: 5m
+        labels: { severity: warning }
+        annotations:
+          summary: "Partner messages exhausted their retries (Integration Outbound Message, Dead Letter)"
+      - alert: ErpInboxFailures
+        expr: max(erp_inbox_messages{status=~"Failed|Dead Letter"}) > 0
+        for: 15m
+        labels: { severity: warning }
+      - alert: ErpAuditSealingBehind
+        expr: max(erp_audit_unsealed_events) > 2000
+        for: 30m
+        labels: { severity: warning }
+        annotations:
+          summary: "Audit events are not being sealed into the hash chain"
+      - alert: ErpErrorLogSpike
+        expr: max(erp_error_logs_24h) > 100
+        labels: { severity: warning }
+
+  - name: erp-data-protection
+    rules:
+      - alert: ErpBackupStale
+        expr: time() - max(erp_backup_last_success_timestamp_seconds) > 26 * 3600
+        labels: { severity: critical }
+        annotations:
+          summary: "No verified off-host backup for more than 26 hours"
+      - alert: ErpBackupNeverRan
+        expr: absent(erp_backup_last_success_timestamp_seconds)
+        for: 30h
+        labels: { severity: critical }
+      - alert: HostDiskSpaceLow
+        expr: node_filesystem_avail_bytes{fstype!~"tmpfs|overlay"} / node_filesystem_size_bytes < 0.15
+        for: 10m
+        labels: { severity: warning }

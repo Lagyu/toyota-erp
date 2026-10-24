@@ -1,0 +1,9 @@
+# The image build needs only the custom apps and the image definition.
+*
+!apps/
+!infra/image/
+apps/**/__pycache__/
+apps/**/.ruff_cache/
+apps/**/node_modules/
+apps/**/*.pyc
+apps/**/dist/

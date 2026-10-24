@@ -122,3 +122,16 @@ frappe.ui.form.on("Plant Schedule", {
 		}
 	},
 });
+
+frappe.ui.form.on("Quality Inspection", {
+	refresh(frm) {
+		// after rework the unit is inspected again; the rejected inspection stays on record
+		if (frm.doc.docstatus === 1 && frm.doc.status === "Rejected") {
+			frm.add_custom_button(__("Re-inspect after Rework"), () =>
+				call("automotive_manufacturing.quality_control.inspections.make_reinspection", {
+					quality_inspection: frm.docname,
+				}).then((name) => frappe.set_route("Form", "Quality Inspection", name))
+			);
+		}
+	},
+});

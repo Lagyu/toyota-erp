@@ -14,7 +14,7 @@ WS=/workspace
 STATE=/home/frappe/dev
 BENCH=$STATE/frappe-bench
 MARKERS=$STATE/markers
-LOG_TAG=bootstrap
+export LOG_TAG=bootstrap
 # shellcheck source=../lib/common.sh
 source "$WS/scripts/lib/common.sh"
 load_env_file "$WS/infra/versions.env"

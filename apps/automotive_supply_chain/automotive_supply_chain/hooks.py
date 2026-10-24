@@ -14,7 +14,8 @@ app_include_js = ["automotive_supply_chain.bundle.js"]
 
 # Extensions of automotive_core governance -------------------------------------------
 automotive_cancel_reason_doctypes = ["Sales Order", "Purchase Order", "Delivery Note", "Purchase Receipt",
-	"Shipment Manifest", "Advance Shipping Notice", "Sourcing Decision", "Transfer Price Agreement"]
+	"Shipment Manifest", "Advance Shipping Notice", "Sourcing Decision", "Transfer Price Agreement",
+	"Consignment Movement", "Consignment Agreement"]
 automotive_audited_doctypes = ["Supplier Onboarding", "Sourcing Decision", "Supplier Delivery Schedule",
 	"Advance Shipping Notice", "Purchase Receipt", "Delivery Note", "Shipment Manifest", "Dealer Registration",
 	"Dealer Order", "Dealer Order Change", "Delivery Acceptance", "Transfer Price Agreement", "Cycle Count"]
@@ -82,3 +83,14 @@ scheduler_events = {
 
 # Every app prepares the test site the same way (Frappe runs the tested app's hook only).
 before_tests = "automotive_core.tests.fixtures.before_tests"
+
+# Work-queue gauges exposed by automotive_core.ops.health.metrics
+automotive_metrics = ["automotive_supply_chain.ops_metrics.metrics"]
+
+# Period-close checks (automotive_core.finance_controls.period_close)
+automotive_period_close_checks = [
+	["MATCH-EXCEPTIONS", "No invoice of the period with an open three-way-match exception", False,
+		"automotive_supply_chain.finance_checks.check_match_exceptions"],
+	["INTERCOMPANY", "Intercompany invoices agree with every group partner", True,
+		"automotive_supply_chain.finance_checks.check_intercompany"],
+]

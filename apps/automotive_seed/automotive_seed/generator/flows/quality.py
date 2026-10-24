@@ -9,6 +9,7 @@ import frappe
 from frappe.utils import add_days
 
 from automotive_manufacturing.quality_control import holds
+from automotive_manufacturing.quality_control.inspections import make_reinspection
 from automotive_manufacturing.shop_floor import andon as andon_service
 
 
@@ -19,13 +20,15 @@ class Quality:
 		self.s = sim.state["sim"]
 
 	def _qi(self, item: str, reference_type: str, reference: str, stage: str, inspector: str, status: str,
-			company: str, serial: str | None = None, batch: str | None = None, remarks: str | None = None) -> str:
+			company: str, serial: str | None = None, batch: str | None = None, remarks: str | None = None,
+			child_row: str | None = None) -> str:
+		"""child_row: inspect one unit of a multi-unit row (ERPNext otherwise allows one inspection per row)."""
 		with self.ctx.as_user(inspector):
 			qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "Incoming" if stage == "Incoming"
 				else "In Process", "automotive_inspection_stage": stage, "reference_type": reference_type,
-				"reference_name": reference, "item_code": item, "item_serial_no": serial, "batch_no": batch,
-				"sample_size": 1, "inspected_by": inspector, "status": status, "manual_inspection": 1,
-				"company": company, "remarks": remarks})
+				"reference_name": reference, "child_row_reference": child_row, "item_code": item,
+				"item_serial_no": serial, "batch_no": batch, "sample_size": 1, "inspected_by": inspector,
+				"status": status, "manual_inspection": 1, "company": company, "remarks": remarks})
 			qi.insert()
 			qi.submit()
 		self.ctx.count("Quality Inspection")
@@ -35,10 +38,10 @@ class Quality:
 		variant = frappe.db.get_value("Vehicle Unit", vin, "variant_item")
 		company = frappe.db.get_value("Vehicle Unit", vin, "company")
 		status = "Rejected" if rejected else "Accepted"
-		self._qi(variant, "Stock Entry", stock_entry, "Final", inspector, status, company, serial=vin,
+		qi = self._qi(variant, "Stock Entry", stock_entry, "Final", inspector, status, company, serial=vin,
 			remarks="Water leak at rear hatch seal" if rejected else None)
 		if rejected:
-			self.s.setdefault("rework", []).append({"vin": vin, "entry": stock_entry})
+			self.s.setdefault("rework", []).append({"vin": vin, "entry": stock_entry, "inspection": qi})
 
 	def powertrain_inspection(self, item: str, stock_entry: str, inspector: str) -> None:
 		rows = frappe.get_all("Stock Entry Detail", filters={"parent": stock_entry, "is_finished_item": 1},
@@ -74,9 +77,13 @@ class Quality:
 				with ctx.as_user(releaser):
 					doc.save()
 					inspector = self.sim.person("Quality Inspector", "AICHI-VA", 1)
-					self._qi(frappe.db.get_value("Vehicle Unit", vin, "variant_item"), "Stock Entry", item["entry"], "Final",
-						inspector, "Accepted", "Hinode Automotive Manufacturing Japan", serial=vin,
-						remarks="Re-inspection after rework")
+					with ctx.as_user(inspector):
+						rejected_qi = item.get("inspection") or frappe.db.get_value("Quality Inspection",
+							{"item_serial_no": vin, "status": "Rejected", "docstatus": 1}, "name")
+						reinspection = frappe.get_doc("Quality Inspection", make_reinspection(rejected_qi,
+							remarks="Re-inspection after rework: seal replaced, water test passed"))
+						reinspection.submit()
+					ctx.count("Quality Inspection")
 					holds.release(hold, "Seal replaced and water test passed")
 				self._close_nc(doc, releaser)
 		self.s["rework"] = keep

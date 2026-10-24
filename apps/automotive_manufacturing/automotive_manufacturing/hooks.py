@@ -99,3 +99,6 @@ scheduler_events = {
 
 # Every app prepares the test site the same way (Frappe runs the tested app's hook only).
 before_tests = "automotive_core.tests.fixtures.before_tests"
+
+# Work-queue gauges exposed by automotive_core.ops.health.metrics
+automotive_metrics = ["automotive_manufacturing.ops_metrics.metrics"]

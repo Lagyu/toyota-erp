@@ -24,7 +24,7 @@ BUNDLE = Path(__file__).parent / "public" / "js" / "portal"
 def portal_context(context, party_type: str, title: str) -> None:
 	if frappe.session.user == "Guest":
 		frappe.local.flags.redirect_location = "/login?redirect-to=" + quote(frappe.local.request.path)
-		raise frappe.Redirect
+		raise frappe.Redirect(302)  # temporary: a permanent redirect would be cached by the browser
 	mine = party_of_user()
 	if not mine or mine[0] != party_type:
 		raise frappe.PermissionError(_("This portal is only available to {0} users.").format(

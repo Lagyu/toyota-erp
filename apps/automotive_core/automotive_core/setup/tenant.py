@@ -460,8 +460,27 @@ def _intercompany(definition, companies, log: TenantLog) -> None:
 		# ERPNext requires intercompany documents to use a buying+selling price list; the
 		# pair trades in the buyer's currency.
 		price_list = _intercompany_price_list(currency[buyer], log)
-		_internal_party("Customer", buyer, seller, log, price_list)
+		# a seller billing in the buyer's (foreign) currency needs a receivable in that currency
+		receivable = _party_account(seller, currency[buyer], "Receivable", log) \
+			if currency[seller] != currency[buyer] else None
+		_internal_party("Customer", buyer, seller, log, price_list, receivable, currency[buyer])
 		_internal_party("Supplier", seller, buyer, log, price_list)
+
+
+def _party_account(company: str, currency: str, account_type: str, log: TenantLog) -> str | None:
+	label = "Debtors" if account_type == "Receivable" else "Creditors"
+	abbr = frappe.get_cached_value("Company", company, "abbr")
+	name = f"{label} {currency} - {abbr}"
+	if frappe.db.exists("Account", name):
+		return name
+	parent = frappe.db.get_value("Account", {"company": company, "account_type": account_type, "is_group": 0,
+		"account_currency": frappe.get_cached_value("Company", company, "default_currency")}, "parent_account")
+	if not log.change(f"account {name}"):
+		return name
+	frappe.get_doc({"doctype": "Account", "account_name": f"{label} {currency}", "company": company,
+		"parent_account": parent, "account_type": account_type, "account_currency": currency,
+		"is_group": 0}).insert(ignore_permissions=True)
+	return name
 
 
 def _intercompany_price_list(currency: str, log: TenantLog) -> str:
@@ -473,7 +492,7 @@ def _intercompany_price_list(currency: str, log: TenantLog) -> str:
 
 
 def _internal_party(doctype: str, represents: str, transacting_company: str, log: TenantLog,
-		price_list: str | None = None) -> None:
+		price_list: str | None = None, party_account: str | None = None, billing_currency: str | None = None) -> None:
 	name_field = "customer_name" if doctype == "Customer" else "supplier_name"
 	flag = "is_internal_customer" if doctype == "Customer" else "is_internal_supplier"
 	existing = frappe.db.get_value(doctype, {flag: 1, "represents_company": represents}, "name")
@@ -489,12 +508,23 @@ def _internal_party(doctype: str, represents: str, transacting_company: str, log
 				doc.update(drift)
 				doc.flags.accept_similar_name = True
 				doc.save(ignore_permissions=True)
-		if any(row.company == transacting_company for row in doc.companies):
-			return
-		if not log.change(f"{doctype} {existing}: allowed company {transacting_company}"):
-			return
-		doc.append("companies", {"company": transacting_company})
-		doc.save(ignore_permissions=True)
+		changed = False
+		if billing_currency and doc.get("default_currency") != billing_currency and log.change(
+				f"{doctype} {existing}: billing currency {billing_currency}"):
+			doc.default_currency = billing_currency
+			changed = True
+		if party_account and not any(r.company == transacting_company and r.account == party_account
+				for r in doc.accounts) and log.change(f"{doctype} {existing}: account {party_account}"):
+			doc.set("accounts", [r for r in doc.accounts if r.company != transacting_company])
+			doc.append("accounts", {"company": transacting_company, "account": party_account})
+			changed = True
+		if not any(row.company == transacting_company for row in doc.companies) and log.change(
+				f"{doctype} {existing}: allowed company {transacting_company}"):
+			doc.append("companies", {"company": transacting_company})
+			changed = True
+		if changed:
+			doc.flags.accept_similar_name = True
+			doc.save(ignore_permissions=True)
 		return
 	if not log.change(f"internal {doctype} {represents}"):
 		return
@@ -505,7 +535,10 @@ def _internal_party(doctype: str, represents: str, transacting_company: str, log
 		"represents_company": represents,
 		"companies": [{"company": transacting_company}],
 		"default_price_list": price_list,
+		"accounts": [{"company": transacting_company, "account": party_account}] if party_account else [],
 	}
+	if billing_currency:
+		values["default_currency"] = billing_currency
 	if doctype == "Customer":
 		values["customer_group"] = frappe.db.get_value("Customer Group", {"is_group": 0}, "name")
 		values["territory"] = frappe.db.get_value("Territory", {"is_group": 0}, "name")

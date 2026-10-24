@@ -1,0 +1,91 @@
+# Monitoring and alerting: Prometheus (ERP metrics endpoint + exporters), Alertmanager,
+# Grafana. Nothing is published to the internet: Grafana listens on 127.0.0.1 (reach it
+# through an SSH tunnel or the VPN), Prometheus and Alertmanager are internal only.
+services:
+  prometheus:
+    image: ${PROMETHEUS_IMAGE:?}
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=${PROMETHEUS_RETENTION:-30d}
+    networks: [backend, monitoring]
+    volumes:
+      - ./monitoring/prometheus.rendered.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/alerts.yml:/etc/prometheus/alerts.yml:ro
+      - ${METRICS_TOKEN_FILE:?set METRICS_TOKEN_FILE}:/etc/prometheus/erp-metrics-token:ro
+      - prometheus-data:/prometheus
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1g
+
+  alertmanager:
+    image: ${ALERTMANAGER_IMAGE:?}
+    restart: unless-stopped
+    command: [--config.file=/etc/alertmanager/alertmanager.yml, --storage.path=/alertmanager]
+    networks: [monitoring, egress]
+    volumes:
+      - ${ALERTMANAGER_CONFIG:-./monitoring/alertmanager.yml}:/etc/alertmanager/alertmanager.yml:ro
+      - alertmanager-data:/alertmanager
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+
+  grafana:
+    image: ${GRAFANA_IMAGE:?}
+    restart: unless-stopped
+    networks: [monitoring]
+    ports:
+      - 127.0.0.1:${GRAFANA_PORT:-3000}:3000
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD__FILE: /run/secrets/grafana_admin_password
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+    secrets: [grafana_admin_password]
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+
+  mysqld-exporter:
+    image: ${MYSQLD_EXPORTER_IMAGE:?}
+    restart: unless-stopped
+    command: [--config.my-cnf=/etc/exporter/my.cnf, --collect.info_schema.processlist]
+    networks: [backend]
+    volumes:
+      - ${MYSQLD_EXPORTER_CNF:?set MYSQLD_EXPORTER_CNF}:/etc/exporter/my.cnf:ro
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+
+  redis-exporter:
+    image: ${REDIS_EXPORTER_IMAGE:?}
+    restart: unless-stopped
+    environment:
+      REDIS_ADDR: redis://redis-queue:6379,redis://redis-cache:6379
+    networks: [backend]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+
+  node-exporter:
+    image: ${NODE_EXPORTER_IMAGE:?}
+    restart: unless-stopped
+    command: [--path.rootfs=/host, --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|run)($$|/)]
+    networks: [monitoring]
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    security_opt: [no-new-privileges:true]
+    mem_limit: 128m
+
+networks:
+  monitoring: {}
+
+volumes:
+  prometheus-data:
+  alertmanager-data:
+  grafana-data:
+
+secrets:
+  grafana_admin_password:
+    file: ${GRAFANA_ADMIN_PASSWORD_FILE:?set GRAFANA_ADMIN_PASSWORD_FILE}

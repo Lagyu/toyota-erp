@@ -203,7 +203,9 @@ def accept(name: str) -> dict:
 	so.update({"customer": doc.dealer, "company": doc.company, "transaction_date": nowdate(),
 		"delivery_date": promised, "set_warehouse": warehouse, "po_no": doc.dealer_reference,
 		"automotive_dealer_order": doc.name, "automotive_promised_date": promised,
-		"selling_price_list": frappe.db.get_value("Customer", doc.dealer, "default_price_list")})
+		"selling_price_list": frappe.db.get_value("Customer", doc.dealer, "default_price_list"),
+		# explicit: otherwise Frappe fills it from the accepting user's defaults (e.g. JPY for a US dealer)
+		"currency": doc.currency})
 	for item in doc.items:
 		so.append("items", {"item_code": item.variant_item, "qty": item.qty, "price_list_rate": item.list_price,
 			"discount_percentage": item.discount_percent, "delivery_date": promised, "warehouse": warehouse,

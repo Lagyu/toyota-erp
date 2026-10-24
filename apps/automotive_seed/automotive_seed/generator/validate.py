@@ -42,11 +42,15 @@ def stock_vs_gl(results: list) -> None:
 
 
 def bins_vs_ledger(results: list) -> None:
-	mismatches = frappe.db.sql("""select b.item_code, b.warehouse, b.actual_qty, ifnull(s.qty, 0) ledger
-		from `tabBin` b left join (select item_code, warehouse, sum(actual_qty) qty from `tabStock Ledger Entry`
-			where is_cancelled = 0 group by item_code, warehouse) s on s.item_code = b.item_code and s.warehouse = b.warehouse
-		where abs(b.actual_qty - ifnull(s.qty, 0)) > 0.0001 limit 20""", as_dict=True)
-	_check(results, "bin quantity = stock ledger", not mismatches, mismatches)
+	"""Each Bin equals the balance after the latest stock ledger entry of its item and warehouse
+	(reconciliations post balances, not movements, so summing actual_qty would be wrong)."""
+	mismatches = frappe.db.sql("""select b.item_code, b.warehouse, b.actual_qty,
+			(select sle.qty_after_transaction from `tabStock Ledger Entry` sle
+			 where sle.item_code = b.item_code and sle.warehouse = b.warehouse and sle.is_cancelled = 0
+			 order by sle.posting_datetime desc, sle.creation desc limit 1) ledger
+		from `tabBin` b
+		having abs(b.actual_qty - ifnull(ledger, 0)) > 0.0001 limit 20""", as_dict=True)
+	_check(results, "bin quantity = stock ledger balance", not mismatches, mismatches)
 	negative = frappe.db.sql("""select item_code, warehouse, min(qty_after_transaction) q from `tabStock Ledger Entry`
 		where is_cancelled = 0 group by item_code, warehouse having q < -0.0001 limit 20""", as_dict=True)
 	_check(results, "no negative stock", not negative, negative)
@@ -62,7 +66,8 @@ def receivables(results: list) -> None:
 		_check(results, f"receivables GL = payment ledger {company}", ok, note)
 		ap_gl = flt(frappe.db.sql("""select sum(gle.credit - gle.debit) from `tabGL Entry` gle join `tabAccount` a
 			on a.name = gle.account where gle.company=%s and gle.is_cancelled=0 and a.account_type='Payable'""", company)[0][0])
-		ap_ple = -flt(frappe.db.sql("""select sum(amount) from `tabPayment Ledger Entry` where company=%s
+		# the payment ledger carries invoices positive on both sides (AR and AP)
+		ap_ple = flt(frappe.db.sql("""select sum(amount) from `tabPayment Ledger Entry` where company=%s
 			and account_type='Payable' and delinked=0""", company)[0][0])
 		_check(results, f"payables GL = payment ledger {company}", abs(ap_gl - ap_ple) <= 1,
 			{"gl": round(ap_gl, 2), "payment_ledger": round(ap_ple, 2)})
