@@ -1,0 +1,81 @@
+# The ten journeys and the rest of the browser and API suites (GATE-2) against a deployment
+# closer to a live one than CI's: a dataset.yml export (the standard dataset, the acceptance
+# dataset) restored on a reference stack from this commit's reference image, with the
+# scheduler on, so background jobs run beside the journeys (scripts/ci/e2e.sh --dataset
+# --scheduler). The results are the run's summary and the journeys artifact.
+name: journeys
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Profile of the dataset run
+        type: choice
+        options: [standard, closing, small, large]
+        default: standard
+      dataset_run:
+        description: Run ID of the dataset.yml run whose export is restored
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read  # the dataset run's export
+
+jobs:
+  journeys:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - name: The dataset export
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}"
+          path: .local/dataset
+          run-id: ${{ inputs.dataset_run }}
+          github-token: ${{ github.token }}
+      - name: Build the reference image
+        run: ./scripts/image/build.sh --reference | tee .local-image-reference.txt
+      - name: Journeys with the scheduler on
+        run: ./scripts/ci/e2e.sh "$(tail -1 .local-image-reference.txt)" --dataset .local/dataset --scheduler
+      - name: Results
+        if: always()
+        env:
+          PROFILE: ${{ inputs.profile }}
+          DATASET_RUN: ${{ inputs.dataset_run }}
+        run: |
+          python3 - <<'EOF' >>"$GITHUB_STEP_SUMMARY"
+          import json, os, xml.etree.ElementTree as ET
+          from pathlib import Path
+          status = json.loads(Path(".local/dataset/status.json").read_text())
+          print(f"Dataset: run {os.environ['DATASET_RUN']} ({os.environ['PROFILE']}), {status.get('run')} "
+                f"{status.get('status')}, {status.get('start_date')} .. {status.get('simulated_date')}; scheduler on.\n")
+          junit = Path(".local/e2e/junit.xml")
+          if not junit.exists():
+              print("No junit.xml: the suite did not run.")
+              raise SystemExit
+          root = ET.parse(junit).getroot()
+          total = {k: int(root.get(k, 0)) for k in ("tests", "failures", "errors", "skipped")}
+          print("| Tests | Failures | Errors | Skipped |\n|---|---|---|---|")
+          print(f"| {total['tests']} | {total['failures']} | {total['errors']} | {total['skipped']} |\n")
+          for case in root.iter("testcase"):
+              if case.find("failure") is not None or case.find("error") is not None:
+                  print(f"- failed: {case.get('classname')} › {case.get('name')}")
+          EOF
+      # reports only: the run's persona passwords and partner secret (.local/e2e/*.json) stay out
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: journeys
+          path: |
+            .local/e2e/report/
+            .local/e2e/junit.xml
+            e2e/test-results/
+          include-hidden-files: true
+          retention-days: 90

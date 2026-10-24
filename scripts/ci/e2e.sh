@@ -3,12 +3,15 @@
 # dataset. Two modes:
 #   e2e.sh --url http://small.localhost:18000 --site small.localhost [-- playwright args]
 #       a running site (the development bench)
-#   e2e.sh IMAGE:TAG [--keep] [-- playwright args]
+#   e2e.sh IMAGE:TAG [--dataset DIR] [--scheduler] [--keep] [-- playwright args]
 #       a reference stack from a reference image (CI): new site, the small dataset (restored
 #       from .local/reference/ when the generator is unchanged, else generated once and
 #       cached; migrations bring a cached dataset forward), scheduler off so background
 #       jobs cannot race the journeys, then the API contract tests and the suite; torn down
-#       unless --keep
+#       unless --keep. --dataset restores a dataset.yml export (database.sql.gz, public.tgz,
+#       private.tgz, encryption_key) instead, with the database sized for the standard profile;
+#       --scheduler leaves the scheduler on, so background jobs run beside the journeys as on
+#       a deployed site (journeys.yml)
 # Persona passwords (automotive_seed.e2e.prepare_users) and journey preconditions
 # (automotive_seed.e2e.prepare_journeys) are generated for the run and kept in
 # .local/e2e/{credentials,fixtures}.json (0600); reports in .local/e2e/.
@@ -16,12 +19,14 @@ set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 export LOG_TAG=e2e
 load_env_file "$REPO_ROOT/infra/ci-tools.env"
-url="" site="" image="" keep=0 pw_args=()
+url="" site="" image="" keep=0 dataset="" scheduler=0 pw_args=()
 while (($#)); do
 	case $1 in
 		--url) url=$2; shift 2 ;;
 		--site) site=$2; shift 2 ;;
 		--keep) keep=1; shift ;;
+		--dataset) dataset=$(cd "$2" && pwd); shift 2 ;;
+		--scheduler) scheduler=1; shift ;;
 		--) shift; pw_args=("$@"); break ;;
 		-*) die "unknown argument $1 (usage: e2e.sh IMAGE:TAG | --url URL --site SITE [-- playwright args])" ;;
 		*) image=$1; shift ;;
@@ -67,8 +72,8 @@ BACKEND_MEM_LIMIT=2g
 BACKEND_CPUS=2
 WORKER_MEM_LIMIT=2g
 WORKER_CPUS=2
-DB_BUFFER_POOL=768M
-DB_MEM_LIMIT=2g
+DB_BUFFER_POOL=$([[ -n $dataset ]] && echo 2G || echo 768M)
+DB_MEM_LIMIT=$([[ -n $dataset ]] && echo 4g || echo 2g)
 DB_CPUS=2
 EOF
 	compose=("$REPO_ROOT/scripts/deploy/compose.sh" "$env_file")
@@ -100,15 +105,12 @@ EOF
 	key=$(cd "$REPO_ROOT" && git ls-files -s "$seed/generator" "$seed/profiles" "$seed/reference_data" \
 		"$seed/runner.py" apps/automotive_core/automotive_core/setup/tenants | sha256sum | cut -c1-12)
 	cache=$REPO_ROOT/.local/reference/small-$key
-	# paused in the site config, which a restore keeps: the dataset's own scheduler is on, and a
-	# tick between the restore and disable-scheduler below would queue every overdue job
-	bench scheduler pause >/dev/null
-	if [[ -f $cache/database.sql.gz ]]; then
-		log "restoring the small dataset ($key)"
+	restore_dataset() { # DIR: an export (database.sql.gz public.tgz private.tgz encryption_key)
+		local f
 		# streamed through exec: docker cp cannot write into the container's tmpfs /tmp, and its
 		# files would be root-owned while the bench runs as frappe
 		for f in database.sql.gz public.tgz private.tgz; do
-			"${compose[@]}" exec -T backend bash -c "cat >/tmp/$f" <"$cache/$f"
+			"${compose[@]}" exec -T backend bash -c "cat >/tmp/$f" <"$1/$f"
 		done
 		"${compose[@]}" exec -T -e DB_ROOT="$(<"$secrets/db_root_password")" backend bash -c \
 			"bench --site '$site' restore /tmp/database.sql.gz --with-public-files /tmp/public.tgz \
@@ -117,11 +119,24 @@ EOF
 		# the dataset's encrypted fields stay readable with its own key. Frappe creates one only
 		# when a field is first encrypted: a dataset without one has an empty line, and setting
 		# an empty key would break every later encryption
-		if [[ -n $(tr -d '[:space:]' <"$cache/encryption_key" 2>/dev/null) ]]; then
+		if [[ -n $(tr -d '[:space:]' <"$1/encryption_key" 2>/dev/null) ]]; then
 			"${compose[@]}" exec -T backend python3 -c "$SET_SITE_CONFIG_PY" "$site" encryption_key \
-				<"$cache/encryption_key"
+				<"$1/encryption_key"
 		fi
 		bench migrate >/dev/null
+	}
+	# paused in the site config, which a restore keeps: the dataset's own scheduler is on, and a
+	# tick between the restore and disable-scheduler below would queue every overdue job
+	bench scheduler pause >/dev/null
+	if [[ -n $dataset ]]; then
+		log "restoring the dataset of $dataset ($(python3 -c 'import json, sys
+s = json.load(open(sys.argv[1]))
+print(s.get("run"), s.get("status"), s.get("start_date"), "..", s.get("simulated_date"))' "$dataset/status.json" \
+			2>/dev/null || echo "no status.json"))"
+		restore_dataset "$dataset"
+	elif [[ -f $cache/database.sql.gz ]]; then
+		log "restoring the small dataset ($key)"
+		restore_dataset "$cache"
 	else
 		log "generating the small dataset (cached afterwards as $key)"
 		if ! bench execute automotive_seed.runner.run --kwargs "{'profile': 'small'}" | tail -1; then
@@ -154,7 +169,14 @@ if s["status"] != "Validated":
 		rm -rf "$cache"
 		mv "$cache.tmp" "$cache"
 	fi
-	"${compose[@]}" exec -T backend bench --site "$site" disable-scheduler >/dev/null
+	if ((scheduler)); then
+		# a deployed site's scheduler: the restored dataset's jobs come due at once, then on time
+		bench scheduler resume >/dev/null
+		bench enable-scheduler >/dev/null
+		log "scheduler on: $(bench scheduler status | tail -1)"
+	else
+		bench disable-scheduler >/dev/null
+	fi
 	"${compose[@]}" restart backend frontend >/dev/null
 	for _ in $(seq 1 30); do
 		curl -fsS -o /dev/null -H "Host: $site" http://127.0.0.1:18091/api/method/automotive_core.ops.health.live \

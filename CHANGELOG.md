@@ -239,6 +239,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the standard fields and the comment count). Found by a short run on the closing dataset.
 
 ### Operations
+- The journeys can run on a deployment closer to a live one: `journeys.yml` restores a
+  dataset.yml export (the standard dataset) on a reference stack with the scheduler on and runs
+  the browser and API suites there (`e2e.sh IMAGE --dataset DIR --scheduler`).
 - A real reboot and a power loss are rehearsed in CI: the rehearsal workflow's `reboot` job
   installs the commit by the install runbook on a fresh Ubuntu 24.04 VM under KVM (Docker from
   the Ubuntu archive, the production example's settings with ClamAV, monitoring and restic on

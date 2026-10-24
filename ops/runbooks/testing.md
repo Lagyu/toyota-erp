@@ -114,7 +114,7 @@ The site must hold the small dataset and be served. Persona passwords and journe
 ### Mode 2: a reference stack from an image (what CI runs)
 
 ```bash
-./scripts/ci/e2e.sh toyota-erp/erp:<version>-<sha>-reference [--keep] [-- playwright args]
+./scripts/ci/e2e.sh toyota-erp/erp:<version>-<sha>-reference [--dataset DIR] [--scheduler] [--keep] [-- playwright args]
 ```
 
 1. **Stack.** Starts project `hinode-e2e` with `ENVIRONMENT=reference`, `TLS_MODE=none` on `127.0.0.1:18091`, ClamAV and monitoring off, and a local restic repository. Random secrets go to `.local/e2e-stack/<timestamp>/secrets/`.
@@ -122,7 +122,8 @@ The site must hold the small dataset and be served. Persona passwords and journe
 3. **Dataset.** Loads the **small dataset**:
    - It restores `.local/reference/small-<key>/` if present. The key is a hash of the generator inputs: `generator/`, `profiles/`, `reference_data/`, `runner.py`. The restore runs `bench migrate` (forward migration of a dataset from an earlier build).
    - Otherwise it generates the dataset (`automotive_seed.runner.run`, profile `small`) and caches the dump, the `.tgz` file archives and the encryption key.
-4. **Scheduler.** Disables the scheduler, so background jobs cannot race the journeys, and restarts backend and frontend.
+   - `--dataset DIR` restores a dataset.yml export instead (`database.sql.gz`, `public.tgz`, `private.tgz`, `encryption_key`), with the database given 2 GB of buffer pool. `journeys.yml` uses it for the standard dataset.
+4. **Scheduler.** Disables the scheduler, so background jobs cannot race the journeys, and restarts backend and frontend. `--scheduler` leaves it on, as on a deployed site: the restored dataset's overdue jobs run at once, then on their schedule, beside the journeys.
 5. **Suite.** Prepares personas and fixtures, then runs Playwright in the pinned image.
 6. **Teardown.** Saves `compose.log` and removes the stack with its volumes. With `--keep`, the stack and its secrets stay up for debugging; the command to reach it is printed.
 
@@ -191,6 +192,7 @@ Other workflows, started by hand (`gh workflow run …`):
 | `rehearsal.yml` | job `rehearsal`: the production install from the runbook, an upgrade from 25 commits earlier, uploads scanned by ClamAV, a simulated reboot (Docker daemon restart), the off-host backup with binary log shipping and a drill with point-in-time recovery, a backup and a drill started by the cron service's schedules, TLS headers and cookie flags, the socket-free cron service, the monitoring targets, the rollback ([install-fresh-host.md](install-fresh-host.md), [upgrade.md](upgrade.md)); job `acme`: `TLS_MODE=letsencrypt` against Pebble, Let's Encrypt's ACME test server; job `reboot`: the install on a fresh Ubuntu VM (Docker from the Ubuntu archive), then a real reboot and a power loss (a reset without shutdown) with the checks of [install-fresh-host.md](install-fresh-host.md#11-reboot-persistence) after each |
 | `dataset.yml` | the standard dataset, generated in chained 4-hour segments (up to 18; `resume_run` continues a run that stopped) and validated ([seed-reference-data.md](seed-reference-data.md)) |
 | `dataset-compare.yml` | two dataset runs of one profile compared document by document (their fingerprints): an uninterrupted run against one stopped in the middle of days ([seed-reference-data.md](seed-reference-data.md#pause-and-resume)) |
+| `journeys.yml` | the browser and API suites, the ten journeys among them, on a dataset.yml export (the standard dataset) with the scheduler on, so background jobs run beside the journeys (`e2e.sh IMAGE --dataset DIR --scheduler`) |
 | `perf.yml` | the load tests on that dataset ([ops/performance/README.md](../performance/README.md)) |
 
 ## Not covered by automated tests yet
