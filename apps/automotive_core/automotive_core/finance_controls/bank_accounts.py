@@ -13,6 +13,7 @@ import frappe
 from frappe import _
 from frappe.utils import now_datetime
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
 from automotive_core.utils import canonical_json, sha256_hex
 
@@ -47,7 +48,7 @@ def validate_bank_account(doc, method=None) -> None:
 @frappe.whitelist(methods=["POST"])
 def verify(bank_account: str, comment: str | None = None) -> dict:
 	frappe.only_for(("Treasury Approver",))
-	doc = frappe.get_doc("Bank Account", bank_account)
+	doc = get_scoped_doc("Bank Account", bank_account)
 	if doc.automotive_verification_status == "Verified":
 		return {"status": "Verified"}
 	user = frappe.session.user

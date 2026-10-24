@@ -352,15 +352,15 @@ def decide(request: str, decision: str, comment: str | None = None) -> dict:
 	step = _current_step(req)
 	if not step:
 		frappe.throw(_("Approval Request {0} has no pending step.").format(req.name))
-	if decision == "Reject" and not (comment or "").strip():
-		frappe.throw(_("A comment is required when rejecting."))
-
 	doc = frappe.get_doc(req.reference_doctype, req.reference_name)
 	policy = frappe.get_cached_doc("Approval Policy", req.policy)
-	if doc.docstatus != 0:
-		frappe.throw(_("{0} is no longer a draft.").format(doc.name))
+	# who may decide first: the step's approvers and their delegates, never the maker
 	on_behalf_of, delegation = resolve_authority(user, step, req, doc)
 	_check_separation(user, on_behalf_of, req, doc, policy)
+	if decision == "Reject" and not (comment or "").strip():
+		frappe.throw(_("A comment is required when rejecting."))
+	if doc.docstatus != 0:
+		frappe.throw(_("{0} is no longer a draft.").format(doc.name))
 
 	current_hash = document_hash(doc, policy)
 	if policy.bind_to_document_hash and current_hash != req.document_hash:

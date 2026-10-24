@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # API tests (integration_tests/) against a running site: the API against the committed OpenAPI
-# document, and concurrent requests to critical workflows.
+# document, authorization as signed-in users without the right, and concurrent requests to
+# critical workflows.
 #   contract.sh --url http://small.localhost:18000 --site small.localhost [--password-file FILE]
-# The concurrency tests also need the run's personas and journey fixtures
+# The authorization and concurrency tests also need the run's personas and journey fixtures
 # (INTEGRATION_CREDENTIALS, INTEGRATION_FIXTURES: scripts/ci/e2e.sh sets them); without them
 # they are skipped.
 # Signs in as Administrator. The password comes from --password-file (a deployed stack's
@@ -30,4 +31,4 @@ fi
 export INTEGRATION_URL=$url INTEGRATION_HOST=${site:-} INTEGRATION_PASSWORD
 cd "$REPO_ROOT"
 log "API tests against $url${site:+ ($site)}"
-python3 -m unittest -v integration_tests.test_api_contract integration_tests.test_concurrency
+python3 -m unittest -v integration_tests.test_api_contract integration_tests.test_authorization integration_tests.test_concurrency

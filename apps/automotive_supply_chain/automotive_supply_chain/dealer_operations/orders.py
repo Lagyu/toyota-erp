@@ -8,6 +8,7 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, cint, flt, getdate, nowdate
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.finance_controls.taxes import default_tax_category
 from automotive_core.governance import audit
 from automotive_core.integration_hub import outbox
@@ -197,7 +198,7 @@ def accept(name: str) -> dict:
 	frappe.only_for(("Dealer Liaison", "Sales Manager", "System Manager"))
 	from automotive_core.governance.approvals import find_policy, request_approval
 
-	doc = frappe.get_doc("Dealer Order", name)
+	doc = get_scoped_doc("Dealer Order", name)
 	if doc.docstatus != 1 or doc.status != "Submitted":
 		frappe.throw(_("Dealer Order {0} is {1}.").format(name, doc.status))
 	warehouse = _vehicle_warehouse(doc.company)
@@ -231,7 +232,7 @@ def accept(name: str) -> dict:
 @frappe.whitelist(methods=["POST"])
 def reject(name: str, reason: str) -> str:
 	frappe.only_for(("Dealer Liaison", "Sales Manager", "System Manager"))
-	doc = frappe.get_doc("Dealer Order", name)
+	doc = get_scoped_doc("Dealer Order", name)
 	if doc.status != "Submitted":
 		frappe.throw(_("Dealer Order {0} is {1}.").format(name, doc.status))
 	doc.db_set({"status": "Rejected", "rejection_reason": reason})

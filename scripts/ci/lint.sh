@@ -37,6 +37,9 @@ else
 	python3 scripts/dev/openapi.py --compat "${TMPDIR:-/tmp}/openapi-base.json" || status=1
 fi
 
+step "actions that write past the permissions check the caller's scope (C-10)"
+python3 scripts/dev/check_scoped_actions.py || status=1
+
 step "translations: complete, placeholders and HTML tags kept"
 python3 scripts/dev/check_po.py --require-complete apps/*/*/locale/ja.po || status=1
 

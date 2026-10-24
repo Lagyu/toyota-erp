@@ -12,6 +12,12 @@ provisioning and plant assignments (`automotive_core.access`), partner scope in 
 and the approval service's maker/checker and delegation rules. Restricted fields (supplier
 bank details) sit at permission level 1.
 
+Actions that change a document past these rights (acknowledging an andon, releasing a hold,
+completing an operation, releasing a planning run, building a plant schedule, accepting a
+dealer order) check the role they need first, then load the document with
+`plant_scope.get_scoped_doc`, which applies the caller's User Permissions: they act only on
+documents of their own plant and company ([findings](findings.md), C-10).
+
 `automotive_core.tests.test_permission_matrix` checks the live permission tables against
 this table: change both together.
 

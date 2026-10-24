@@ -17,6 +17,7 @@ import frappe
 from frappe import _
 from frappe.utils import cint, flt, getdate, now_datetime, nowdate, nowtime
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.integration_hub.idempotency import idempotent
 from automotive_manufacturing.traceability.vehicle_units import planned_vins
 
@@ -123,7 +124,7 @@ def complete_operation(job_card: str, completed_qty: float, employee: str | None
 		from_time: str | None = None, to_time: str | None = None) -> dict[str, Any]:
 	"""Log a finished operation on a Job Card (time log + quantity) and submit it when done."""
 	frappe.only_for(MES_ROLES)
-	jc = frappe.get_doc("Job Card", job_card)
+	jc = get_scoped_doc("Job Card", job_card)
 	if jc.docstatus != 0:
 		frappe.throw(_("Job Card {0} is already closed.").format(job_card))
 	start = from_time or now_datetime()

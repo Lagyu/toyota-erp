@@ -129,3 +129,12 @@ def _enforced() -> bool:
 	if "enforce" not in cache:
 		cache["enforce"] = bool(frappe.db.get_single_value("Automotive Settings", "enforce_plant_scope"))
 	return cache["enforce"]
+
+
+def get_scoped_doc(doctype: str, name: str, ptype: str = "read", **kwargs):
+	"""A document for a whitelisted action that then writes it past the DocType permissions (a
+	status change, a recorded step). The caller must be allowed to ``ptype`` it, which applies
+	their User Permissions too: they act only on documents of their own plant and company."""
+	doc = frappe.get_doc(doctype, name, **kwargs)
+	doc.check_permission(ptype)
+	return doc

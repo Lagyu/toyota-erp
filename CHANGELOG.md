@@ -58,6 +58,12 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The custom methods' OpenAPI contract is versioned (1.1.0): additions raise the minor
   version, breaking changes come as new paths with the old ones deprecated, and CI checks
   that the version follows each change of the contract (D-034).
+- Actions that change a document past the DocType permissions (andons, hold release, MES
+  operation completion, planning runs, plant schedules, dealer order acceptance, discrepancy
+  and match-exception resolution, bank-account verification) act only on documents of the
+  caller's own plant and company; building a plant schedule needs a planning role (finding
+  C-10). A lint check keeps new actions to the rule, and API tests call every role-guarded and
+  partner method as a signed-in user without the right.
 - Notifications through one service: desk alerts and e-mails from editable templates in
   the recipient's language, per-user preferences, and a Notification Dispatch record of
   every delivery result.

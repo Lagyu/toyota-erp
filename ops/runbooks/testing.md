@@ -175,7 +175,7 @@ The `image` job runs beside `integration`:
 1. builds the production and reference images with `scripts/image/build.sh` (and `--reference`);
 2. runs `scripts/ci/sbom.sh` and `scripts/ci/smoke.sh` on the production image (the smoke test includes a backup, binary log shipping and a restore drill with point-in-time recovery);
 3. restores the `.local/reference` cache (the small dataset, rebuilt when the generator changes);
-4. runs `scripts/ci/e2e.sh` on the reference image: the Playwright suite, then the API contract and concurrency tests (`integration_tests/`);
+4. runs `scripts/ci/e2e.sh` on the reference image: the API tests (`integration_tests/`: the contract, authorization as users without the right, concurrency), then the Playwright suite;
 5. on `v*` tags, pushes both images as candidates; the `release` job promotes them once every job is green.
 
 Other workflows, started by hand (`gh workflow run …`):

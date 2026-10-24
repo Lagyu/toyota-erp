@@ -14,6 +14,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt, now_datetime
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
 
 
@@ -142,7 +143,7 @@ def before_submit_purchase_invoice(doc, method=None) -> None:
 
 def _resolve(name: str, status: str, note: str) -> str:
 	frappe.only_for(("Procurement Manager", "Group Controller", "System Manager"))
-	exc = frappe.get_doc("Invoice Match Exception", name)
+	exc = get_scoped_doc("Invoice Match Exception", name)
 	if exc.status != "Open":
 		frappe.throw(_("{0} is {1}.").format(name, exc.status))
 	if not (note or "").strip():

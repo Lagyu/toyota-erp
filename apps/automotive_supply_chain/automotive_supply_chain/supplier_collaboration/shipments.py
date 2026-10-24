@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.utils import flt, getdate, now_datetime, nowdate
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
 
 
@@ -158,7 +159,7 @@ def on_purchase_receipt_cancel(doc, method=None) -> None:
 @frappe.whitelist(methods=["POST"])
 def resolve_discrepancy(name: str, resolution: str, note: str) -> str:
 	frappe.only_for(("Buyer", "Procurement Manager", "Warehouse Clerk", "System Manager"))
-	doc = frappe.get_doc("Receipt Discrepancy", name)
+	doc = get_scoped_doc("Receipt Discrepancy", name)
 	if doc.status != "Open":
 		frappe.throw(_("{0} is already resolved.").format(name))
 	doc.update({"status": "Resolved", "resolution": resolution, "resolution_note": note,

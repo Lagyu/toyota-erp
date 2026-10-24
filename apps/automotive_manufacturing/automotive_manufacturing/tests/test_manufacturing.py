@@ -651,3 +651,45 @@ class TestSequencing(ManufacturingTestCase):
 		schedule.resequence(name, [6, 5, 4, 3, 2, 1], "Paint shop delay on AWD bodies")
 		changes = frappe.get_all("Plant Schedule Change", filters={"plant_schedule": name}, pluck="change_type")
 		self.assertEqual(sorted(changes), ["Release", "Resequence"])
+
+
+class TestPlantScopedActions(ManufacturingTestCase):
+	"""SEC-3: the shop-floor and planning actions write past the DocType permissions, so each one
+	checks the caller's User Permissions on the document it acts on: a supervisor of another plant
+	cannot acknowledge an Aichi andon or rebuild an Aichi line's schedule, and a user whose role
+	may not plan cannot build a schedule at all."""
+
+	KYUSHU_SUPERVISOR = "supervisor.kyushu.mfg@hinode.example"
+
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		make_user(cls.KYUSHU_SUPERVISOR, ["Production Supervisor", "Manufacturing User"])
+		if not frappe.db.exists("User Permission", {"user": cls.KYUSHU_SUPERVISOR, "allow": "Plant"}):
+			frappe.get_doc({"doctype": "User Permission", "user": cls.KYUSHU_SUPERVISOR, "allow": "Plant",
+				"for_value": "KYUSHU-PT", "apply_to_all_doctypes": 1}).insert(ignore_permissions=True)
+
+	def test_another_plant_s_documents_are_out_of_reach(self):
+		from automotive_manufacturing.production_planning import schedule
+		from automotive_manufacturing.shop_floor import andon as andon_service
+
+		operator = make_user("operator.scope.mfg@hinode.example", ["Line Operator"])
+		with as_user(operator):
+			andon = frappe.get_doc({"doctype": "Andon Event", "production_line": catalog.LINE,
+				"workstation": "AICHI-FA1-S30", "reason_code": "P-HELP", "stop_type": "Call",
+				"description": "Help needed with the harness routing"}).insert()
+		with as_user(self.KYUSHU_SUPERVISOR), self.assertRaises(frappe.PermissionError):
+			andon_service.acknowledge(andon.name)
+		self.assertEqual(frappe.db.get_value("Andon Event", andon.name, "status"), "Raised")
+		with as_user(SUPERVISOR):
+			andon_service.acknowledge(andon.name)
+		self.assertEqual(frappe.db.get_value("Andon Event", andon.name, "status"), "Acknowledged")
+
+		day = add_days(nowdate(), 5)
+		portal = make_user("scope.portal@partner.example", [], user_type="Website User")
+		for outsider in (self.KYUSHU_SUPERVISOR, portal):
+			with self.subTest(outsider), as_user(outsider), self.assertRaises(frappe.PermissionError):
+				schedule.build(catalog.LINE, day)
+		self.assertFalse(frappe.db.exists("Plant Schedule", {"production_line": catalog.LINE, "schedule_date": day}))
+		with as_user(PLANNER):
+			self.assertTrue(schedule.build(catalog.LINE, day))

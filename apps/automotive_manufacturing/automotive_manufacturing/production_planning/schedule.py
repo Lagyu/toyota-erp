@@ -17,6 +17,7 @@ import frappe
 from frappe import _
 from frappe.utils import add_to_date, get_time, getdate, now_datetime
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_manufacturing.engine import sequencing
 from automotive_manufacturing.production_planning.snapshot import working_days
 
@@ -80,9 +81,12 @@ def log_change(doc, change_type: str, reason: str | None, before: str | None) ->
 
 @frappe.whitelist(methods=["POST"])
 def build(production_line: str, schedule_date: str, reason: str | None = None) -> str:
-	line = frappe.get_cached_doc("Production Line", production_line)
+	line = get_scoped_doc("Production Line", production_line)  # a line of the caller's own plant
 	day = getdate(schedule_date)
 	name = frappe.db.get_value("Plant Schedule", {"production_line": production_line, "schedule_date": day}, "name")
+	# the schedule is saved past the DocType permissions (slots are the service's): the caller's role
+	# must be one that may create schedules, or change an existing one
+	frappe.has_permission("Plant Schedule", "write" if name else "create", throw=True)
 	doc = frappe.get_doc("Plant Schedule", name) if name else frappe.new_doc("Plant Schedule")
 	before = _snapshot(doc) if name else None
 	if name and doc.status in ("Frozen", "Completed"):

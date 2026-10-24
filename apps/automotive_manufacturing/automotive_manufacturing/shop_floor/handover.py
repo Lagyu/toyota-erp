@@ -8,6 +8,8 @@ import frappe
 from frappe import _
 from frappe.utils import flt, get_datetime, get_time, getdate, now_datetime
 
+from automotive_core.access.plant_scope import get_scoped_doc
+
 
 def shift_window(line: str, shift_date, shift_code: str) -> tuple[dt.datetime, dt.datetime]:
 	pattern = frappe.get_cached_value("Production Line", line, "shift_pattern")
@@ -59,10 +61,10 @@ def compute(doc) -> None:
 
 @frappe.whitelist(methods=["POST"])
 def acknowledge(name: str) -> str:
-	doc = frappe.get_doc("Shift Handover", name)
-	if doc.docstatus != 1 or doc.status != "Handed Over":
-		frappe.throw(_("Only handed-over shifts can be acknowledged."))
+	doc = get_scoped_doc("Shift Handover", name)
 	if frappe.session.user != doc.incoming_supervisor:
 		raise frappe.PermissionError(_("Only the incoming supervisor can acknowledge this handover."))
+	if doc.docstatus != 1 or doc.status != "Handed Over":
+		frappe.throw(_("Only handed-over shifts can be acknowledged."))
 	doc.db_set({"status": "Acknowledged", "acknowledged_at": now_datetime()})
 	return doc.status

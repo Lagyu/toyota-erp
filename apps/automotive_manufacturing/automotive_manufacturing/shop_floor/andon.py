@@ -15,6 +15,7 @@ import frappe
 from frappe import _
 from frappe.utils import now_datetime, time_diff_in_seconds
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
 from automotive_manufacturing.quality_control.holds import raise_hold
 
@@ -69,7 +70,7 @@ def _transition(doc, status: str, **values) -> None:
 @frappe.whitelist(methods=["POST"])
 def acknowledge(name: str) -> str:
 	frappe.only_for(RESPONDERS)
-	doc = frappe.get_doc("Andon Event", name)
+	doc = get_scoped_doc("Andon Event", name)
 	if doc.status != "Raised":
 		frappe.throw(_("Andon {0} is already {1}.").format(name, doc.status))
 	_transition(doc, "Acknowledged", acknowledged_at=now_datetime(), assigned_to=doc.assigned_to or frappe.session.user)
@@ -79,7 +80,7 @@ def acknowledge(name: str) -> str:
 @frappe.whitelist(methods=["POST"])
 def contain(name: str, action: str) -> str:
 	frappe.only_for(RESPONDERS)
-	doc = frappe.get_doc("Andon Event", name)
+	doc = get_scoped_doc("Andon Event", name)
 	if doc.status not in ("Raised", "Acknowledged"):
 		frappe.throw(_("Andon {0} is {1}.").format(name, doc.status))
 	if not (action or "").strip():
@@ -129,19 +130,18 @@ def _open_nonconformance(doc, action: str) -> str:
 
 @frappe.whitelist(methods=["POST"])
 def authorize_restart(name: str, note: str | None = None) -> str:
-	doc = frappe.get_doc("Andon Event", name)
+	doc = get_scoped_doc("Andon Event", name)
 	user = frappe.session.user
+	# a quality stop restarts on quality's word, any other on a responder's
+	frappe.only_for(("Quality Manager", "System Manager") if doc.category == "Quality" else RESPONDERS)
 	if doc.status not in ("Acknowledged", "Contained"):
 		frappe.throw(_("Andon {0} must be acknowledged/contained before restart (now {1}).").format(name, doc.status))
 	if doc.category == "Quality":
-		frappe.only_for(("Quality Manager", "System Manager"))
 		if doc.status != "Contained":
 			frappe.throw(_("A quality stop needs a recorded containment before restart."))
 		if doc.quality_hold and frappe.db.get_value("Quality Hold", doc.quality_hold, "status") == "Active":
 			frappe.throw(_("Quality hold {0} is still active; release or disposition it first (jidoka).").format(
 				doc.quality_hold))
-	else:
-		frappe.only_for(RESPONDERS)
 	if user == doc.raised_by and user != "Administrator":
 		raise frappe.PermissionError(_("The person who raised the stop cannot authorise the restart."))
 	restarted = now_datetime()
@@ -180,7 +180,7 @@ def _book_downtime(doc, restarted, note: str | None) -> str | None:
 @frappe.whitelist(methods=["POST"])
 def close(name: str) -> str:
 	frappe.only_for(RESPONDERS)
-	doc = frappe.get_doc("Andon Event", name)
+	doc = get_scoped_doc("Andon Event", name)
 	if doc.stop_type == "Line Stop" and doc.status != "Restarted":
 		frappe.throw(_("A line stop closes after the restart."))
 	if doc.stop_type == "Call" and doc.status == "Raised":

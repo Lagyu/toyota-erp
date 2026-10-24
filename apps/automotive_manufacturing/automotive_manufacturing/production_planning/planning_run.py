@@ -12,6 +12,7 @@ import frappe
 from frappe import _
 from frappe.utils import add_to_date, cint, flt, getdate, now_datetime, nowdate
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
 from automotive_core.utils import canonical_json, commit, sha256_hex
 from automotive_manufacturing.engine import mrp
@@ -31,7 +32,7 @@ def outputs_hash(result: dict) -> str:
 @frappe.whitelist(methods=["POST"])
 def start(company: str, plant: str, parameter_set: str, master_production_schedule: str | None = None) -> str:
 	frappe.only_for(PLANNER_ROLES)
-	params = frappe.get_doc("Planning Parameter Set", parameter_set)
+	params = get_scoped_doc("Planning Parameter Set", parameter_set)
 	if params.docstatus != 1:
 		frappe.throw(_("Only submitted (approved) parameter versions can be used."))
 	if params.plant != plant or params.company != company:
@@ -135,7 +136,7 @@ def load_snapshot(run_name: str) -> dict:
 @frappe.whitelist(methods=["POST"])
 def replay(name: str) -> str:
 	frappe.only_for((*PLANNER_ROLES, "Auditor"))
-	original = frappe.get_doc("Planning Run", name)
+	original = get_scoped_doc("Planning Run", name)
 	run = frappe.get_doc({"doctype": "Planning Run", "company": original.company, "plant": original.plant,
 		"parameter_set": original.parameter_set, "replay_of": original.name, "status": "Queued",
 		"as_of": original.as_of})
@@ -166,7 +167,7 @@ def recover_stalled() -> None:
 @frappe.whitelist(methods=["POST"])
 def release(name: str) -> dict:
 	frappe.only_for(PLANNER_ROLES)
-	run = frappe.get_doc("Planning Run", name, for_update=True)
+	run = get_scoped_doc("Planning Run", name, for_update=True)
 	if run.status != "Completed":
 		frappe.throw(_("Only completed runs can be released (status {0}).").format(run.status))
 	if run.replay_of:
@@ -298,7 +299,7 @@ def decide_all(name: str, decision: str, proposal_type: str | None = None) -> in
 	frappe.only_for(PLANNER_ROLES)
 	if decision not in ("Approved", "Rejected", "Proposed"):
 		frappe.throw(_("Invalid decision."))
-	run = frappe.get_doc("Planning Run", name)
+	run = get_scoped_doc("Planning Run", name)
 	if run.status != "Completed":
 		frappe.throw(_("Run {0} is {1}.").format(name, run.status))
 	count = 0

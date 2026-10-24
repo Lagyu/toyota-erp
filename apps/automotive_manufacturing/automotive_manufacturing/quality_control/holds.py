@@ -26,6 +26,7 @@ import frappe
 from frappe import _
 from frappe.utils import now_datetime
 
+from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.governance import audit
 
 DEFAULT_RELEASE_CHECKS = [
@@ -217,8 +218,8 @@ def validate_hold(doc) -> None:
 
 @frappe.whitelist(methods=["POST"])
 def release(name: str, note: str) -> str:
-	doc = frappe.get_doc("Quality Hold", name)
 	frappe.only_for(("Quality Manager", "System Manager"))
+	doc = get_scoped_doc("Quality Hold", name)
 	if doc.status != "Active":
 		frappe.throw(_("Hold {0} is {1}.").format(name, doc.status))
 	if not (note or "").strip():
