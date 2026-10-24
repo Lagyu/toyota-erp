@@ -20,6 +20,8 @@ Item Reorder, Material Request, Pick List, Stock Entry), each linked to the next
 
 from __future__ import annotations
 
+import math
+
 import frappe
 from frappe import _
 from frappe.utils import flt, nowdate
@@ -159,10 +161,22 @@ def open_transfer_requests(plant: str) -> list[str]:
 		order by mr.transaction_date, mr.name""", (doc.company, doc.raw_material_warehouse))
 
 
+def forward_room(plant: str, items: list[str]) -> dict[str, float]:
+	"""Free space in the plant's forward store per part with a put-away rule there: ERPNext
+	refuses a receipt or transfer into a warehouse above a rule's capacity."""
+	forward = _plant(plant).raw_material_warehouse
+	capacity = dict(frappe.get_all("Putaway Rule", filters={"warehouse": forward, "disable": 0,
+		"item_code": ("in", items)}, fields=["item_code", "stock_capacity"], as_list=True))
+	on_hand = dict(frappe.get_all("Bin", filters={"warehouse": forward, "item_code": ("in", list(capacity))},
+		fields=["item_code", "actual_qty"], as_list=True)) if capacity else {}
+	return {item: max(flt(limit) - flt(on_hand.get(item)), 0) for item, limit in capacity.items()}
+
+
 def pick_from_reserve(material_request: str, plant: str) -> tuple[str, str] | None:
 	"""The clerk fulfils a transfer request from reserve storage: a pick list (locations from
-	the reserve only, oldest stock first) and the transfer entry made from it. None when the
-	reserve holds none of the requested parts."""
+	the reserve only, oldest stock first) and the transfer entry made from it, for what the
+	forward store has room for (receipts since the request may have filled it; the rest of
+	the request stays open). None when nothing can move."""
 	from erpnext.stock.doctype.material_request.material_request import create_pick_list
 	from erpnext.stock.doctype.pick_list.pick_list import create_stock_entry
 
@@ -173,6 +187,21 @@ def pick_from_reserve(material_request: str, plant: str) -> tuple[str, str] | No
 		return None
 	pick_list = create_pick_list(material_request)
 	pick_list.parent_warehouse = doc.reserve_warehouse  # the locations are chosen again on save
+	room = forward_room(plant, items)
+	for row in list(pick_list.locations):
+		if row.item_code not in room:
+			continue
+		take = min(flt(row.stock_qty), room[row.item_code])
+		if frappe.get_cached_value("UOM", row.uom, "must_be_whole_number"):
+			take = math.floor(take / flt(row.conversion_factor or 1)) * flt(row.conversion_factor or 1)
+		room[row.item_code] -= take
+		if take <= 0:
+			pick_list.remove(row)
+			continue
+		row.stock_qty = take
+		row.qty = take / flt(row.conversion_factor or 1)
+	if not pick_list.locations:
+		return None
 	pick_list.insert()
 	pick_list.submit()
 	entry = frappe.get_doc(create_stock_entry(pick_list.as_dict()))

@@ -76,3 +76,23 @@ class TestStorage(IntegrationTestCase):
 		self.assertEqual((self._bin(catalog.PARTS_STORE), self._bin(RESERVE)), (9, 9))
 		self.assertEqual(frappe.db.get_value("Material Request", request, "status"), "Transferred")
 		self.assertNotIn(request, storage.open_transfer_requests(catalog.PLANT))
+
+		# a receipt fills the forward store before the clerk picks: only what fits moves (ERPNext
+		# refuses a transfer above the capacity), the rest of the request stays open
+		self._entry("Material Issue", 6)
+		request = storage.raise_transfer_requests(catalog.PLANT)
+		self._entry("Material Receipt", 5, putaway=True)
+		self.assertEqual((self._bin(catalog.PARTS_STORE), self._bin(RESERVE)), (8, 9))
+		self.assertEqual(storage.forward_room(catalog.PLANT, [PART]), {PART: 2})
+		with as_user(h.WAREHOUSE):
+			pick_list, _entry = storage.pick_from_reserve(request, catalog.PLANT)
+		self.assertEqual(flt(frappe.db.get_value("Pick List Item", {"parent": pick_list}, "qty")), 2)
+		self.assertEqual((self._bin(catalog.PARTS_STORE), self._bin(RESERVE)), (10, 7))
+		self.assertIn(request, storage.open_transfer_requests(catalog.PLANT))
+		with as_user(h.WAREHOUSE):
+			self.assertIsNone(storage.pick_from_reserve(request, catalog.PLANT))  # no room at all
+		self._entry("Material Issue", 5)
+		with as_user(h.WAREHOUSE):
+			storage.pick_from_reserve(request, catalog.PLANT)
+		self.assertEqual((self._bin(catalog.PARTS_STORE), self._bin(RESERVE)), (9, 3))
+		self.assertNotIn(request, storage.open_transfer_requests(catalog.PLANT))

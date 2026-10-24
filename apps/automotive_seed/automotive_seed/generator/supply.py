@@ -220,7 +220,8 @@ def storage(ctx: SeedContext, structure, loops: dict) -> str:
 	"""Forward stores and reserve storage: put-away and reorder rules for every stored part
 	(purchased, not delivered just in time to the line, not inspected on receipt), sized from
 	its daily usage: three days in the forward store, replenished at a day and a half.
-	Runs before the opening stock (a rule's capacity may not be below the stock on hand)."""
+	Runs before the opening stock (a rule's capacity may not be below the stock on hand), which
+	then fills each forward store up to its capacity and puts the rest in reserve storage."""
 	from automotive_supply_chain.logistics.storage import set_storage
 
 	stored = 0
@@ -262,6 +263,17 @@ def opening(ctx: SeedContext, structure, roster) -> None:
 	frappe.db.commit()
 
 
+def _stored(code: str, warehouse: str, qty: float) -> list[tuple[str, float]]:
+	"""Opening stock of a part with put-away rules: the forward store up to its capacity, the
+	rest in reserve storage (ERPNext refuses an opening above a rule's capacity)."""
+	capacity = frappe.db.get_value("Putaway Rule", {"item_code": code, "warehouse": warehouse, "disable": 0},
+		"stock_capacity")
+	reserve = frappe.db.get_value("Plant", {"raw_material_warehouse": warehouse}, "reserve_warehouse")
+	if capacity is None or not reserve or qty <= flt(capacity):
+		return [(warehouse, qty)]
+	return [(warehouse, flt(capacity)), (reserve, qty - flt(capacity))]
+
+
 def _opening_stock(ctx, structure, usage, day) -> None:
 	from automotive_seed.generator.flows.common import line_side_for, store_for
 
@@ -278,20 +290,23 @@ def _opening_stock(ctx, structure, usage, day) -> None:
 		else:
 			targets = [store_for("KYUSHU-PT")]
 		supplier = primary_supplier(code, info["plant"])
-		for n, warehouse in enumerate(targets):
-			qty = math.ceil(per_day * days / len(targets))
-			row = {"item_code": code, "warehouse": warehouse, "qty": qty, "valuation_rate": info["cost"],
-				"use_serial_batch_fields": 1}
-			if info["tracking"] == "batch":
-				batch_id = f"OPEN-{code}-{n + 1}"[:140]
-				if not frappe.db.exists("Batch", batch_id):
-					frappe.get_doc({"doctype": "Batch", "batch_id": batch_id, "item": code, "automotive_supplier": supplier,
-						"automotive_supplier_lot": "OPENING"}).insert(ignore_permissions=True)
-				row["batch_no"] = batch_id
-			elif info["tracking"] == "serial":
-				row["qty"] = math.ceil(qty)
-				row["serial_no"] = "\n".join(f"{code}-OPN{n + 1}-{i:05d}" for i in range(1, row["qty"] + 1))
-			by_company.setdefault(company, []).append(row)
+		for n, target in enumerate(targets):
+			total = math.ceil(per_day * days / len(targets))
+			first = 1
+			for warehouse, qty in _stored(code, target, total):
+				row = {"item_code": code, "warehouse": warehouse, "qty": qty, "valuation_rate": info["cost"],
+					"use_serial_batch_fields": 1}
+				if info["tracking"] == "batch":
+					batch_id = f"OPEN-{code}-{n + 1}"[:140]
+					if not frappe.db.exists("Batch", batch_id):
+						frappe.get_doc({"doctype": "Batch", "batch_id": batch_id, "item": code,
+							"automotive_supplier": supplier, "automotive_supplier_lot": "OPENING"}).insert(ignore_permissions=True)
+					row["batch_no"] = batch_id
+				elif info["tracking"] == "serial":
+					row["qty"] = math.ceil(qty)
+					row["serial_no"] = "\n".join(f"{code}-OPN{n + 1}-{i:05d}" for i in range(first, first + row["qty"]))
+					first += row["qty"]
+				by_company.setdefault(company, []).append(row)
 	# Aichi starts with a few days of Kyushu powertrains (at the cost-plus transfer price), as
 	# a running plant would; afterwards they arrive by intercompany shipment.
 	for code, per_day in sorted(powertrain_usage(structure, ctx).items()):

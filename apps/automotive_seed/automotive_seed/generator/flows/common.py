@@ -16,6 +16,10 @@ def store_for(plant_name: str) -> str:
 	return plant(plant_name).raw_material_warehouse
 
 
+def reserve_for(plant_name: str) -> str | None:
+	return plant(plant_name).reserve_warehouse
+
+
 def fg_for(plant_name: str) -> str:
 	return plant(plant_name).finished_goods_warehouse
 

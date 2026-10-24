@@ -15,7 +15,7 @@ from automotive_core.governance import approvals
 from automotive_manufacturing.mes.production import build_entry
 from automotive_seed.generator.catalog import AICHI, KYUSHU, MODELS
 from automotive_seed.generator.context import working_day
-from automotive_seed.generator.flows.common import fg_for, line_side_for, store_for
+from automotive_seed.generator.flows.common import fg_for, line_side_for, reserve_for, store_for
 
 OPEN_WO = ("Not Started", "In Process")
 LINE_SHARE = {"AICHI-FA1": 0.72, "AICHI-FA2": 0.28}
@@ -132,17 +132,26 @@ class Production:
 	# material availability (transfers, expedites)
 	# -----------------------------------------------------------------------------------
 	def ensure(self, item: str, qty: float, warehouse: str, plant: str) -> None:
+		"""``qty`` of the item at ``warehouse``: moved from the forward store, then from reserve
+		storage (the clerk fetches it from the high-bay rather than buy in), and expedited only
+		when the plant holds none."""
+		from automotive_supply_chain.logistics.storage import forward_room
+
 		have = self.actual(item, warehouse)
 		short = qty - have
 		if short <= 1e-9:
 			return
 		store = store_for(plant)
-		if store != warehouse:
-			available = self.actual(item, store)
+		for source in (store, reserve_for(plant)):
+			if not source or source == warehouse or short <= 1e-9:
+				continue
+			available = self.actual(item, source)
 			move = min(available, math.ceil(short)) if frappe.get_cached_value("Item", item, "has_serial_no") else min(
 				available, short)
+			if warehouse == store:  # into the forward store: never above its put-away capacity
+				move = min(move, forward_room(plant, [item]).get(item, move))
 			if move > 0:
-				self.transfer(item, move, store, warehouse, plant)
+				self.transfer(item, move, source, warehouse, plant)
 				short -= move
 		if short > 1e-9:
 			self.sim.procurement.expedite(item, short, warehouse, plant)
