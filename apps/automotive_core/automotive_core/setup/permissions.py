@@ -123,6 +123,15 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 			"Stock Reconciliation",
 			"Non Conformance",
 			"Blanket Order",
+			"Stock Reservation Entry",
+			"Serial No",
+			"Batch",
+			"Serial and Batch Bundle",
+			"Stock Ledger Entry",
+			"Bin",
+			# ERPNext's Auditor reads purchase invoices and journals but not these
+			"Sales Invoice",
+			"Payment Entry",
 		)
 	],
 ]

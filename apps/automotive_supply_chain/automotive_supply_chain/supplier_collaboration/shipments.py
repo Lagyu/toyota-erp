@@ -29,6 +29,10 @@ def validate_asn(doc) -> None:
 			as_dict=True)
 		if po.supplier != doc.supplier or po.docstatus != 1 or po.status in ("Closed", "Completed"):
 			frappe.throw(_("Row {0}: {1} is not an open order of {2}.").format(row.idx, row.purchase_order, doc.supplier))
+		if po.status == "On Hold":
+			# ERPNext refuses receipts against a held order; refuse the shipment notice too
+			frappe.throw(_("Row {0}: {1} is on hold; ship once the buyer releases it.").format(row.idx,
+				row.purchase_order))
 		if po_item.item_code != row.item_code:
 			frappe.throw(_("Row {0}: item differs from the order line ({1}).").format(row.idx, po_item.item_code))
 		shipped_before = flt(frappe.db.sql(

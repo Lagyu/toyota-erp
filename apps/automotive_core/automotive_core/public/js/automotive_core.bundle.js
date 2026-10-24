@@ -176,3 +176,29 @@ frappe.ui.form.on("Period Close Checklist", {
 		}
 	},
 });
+
+// Integration hub (ERP-11): operators replay a failed inbound message once its cause is
+// fixed, and retry an outbound delivery; both keep the exactly-once guarantees.
+frappe.ui.form.on("Integration Inbound Message", {
+	refresh(frm) {
+		if (!["Failed", "Dead Letter", "Rejected"].includes(frm.doc.status)) return;
+		if (!frappe.user.has_role(["IT Operator", "System Manager"])) return;
+		frm.add_custom_button(__("Replay"), () =>
+			automotive
+				.call("automotive_core.integration_hub.inbound.replay", { name: frm.docname })
+				.then(() => frm.reload_doc())
+		);
+	},
+});
+
+frappe.ui.form.on("Integration Outbound Message", {
+	refresh(frm) {
+		if (!["Failed", "Dead Letter"].includes(frm.doc.status)) return;
+		if (!frappe.user.has_role(["IT Operator", "System Manager"])) return;
+		frm.add_custom_button(__("Retry Delivery"), () =>
+			automotive
+				.call("automotive_core.integration_hub.outbox.retry", { name: frm.docname })
+				.then(() => frm.reload_doc())
+		);
+	},
+});

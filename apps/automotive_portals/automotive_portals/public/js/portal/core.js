@@ -308,6 +308,12 @@ export function shell(root, { title, party, tabs }) {
 		}
 	}
 
+	// a changed fragment (edited URL, in-page link, back/forward) opens that tab
+	window.addEventListener("hashchange", () => {
+		const key = window.location.hash.slice(1);
+		const active = buttons.find((b) => b.getAttribute("aria-selected") === "true");
+		if (key && tabs.some((tab) => tab.key === key) && active?.id !== `hp-tab-${key}`) select(key);
+	});
 	select(window.location.hash.slice(1) || tabs[0].key);
 	return select;
 }

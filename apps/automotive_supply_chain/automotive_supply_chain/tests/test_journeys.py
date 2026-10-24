@@ -295,7 +295,7 @@ class TestDealerJourney(JourneyTestCase):
 		self.assertFalse(result["needs_approval"])
 		return frappe.db.get_value("Dealer Order", order.name, "sales_order")
 
-	def _released_vehicle(self) -> str:
+	def _released_vehicle(self, for_sales_order: str | None = None) -> str:
 		cat = self.cat
 		for item, qty in ((cat["wheel"], 4), (cat["seat"], 2)):
 			if frappe.get_cached_value("Item", item, "has_batch_no"):
@@ -305,7 +305,9 @@ class TestDealerJourney(JourneyTestCase):
 				catalog.receive(item, qty)
 		ecu = f"TECU-{frappe.generate_hash(length=8).upper()}"
 		catalog.receive(cat["ecu"], 1, serial_nos=[ecu], rate=900)
-		wo = catalog.work_order(self.variant, 1)
+		so_item = frappe.get_all("Sales Order Item", filters={"parent": for_sales_order}, pluck="name",
+			limit=1)[0] if for_sales_order else None
+		wo = catalog.work_order(self.variant, 1, sales_order=for_sales_order, sales_order_item=so_item)
 		se = build_entry(wo.name, 1)
 		vin = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")[0]
 		qi = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "In Process",
@@ -375,6 +377,24 @@ class TestDealerJourney(JourneyTestCase):
 		gl = frappe.db.sql("""select sum(debit) - sum(credit) from `tabGL Entry` where voucher_no in (%s, %s)
 			and party = %s and is_cancelled = 0""", (si.name, pe.name, self.dealer))[0][0]
 		self.assertAlmostEqual(flt(gl), 0, places=2)
+
+	def test_built_to_order_vehicle_serves_its_own_order(self):
+		from automotive_supply_chain.dealer_operations.allocation import allocate
+
+		older = self._order("ASAHI-PO-1003")
+		newer = self._order("ASAHI-PO-1004")
+		vin = self._released_vehicle(for_sales_order=newer)
+		allocate(AICHI)
+		# FIFO alone would hand it to the older order of the same variant
+		self.assertEqual(frappe.db.get_value("Vehicle Allocation", {"vehicle_unit": vin, "status": "Allocated"},
+			"sales_order"), newer)
+		self.assertNotEqual(frappe.db.get_value("Vehicle Allocation", {"sales_order": older, "status": "Allocated"},
+			"vehicle_unit"), vin)
+		# a vehicle built to stock then serves the oldest waiting order
+		stock_vin = self._released_vehicle()
+		allocate(AICHI)
+		self.assertEqual(frappe.db.get_value("Vehicle Allocation", {"vehicle_unit": stock_vin, "status": "Allocated"},
+			"sales_order"), older)
 
 	def test_cancellation_after_allocation_releases_reservation(self):
 		from automotive_supply_chain.dealer_operations.allocation import allocate

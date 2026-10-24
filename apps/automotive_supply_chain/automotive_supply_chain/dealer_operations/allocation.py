@@ -2,7 +2,9 @@
 serial-level Stock Reservation Entry (ERP-08, J-01, J-09).
 
 Only vehicles that are built, quality-released, in stock in the selling company and
-not yet allocated are candidates. Lines are served by the highest-priority active
+not yet allocated are candidates. A vehicle built to order (its work order was planned
+for a sales order line) goes to that line first; every other vehicle, and a built-to-order
+one whose line no longer needs it, serves the open lines by the highest-priority active
 Allocation Rule for the company (FIFO by order date, dealer tier, or requested date).
 Releasing an allocation cancels its reservation and returns the vehicle to the pool;
 inventory value never changes because nothing moves until the Delivery Note.
@@ -31,10 +33,15 @@ def candidates(company: str) -> list[dict]:
 	warehouses = _vehicle_warehouses(company)
 	if not warehouses:
 		return []
-	return frappe.get_all("Vehicle Unit", filters={"quality_status": "Released", "inventory_status": "In Stock",
-		"production_status": "Built", "automotive_allocation": ("is", "not set"),
-		"current_warehouse": ("in", warehouses)}, fields=["name", "variant_item", "current_warehouse", "built_at"],
-		order_by="built_at asc, name asc")
+	return frappe.db.sql(
+		"""select vu.name, vu.variant_item, vu.current_warehouse, vu.built_at, wo.sales_order_item
+		from `tabVehicle Unit` vu left join `tabWork Order` wo on wo.name = vu.work_order
+		where vu.quality_status = 'Released' and vu.inventory_status = 'In Stock' and vu.production_status = 'Built'
+			and ifnull(vu.automotive_allocation, '') = '' and vu.current_warehouse in %(warehouses)s
+		order by vu.built_at asc, vu.name asc""",
+		{"warehouses": tuple(warehouses)},
+		as_dict=True,
+	)
 
 
 def open_lines(company: str) -> list[dict]:
@@ -95,16 +102,23 @@ def allocate(company: str | None = None) -> list[str]:
 		rule = _rule(comp)
 		method = rule.method if rule else "Order Date (FIFO)"
 		lines = sorted(open_lines(comp), key=_sort_key(method))
-		by_variant: dict[str, list] = {}
+		need = {line.name: int(flt(line.stock_qty) - flt(line.delivered_qty) * flt(line.conversion_factor)
+			- flt(line.allocated)) for line in lines}
+		by_line = {line.name: line for line in lines}
+		pool: dict[str, list] = {}
+		# built to order: the vehicle planned for a line serves that line
 		for vehicle in candidates(comp):
-			by_variant.setdefault(vehicle.variant_item, []).append(vehicle)
-		for line in lines:
-			pool = by_variant.get(line.item_code) or []
-			need = int(flt(line.stock_qty) - flt(line.delivered_qty) * flt(line.conversion_factor) - flt(line.allocated))
-			while need > 0 and pool:
-				vehicle = pool.pop(0)
+			line = by_line.get(vehicle.sales_order_item)
+			if line and line.item_code == vehicle.variant_item and need[line.name] > 0:
 				created.append(_allocate_one(line, vehicle, rule.name if rule else None))
-				need -= 1
+				need[line.name] -= 1
+			else:
+				pool.setdefault(vehicle.variant_item, []).append(vehicle)
+		for line in lines:
+			free = pool.get(line.item_code) or []
+			while need[line.name] > 0 and free:
+				created.append(_allocate_one(line, free.pop(0), rule.name if rule else None))
+				need[line.name] -= 1
 	commit()
 	return created
 

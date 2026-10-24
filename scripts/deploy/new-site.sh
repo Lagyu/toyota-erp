@@ -35,7 +35,10 @@ bench --site "$site" set-config automotive_environment "$ENVIRONMENT"
 bench --site "$site" set-config host_name "https://$site"
 "${compose[@]}" exec -T -e TOKEN="$token" backend bash -c \
 	"bench --site '$site' set-config automotive_metrics_token \"\$TOKEN\""
-bench --site "$site" execute automotive_core.setup.tenant.apply --kwargs "{'tenant': 'hinode'}"
+# the tenant setup returns its change log (one JSON line); report its size, keep the detail
+steps=$(bench --site "$site" execute automotive_core.setup.tenant.apply --kwargs "{'tenant': 'hinode'}" | tail -1)
+log "tenant setup: $(python3 -c 'import json, sys; print(len(json.loads(sys.argv[1] or "[]")), "changes")' "$steps" \
+	2>/dev/null || echo "applied")"
 bench --site "$site" enable-scheduler
 bench use "$site"
 log "site $site ready ($ENVIRONMENT)"

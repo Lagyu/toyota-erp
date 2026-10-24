@@ -145,7 +145,8 @@ def make_batch(item: str, batch_id: str, supplier: str | None = None) -> str:
 
 
 def work_order(item: str, qty: int, bom: str | None = None, start_offset_days: int = 0, submit: bool = True,
-		fg_warehouse: str = FG, pinned: bool = False):
+		fg_warehouse: str = FG, pinned: bool = False, sales_order: str | None = None,
+		sales_order_item: str | None = None):
 	wo = frappe.get_doc({
 		"doctype": "Work Order",
 		"production_item": item,
@@ -161,6 +162,8 @@ def work_order(item: str, qty: int, bom: str | None = None, start_offset_days: i
 		"use_multi_level_bom": 0,
 		"automotive_production_line": LINE,
 		"automotive_plant": PLANT,
+		"sales_order": sales_order,
+		"sales_order_item": sales_order_item,
 	})
 	wo.insert(ignore_permissions=True)
 	if submit:

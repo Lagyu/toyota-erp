@@ -65,7 +65,7 @@ done
 "${compose[@]}" restart backend frontend >/dev/null
 for _ in $(seq 1 30); do
 	"${compose[@]}" exec -T frontend curl -fsS -o /dev/null -H "Host: smoke.localhost" \
-		http://127.0.0.1:8080/api/method/automotive_core.ops.health.live && break
+		http://127.0.0.1:8080/api/method/automotive_core.ops.health.live 2>/dev/null && break
 	sleep 5
 done
 "$REPO_ROOT/scripts/deploy/smoke.sh" "$env_file" 2>&1 | tee "$work/checks.log"
