@@ -20,6 +20,9 @@ log "pre-upgrade backup"
 "${compose[@]}" pull --quiet || true
 "${compose[@]}" up -d --remove-orphans
 "${compose[@]}" exec -T backend bench --site "$site" migrate
+# sites created before new-site.sh did this get their encryption key now, while the workers
+# refuse requests; the wait below lets every worker read it (lib/common.sh)
+"${compose[@]}" exec -T backend env/bin/python -c "$ENSURE_ENCRYPTION_KEY_PY" "$site"
 "${compose[@]}" exec -T backend bench --site "$site" set-maintenance-mode off
 wait_ready "$env_file" "$site" 61 || true  # the smoke test below reports what is wrong
 "$REPO_ROOT/scripts/deploy/smoke.sh" "$env_file"

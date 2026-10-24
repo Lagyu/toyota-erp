@@ -30,7 +30,7 @@ SITE=erp.hinode.example
 - The environment file holds the S3 credentials: keep it at mode `600`. `compose.sh` passes its values to Compose through a temporary owner-only file that it deletes on exit.
 - **Container environments are not secret from Docker users.** Values passed to containers (S3 keys, values given with `exec -e`) are visible to anyone who can use Docker on the host. Membership of the `docker` group is equivalent to root: keep it to the deploy user.
 - **Backups contain secrets.** Every backup set contains `*-site_config_backup.json` with the `encryption_key` and DB password. The restic repository is encrypted, so its password is the master secret: escrow it off the host.
-- **Never change `encryption_key`.** Existing encrypted values would no longer decrypt. Restores carry the backup's key over (`ops/backup/adopt_encryption_key.py`).
+- **Never change `encryption_key`.** Existing encrypted values would no longer decrypt. Restores carry the backup's key over (`ops/backup/adopt_encryption_key.py`). `new-site.sh` creates the key with the site, and `upgrade.sh` adds one to a site that has none: Frappe would otherwise create it at the first encrypted field, and two processes doing that at once each write their own, losing what the first encrypted.
 - Secret files are bind mounts. After **replacing** a file (new inode), restart the containers that read it, because a running container keeps the old file. Rewriting the file in place keeps the inode.
 
 ### Rotation

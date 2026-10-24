@@ -145,6 +145,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the synthetic dataset was dated after the history that uses it.
 - The synthetic opening stock exceeded the forward stores' put-away capacity (it now puts the
   excess in reserve storage), and the generator expedited parts that reserve storage held.
+- Concurrent requests with one Idempotency-Key answered 417 instead of replaying the first
+  answer; two processes could each create a site's encryption key, leaving values encrypted
+  with the first undecryptable (sites now get their key at creation, or at the next upgrade);
+  Prometheus could not scrape the application (Frappe refused the Authorization header); the
+  inbound `dealer_order_change` handler failed on every message.
 - The `cron` service had no restart policy (it did not come back after a reboot), and the
   Python that sets a stack's Administrator password ran from the bench directory, where
   Frappe's logger finds no log directory.
