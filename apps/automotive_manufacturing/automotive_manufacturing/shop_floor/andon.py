@@ -94,8 +94,16 @@ def contain(name: str, action: str) -> str:
 
 
 def _open_nonconformance(doc, action: str) -> str:
+	"""The case for this stop: an open one already raised for the same batch or serial (an
+	inspection usually finds it first), else a new one."""
 	from automotive_manufacturing.quality_control.inspections import _ensure_procedure
 
+	for field, value in (("automotive_batch_no", doc.batch_no), ("automotive_serial_no", doc.serial_no)):
+		existing = frappe.db.get_value("Non Conformance", {field: value, "status": "Open"}, "name") if value else None
+		if existing:
+			if not frappe.db.get_value("Non Conformance", existing, "automotive_andon_event"):
+				frappe.db.set_value("Non Conformance", existing, "automotive_andon_event", doc.name)
+			return existing
 	nc = frappe.get_doc(
 		{
 			"doctype": "Non Conformance",

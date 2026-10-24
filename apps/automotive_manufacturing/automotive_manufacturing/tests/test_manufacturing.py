@@ -175,6 +175,23 @@ class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 		with self.assertRaises(frappe.ValidationError):
 			build_entry(wo.name, 1)
 
+	def test_auto_numbered_output_is_linked_to_its_lots(self):
+		"""A sub-assembly whose batch is numbered on posting (as the line reports it) still
+		gets its genealogy, so vehicles trace through it to the supplier lots."""
+		cat = self.cat
+		foam_batch = catalog.make_batch(cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries")
+		catalog.receive(cat["foam"], 2, batch_no=foam_batch, rate=40)
+		wo = catalog.work_order(cat["seat"], 1, fg_warehouse=catalog.LINE_SIDE)
+		se = build_entry(wo.name, 1)
+		links = frappe.get_all("Genealogy Link", filters={"stock_entry": se.name},
+			fields=["parent_batch_no", "component_batch_no"])
+		self.assertTrue(links and all(link.parent_batch_no for link in links))
+		self.assertIn(foam_batch, {link.component_batch_no for link in links})
+		from automotive_manufacturing.traceability.genealogy import backfill
+
+		backfill()  # entries that already have links are left alone
+		self.assertEqual(frappe.db.count("Genealogy Link", {"stock_entry": se.name}), len(links))
+
 	def test_unreleased_vehicle_cannot_ship(self):
 		cat = self.cat
 		self.stock_up(1)

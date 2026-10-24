@@ -155,7 +155,22 @@ def validate_outbound(doc, method=None) -> None:
 # ---------------------------------------------------------------------------------------
 
 
+SCOPE_FIELDS = {
+	"Batch": "batch_no", "Serial No": "serial_no", "Item": "item", "Work Order": "work_order",
+	"Workstation": "workstation", "Production Line": "production_line", "Supplier": "supplier",
+}
+
+
 def raise_hold(scope: str, reason: str, company: str, source=None, **targets) -> str:
+	"""Hold the target, or confirm the active hold already on it (one hold per target: a
+	second finding on a held batch is recorded on that hold's audit trail)."""
+	field = SCOPE_FIELDS[scope]
+	existing = frappe.db.get_value("Quality Hold", {"hold_scope": scope, field: targets.get(field), "status": "Active"},
+		"name") if targets.get(field) else None
+	if existing:
+		audit.record("quality.hold_confirmed", "Quality Hold", existing, {"reason": reason,
+			"source": [source.doctype, source.name] if source else None}, company=company)
+		return existing
 	doc = frappe.get_doc(
 		{
 			"doctype": "Quality Hold",
@@ -182,10 +197,7 @@ def on_hold_insert(doc) -> None:
 
 
 def validate_hold(doc) -> None:
-	required = {
-		"Batch": "batch_no", "Serial No": "serial_no", "Item": "item", "Work Order": "work_order",
-		"Workstation": "workstation", "Production Line": "production_line", "Supplier": "supplier",
-	}[doc.hold_scope]
+	required = SCOPE_FIELDS[doc.hold_scope]
 	if not doc.get(required):
 		frappe.throw(_("A {0} hold needs the {1}.").format(doc.hold_scope, doc.meta.get_label(required)))
 	if doc.batch_no and not doc.item:

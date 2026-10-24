@@ -19,6 +19,13 @@ import frappe
 from frappe.utils import now_datetime
 
 
+def _bundle(row) -> str | None:
+	"""The row's Serial and Batch Bundle. Serials and batches numbered automatically are
+	bundled while the entry posts, after the in-memory row was built: read it back."""
+	return row.serial_and_batch_bundle or (frappe.db.get_value("Stock Entry Detail", row.name,
+		"serial_and_batch_bundle") if row.name else None)
+
+
 def _consumed(stock_entry) -> list[dict]:
 	from erpnext.stock.serial_batch_bundle import get_batch_nos, get_serial_nos
 
@@ -28,9 +35,10 @@ def _consumed(stock_entry) -> list[dict]:
 			continue
 		serials = [s.strip() for s in (row.serial_no or "").split("\n") if s.strip()]
 		batches = {row.batch_no: row.transfer_qty or row.qty} if row.batch_no else {}
-		if row.serial_and_batch_bundle and not serials and not batches:
-			serials = get_serial_nos(row.serial_and_batch_bundle)
-			batches = {b: abs(d.get("qty", 0)) for b, d in (get_batch_nos(row.serial_and_batch_bundle) or {}).items()}
+		bundle = _bundle(row) if not serials and not batches else None
+		if bundle:
+			serials = get_serial_nos(bundle)
+			batches = {b: abs(d.get("qty", 0)) for b, d in (get_batch_nos(bundle) or {}).items()}
 		for serial in serials:
 			rows.append({"item": row.item_code, "serial": serial, "batch": None, "qty": 1})
 		for batch, qty in batches.items():
@@ -47,10 +55,10 @@ def _produced(stock_entry) -> list[dict]:
 			continue
 		serials = [s.strip() for s in (row.serial_no or "").split("\n") if s.strip()]
 		batch = row.batch_no
-		if row.serial_and_batch_bundle and not serials and not batch:
-			serials = get_serial_nos(row.serial_and_batch_bundle)
-			batch_map = get_batch_nos(row.serial_and_batch_bundle) or {}
-			batch = next(iter(batch_map), None)
+		bundle = _bundle(row) if not serials and not batch else None
+		if bundle:
+			serials = get_serial_nos(bundle)
+			batch = next(iter(get_batch_nos(bundle) or {}), None)
 		out.append({"item": row.item_code, "serials": serials, "batch": batch})
 	return out
 
@@ -109,6 +117,18 @@ def on_stock_entry_submit(doc, method=None) -> None:
 				)
 				link.flags.ignore_permissions = True
 				link.db_insert()
+
+
+def backfill(limit: int | None = None) -> int:
+	"""Record the links of submitted manufacture entries that have none (entries posted
+	before auto-numbered serials/batches were read back). Idempotent."""
+	names = frappe.db.sql_list(
+		"""select se.name from `tabStock Entry` se where se.docstatus = 1 and se.purpose in ('Manufacture', 'Repack')
+		and not exists (select 1 from `tabGenealogy Link` gl where gl.stock_entry = se.name)
+		order by se.posting_date, se.posting_time, se.creation""" + (f" limit {int(limit)}" if limit else ""))
+	for name in names:
+		on_stock_entry_submit(frappe.get_doc("Stock Entry", name))
+	return len(names)
 
 
 def on_stock_entry_cancel(doc, method=None) -> None:

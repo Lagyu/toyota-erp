@@ -8,6 +8,7 @@ from frappe import _
 from frappe.utils import flt
 
 from automotive_core.governance import audit
+from automotive_core.governance.elevation import on_behalf_of
 from automotive_manufacturing.quality_control.holds import close_dispositioned
 
 
@@ -64,17 +65,21 @@ def _purchase_return(doc) -> str:
 	)
 	if not receipt:
 		frappe.throw(_("No purchase receipt from {0} for {1} to return against.").format(doc.supplier, doc.item_code))
-	ret = make_return_doc("Purchase Receipt", receipt[0][0])
-	ret.items = [r for r in ret.items if r.item_code == doc.item_code and (not doc.batch_no or r.batch_no == doc.batch_no)]
-	for row in ret.items:
-		row.qty = -flt(doc.qty)
-		row.received_qty = -flt(doc.qty)
-		row.warehouse = doc.from_warehouse
-		row.use_serial_batch_fields = 1
-		row.batch_no = doc.batch_no
-	ret.flags.ignore_permissions = True
-	ret.insert()
-	ret.submit()
+	# the approved disposition is the authority for the return; quality staff need not
+	# hold purchasing rights, so the return is a system step recorded on their behalf
+	with on_behalf_of(_("Return for disposition {0}").format(doc.name), doc.doctype, doc.name) as requester:
+		ret = make_return_doc("Purchase Receipt", receipt[0][0])
+		ret.items = [r for r in ret.items if r.item_code == doc.item_code
+			and (not doc.batch_no or r.batch_no == doc.batch_no)]
+		for row in ret.items:
+			row.qty = -flt(doc.qty)
+			row.received_qty = -flt(doc.qty)
+			row.warehouse = doc.from_warehouse
+			row.use_serial_batch_fields = 1
+			row.batch_no = doc.batch_no
+		ret.insert()
+		ret.submit()
+		ret.db_set("owner", requester, update_modified=False)
 	return ret.name
 
 

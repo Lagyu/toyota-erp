@@ -95,12 +95,13 @@ def prepare_users(password: str | None = None, output: str | None = None) -> str
 			users[key] = user
 	users["supplier"] = _partner("Supplier")
 	users["dealer"] = _partner("Customer")
-	# a second treasury approver: payments need two distinct approvers
-	others = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
-		where r.role = 'Treasury Approver' and u.enabled = 1 and u.name != %s order by u.name""",
-		users.get("treasury") or "", pluck=True)
-	if others:
-		users["treasury_2"] = others[0]
+	# second approvers: payments need two treasury approvers, dispositions a second quality manager
+	for key, role in (("treasury", "Treasury Approver"), ("quality_manager", "Quality Manager")):
+		others = frappe.db.sql("""select u.name from `tabUser` u join `tabHas Role` r on r.parent = u.name
+			where r.role = %s and u.enabled = 1 and u.user_type = 'System User' and u.name != %s order by u.name""",
+			(role, users.get(key) or ""), pluck=True)
+		if others:
+			users[f"{key}_2"] = others[0]
 	for user in users.values():
 		if user:
 			update_password(user, password)
@@ -129,6 +130,10 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	  free in stock and no order waiting for it;
 	- ``j04`` engineering change: a released module BOM with a whole-unit component, no change
 	  pending, and a work order already built on it (history that must stay pinned);
+	- ``j05`` defective batch: a supplier's batch in use at an Aichi line (stock at the line
+	  side), not on hold, with the receipt it came on;
+	- ``j08`` traceability: a vehicle delivered to a dealer whose genealogy holds a serialised
+	  component and a supplier batch at least two levels down;
 	- ``j06`` invoice matching: a receipt nobody has invoiced yet, from a supplier whose bank
 	  account is verified (payments go only to verified accounts);
 	- ``j07`` intercompany supply: a powertrain Kyushu has in stock and an agreed transfer
@@ -153,13 +158,15 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	fixtures["j06"] = _receipt_to_invoice(company)
 	fixtures["j07"] = _intercompany_supply()
 	fixtures["j04"] = _engineering_change()
+	fixtures["j05"] = _batch_in_use()
+	fixtures["j08"] = _traced_vehicle()
 	frappe.db.commit()
 	if output:
 		_write(output, json.dumps(fixtures, sort_keys=True, default=str))
 		staged = len((fixtures["j01"] or {}).get("staged") or [])
 		return (f"journeys: j01 {(fixtures['j01'] or {}).get('variant')} ({staged} components staged), "
-			f"j04 {(fixtures['j04'] or {}).get('bom')}, j06 {(fixtures['j06'] or {}).get('purchase_receipt')}, "
-			f"j07 {(fixtures['j07'] or {}).get('item_code')}, "
+			f"j04 {(fixtures['j04'] or {}).get('bom')}, j05 {(fixtures['j05'] or {}).get('batch_no')}, j06 {(fixtures['j06'] or {}).get('purchase_receipt')}, "
+			f"j07 {(fixtures['j07'] or {}).get('item_code')}, j08 {(fixtures['j08'] or {}).get('vin')}, "
 			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}")
 	return fixtures
 
@@ -425,4 +432,53 @@ def _engineering_change() -> dict | None:
 				return {"item": bom.item, "bom": bom.name, "component": line.item_code, "qty": line.qty,
 					"new_qty": line.qty + 1, "work_order": frappe.db.get_value("Work Order",
 						{"bom_no": bom.name, "docstatus": 1}, "name", order_by="creation desc")}
+	return None
+
+
+def _batch_in_use() -> dict | None:
+	from erpnext.stock.doctype.batch.batch import get_batch_qty
+
+	from automotive_seed.generator.flows.common import line_side_for, store_for
+
+	plant = frappe.get_cached_doc("Plant", PLANT)
+	for line in ("AICHI-FA1", "AICHI-FA2"):
+		line_side = line_side_for(line)
+		for item_code in frappe.get_all("Bin", filters={"warehouse": line_side, "actual_qty": (">", 0)},
+				pluck="item_code", order_by="item_code asc"):
+			item = frappe.get_cached_value("Item", item_code, ["has_batch_no", "is_purchase_item", "has_serial_no"],
+				as_dict=True)
+			if not item.has_batch_no or not item.is_purchase_item or item.has_serial_no:
+				continue
+			batches = sorted((b for b in get_batch_qty(warehouse=line_side, item_code=item_code) or []
+				if flt(b.get("qty")) >= 2), key=lambda b: (-flt(b["qty"]), b["batch_no"]))
+			for b in batches:
+				supplier = frappe.db.get_value("Batch", b["batch_no"], "automotive_supplier")
+				receipt = frappe.db.get_value("Purchase Receipt Item", {"batch_no": b["batch_no"], "docstatus": 1},
+					["parent", "name"], as_dict=True)
+				held = frappe.db.exists("Quality Hold", {"batch_no": b["batch_no"], "status": "Active"})
+				if supplier and receipt and not held:
+					station = frappe.get_all("Production Line Station", filters={"parent": line}, pluck="workstation",
+						order_by="idx asc", limit=1)
+					return {"item_code": item_code, "batch_no": b["batch_no"], "supplier": supplier, "line": line,
+						"workstation": station[0] if station else frappe.get_cached_value("Production Line", line,
+							"default_workstation"),
+						"line_side": line_side, "store": store_for(PLANT), "quarantine": plant.quarantine_warehouse,
+						"line_side_qty": flt(b["qty"]), "purchase_receipt": receipt.parent, "receipt_row": receipt.name,
+						"company": plant.company}
+	return None
+
+
+def _traced_vehicle() -> dict | None:
+	from automotive_manufacturing.traceability.genealogy import components_of
+
+	for vin in frappe.get_all("Vehicle Unit", filters={"production_status": "Built", "inventory_status": "Delivered",
+			"dealer": ("is", "set")}, pluck="name", order_by="built_at desc, name asc", limit=40):
+		tree = components_of(vin)
+		deep = [r for r in tree if r["level"] >= 2 and r["component_batch_no"] and r.get("supplier")]
+		serial = [r for r in tree if r["level"] == 1 and r["component_serial_no"]]
+		if deep and serial:
+			return {"vin": vin, "dealer": frappe.db.get_value("Vehicle Unit", vin, "dealer"),
+				"batch_item": deep[0]["component_item"], "batch_no": deep[0]["component_batch_no"],
+				"batch_supplier": deep[0]["supplier"], "batch_level": deep[0]["level"],
+				"serial_item": serial[0]["component_item"], "serial_no": serial[0]["component_serial_no"]}
 	return None
