@@ -171,7 +171,7 @@
  "icon": "user-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 07:18:49.080033",
+ "modified": "2026-10-24 16:23:34.002362",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "User Provisioning Request",
@@ -184,6 +184,7 @@
    "create": 1,
    "delete": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager",
@@ -195,6 +196,7 @@
    "cancel": 1,
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator",
@@ -204,6 +206,7 @@
   {
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Plant Director",
@@ -211,6 +214,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

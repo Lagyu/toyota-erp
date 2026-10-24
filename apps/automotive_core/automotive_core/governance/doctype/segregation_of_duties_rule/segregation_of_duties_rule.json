@@ -61,7 +61,7 @@
  ],
  "icon": "split",
  "links": [],
- "modified": "2026-10-24 07:18:49.079740",
+ "modified": "2026-10-24 16:23:34.002024",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Segregation of Duties Rule",
@@ -72,6 +72,7 @@
    "create": 1,
    "delete": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager",
@@ -80,6 +81,7 @@
   {
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator",
@@ -87,6 +89,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Group Controller",
@@ -94,6 +97,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

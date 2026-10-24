@@ -196,12 +196,17 @@ RIGHTS = {
 
 
 def perm(role: str, rights: str = "r", permlevel: int = 0) -> dict[str, Any]:
-	"""perm("Buyer", "rwc pe") -> DocPerm dict. Letters: see RIGHTS; spaces ignored."""
+	"""perm("Buyer", "rwc pe") -> DocPerm dict. Letters: see RIGHTS; spaces ignored.
+
+	Read implies print: a print format shows only what the role can already read, and the
+	desk offers Print only to roles with the print right."""
 	out: dict[str, Any] = {"role": role}
 	for letter in rights.replace(" ", ""):
 		if letter not in RIGHTS:
 			raise ValueError(f"unknown right {letter!r} in {rights!r}")
 		out[RIGHTS[letter]] = 1
+	if out.get("read") and not permlevel:
+		out["print"] = 1
 	if permlevel:
 		out["permlevel"] = permlevel
 	return out

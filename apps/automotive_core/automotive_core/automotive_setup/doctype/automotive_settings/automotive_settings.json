@@ -208,7 +208,7 @@
  "icon": "settings",
  "issingle": 1,
  "links": [],
- "modified": "2026-10-24 14:09:04.330647",
+ "modified": "2026-10-24 16:23:33.995322",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Automotive Settings",
@@ -227,6 +227,7 @@
    "write": 1
   },
   {
+   "print": 1,
    "read": 1,
    "role": "Auditor"
   }

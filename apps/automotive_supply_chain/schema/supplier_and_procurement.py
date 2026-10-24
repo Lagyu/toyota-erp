@@ -261,6 +261,7 @@ DOCTYPES = [
 	DocType(
 		"Advance Shipping Notice",
 		SC,
+		extra={"default_print_format": "Advance Shipping Notice"},
 		autoname="naming_series:",
 		submittable=True,
 		title_field="supplier",

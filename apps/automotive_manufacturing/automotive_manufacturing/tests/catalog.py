@@ -169,3 +169,26 @@ def work_order(item: str, qty: int, bom: str | None = None, start_offset_days: i
 	if submit:
 		wo.submit()
 	return wo
+
+
+def released_vehicle(cat: dict, variant: str, inspector: str = "Administrator",
+		configuration: str | None = None) -> str:
+	"""Build one vehicle of ``variant`` from freshly received parts and release it at final
+	inspection by ``inspector``; returns its VIN."""
+	from automotive_manufacturing.mes.production import build_entry
+
+	for item, qty in ((cat["wheel"], 4), (cat["seat"], 2)):
+		receive(item, qty, batch_no=make_batch(item, f"B-{frappe.generate_hash(length=8)}"))
+	receive(cat["ecu"], 1, serial_nos=[f"TECU-{frappe.generate_hash(length=8).upper()}"], rate=900)
+	wo = work_order(variant, 1, submit=False)
+	wo.automotive_configuration = configuration
+	wo.submit()
+	entry = build_entry(wo.name, 1)
+	vin = frappe.get_all("Vehicle Unit", filters={"work_order": wo.name}, pluck="name")[0]
+	inspection = frappe.get_doc({"doctype": "Quality Inspection", "inspection_type": "In Process",
+		"automotive_inspection_stage": "Final", "reference_type": "Stock Entry", "reference_name": entry.name,
+		"item_code": variant, "item_serial_no": vin, "sample_size": 1, "inspected_by": inspector,
+		"status": "Accepted", "manual_inspection": 1, "company": AICHI})
+	inspection.insert(ignore_permissions=True)
+	inspection.submit()
+	return vin

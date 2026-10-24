@@ -170,7 +170,7 @@
  ],
  "icon": "file-x",
  "links": [],
- "modified": "2026-10-24 08:23:27.545625",
+ "modified": "2026-10-24 16:23:34.051041",
  "modified_by": "Administrator",
  "module": "Procurement Controls",
  "name": "Invoice Match Exception",
@@ -179,35 +179,41 @@
  "permissions": [
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "AP Clerk"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Procurement Manager"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Group Controller"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"
   },
   {
+   "print": 1,
    "read": 1,
    "role": "Buyer"
   }

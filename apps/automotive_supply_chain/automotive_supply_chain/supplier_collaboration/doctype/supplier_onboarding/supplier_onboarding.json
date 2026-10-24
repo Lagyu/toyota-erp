@@ -163,7 +163,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-24 14:09:04.366720",
+ "modified": "2026-10-24 16:23:34.046641",
  "modified_by": "Administrator",
  "module": "Supplier Collaboration",
  "name": "Supplier Onboarding",
@@ -176,6 +176,7 @@
    "create": 1,
    "delete": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager",
@@ -186,6 +187,7 @@
    "cancel": 1,
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Buyer",
@@ -197,6 +199,7 @@
    "cancel": 1,
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Procurement Manager",
@@ -205,106 +208,127 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Quality Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Automotive Executive"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Group Controller"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Plant Director"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Production Planner"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Production Supervisor"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Line Operator"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Warehouse Clerk"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Quality Inspector"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Quality Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Buyer"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Procurement Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "AP Clerk"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Treasury Approver"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Sales Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Dealer Liaison"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Product Engineer"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Engineering Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Logistics Coordinator"

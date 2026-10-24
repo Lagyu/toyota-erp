@@ -62,6 +62,7 @@ DOCTYPES = [
 	DocType(
 		"Shipment Manifest",
 		LOG,
+		extra={"default_print_format": "Shipment Manifest"},
 		autoname="naming_series:",
 		submittable=True,
 		title_field="carrier",

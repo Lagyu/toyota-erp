@@ -83,6 +83,7 @@ DOCTYPES = [
 	DocType(
 		"Kanban Card",
 		MODULE,
+		extra={"default_print_format": "Kanban Card"},
 		autoname="field:card_id",
 		title_field="card_id",
 		icon="credit-card",

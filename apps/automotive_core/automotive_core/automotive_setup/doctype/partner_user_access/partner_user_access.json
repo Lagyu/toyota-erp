@@ -107,7 +107,7 @@
  ],
  "icon": "handshake",
  "links": [],
- "modified": "2026-10-24 07:18:49.076218",
+ "modified": "2026-10-24 16:23:33.998092",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Partner User Access",
@@ -143,6 +143,7 @@
   {
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Procurement Manager",
@@ -151,6 +152,7 @@
   {
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Dealer Liaison",
@@ -158,6 +160,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

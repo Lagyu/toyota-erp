@@ -36,7 +36,7 @@
  ],
  "icon": "bell",
  "links": [],
- "modified": "2026-10-24 15:07:15.927242",
+ "modified": "2026-10-24 16:23:34.002905",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Notification Preference",
@@ -46,6 +46,7 @@
   {
    "create": 1,
    "delete": 1,
+   "print": 1,
    "read": 1,
    "role": "System Manager",
    "write": 1
@@ -53,11 +54,13 @@
   {
    "create": 1,
    "delete": 1,
+   "print": 1,
    "read": 1,
    "role": "IT Operator",
    "write": 1
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"
@@ -65,6 +68,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Automotive Executive",
    "write": 1
@@ -72,6 +76,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Group Controller",
    "write": 1
@@ -79,6 +84,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Plant Director",
    "write": 1
@@ -86,6 +92,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Production Planner",
    "write": 1
@@ -93,6 +100,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Production Supervisor",
    "write": 1
@@ -100,6 +108,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Line Operator",
    "write": 1
@@ -107,6 +116,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Warehouse Clerk",
    "write": 1
@@ -114,6 +124,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Quality Inspector",
    "write": 1
@@ -121,6 +132,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Quality Manager",
    "write": 1
@@ -128,6 +140,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Buyer",
    "write": 1
@@ -135,6 +148,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Procurement Manager",
    "write": 1
@@ -142,6 +156,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "AP Clerk",
    "write": 1
@@ -149,6 +164,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Treasury Approver",
    "write": 1
@@ -156,6 +172,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Sales Manager",
    "write": 1
@@ -163,6 +180,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Dealer Liaison",
    "write": 1
@@ -170,6 +188,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Product Engineer",
    "write": 1
@@ -177,6 +196,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Engineering Manager",
    "write": 1
@@ -184,6 +204,7 @@
   {
    "create": 1,
    "if_owner": 1,
+   "print": 1,
    "read": 1,
    "role": "Logistics Coordinator",
    "write": 1

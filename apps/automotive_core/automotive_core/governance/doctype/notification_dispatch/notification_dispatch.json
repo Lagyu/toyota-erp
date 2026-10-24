@@ -118,7 +118,7 @@
  ],
  "icon": "send",
  "links": [],
- "modified": "2026-10-24 15:07:15.928349",
+ "modified": "2026-10-24 16:23:34.003334",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Notification Dispatch",
@@ -127,18 +127,21 @@
  "permissions": [
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

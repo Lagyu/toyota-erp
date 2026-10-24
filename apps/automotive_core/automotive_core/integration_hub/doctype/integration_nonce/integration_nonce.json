@@ -38,7 +38,7 @@
   }
  ],
  "links": [],
- "modified": "2026-10-24 07:18:49.082135",
+ "modified": "2026-10-24 16:23:34.005914",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Integration Nonce",
@@ -46,10 +46,12 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "print": 1,
    "read": 1,
    "role": "System Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "role": "IT Operator"
   }

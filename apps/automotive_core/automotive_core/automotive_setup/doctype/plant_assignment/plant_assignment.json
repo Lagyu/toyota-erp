@@ -142,7 +142,7 @@
  ],
  "icon": "id-card",
  "links": [],
- "modified": "2026-10-24 07:18:49.075935",
+ "modified": "2026-10-24 16:23:33.997759",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Plant Assignment",
@@ -178,6 +178,7 @@
   {
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Plant Director",
@@ -185,6 +186,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

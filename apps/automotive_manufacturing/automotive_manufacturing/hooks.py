@@ -12,6 +12,9 @@ after_migrate = "automotive_manufacturing.setup.install.after_migrate"
 
 app_include_js = ["automotive_manufacturing.bundle.js"]
 
+# Print formats: the Kanban Card prints its id as a QR code
+jinja = {"methods": ["automotive_manufacturing.printing.automotive_qr_code"]}
+
 # Extensions of automotive_core's governance lists ------------------------------------
 automotive_cancel_reason_doctypes = ["Engineering Change Order", "Quality Disposition", "Shift Handover"]
 automotive_audited_doctypes = [

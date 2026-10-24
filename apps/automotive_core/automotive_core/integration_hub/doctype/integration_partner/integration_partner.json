@@ -203,7 +203,7 @@
  ],
  "icon": "plug",
  "links": [],
- "modified": "2026-10-24 14:31:41.563586",
+ "modified": "2026-10-24 16:23:34.003717",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Integration Partner",
@@ -214,6 +214,7 @@
    "create": 1,
    "delete": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager",
@@ -222,6 +223,7 @@
   {
    "create": 1,
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator",
@@ -229,15 +231,18 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"
   },
   {
+   "print": 1,
    "read": 1,
    "role": "Procurement Manager"
   },
   {
+   "print": 1,
    "read": 1,
    "role": "Dealer Liaison"
   }

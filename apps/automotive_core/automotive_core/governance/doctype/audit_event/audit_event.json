@@ -140,7 +140,7 @@
  ],
  "icon": "scroll-text",
  "links": [],
- "modified": "2026-10-24 07:50:28.433299",
+ "modified": "2026-10-24 16:23:34.001752",
  "modified_by": "Administrator",
  "module": "Governance",
  "name": "Audit Event",
@@ -149,17 +149,20 @@
  "permissions": [
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"
   },
   {
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator"

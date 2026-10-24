@@ -145,7 +145,7 @@
  ],
  "icon": "sprout",
  "links": [],
- "modified": "2026-10-24 08:47:52.479570",
+ "modified": "2026-10-24 16:23:34.028229",
  "modified_by": "Administrator",
  "module": "Reference Data",
  "name": "Seed Run",
@@ -154,6 +154,7 @@
  "permissions": [
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager",
@@ -161,12 +162,14 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

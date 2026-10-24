@@ -100,7 +100,7 @@
  ],
  "icon": "key-round",
  "links": [],
- "modified": "2026-10-24 07:18:49.081913",
+ "modified": "2026-10-24 16:23:34.005660",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Idempotency Record",
@@ -109,12 +109,14 @@
  "permissions": [
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator",
@@ -122,6 +124,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"

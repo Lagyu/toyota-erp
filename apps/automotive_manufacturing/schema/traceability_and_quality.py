@@ -35,6 +35,7 @@ DOCTYPES = [
 	DocType(
 		"Vehicle Unit",
 		"Traceability",
+		extra={"default_print_format": "Vehicle Certificate"},
 		autoname="field:vin",
 		title_field="vin",
 		search_fields="vehicle_model,variant_item,plant",

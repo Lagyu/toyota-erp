@@ -81,6 +81,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   intercompany reconciliation; Goods In Transit report.
 - Landed costs: ocean freight and import duty ordered, invoiced and allocated to imported
   vehicles with Landed Cost Vouchers.
+- Print formats (A4, Japanese/English): shipment manifest with driver and receiver
+  signature boxes, advance shipping notice, kanban card with a QR code, vehicle
+  certificate. Every role that can read a document can print it.
 
 ### Portals (`automotive_portals`)
 - Supplier portal: overview, RFQs and quotations, orders and acknowledgements, delivery

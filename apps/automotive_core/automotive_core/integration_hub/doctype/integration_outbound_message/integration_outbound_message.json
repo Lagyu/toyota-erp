@@ -167,7 +167,7 @@
  ],
  "icon": "send",
  "links": [],
- "modified": "2026-10-24 14:44:01.907675",
+ "modified": "2026-10-24 16:23:34.004865",
  "modified_by": "Administrator",
  "module": "Integration Hub",
  "name": "Integration Outbound Message",
@@ -176,12 +176,14 @@
  "permissions": [
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "System Manager"
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "IT Operator",
@@ -189,6 +191,7 @@
   },
   {
    "export": 1,
+   "print": 1,
    "read": 1,
    "report": 1,
    "role": "Auditor"
