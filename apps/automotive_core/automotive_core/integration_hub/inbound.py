@@ -306,7 +306,12 @@ def replay(name: str) -> str:
 
 @frappe.whitelist()
 def reconciliation() -> dict[str, Any]:
-	"""Counts by status plus integrity checks used by the J-10 acceptance test."""
+	"""Counts by status plus integrity checks used by the J-10 acceptance test.
+
+	A processed message must point at an existing business document. Several messages
+	pointing at the same document are not a fault: a partner that resends a business
+	document under a new message id is answered with the document created the first time
+	(handlers deduplicate on the partner's reference), so they are listed for information."""
 	frappe.only_for(("IT Operator", "System Manager", "Auditor"))
 	by_status = dict(
 		frappe.db.sql("select status, count(*) from `tabIntegration Inbound Message` group by status")
@@ -322,4 +327,4 @@ def reconciliation() -> dict[str, Any]:
 		where status='Processed' and result_name is not null group by result_doctype, result_name having c > 1"""
 	)
 	return {"by_status": by_status, "processed_without_result_document": orphans,
-		"results_shared_by_several_messages": [list(r) for r in shared], "ok": not orphans and not shared}
+		"deduplicated_by_business_reference": [list(r) for r in shared], "ok": not orphans}

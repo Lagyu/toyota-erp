@@ -79,8 +79,11 @@ export async function openForm(page: Page, doctype: string, name: string) {
 /** Click a custom form button (optionally inside a button group). */
 export async function clickAction(page: Page, label: string, group?: string) {
 	if (group) {
-		await page.getByRole("button", { name: group }).click();
-		await page.getByRole("menuitem", { name: label }).or(page.locator(".dropdown-item", { hasText: label })).first().click();
+		// a group is .inner-group-button[data-label]; its button (aria-haspopup=menu) opens a popup
+		// menu of menuitems; the .dropdown-item list inside the group is only the hidden source
+		await page.locator(`.inner-group-button[data-label="${encodeURIComponent(group)}"]`).filter({ visible: true })
+			.first().getByRole("button").first().click();
+		await page.getByRole("menuitem", { name: label, exact: true }).filter({ visible: true }).first().click();
 	} else {
 		await page.locator(".page-actions, .form-inner-toolbar, .custom-actions").getByRole("button", { name: label }).first().click();
 	}

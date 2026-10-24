@@ -20,6 +20,8 @@ export default defineConfig({
 	globalSetup: "./support/global-setup.ts",
 	use: {
 		baseURL: process.env.E2E_BASE_URL ?? "http://small.localhost:18000",
+		actionTimeout: 20_000, // a click that cannot happen fails fast instead of eating the test timeout
+		navigationTimeout: 60_000,
 		trace: "retain-on-failure",
 		screenshot: "only-on-failure",
 		video: "retain-on-failure",
