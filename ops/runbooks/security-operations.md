@@ -295,6 +295,13 @@ With **Required**, users other than Administrator cannot read, print or download
 - **No network-level egress filter.** The application containers and ClamAV are on the `egress` network with unrestricted outbound access, so the allowlist is enforced in the application only. Add host firewall egress rules if your policy requires them; none are provided.
 - **Internal network.** The database and Redis are on the internal `backend` network and cannot reach out.
 
+## Request limits
+
+- **Portals and shop floor.** Each signed-in user may send a set number of requests per minute to the partner portal methods (reads 300, changes 60, partner uploads included) and to the MES and shop-floor methods (240); over the limit the answer is HTTP 429. The limits are in Automotive Settings → *Request Limits* ([integration-operations.md](integration-operations.md#custom-methods-contract-versions-and-request-limits)). They count per user, not per address.
+- **Partner endpoint.** Signed inbound deliveries are limited per partner (*Inbound Rate Limit Per Minute*, 120), refused deliveries separately.
+- **Request size.** Bodies above 25 MB (`CLIENT_MAX_BODY_SIZE` of the deploy compose) are refused by the frontend's nginx.
+- Desk work is not limited by the application; sign-in attempts are limited by Frappe's own login settings (System Settings).
+
 ## TLS and HTTP headers
 
 The TLS modes are described in [install-fresh-host.md](install-fresh-host.md#5-tls). Both Traefik modes use `infra/deploy/traefik/dynamic.yaml`.

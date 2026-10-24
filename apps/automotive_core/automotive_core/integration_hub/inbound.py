@@ -230,7 +230,7 @@ def verify_delivery(partner, header: str | None, body: bytes) -> signing.Signatu
 def _rate_limit(partner: str, refused: bool = False) -> None:
 	limit = cint(_settings().inbound_rate_limit_per_minute) or 120
 	kind = "inbound-refused" if refused else "inbound-rate"
-	key = f"automotive:{kind}:{partner}:{now_datetime().strftime('%Y%m%d%H%M')}"
+	key = frappe.cache.make_key(f"automotive:{kind}:{partner}:{now_datetime().strftime('%Y%m%d%H%M')}")
 	count = frappe.cache.incrby(key, 1)
 	if count == 1:
 		frappe.cache.expire(key, 120)

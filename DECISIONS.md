@@ -317,3 +317,29 @@ is tested).
 is developed. A concurrent duplicate insert still waits and then fails with a duplicate key,
 which the integration hub and the idempotency keys handle.
 
+
+## D-034 Versions of the custom methods' contract, and per-user request limits
+
+**Decision.** The OpenAPI contract of the custom methods (`integration_hub/openapi.json`) has a
+semantic version (`info.version`). A method path keeps its behaviour within a major version:
+an addition (a method, an optional parameter, a result property, a documented answer) raises
+the minor version; a breaking change (a method or verb removed, a parameter removed, retyped or
+newly required, a result property removed or retyped, guest access withdrawn) needs a new
+major version. To give partners time, the new behaviour comes as a new path (a new function,
+or a module's `v2` package) while the old path stays, marked deprecated (a `Deprecated:` line
+in its docstring), for at least one release; removing it then raises the major version.
+Wording changes need no new version. CI compares the generated contract with the one before
+the change (`openapi.py --compat`) and fails when the version does not follow. Changes of the
+roles a method requires are access decisions (access review), not contract versions.
+Separately, the portal and shop-floor methods count against per-user limits per minute
+(Automotive Settings, Request Limits): portal reads 300, portal changes 60 (including partner
+uploads), shop floor 240; over the limit the request is refused with HTTP 429 before the
+method runs.
+**Alternatives.** Version prefixes in every path from the start (`/api/v1/...` of our own:
+Frappe routes methods by module path, so this would be every module twice); Frappe's
+`rate_limit` decorator (counts per IP address: partners behind one corporate proxy, or the
+tablets of a line, would share one budget).
+**Consequences.** Partners and integrators can rely on a path for a major version and see
+additions in the contract's minor versions. A method whose shape must change keeps a
+deprecated twin for a release. The limits are site settings an IT operator can raise; the
+429s show in the 4xx responses of the metrics.

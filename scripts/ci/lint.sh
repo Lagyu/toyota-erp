@@ -22,6 +22,21 @@ python3 scripts/dev/schema/generate.py --check || status=1
 step "OpenAPI contract matches the whitelisted methods"
 python3 scripts/dev/openapi.py --check || status=1
 
+step "OpenAPI contract version follows its changes (D-034)"
+# CONTRACT_BASE: the commit before the push, or a pull request's base (set by ci.yml)
+contract=apps/automotive_core/automotive_core/integration_hub/openapi.json
+base="${CONTRACT_BASE:-}"
+if [[ -z $base || $base =~ ^0+$ ]]; then
+	echo "no earlier commit to compare with"
+elif ! git cat-file -e "$base^{commit}" 2>/dev/null && ! git fetch -q --depth=1 origin "$base"; then
+	echo "earlier commit $base not reachable: not compared"
+elif ! git cat-file -e "$base:$contract" 2>/dev/null; then
+	echo "no contract at $base"
+else
+	git show "$base:$contract" > "${TMPDIR:-/tmp}/openapi-base.json"
+	python3 scripts/dev/openapi.py --compat "${TMPDIR:-/tmp}/openapi-base.json" || status=1
+fi
+
 step "translations: complete, placeholders and HTML tags kept"
 python3 scripts/dev/check_po.py --require-complete apps/*/*/locale/ja.po || status=1
 

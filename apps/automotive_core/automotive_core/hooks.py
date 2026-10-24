@@ -158,6 +158,8 @@ scheduler_events = {
 before_request = [
 	"automotive_core.observability.context.before_request",
 	"automotive_core.observability.timing.before_request",
+	# after the timing: a refused request is still counted and timed
+	"automotive_core.access.request_budgets.before_request",
 ]
 after_request = [
 	"automotive_core.observability.context.after_request",

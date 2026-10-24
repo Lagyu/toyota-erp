@@ -562,6 +562,49 @@ class TestDealerJourney(JourneyTestCase):
 		self.assertAlmostEqual(value_before, value_after, places=2)
 		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "allocation.released", "reference_name": allocation}))
 
+	def test_a_late_delivery_is_recorded_with_an_exception(self):
+		"""ERP-06.4: the yard records a delivery that arrived late: the manifest shows the exception,
+		logistics gets an open Delay case, and the vehicle counts as delivered."""
+		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
+
+		from automotive_supply_chain.dealer_operations.allocation import allocate
+		from automotive_supply_chain.logistics.operations import record_delivery
+
+		so = self._order("ASAHI-PO-1007")
+		self._released_vehicle()
+		allocate(AICHI)
+		vin = frappe.db.get_value("Vehicle Allocation", {"sales_order": so, "status": "Allocated"}, "vehicle_unit")
+		dn = make_delivery_note(so)
+		for item in dn.items:
+			item.use_serial_batch_fields = 1
+			item.serial_no = vin
+		dn.insert(ignore_permissions=True)
+		dn.submit()
+		carrier = h.supplier("Raijin Logistics", group="Carriers")
+		late = "Arrived a day late: the ferry was held by the weather"
+		with as_user(h.LOGISTICS):
+			booking = frappe.get_doc({"doctype": "Transport Booking", "carrier": carrier, "company": AICHI,
+				"plant": catalog.PLANT, "direction": "Outbound", "vehicle_type": "Car Carrier",
+				"pickup_window_start": f"{nowdate()} 09:00:00", "pickup_window_end": f"{nowdate()} 12:00:00",
+				"delivery_window_end": f"{add_days(nowdate(), 1)} 18:00:00", "destination": "Asahi Motors Nagoya"}).insert()
+			manifest = frappe.get_doc({"doctype": "Shipment Manifest", "company": AICHI, "plant": catalog.PLANT,
+				"transport_booking": booking.name, "carrier": carrier, "departure": f"{nowdate()} 10:00:00",
+				"items": [{"delivery_note": dn.name}]}).insert()
+			manifest.submit()
+			self.assertEqual(record_delivery(manifest.name, "Taro Yard-Manager", exception=late), "Exception")
+		recorded = frappe.db.get_value("Shipment Manifest", manifest.name, ["delivery_status", "received_by_name"],
+			as_dict=True)
+		self.assertEqual((recorded.delivery_status, recorded.received_by_name), ("Exception", "Taro Yard-Manager"))
+		self.assertEqual(set(frappe.get_all("Shipment Manifest Item", filters={"parent": manifest.name},
+			pluck="line_status")), {"Exception"})
+		cases = frappe.get_all("Transport Exception", filters={"shipment_manifest": manifest.name},
+			fields=["exception_type", "status", "carrier", "description"])
+		self.assertEqual([tuple(c.values()) for c in cases], [("Delay", "Open", carrier, late)])
+		self.assertEqual(frappe.db.get_value("Vehicle Unit", vin, "shipment_status"), "Delivered")
+		self.assertEqual(frappe.db.get_value("Transport Booking", booking.name, "status"), "Delivered")
+		with as_user(h.LOGISTICS), self.assertRaises(frappe.ValidationError):  # recorded once
+			record_delivery(manifest.name, "Taro Yard-Manager")
+
 	def test_the_carrier_reports_its_shipment_by_message(self):
 		"""shipment_status from the carrier's system: confirmation, an exception, the delivery."""
 		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
@@ -727,6 +770,68 @@ class TestVehicleCreditNote(JourneyTestCase):
 		self.assertAlmostEqual(flt(receivable), 0, places=2)
 		cancel_with_reason("Sales Invoice", credit.name, "Credit note raised against the wrong invoice")
 		self.assertEqual(unit(), ("Delivered", "Invoiced"))
+
+
+class TestReceivablesAndPayablesAgeing(JourneyTestCase):
+	"""ERP-09.2: ERPNext's own Accounts Receivable and Accounts Payable reports age a dealer's and
+	a supplier's open invoices by due date (0-30, 31-60, 61-90, 91-120, over 120 days). The
+	invoices are posted today and the reports run as at a later date, aged as at that date."""
+
+	@staticmethod
+	def aged(report: str, party_type: str, party: str, days_ahead: int) -> dict:
+		"""voucher -> (ageing bucket 1..5 holding its outstanding, outstanding)."""
+		execute = frappe.get_attr(f"erpnext.accounts.report.{report}.{report}.execute")
+		_, rows, *_ = execute({"company": AICHI, "report_date": add_days(nowdate(), days_ahead),
+			"age_as_on": "Report Date", "ageing_based_on": "Due Date", "range": "30, 60, 90, 120",
+			"party_type": party_type, "party": [party]})
+		aged = {}
+		for row in rows:
+			if row.get("voucher_no"):
+				buckets = [i for i in range(1, 6) if flt(row.get(f"range{i}"))]
+				aged[row["voucher_no"]] = (buckets, flt(row.get("outstanding")))
+		return aged
+
+	def test_open_invoices_are_aged_by_due_date(self):
+		from erpnext.buying.doctype.purchase_order.purchase_order import make_purchase_receipt
+		from erpnext.stock.doctype.purchase_receipt.purchase_receipt import make_purchase_invoice
+
+		wheel = self.cat["wheel"]
+		dealer = frappe.get_doc({"doctype": "Customer", "customer_name": "Fujimi Motors Kofu",
+			"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+			"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
+		expected = {}
+		for due_in, bucket in ((0, 2), (40, 1)):  # 45 and 5 days past due on the report date
+			invoice = frappe.get_doc({"doctype": "Sales Invoice", "company": AICHI, "customer": dealer.name,
+				"ignore_default_payment_terms_template": 1, "due_date": add_days(nowdate(), due_in),
+				"items": [{"item_code": wheel, "qty": 2, "rate": 1500}]})
+			invoice.insert(ignore_permissions=True)
+			invoice.submit()
+			expected[invoice.name] = ([bucket], flt(invoice.outstanding_amount))
+		self.assertEqual(self.aged("accounts_receivable", "Customer", dealer.name, 45), expected)
+
+		supplier = h.supplier("Kumo Fasteners")
+		with as_user(h.BUYER):
+			po = frappe.get_doc({"doctype": "Purchase Order", "supplier": supplier, "company": AICHI,
+				"transaction_date": nowdate(), "schedule_date": add_days(nowdate(), 5), "items": [{
+					"item_code": wheel, "qty": 10, "rate": 120, "warehouse": catalog.PARTS_STORE,
+					"schedule_date": add_days(nowdate(), 5)}]}).insert()
+		approve(po, h.BUYER, [h.PROC_MGR])
+		with as_user(h.BUYER):
+			po.reload()
+			po.submit()
+		receipt = frappe.get_doc(make_purchase_receipt(po.name))
+		receipt.insert(ignore_permissions=True)
+		receipt.submit()
+		with as_user(h.AP_CLERK):
+			bill = frappe.get_doc(make_purchase_invoice(receipt.name))
+			bill.update({"bill_no": "KUMO-7001", "ignore_default_payment_terms_template": 1,
+				"payment_terms_template": None, "due_date": nowdate()})
+			bill.set("payment_schedule", [])
+			bill.insert()
+			bill.submit()
+		# 100 days past due on the report date: the 91-120 day column
+		self.assertEqual(self.aged("accounts_payable", "Supplier", supplier, 100),
+			{bill.name: ([4], flt(bill.outstanding_amount))})
 
 
 class TestSourcing(JourneyTestCase):

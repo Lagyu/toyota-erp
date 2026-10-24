@@ -8,9 +8,10 @@ import { expect, type Page, test } from "@playwright/test";
 import { call, openDesk } from "../support/frappe";
 import { as, type Persona } from "../support/personas";
 
-const DESK_PERSONAS: Persona[] = ["buyer", "ap_clerk", "treasury", "controller", "executive", "planner", "supervisor",
-	"operator", "warehouse", "inspector", "quality_manager", "engineer", "logistics", "dealer_liaison", "auditor",
-	"it_operator"];
+// one persona per internal role profile (the 20 of setup/roles.py)
+const DESK_PERSONAS: Persona[] = ["buyer", "procurement_manager", "ap_clerk", "treasury", "controller", "executive",
+	"plant_director", "planner", "supervisor", "operator", "warehouse", "inspector", "quality_manager", "engineer",
+	"engineering_manager", "logistics", "sales_manager", "dealer_liaison", "auditor", "it_operator"];
 
 type Target = { type: string; to: string; from: string };
 

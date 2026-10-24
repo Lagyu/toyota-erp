@@ -49271,3 +49271,36 @@ msgstr "{}には提出済みの資産がリンクされています。仕入先�
 msgid "{} {} is not affecting bank account {}"
 msgstr "{} {}は銀行口座{}に計上されていません。"
 
+#. Label of the request_limits_section (Section Break) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
+msgid "Request Limits"
+msgstr "リクエスト上限"
+
+#. Description of the request_limits_section (Section Break) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
+msgid "Per signed-in user and minute; a request over the limit is refused with HTTP 429. Desk work is not limited."
+msgstr "サインイン中のユーザーごと、1分あたりの上限です。上限を超えたリクエストは HTTP 429 で拒否されます。デスクでの作業は制限されません。"
+
+#. Label of the portal_reads_per_minute (Int) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
+msgid "Portal Reads Per Minute Per User"
+msgstr "ユーザーごとのポータル参照上限（1分あたり）"
+
+#. Label of the portal_changes_per_minute (Int) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
+msgid "Portal Changes Per Minute Per User"
+msgstr "ユーザーごとのポータル更新上限（1分あたり）"
+
+#. Label of the shop_floor_requests_per_minute (Int) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
+msgid "Shop Floor Requests Per Minute Per User"
+msgstr "ユーザーごとの現場端末リクエスト上限（1分あたり）"
+
+#: automotive_core/access/request_budgets.py:72
+msgid "Too many requests. Please wait a minute and try again."
+msgstr "リクエストが多すぎます。1分ほど待ってから再度お試しください。"

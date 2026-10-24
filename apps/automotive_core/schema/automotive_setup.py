@@ -68,6 +68,12 @@ DOCTYPES = [
 			int_("outbox_base_backoff_seconds", "Outbox Base Backoff (Seconds)", default="30"),
 			int_("inbound_max_attempts", "Inbound Max Attempts", default="6"),
 			int_("inbound_rate_limit_per_minute", "Inbound Requests Per Minute Per Partner", default="120"),
+			section("Request Limits", "request_limits_section", description="Per signed-in user and minute; a request over the limit is "
+				"refused with HTTP 429. Desk work is not limited."),
+			int_("portal_reads_per_minute", "Portal Reads Per Minute Per User", default="300"),
+			int_("portal_changes_per_minute", "Portal Changes Per Minute Per User", default="60"),
+			column("request_limits_column"),
+			int_("shop_floor_requests_per_minute", "Shop Floor Requests Per Minute Per User", default="240"),
 			tab("Attachments"),
 			int_("max_upload_mb", "Default Max Upload Size (MB)", default="25"),
 			small_text("allowed_extensions", "Allowed Extensions", default="pdf,png,jpg,jpeg,csv,xlsx,txt,edi,json,xml",

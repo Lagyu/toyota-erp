@@ -23,6 +23,11 @@
   "outbox_base_backoff_seconds",
   "inbound_max_attempts",
   "inbound_rate_limit_per_minute",
+  "request_limits_section",
+  "portal_reads_per_minute",
+  "portal_changes_per_minute",
+  "request_limits_column",
+  "shop_floor_requests_per_minute",
   "tab_break_3",
   "max_upload_mb",
   "allowed_extensions",
@@ -134,6 +139,34 @@
    "label": "Inbound Requests Per Minute Per Partner"
   },
   {
+   "description": "Per signed-in user and minute; a request over the limit is refused with HTTP 429. Desk work is not limited.",
+   "fieldname": "request_limits_section",
+   "fieldtype": "Section Break",
+   "label": "Request Limits"
+  },
+  {
+   "default": "300",
+   "fieldname": "portal_reads_per_minute",
+   "fieldtype": "Int",
+   "label": "Portal Reads Per Minute Per User"
+  },
+  {
+   "default": "60",
+   "fieldname": "portal_changes_per_minute",
+   "fieldtype": "Int",
+   "label": "Portal Changes Per Minute Per User"
+  },
+  {
+   "fieldname": "request_limits_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "240",
+   "fieldname": "shop_floor_requests_per_minute",
+   "fieldtype": "Int",
+   "label": "Shop Floor Requests Per Minute Per User"
+  },
+  {
    "fieldname": "tab_break_3",
    "fieldtype": "Tab Break",
    "label": "Attachments"
@@ -208,7 +241,7 @@
  "icon": "settings",
  "issingle": 1,
  "links": [],
- "modified": "2026-10-24 17:12:51.799857",
+ "modified": "2026-10-24 21:40:53.290418",
  "modified_by": "Administrator",
  "module": "Automotive Setup",
  "name": "Automotive Settings",

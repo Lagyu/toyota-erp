@@ -138,7 +138,7 @@ The envelope is validated strictly (`contracts.InboundEnvelope`, extra fields re
 - optional `sent_at`;
 - `data`: an object.
 
-The payload of `data` is validated by the handler's model (`AsnMessage`, `AckMessage`, `DealerOrderMessage`, `DealerOrderChangeMessage`, `InventoryAdjustmentMessage`, `ProductionEvent`).
+The payload of `data` is validated by the handler's model (`AsnMessage`, `AckMessage`, `DealerOrderMessage`, `DealerOrderChangeMessage`, `ShipmentStatusMessage`, `SupplierInvoiceMessage`, `InventoryAdjustmentMessage`, `BankStatementMessage`, `ProductionEvent`).
 
 | HTTP | Meaning |
 |---|---|
@@ -151,6 +151,44 @@ The payload of `data` is validated by the handler's model (`AsnMessage`, `AckMes
 | 429 | Rate limit exceeded |
 
 A database unique key on (partner, message_id) backs the duplicate check ([database.md](database.md#unique-keys)).
+
+## Custom methods: contract, versions and request limits
+
+The custom methods (`/api/method/<module>.<function>`) are described by the OpenAPI contract
+`integration_hub/openapi.json`, generated from the code. Besides parameters and results, it
+names the roles a method requires (`x-roles`), the partner scope of portal methods (`x-party`),
+the `Idempotency-Key` of state-changing partner and MES methods, and the request limit a
+method counts against (`x-request-limit`).
+
+**Versions** ([D-034](../../DECISIONS.md#d-034-versions-of-the-custom-methods-contract-and-per-user-request-limits)).
+The contract's `info.version` is a semantic version, and a method path keeps its behaviour
+within a major version.
+
+- Additions (a method, an optional parameter, a result property, a documented answer) raise
+  the minor version. Clients that ignore unknown result properties need no change.
+- A breaking change (a method or verb removed, a parameter removed, retyped or newly
+  required, a result property removed or retyped, guest access withdrawn) comes as a new path
+  (a new function, or the module's `v2` package). The old path stays for at least one more
+  release, marked `deprecated` in the contract (with `x-deprecation` saying what replaces it);
+  removing it is the breaking change that raises the major version.
+- CI compares the contract with the one before each change (`scripts/dev/openapi.py --compat`)
+  and fails if the version does not follow the change. Give partners the new contract with
+  the release notes (CHANGELOG).
+
+**Request limits** (Automotive Settings, *Request Limits*; per signed-in user and minute).
+
+| Field | Default | Counts |
+|---|---|---|
+| Portal Reads Per Minute Per User | 300 | `GET` of the supplier and dealer portal methods |
+| Portal Changes Per Minute Per User | 60 | other verbs of the portal methods, and uploads by portal users |
+| Shop Floor Requests Per Minute Per User | 240 | the MES and shop-floor methods (`automotive_manufacturing.mes`, `.shop_floor`) |
+
+Over the limit, the request is refused with HTTP 429 ("Too many requests") before the method
+runs; the next minute starts afresh. The count is per user, not per address: partners behind
+one proxy, and the tablets of a line, each keep their own. Desk work is not limited. If a
+partner's system legitimately needs more (a bulk catalogue read), raise the field for the site
+and note it in the partner record. Refusals show in the 4xx responses of the metrics
+([monitoring.md](monitoring.md)).
 
 ## Inbound statuses and automatic retries
 

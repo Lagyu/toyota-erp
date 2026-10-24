@@ -53,6 +53,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   taxes; default categories for new dealers, suppliers and intercompany parties.
 - Bank statements from a bank partner (signed `bank_statement` messages) become bank
   transactions that reconcile automatically with payment and journal entries.
+- Request limits per signed-in user and minute for the partner portals (reads, changes and
+  partner uploads) and the shop floor, set in Automotive Settings; HTTP 429 over the limit.
+- The custom methods' OpenAPI contract is versioned (1.1.0): additions raise the minor
+  version, breaking changes come as new paths with the old ones deprecated, and CI checks
+  that the version follows each change of the contract (D-034).
 - Notifications through one service: desk alerts and e-mails from editable templates in
   the recipient's language, per-user preferences, and a Notification Dispatch record of
   every delivery result.

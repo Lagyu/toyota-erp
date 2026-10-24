@@ -292,8 +292,8 @@ class TestInboundDeliveryGuards(IntegrationTestCase):
 		minute = datetime.datetime(2031, 3, 4, 5, 6, 7)
 		later = minute + datetime.timedelta(minutes=1)
 		# the counters live in Redis (not rolled back with the test): keys of minutes no other test uses
-		keys = [f"automotive:inbound-rate:{partner}:{at:%Y%m%d%H%M}" for partner in (GUARD, f"{GUARD}-2")
-			for at in (minute, later)]
+		keys = [frappe.cache.make_key(f"automotive:inbound-rate:{partner}:{at:%Y%m%d%H%M}")
+			for partner in (GUARD, f"{GUARD}-2") for at in (minute, later)]
 		frappe.cache.delete(*keys)
 		self.addCleanup(frappe.cache.delete, *keys)
 		with mock.patch.object(inbound, "now_datetime", return_value=minute):

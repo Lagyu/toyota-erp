@@ -9,3 +9,6 @@ python3 -s -m unittest automotive_manufacturing.tests.test_engine -v 2>&1 | tail
 # the operations scripts' pure logic (binary log positions, replay order, mirror retention)
 cd "$CI_ROOT/ops/backup"
 python3 -s -m unittest test_binlog -v 2>&1 | tail -12
+# the API contract's versioning rules (D-034)
+cd "$CI_ROOT/scripts/dev"
+python3 -s -m unittest test_openapi -v 2>&1 | tail -10
