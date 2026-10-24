@@ -59,7 +59,8 @@ jobs:
   image:
     needs: [integration, audit]
     runs-on: ubuntu-24.04
-    timeout-minutes: 90
+    # the first run after a generator change also builds the small reference dataset
+    timeout-minutes: 150
     permissions:
       contents: read
       packages: write
@@ -73,6 +74,11 @@ jobs:
         run: ./scripts/ci/sbom.sh "$(tail -1 .local-image.txt)"
       - name: Production stack smoke test
         run: ./scripts/ci/smoke.sh "$(tail -1 .local-image.txt)"
+      - name: Reference dataset cache (rebuilt only when the generator changes)
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: .local/reference
+          key: reference-small-${{ hashFiles('apps/automotive_seed/**') }}
       - name: End-to-end journeys (reference image, small dataset)
         run: ./scripts/ci/e2e.sh "$(tail -1 .local-image-reference.txt)"
       - name: Evidence
