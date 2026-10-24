@@ -4608,8 +4608,8 @@ msgstr "報告者本人はクローズを承認できません"
 
 #: automotive_manufacturing/product_engineering/change_control.py:57
 #, python-brace-format
-msgid "{0} affected item(s); used in {1} BOM(s); {2} open work order(s) ({3} units unbuilt); {4} on hand; {5} on open purchase orders."
-msgstr "対象品目 {0} 件、使用先BOM {1} 件、未完了の作業指示 {2} 件（未生産 {3}）、手持在庫 {4}、発注残 {5}。"
+msgid "{0} affected item(s); used in {1} BOM(s); {2} open work order(s) ({3} units unbuilt); {4} on hand; {5} on open purchase orders; {6} on open material requests; {7} in planning proposals not yet released."
+msgstr "対象品目 {0} 件、使用先BOM {1} 件、未完了の作業指示 {2} 件（未生産 {3}）、手持在庫 {4}、発注残 {5}、未発注の購買依頼 {6}、未リリースの計画提案 {7}。"
 
 #: automotive_manufacturing/shop_floor/doctype/kanban_loop/kanban_loop.py:19
 #, python-brace-format
@@ -4681,3 +4681,12 @@ msgstr "能力 {1} 台に対して {0} 台が計画されています。"
 msgid "{0}: one batch per component row (got {1})."
 msgstr "{0}: 構成部品の行ごとにバッチは1つにしてください（指定: {1}）。"
 
+#. Label of the open_request_qty (Float) field in DocType 'Engineering Change Request'
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json
+msgid "Open Material Request Qty"
+msgstr "未発注の購買依頼数量"
+
+#. Label of the proposal_qty (Float) field in DocType 'Engineering Change Request'
+#: automotive_manufacturing/product_engineering/doctype/engineering_change_request/engineering_change_request.json
+msgid "Planning Proposals Qty (Not Released)"
+msgstr "計画提案数量（未リリース）"

@@ -85,6 +85,8 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   every delivery result.
 
 ### Manufacturing (`automotive_manufacturing`)
+- A change request's impact assessment also names the affected items' quantity on open
+  material requests and in the newest planning runs' unreleased proposals (ERP-02.3).
 - Vehicle models, option rules and configurator; BOM revisions with effectivity; ECR with
   impact assessment and ECO with approval, new revisions and rippling parents.
 - Versioned planning parameter sets; deterministic MRP with shortage and capacity

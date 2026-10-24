@@ -24,6 +24,8 @@ from frappe.utils import add_days, flt, getdate, now_datetime, nowdate
 from automotive_manufacturing.product_engineering.bom_revisions import next_revision
 
 OPEN_WO_STATUSES = ("Not Started", "In Process", "Material Transferred", "Draft")
+# requests still to be ordered or supplied
+CLOSED_MR_STATUSES = ("Stopped", "Cancelled", "Ordered", "Issued", "Transferred", "Received", "Manufactured")
 
 
 # ---------------------------------------------------------------------------------------
@@ -53,18 +55,49 @@ def assess(doc) -> dict:
 		)[0][0]
 	)
 	wip = sum(flt(w.qty) - flt(w.produced_qty) for w in open_wos)
+	open_requests = _open_request_qty(items)
+	proposals = _proposal_qty(items)
 	summary = _(
 		"{0} affected item(s); used in {1} BOM(s); {2} open work order(s) ({3} units unbuilt); "
-		"{4} on hand; {5} on open purchase orders."
-	).format(len(items), len(all_boms), len(open_wos), wip, on_hand, open_po)
+		"{4} on hand; {5} on open purchase orders; {6} on open material requests; {7} in planning "
+		"proposals not yet released."
+	).format(len(items), len(all_boms), len(open_wos), wip, on_hand, open_po, open_requests, proposals)
 	return {
 		"open_work_orders": len(open_wos),
 		"wip_qty": wip,
 		"on_hand_qty": on_hand,
 		"open_purchase_qty": open_po,
+		"open_request_qty": open_requests,
+		"proposal_qty": proposals,
 		"impact_summary": summary,
 		"impact_assessed_at": now_datetime(),
 	}
+
+
+def _open_request_qty(items: list[str]) -> float:
+	"""Quantity of the affected items requested and not yet ordered (submitted, open requests)."""
+	return flt(frappe.db.sql(
+		"""select sum(greatest(mri.stock_qty - ifnull(mri.ordered_qty, 0), 0)) from `tabMaterial Request Item` mri
+		join `tabMaterial Request` mr on mr.name = mri.parent
+		where mr.docstatus = 1 and mr.status not in %s and mri.item_code in %s""",
+		[CLOSED_MR_STATUSES, tuple(items) or ("",)],
+	)[0][0])
+
+
+def _proposal_qty(items: list[str]) -> float:
+	"""Quantity of the affected items in the newest planning run of each plant, proposed or
+	approved but not yet released into a document."""
+	runs = []
+	for plant in frappe.get_all("Plant", pluck="name"):
+		runs += frappe.get_all("Planning Run", filters={"plant": plant, "status": ("in", ("Completed", "Released")),
+			"replay_of": ("is", "not set")}, order_by="creation desc", limit=1, pluck="name")
+	if not runs:
+		return 0.0
+	return flt(frappe.db.sql(
+		"""select sum(qty) from `tabPlanning Run Proposal` where parent in %s and item_code in %s
+		and decision != 'Rejected' and ifnull(document_name, '') = ''""",
+		[tuple(runs), tuple(items) or ("",)],
+	)[0][0])
 
 
 @frappe.whitelist(methods=["POST"])

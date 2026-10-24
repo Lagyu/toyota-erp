@@ -143,6 +143,44 @@ class TestConfigurationAndChangeControl(ManufacturingTestCase):
 			eco.submit()
 		self.assertEqual(frappe.db.get_value("Engineering Change Request", ecr.name, "status"), "Converted")
 
+	def test_impact_assessment_counts_open_requests_and_planning_proposals(self):
+		"""ERP-02.3: besides orders, stock and work in progress, a change request's impact names what
+		is requested and not yet ordered, and what the newest planning run proposes and has not
+		released."""
+		from automotive_manufacturing.product_engineering import change_control
+
+		cat = self.cat
+		wheel = cat["wheel"]
+		before = change_control._open_request_qty([wheel])
+		request = frappe.get_doc({"doctype": "Material Request", "material_request_type": "Purchase", "company": AICHI,
+			"schedule_date": add_days(nowdate(), 7), "items": [{"item_code": wheel, "qty": 5,
+				"schedule_date": add_days(nowdate(), 7), "warehouse": catalog.PARTS_STORE}]})
+		request.insert(ignore_permissions=True)
+		request.submit()
+		self.assertEqual(change_control._open_request_qty([wheel]), before + 5)
+		params = frappe.get_doc({"doctype": "Planning Parameter Set", "parameter_set": "AICHI-ECR-IMPACT",
+			"company": AICHI, "plant": catalog.PLANT, "horizon_days": 21, "frozen_zone_days": 0,
+			"lot_sizing": "Lot For Lot", "capacity_check": 0, "respect_holidays": 0, "include_forecast": 0})
+		params.insert(ignore_permissions=True)
+		approve(params, "Administrator", [DIRECTOR])
+		params.reload()
+		params.submit()
+		# the plant's newest run: one open proposal for the wheel, one rejected, one already released
+		frappe.get_doc({"doctype": "Planning Run", "company": AICHI, "plant": catalog.PLANT, "parameter_set": params.name,
+			"status": "Completed", "proposals": [
+				{"proposal_type": "Purchase", "item_code": wheel, "qty": 7, "decision": "Proposed"},
+				{"proposal_type": "Purchase", "item_code": wheel, "qty": 11, "decision": "Rejected"},
+				{"proposal_type": "Purchase", "item_code": wheel, "qty": 13, "decision": "Approved",
+					"document_type": "Material Request", "document_name": request.name}]}).insert(ignore_permissions=True)
+		with as_user(ENGINEER):
+			ecr = frappe.get_doc({"doctype": "Engineering Change Request", "title": "Wheel supplier change",
+				"change_reason": "Cost Reduction", "description": "Second source for the wheel",
+				"affected_items": [{"item_code": wheel, "proposed_change": "second source"}]}).insert()
+			ecr.submit()
+		ecr.reload()
+		self.assertEqual((ecr.open_request_qty, ecr.proposal_qty), (before + 5, 7))
+		self.assertIn("in planning proposals not yet released", ecr.impact_summary)
+
 
 class TestBuildGenealogyAndRecall(ManufacturingTestCase):
 	def test_vehicle_build_traceability_and_recall(self):
