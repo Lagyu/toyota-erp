@@ -264,9 +264,10 @@ scratch site and verifies ledgers, the audit chain and record counts
 ([`ops/backup/`](ops/backup/)).
 
 A single host is the delivered topology. High availability (replicated database,
-several application hosts behind a load balancer, shared file storage) is an option the
-compose layout allows but that is not packaged or tested; the 99.9% availability
-objective is not claimed for one host.
+several application hosts behind a load balancer, shared file storage) is a documented
+option ([ops/runbooks/high-availability.md](ops/runbooks/high-availability.md)), not
+packaged as settings and not rehearsed; the 99.9% availability objective is not claimed
+for one host.
 
 ## 7. Known limitations
 

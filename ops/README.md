@@ -52,6 +52,7 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 | Runbook | Use it for |
 |---|---|
 | [install-fresh-host.md](runbooks/install-fresh-host.md) | Host preparation (Docker, `erp.slice`), secrets and their ownership, environment file, TLS modes, preflight, first start, `new-site.sh`, smoke test, enabling backups/ClamAV/monitoring, reboot persistence |
+| [high-availability.md](runbooks/high-availability.md) | The high-availability option: what fails over and how, what the operator provides, what has not been rehearsed |
 | [upgrade.md](runbooks/upgrade.md) | Building the image (`build.sh`, tags, `--reference`, `--push`), updating upstream pins, `upgrade.sh`, schema migrations and backfills, maintenance mode, rollback |
 | [backup-restore.md](runbooks/backup-restore.md) | What `backup.sh` does, schedules, off-host repository, the weekly restore drill and its evidence, `restore.sh`, disaster recovery, RPO/RTO status |
 | [monitoring.md](runbooks/monitoring.md) | Health and metrics endpoints, Prometheus/Alertmanager/Grafana, **meaning and first response of every alert**, job queues, logs and correlation ids, audit chain verification |
