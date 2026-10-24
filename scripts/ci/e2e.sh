@@ -116,7 +116,12 @@ EOF
 		bench migrate >/dev/null
 	else
 		log "generating the small dataset (cached afterwards as $key)"
-		bench execute automotive_seed.runner.run --kwargs "{'profile': 'small'}" | tail -1
+		if ! bench execute automotive_seed.runner.run --kwargs "{'profile': 'small'}" | tail -1; then
+			# bench execute reports a failing call as a NameError: the run stored the real one
+			bench execute automotive_seed.runner.status --kwargs "{'profile': 'small'}" | grep '^{' | tail -1 \
+				| python3 -c 'import json,sys; s=json.load(sys.stdin); print(s["status"], s.get("stage")); print(s.get("error") or "")'
+			die "the small dataset could not be generated"
+		fi
 		bench backup --with-files --compress >/dev/null
 		rm -rf "$cache.tmp"
 		mkdir -p "$cache.tmp"

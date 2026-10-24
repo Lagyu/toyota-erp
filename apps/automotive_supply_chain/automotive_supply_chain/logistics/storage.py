@@ -116,13 +116,21 @@ def raise_transfer_requests(plant: str) -> str | None:
 			continue
 		qty = min(max(flt(rule.qty), flt(rule.level) - on_hand), flt(rule.capacity) - on_hand,
 			stock.get((rule.item_code, reserve), 0))
-		if qty > 0:
-			lines.append({"item_code": rule.item_code, "qty": qty, "warehouse": forward, "from_warehouse": reserve,
-				"schedule_date": nowdate()})
+		item = frappe.get_cached_value("Item", rule.item_code, ["item_name", "description", "item_group", "stock_uom"],
+			as_dict=True)
+		if frappe.get_cached_value("UOM", item.stock_uom, "must_be_whole_number"):
+			qty = int(qty)  # never more than the reserve holds
+		if qty <= 0:
+			continue
+		# the line as ERPNext's own reorder job writes it (erpnext.stock.reorder_item)
+		lines.append({"item_code": rule.item_code, "item_name": item.item_name, "description": item.description,
+			"item_group": item.item_group, "qty": qty, "uom": item.stock_uom, "stock_uom": item.stock_uom,
+			"conversion_factor": 1, "warehouse": forward, "from_warehouse": reserve, "schedule_date": nowdate(),
+			"reorder_level": rule.level, "reorder_qty": rule.qty, "projected_on_hand": on_hand})
 	if not lines:
 		return None
 	request = frappe.get_doc({"doctype": "Material Request", "material_request_type": "Material Transfer",
-		"company": doc.company, "transaction_date": nowdate(), "schedule_date": nowdate(),
+		"company": doc.company, "transaction_date": nowdate(), "schedule_date": nowdate(), "auto_created_via_reorder": 1,
 		"set_warehouse": forward, "set_from_warehouse": reserve, "items": lines})
 	request.flags.ignore_permissions = True  # the scheduled run, as the system
 	request.insert()
