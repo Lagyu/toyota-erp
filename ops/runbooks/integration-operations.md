@@ -54,7 +54,7 @@ Inbound message types:
 
 - Accepted by the envelope: `dealer_order`, `dealer_order_change`, `asn`, `po_acknowledgement`, `production_event`, `inventory_adjustment`, `supplier_invoice`, `shipment_status`, `bank_statement`.
 - With a registered handler: `asn`, `po_acknowledgement`, `dealer_order`, `dealer_order_change`, `production_event` and `inventory_adjustment`.
-- `supplier_invoice`, `shipment_status` and `bank_statement` have **no handler yet**. Messages of those types are Rejected ("no handler registered for …"), so do not allow them for a partner.
+- `supplier_invoice` and `shipment_status` have **no handler yet**. Messages of those types are Rejected ("no handler registered for …"), so do not allow them for a partner. `bank_statement` comes from a bank partner: see [Bank statements](#bank-statements).
 
 What the `inventory_adjustment` handler does:
 
@@ -281,6 +281,27 @@ Decoding fails with a clear reason in each of these cases:
 - an unexpected segment.
 
 Inbound EDI failures answer 417. In file drop they go to `rejected/` with the reason.
+
+## Bank statements
+
+A partner of type **Bank** (with its *Bank* set) sends `bank_statement` messages
+(`automotive_core.finance_controls.bank_statements`):
+
+```json
+{"statement_id": "…", "account_number": "…", "currency": "JPY", "from_date": "2026-10-01",
+ "to_date": "2026-10-31", "opening_balance": 0, "closing_balance": 0,
+ "entries": [{"entry_id": "…", "booking_date": "2026-10-05", "amount": -120000,
+   "reference": "…", "counterparty_name": "…", "counterparty_account": "…"}]}
+```
+
+- Each entry becomes a submitted **Bank Transaction** on the company's bank account with that
+  number (`amount` signed: + credited to our account, − debited). ERPNext's automatic
+  reconciliation then matches it to the payment or journal entry with the same reference and
+  amount (payments posted up to 14 days earlier). Entries without a match stay
+  *Unreconciled* for treasury in the Bank Reconciliation Tool.
+- The whole statement is **Rejected** if its balances do not add up, its dates do not cover its
+  entries, the account is held at another bank, or its currency differs from the account's.
+- Entry ids make resends idempotent: an entry already imported for the account is skipped.
 
 ## Housekeeping and monitoring
 

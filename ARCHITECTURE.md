@@ -254,7 +254,7 @@ pins (dependency constraints frozen in [`infra/image/constraints.txt`](infra/ima
 and promoted unchanged.
 
 Health: `automotive_core.ops.health.live` (process up), `ready` (database, cache, queue,
-scheduler) and `metrics` (Prometheus text, bearer token). Alerts cover error rates, failed
+scheduler) and `metrics` (Prometheus text, token header). Alerts cover error rates, failed
 and stuck jobs, queue backlog, disk pressure, backup age and latency
 ([`infra/deploy/monitoring/alerts.yml`](infra/deploy/monitoring/alerts.yml)).
 

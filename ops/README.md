@@ -101,9 +101,9 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 
 Each item is detailed in the runbook named.
 
-- **RPO ≤ 15 min is not met.** Backups are nightly, and binary logs stay on the host with no point-in-time-recovery tooling. **RTO is not validated** on a full dataset; the only drill measurement is 44 s on the empty CI smoke site. See [backup-restore.md](runbooks/backup-restore.md).
-- **Not exercised by CI:** the monitoring overlay and the TLS modes `files` and `letsencrypt`. See [monitoring.md](runbooks/monitoring.md) and [install-fresh-host.md](runbooks/install-fresh-host.md).
-- **Not measured yet:** performance on the reference sizing.
+- **RPO and RTO are measured on test sites only.** Binary logs and new uploads are shipped off the host every 5 minutes and replayed on restore; every drill records its restore time and recovery point. The CI smoke test and the production rehearsal run them on small sites; a production-size measurement is still to be recorded. See [backup-restore.md](runbooks/backup-restore.md).
+- **Exercised only by the production rehearsal** (`rehearsal.yml`, not by every CI run): the monitoring overlay and the TLS mode `files`. The mode `letsencrypt` needs a public name and is not exercised. See [monitoring.md](runbooks/monitoring.md) and [install-fresh-host.md](runbooks/install-fresh-host.md).
+- **Performance** is measured by `perf.yml` on the standard dataset: see [ops/performance/README.md](performance/README.md) for the recorded results.
 - **Not scripted:**
   - rotation of the database root password, the restic password and the Grafana password;
   - creation of the MariaDB monitoring account for the exporter;
@@ -114,9 +114,8 @@ Each item is detailed in the runbook named.
   - switching on virus scanning (*Virus Scan Mode* Required);
   - the Alertmanager receiver.
 - **Not implemented yet:**
-  - approval escalation;
-  - partner-role restrictions inside the portals;
   - bulk replay or re-scan;
-  - inbound handlers for `supplier_invoice`, `shipment_status` and `bank_statement`;
+  - inbound handlers for `supplier_invoice` and `shipment_status`;
   - centralized log shipping;
-  - network-level egress filtering.
+  - network-level egress filtering (findings C-03);
+  - restoring a single document or file.

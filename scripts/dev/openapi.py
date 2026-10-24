@@ -9,7 +9,8 @@ portal methods (``x-party``) and the response shape: dict literals and ``frappe.
 field lists give the properties of ``message``; otherwise the return annotation does.
 
 The spec is written to apps/automotive_core/automotive_core/integration_hub/openapi.json
-(served by ``automotive_core.integration_hub.api_contract.openapi``); ``--check`` fails
+(part of the app; partners get it with ops/runbooks/integration-operations.md, and the API
+contract tests in integration_tests/ check the running stack against it); ``--check`` fails
 when it is out of date (CI lint). Pure ``ast``: no Frappe import needed.
 
 	python3 scripts/dev/openapi.py [--check]

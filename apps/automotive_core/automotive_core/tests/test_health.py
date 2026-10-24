@@ -32,16 +32,19 @@ class TestHealth(IntegrationTestCase):
 
 	def test_metrics_need_a_configured_token(self):
 		frappe.local.conf["automotive_metrics_token"] = None
-		self._request_with({"Authorization": "Bearer anything"})
+		self._request_with({"X-Hinode-Metrics-Token": "anything"})
 		self.assertEqual(health.metrics(), {"status": "forbidden"})
 		frappe.local.conf["automotive_metrics_token"] = "s3cret-token"
-		self._request_with({"Authorization": "Bearer wrong"})
+		self._request_with({"X-Hinode-Metrics-Token": "wrong"})
+		self.assertEqual(health.metrics(), {"status": "forbidden"})
+		# the token in Authorization is not accepted: Frappe would take it for a login first
+		self._request_with({"Authorization": "Bearer s3cret-token"})
 		self.assertEqual(health.metrics(), {"status": "forbidden"})
 		self.assertEqual(frappe.local.response.http_status_code, 403)
 
 	def test_metrics_exposition(self):
 		frappe.local.conf["automotive_metrics_token"] = "s3cret-token"
-		self._request_with({"Authorization": "Bearer s3cret-token"})
+		self._request_with({"X-Hinode-Metrics-Token": "s3cret-token"})
 		health.metrics()
 		body = frappe.local.response.filecontent
 		self.assertIn("# TYPE erp_queue_jobs gauge", body)
@@ -78,7 +81,7 @@ class TestHealth(IntegrationTestCase):
 		self.assertEqual(delta[("erp_http_responses_total", "5xx", "api", None)], 1)
 		self.assertEqual(delta[("erp_http_responses_total", "4xx", "api", None)], 0)
 		frappe.local.conf["automotive_metrics_token"] = "s3cret-token"
-		self._request_with({"Authorization": "Bearer s3cret-token"})
+		self._request_with({"X-Hinode-Metrics-Token": "s3cret-token"})
 		health.metrics()
 		body = frappe.local.response.filecontent
 		self.assertIn(f"# TYPE {name} histogram", body)

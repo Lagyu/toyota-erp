@@ -26,14 +26,16 @@ The tool images (Syft, Trivy, Playwright) are pinned in `infra/ci-tools.env`.
 
 `./scripts/ci/lint.sh` runs every step and fails if any step failed:
 
-1. `ruff check apps scripts`.
+1. `ruff check apps scripts integration_tests perf ops` (including the `S` security rules).
 2. `shellcheck -x -S warning` on every `*.sh` under `scripts/` and `ops/`.
 3. Schema and desk JSON are generated from the specs: `python3 scripts/dev/schema/generate.py --check`.
 4. The OpenAPI contract matches the whitelisted methods: `python3 scripts/dev/openapi.py --check`. The output is `apps/automotive_core/automotive_core/integration_hub/openapi.json`.
 5. YAML and JSON syntax of every file, except `.git`, `.local`, `node_modules` and `dist`.
 6. Identity boundary: `python3 scripts/ci/identity_check.py`, so no protected third-party names appear in customer-facing assets.
+7. Translations: `scripts/dev/check_po.py --require-complete apps/*/*/locale/ja.po` (every string translated, placeholders and HTML tags kept).
+8. GitHub workflows: actionlint.
 
-The translation-catalogue checker `scripts/dev/check_po.py` (`[--require-complete] apps/*/*/locale/ja.po`, needs Babel) is **not part of lint or CI yet**.
+In CI the lint job also runs `scripts/ci/compose-check.sh`: the deploy compose as Docker Compose resolves it, for each TLS mode, must give every service a restart policy (the one-shot configurator none) and mount no Docker socket.
 
 ## Unit
 
@@ -157,30 +159,38 @@ See [security-operations.md](security-operations.md#dependency-audit-and-the-all
 
 ## CI workflow mapping
 
-`.github/workflows/ci.yml` runs on pushes to `main`, on `v*` tags and on pull requests. Concurrent runs per ref are cancelled, and token permissions are `contents: read`.
+`.github/workflows/ci.yml` runs on pushes to `main`, on `v*` tags, on pull requests and on demand. Runs of one ref queue behind each other; only pull-request runs are cancelled by a newer push. Token permissions are `contents: read`.
 
 | Job | Needs | Runs | Artifacts |
 |---|---|---|---|
-| `lint` | | `./scripts/ci/lint.sh` | |
+| `lint` | | `./scripts/ci/lint.sh`, `./scripts/ci/compose-check.sh` | |
 | `unit` | | `./scripts/ci/unit.sh` | |
 | `audit` | | `./scripts/ci/audit.sh` | |
-| `integration` (90 min) | lint, unit | `./scripts/ci/integration.sh` | `integration-logs`: `.local/dev-state/logs/`, 14 days |
-| `image` (150 min, `packages: write`) | integration, audit | see below | `image-evidence`: `.local/sbom/`, `.local/e2e/`, `.local/smoke/`, 30 days |
+| `integration` (120 min) | lint, unit | `./scripts/ci/integration.sh` | `integration-logs`: `.local/dev-state/logs/`, 14 days |
+| `image` (330 min, `packages: write`) | lint, unit | see below | `image-evidence`: `.local/sbom/`, `.local/smoke/`, the e2e report and junit, 30 days |
+| `release` (tags only) | integration, audit, image | promotes the tested candidates | |
 
-The `image` job:
+The `image` job runs beside `integration`:
 
 1. builds the production and reference images with `scripts/image/build.sh` (and `--reference`);
-2. runs `scripts/ci/sbom.sh` and `scripts/ci/smoke.sh` on the production image;
-3. restores the `.local/reference` cache;
-4. runs `scripts/ci/e2e.sh` on the reference image;
-5. on `v*` tags, pushes the production image to `ghcr.io/<owner>/hinode-erp`.
+2. runs `scripts/ci/sbom.sh` and `scripts/ci/smoke.sh` on the production image (the smoke test includes a backup, binary log shipping and a restore drill with point-in-time recovery);
+3. restores the `.local/reference` cache (the small dataset, rebuilt when the generator changes);
+4. runs `scripts/ci/e2e.sh` on the reference image: the Playwright suite, then the API contract and concurrency tests (`integration_tests/`);
+5. on `v*` tags, pushes both images as candidates; the `release` job promotes them once every job is green.
+
+Other workflows, started by hand (`gh workflow run …`):
+
+| Workflow | What it proves |
+|---|---|
+| `rehearsal.yml` | the production install from the runbook, an upgrade from 25 commits earlier, a simulated reboot, the off-host backup with binary log shipping and a drill with point-in-time recovery, TLS headers and cookie flags, the socket-free cron service, the monitoring targets ([install-fresh-host.md](install-fresh-host.md)) |
+| `dataset.yml` | the standard dataset, generated in chained 4-hour segments and validated ([seed-reference-data.md](seed-reference-data.md)) |
+| `perf.yml` | the load tests on that dataset ([ops/performance/README.md](../performance/README.md)) |
 
 ## Not covered by automated tests yet
 
-- **Load and performance tests.** The brief's 50/150-user targets are not measured yet; see [monitoring.md](monitoring.md#erpreadlatencyhigh--erpwritelatencyhigh).
-- **Upgrade tests from a previous release.** The only automated forward migration is e2e mode 2 restoring a cached dataset; see [upgrade.md](upgrade.md#schema-migrations-and-data-backfills).
-- **The monitoring overlay**, and the TLS modes `files` and `letsencrypt`. Smoke and e2e run with `MONITORING=0` and `TLS_MODE=none`.
-- **Reboot persistence.** Rehearse it by hand ([install-fresh-host.md](install-fresh-host.md#11-reboot-persistence)).
+- **The TLS mode `letsencrypt`** (it needs a public DNS name); `files` is covered by the rehearsal.
+- **The high-availability option** ([high-availability.md](high-availability.md)): no rehearsal on several hosts.
+- **Restoring onto a different host**: the drill restores into a scratch site on the same stack.
 
 ## Related
 

@@ -15,7 +15,7 @@ SITE=erp.hinode.example
 |---|---|---|
 | Database root password | `DB_PASSWORD_SECRETS_FILE` → compose secret `db_password` | MariaDB volume initialisation; scheduler and cron (drill, restore); `new-site.sh` |
 | Administrator password | `ADMIN_PASSWORD_FILE` | `new-site.sh` at site creation; `smoke.sh` login check |
-| Metrics token | `METRICS_TOKEN_FILE` → site config `automotive_metrics_token` | metrics endpoint; Prometheus bearer token |
+| Metrics token | `METRICS_TOKEN_FILE` → site config `automotive_metrics_token` | metrics endpoint (header `X-Hinode-Metrics-Token`); Prometheus |
 | Restic password | `RESTIC_PASSWORD_FILE` → compose secret `restic_password` | encryption key of the backup repository (scheduler and cron) |
 | S3 credentials | `RESTIC_AWS_ACCESS_KEY_ID` / `RESTIC_AWS_SECRET_ACCESS_KEY` **in the environment file** | scheduler and cron (backup, restore) |
 | Grafana admin password | `GRAFANA_ADMIN_PASSWORD_FILE` | Grafana (`MONITORING=1`) |
@@ -245,7 +245,7 @@ Policy lives in Desk → **Automotive Settings** (`apps/automotive_core/automoti
 | Allowed Extensions | `pdf,png,jpg,jpeg,csv,xlsx,txt,edi,json,xml` | extension allowlist |
 | Virus Scan Mode | **Disabled** | `Disabled`, `Best Effort` (scan, never block) or `Required` (unscanned or infected files cannot be read or downloaded) |
 | ClamAV (clamd) Host / Port | empty / 3310 | `clamav` / `3310` with `compose.clamav.yaml` |
-| Default Retention Days | 0 | **not used by the retention job yet**; only per-DocType rules purge |
+| Default Retention Days | 0 | the period for attachments of DocTypes without their own rule; the system's own records keep theirs (`files/policy.py`, `KEPT_DOCTYPES`); 0 keeps them |
 | Per-DocType Rules (Attachment Policy Rule) | none | per DocType: allowed extensions, max size, retention days, *private only* (default on) |
 
 Checks on every new attachment, except framework-internal ones such as Prepared Report, Data Import and Repost Item Valuation:
@@ -312,7 +312,7 @@ The TLS modes are described in [install-fresh-host.md](install-fresh-host.md#5-t
 - `Referrer-Policy: strict-origin-when-cross-origin`;
 - `Permissions-Policy: camera=(), microphone=(), geolocation=()`.
 
-**Not set:** no Content-Security-Policy is configured.
+- `Content-Security-Policy: frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'` (`script-src` stays open: Frappe's desk needs inline scripts; findings C-01).
 
 **Entrypoint settings:** request headers containing underscores are deleted, the read timeout is 180 s, and the access log is on.
 

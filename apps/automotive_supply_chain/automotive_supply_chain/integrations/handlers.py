@@ -165,14 +165,14 @@ def dealer_order_change(message, partner, data):
 	msg = _parse(DealerOrderChangeMessage, data)
 	dealer = _party("Customer")
 	order = frappe.db.get_value("Dealer Order", {"dealer": dealer, "dealer_reference": msg.dealer_reference,
-		"docstatus": 1}, ["name", "items"], as_dict=True)
+		"docstatus": 1}, "name")
 	if not order:
 		raise InboundRejected(f"no accepted order {msg.dealer_reference}")
-	values = {"doctype": "Dealer Order Change", "dealer_order": order.name, "change_type": msg.change_type,
+	values = {"doctype": "Dealer Order Change", "dealer_order": order, "change_type": msg.change_type,
 		"item_row": msg.item_row, "new_qty": msg.new_qty, "new_delivery_date": msg.new_delivery_date,
 		"reason": msg.reason}
 	if msg.new_selections:
-		model = frappe.get_all("Dealer Order Item", filters={"parent": order.name, "idx": msg.item_row},
+		model = frappe.get_all("Dealer Order Item", filters={"parent": order, "idx": msg.item_row},
 			pluck="vehicle_model")
 		values["new_configuration"] = configure(model[0], msg.new_selections)["configuration"]
 	doc = frappe.get_doc(values)

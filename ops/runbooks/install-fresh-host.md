@@ -28,7 +28,7 @@ Sources:
 - **Sizing.**
   - Reference sizing in the brief: 16 vCPU, 64 GB RAM, SSD/NVMe.
   - The memory limits of the production example add up to roughly 30 GB with monitoring and ClamAV: backend 6g, two workers 2g each, MariaDB 12g, Redis 1.5g, ClamAV 2g, monitoring about 2.3g, small services.
-  - **Performance on this sizing has not been measured yet.** The `ops/performance/` directory named in the env examples does not exist yet.
+  - Performance: `perf.yml` runs the load tests on the standard dataset. The results, and the hardware they were measured on, are in [ops/performance/README.md](../performance/README.md).
 - **A DNS name** for the site (`SITE_NAME`) pointing at the host, with ports 443 and 80 reachable by users. HTTP only redirects, but Let's Encrypt needs port 80 from the internet.
 - **Outbound network access** from the host to:
   - GitHub: `compose.sh` clones the pinned frappe_docker once;
@@ -352,7 +352,7 @@ Keep the output of both as installation evidence (brief §8.2 gate 6). No script
   1. Point `ALERTMANAGER_CONFIG` at an Alertmanager file with your team's receiver. The default sends to a placeholder URL.
   2. Open Grafana through an SSH tunnel.
 
-  See [monitoring.md](monitoring.md). **The monitoring overlay is not exercised by CI.** Check every Prometheus target after enabling it.
+  See [monitoring.md](monitoring.md). The production rehearsal (`rehearsal.yml`) runs the overlay and checks that every Prometheus target is up; check them on your host too after enabling it.
 - **Outgoing email.** Configure an Email Account in the desk for welcome mails, password resets and notifications. No script does this.
 - **Administrator and users.**
   - On production, privileged roles (including System Manager, held by Administrator) must use an OTP app. Enrol at the first login.

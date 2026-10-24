@@ -14,12 +14,12 @@ scrape_configs:
   # automotive_core.ops.health.metrics: queues, outbox/inbox, audit sealing, backups, work queues
   - job_name: erp
     metrics_path: /api/method/automotive_core.ops.health.metrics
-    authorization:
-      type: Bearer
-      credentials_file: /etc/prometheus/erp-metrics-token
+    # the token in its own header: Frappe refuses an Authorization header that is not a login
     http_headers:
       X-Frappe-Site-Name:
         values: ["${SITE_NAME}"]
+      X-Hinode-Metrics-Token:
+        files: [/etc/prometheus/erp-metrics-token]
     static_configs: [{ targets: ["backend:8000"] }]
 
   - job_name: mariadb

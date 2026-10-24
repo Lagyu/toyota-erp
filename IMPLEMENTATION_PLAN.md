@@ -110,7 +110,7 @@ Exit gate: all acceptance gates and operational runbooks verified. **Open.**
 - [x] Immutable image (runtime without the asset toolchain or package installers),
       production compose (TLS proxy, private networks, limits, health), encrypted off-host
       backups with verified restore drills, monitoring and alerting.
-- [~] Latency alerting (request-duration metrics) to add.
+- [x] Latency alerting: request-duration histogram and the `ErpReadLatencyHigh` / `ErpWriteLatencyHigh` alerts.
 - [~] Load tests: scenarios, runner and workflow ready (`perf/`, `perf.yml`); results await the
       standard dataset; slow-query/index review after them.
 - [~] Production rehearsal on a fresh runner (`rehearsal.yml`): install by the runbook with
@@ -118,7 +118,7 @@ Exit gate: all acceptance gates and operational runbooks verified. **Open.**
       reboot, backup and restore drill: first run in progress.
 - [~] Security: lint, dependency audit and image scan with reviewed allowlists, SBOM, findings
       log, configuration review, permission matrix checked by tests; owner decisions on the
-      accepted findings open (C-02, C-03, C-08, V-02, V-03c/d/g, V-05).
+      accepted findings open (C-03, V-02, V-03c/d/g, V-05); C-02 fixed, C-08 mitigated.
 - [~] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, operations runbooks,
       performance procedure; traceability matrix to refresh with the hosted CI results.
 

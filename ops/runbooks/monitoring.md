@@ -23,7 +23,7 @@ ENV=/etc/hinode/production.env
 SITE=erp.hinode.example
 ```
 
-> **Status.** The health endpoints are exercised by every smoke test. The monitoring overlay (`MONITORING=1`) is **not exercised by CI**: the smoke and e2e stacks run with `MONITORING=0`. After enabling it, confirm that every Prometheus target is up and that a test alert reaches your receiver.
+> **Status.** The health endpoints, including the metrics endpoint with its token, are exercised by every smoke test. The monitoring overlay (`MONITORING=1`) runs in the production rehearsal (`rehearsal.yml`), which checks that every Prometheus target is up; the CI smoke and e2e stacks run with `MONITORING=0`. After enabling it, confirm the targets and that a test alert reaches your receiver.
 
 ## Health endpoints
 
@@ -31,7 +31,7 @@ SITE=erp.hinode.example
 |---|---|---|
 | `GET /api/method/automotive_core.ops.health.live` | anonymous | `200 {"message": {"status": "ok"}}` (no I/O) |
 | `GET /api/method/automotive_core.ops.health.ready` | anonymous | `200` when database, cache, queue and scheduler are fine. `503` with `"status": "unavailable"`, where each failed check's `detail` is the exception class. |
-| `GET /api/method/automotive_core.ops.health.metrics` | `Authorization: Bearer <automotive_metrics_token>` | Prometheus text format. `403 {"status": "forbidden"}` without the right token, or when no token is configured. |
+| `GET /api/method/automotive_core.ops.health.metrics` | `X-Hinode-Metrics-Token: <automotive_metrics_token>` | Prometheus text format. `403 {"status": "forbidden"}` without the right token, or when no token is configured. Not `Authorization: Bearer`: Frappe takes any credentials there for a login and refuses the request (401). |
 
 - Responses carry `Cache-Control: no-store`.
 - The `scheduler` readiness check applies only when `automotive_environment` is `production` or `staging`. It fails when the site's scheduler is disabled or paused.
@@ -56,7 +56,7 @@ Calling the endpoints by hand, through the frontend container as `scripts/deploy
 ./scripts/deploy/compose.sh "$ENV" exec -T frontend curl -s -H "Host: $SITE" \
   http://127.0.0.1:8080/api/method/automotive_core.ops.health.ready
 ./scripts/deploy/compose.sh "$ENV" exec -T -e TOKEN="$(cat /etc/hinode/secrets/metrics_token)" frontend sh -c \
-  'curl -s -H "Host: $SITE_NAME" -H "Authorization: Bearer $TOKEN" http://127.0.0.1:8080/api/method/automotive_core.ops.health.metrics'
+  'curl -s -H "Host: $SITE_NAME" -H "X-Hinode-Metrics-Token: $TOKEN" http://127.0.0.1:8080/api/method/automotive_core.ops.health.metrics'
 ```
 
 ## Metrics
@@ -130,7 +130,7 @@ The request histogram:
 
 Scrape jobs:
 
-- **`erp`:** `backend:8000` at `/api/method/automotive_core.ops.health.metrics`, with the bearer token from the mounted `METRICS_TOKEN_FILE` and the header `X-Frappe-Site-Name: <site>`. It bypasses nginx and Traefik.
+- **`erp`:** `backend:8000` at `/api/method/automotive_core.ops.health.metrics`, with the token from the mounted `METRICS_TOKEN_FILE` in the header `X-Hinode-Metrics-Token`, and `X-Frappe-Site-Name: <site>`. It bypasses nginx and Traefik.
 - **`mariadb`, `redis`, `node`:** the exporters above.
 - **`traefik`:** `proxy:8082`, only with `TLS_MODE` letsencrypt or files. This is Traefik's internal metrics entrypoint, which includes certificate expiry.
 

@@ -2,11 +2,12 @@
 
     GET /api/method/automotive_core.ops.health.live       process is serving (no I/O)
     GET /api/method/automotive_core.ops.health.ready      database, cache, queue, scheduler
-    GET /api/method/automotive_core.ops.health.metrics    Prometheus text, bearer token
+    GET /api/method/automotive_core.ops.health.metrics    Prometheus text, token header
 
 ``live`` and ``ready`` are anonymous and reveal only component states. ``metrics`` requires
-``Authorization: Bearer <automotive_metrics_token>`` (site config) and is never served
-without a configured token. Every metric is read from the live system: queue lengths from
+the header ``X-Hinode-Metrics-Token: <automotive_metrics_token>`` (site config) and is never
+served without a configured token. Not ``Authorization``: Frappe takes any credentials
+there for a login, and refuses the request when they are not a user's. Every metric is read from the live system: queue lengths from
 Redis, work backlogs from their DocTypes, the last successful backup from the marker the
 backup job writes; nothing is cached or estimated.
 """
@@ -72,13 +73,15 @@ def ready() -> dict:
 	return _respond(payload, 200 if ok else 503)
 
 
+METRICS_HEADER = "X-Hinode-Metrics-Token"
+
+
 def _authorised() -> bool:
 	token = frappe.conf.get("automotive_metrics_token")
 	if not token:
 		return False
-	header = frappe.get_request_header("Authorization") or ""
-	scheme, _, presented = header.partition(" ")
-	return scheme.lower() == "bearer" and hmac.compare_digest(presented.strip(), str(token))
+	presented = (frappe.get_request_header(METRICS_HEADER) or "").strip()
+	return bool(presented) and hmac.compare_digest(presented, str(token))
 
 
 def _count(doctype: str, filters: dict) -> int:

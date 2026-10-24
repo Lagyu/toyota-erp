@@ -176,10 +176,13 @@ the result passes the same invariants as live data.
 ## D-019 Production packaging on the official frappe_docker compose
 
 **Decision.** Use frappe_docker's compose plus our overrides (Traefik with TLS modes,
-ofelia jobs, restic backups, optional ClamAV and monitoring) and an immutable image
+scheduled jobs, restic backups, optional ClamAV and monitoring) and an immutable image
 built from the pins with frozen Python constraints; images are promoted unchanged.
 `pwd.yml` is never used.
 **Consequences.** Upgrades follow upstream's container model; our overrides stay small.
+**Amended.** The scheduled jobs first ran under Ofelia, which needed the Docker socket; the
+socket-free `cron` service (`ops/backup/cron.py`) replaced it, and Traefik reads its routes
+from files (findings C-02).
 
 ## D-020 KPI catalogue with reconciliation checks
 

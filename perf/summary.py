@@ -12,7 +12,7 @@ targets met; 1: a p95 target missed, failures above the ratio, or errors inside 
 2: no usable results.
 
 The second form saves the site's Prometheus metrics (automotive_core.ops.health.metrics)
-to OUTPUT with the bearer token read from TOKEN_FILE. The token is never printed.
+to OUTPUT with the token read from TOKEN_FILE (header X-Hinode-Metrics-Token). The token is never printed.
 
 Groups follow the request names of the locustfile: read:* (GET), write:* (other methods),
 job:* (completion times of background jobs, no target). Client-side times include the
@@ -190,7 +190,7 @@ def scrape(url: str, token_file: str, output: str) -> int:
 
 	token = Path(token_file).read_text().strip()
 	response = requests.get(f"{url.rstrip('/')}/api/method/automotive_core.ops.health.metrics",
-		headers={"Authorization": f"Bearer {token}"}, timeout=60)
+		headers={"X-Hinode-Metrics-Token": token}, timeout=60)
 	if response.status_code != 200 or HISTOGRAM not in response.text:
 		print(f"metrics endpoint answered HTTP {response.status_code} without the request histogram "
 			"(wrong token, or no automotive_metrics_token on the site)", file=sys.stderr)

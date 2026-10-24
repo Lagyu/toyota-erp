@@ -127,6 +127,14 @@ EOF
 				| python3 -c 'import json,sys; s=json.load(sys.stdin); print(s["status"], s.get("stage")); print(s.get("error") or "")'
 			die "the small dataset could not be generated"
 		fi
+		# run() also returns when the dataset's invariants fail: it records that on the Seed Run
+		bench execute automotive_seed.runner.status --kwargs "{'profile': 'small'}" | grep '^{' | tail -1 \
+			| python3 -c 'import json, sys
+s = json.load(sys.stdin)
+if s["status"] != "Validated":
+	failed = [c for c in (s.get("validation") or {}).get("checks", []) if not c.get("ok")]
+	print(s["status"], s.get("stage"), (s.get("error") or "")[:2000], json.dumps(failed, default=str)[:4000])
+	sys.exit(1)' || die "the small dataset did not pass its validation"
 		bench backup --with-files --compress >/dev/null
 		rm -rf "$cache.tmp"
 		mkdir -p "$cache.tmp"

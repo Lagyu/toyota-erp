@@ -212,8 +212,14 @@ if not frappe.db.exists("User", sys.argv[2]):
 update_password(sys.argv[2], sys.stdin.read().strip())
 frappe.db.commit()
 frappe.destroy()' "$SITE" "$cookie_user" <<<"$cookie_password" >"$out/cookie-user.log" 2>&1 || true
-login=$(https -D - -o /dev/null -H 'Content-Type: application/json' --data-binary @- "https://$SITE/api/method/login" \
-	<<<"{\"usr\": \"$cookie_user\", \"pwd\": \"$cookie_password\"}" | tr -d '\r' || true)
+# the body from an owner-only file, so curl sends its length: a body streamed from stdin goes
+# out chunked, which the backend refused (501)
+body=$(mktemp)
+printf '{"usr": "%s", "pwd": "%s"}' "$cookie_user" "$cookie_password" >"$body"
+login=$(https -D - -o "$out/cookie-login.json" -H 'Content-Type: application/json' --data-binary @"$body" \
+	"https://$SITE/api/method/login" | tr -d '\r' || true)
+rm -f "$body"
+echo "login: $(head -1 <<<"$login")" >>"$out/cookie-user.log"
 cookie=$(grep -i '^set-cookie: sid=' <<<"$login" | head -1 || true)
 [[ -n $cookie ]] || missing+=("sid cookie from a login (see cookie-user.log)")
 for flag in secure httponly samesite; do grep -qi "$flag" <<<"$cookie" || missing+=("sid cookie $flag"); done
@@ -284,6 +290,12 @@ for _ in $(seq 1 12); do
 	[[ $total -gt 0 && $up == "$total" ]] && break
 	sleep 10
 done
-if [[ $total -gt 0 && $up == "$total" ]]; then pass "$up of $total targets up"; else fail "$up of $total up; down: ${down:-?}"; fi
+if [[ $total -gt 0 && $up == "$total" ]]; then
+	pass "$up of $total targets up"
+else
+	why=$(python3 -c 'import json,sys; print("; ".join(x["labels"]["job"] + ": " + (x.get("lastError") or "?")[:160] for x in json.load(sys.stdin)["data"]["activeTargets"] if x["health"] != "up"))' \
+		<<<"$targets" 2>/dev/null || true)
+	fail "$up of $total up; down: ${why:-${down:-?}}"
+fi
 
 finish

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Post-deploy smoke test through the front end: liveness, readiness (database, cache,
-# queue, scheduler), the realtime server, an authenticated API call, and the partner portal
-# pages.
+# queue, scheduler), the realtime server, an authenticated API call, the metrics endpoint
+# with its token, and the partner portal pages.
 #   smoke.sh ENV_FILE
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
@@ -31,4 +31,9 @@ login=$("${compose[@]}" exec -T -e PW="$admin" frontend sh -c \
 	"curl -s -o /dev/null -w '%{http_code}' -H 'Host: $site' -H 'Content-Type: application/json' \
 	-d \"{\\\"usr\\\": \\\"Administrator\\\", \\\"pwd\\\": \\\"\$PW\\\"}\" http://127.0.0.1:8080/api/method/login")
 [[ $login == 200 ]] && log "ok   administrator login" || { log "FAIL administrator login ($login)"; fail=1; }
+# the metrics endpoint with the site's token, as Prometheus asks for it
+metrics=$("${compose[@]}" exec -T -e TOKEN="$(<"${METRICS_TOKEN_FILE:?}")" frontend sh -c \
+	"curl -s -o /dev/null -w '%{http_code}' -H 'Host: $site' -H \"X-Hinode-Metrics-Token: \$TOKEN\" \
+	http://127.0.0.1:8080/api/method/automotive_core.ops.health.metrics")
+[[ $metrics == 200 ]] && log "ok   metrics with the token" || { log "FAIL metrics with the token ($metrics)"; fail=1; }
 exit $fail

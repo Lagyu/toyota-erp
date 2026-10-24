@@ -25,10 +25,11 @@ The brief (§7) asks for RPO ≤ 15 minutes and RTO ≤ 2 hours where the archit
 
 **Measured so far:**
 
-- The CI smoke test of 2026-10-24 (`scripts/ci/smoke.sh`, evidence `.local/smoke/20261024T022605Z/`) ran one backup into a local restic repository and a restore drill. The **drill passed in 44 s on the empty smoke site** (snapshot `6fb1b416`).
-- **Nothing has been measured on a standard-size dataset yet.** Before claiming an RTO, run drills on a staging stack loaded with production-size data and record the times.
+- Every CI smoke test (`scripts/ci/smoke.sh`, artifact `image-evidence`) runs a backup into a local restic repository, ships the binary logs and runs a drill, and fails unless the drill brought its copy forward to the newest shipped change.
+- The production rehearsal of 2026-10-24 (`rehearsal.yml` run 40087480153; restic on S3): backup, one shipment, then a **drill that passed in 40 s with a recovery point of 1.5 s** on the rehearsal's fresh site (all checks ok: trial balances, audit chain, attachments, encrypted fields).
+- **Nothing has been measured on a standard-size dataset yet.** Before claiming an RTO or RPO, run drills on a staging stack loaded with production-size data and record the times.
 
-**History note.** Before the fix of 2026-10-24, restores and drills looked only for `.tar` file archives. `bench backup --compress` writes `.tgz`, so attachments were silently not restored, and drills did not check them. The 44 s drill above ran before this fix, and before the *attachments restored* and *encrypted fields decrypt* checks existed.
+**History note.** Before the fix of 2026-10-24, restores and drills looked only for `.tar` file archives. `bench backup --compress` writes `.tgz`, so attachments were silently not restored, and drills did not check them. Drills recorded before this fix, and before the *attachments restored* and *encrypted fields decrypt* checks existed, prove less than the ones above.
 
 ## What a backup contains and where it goes
 

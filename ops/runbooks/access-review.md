@@ -99,7 +99,7 @@ Every policy has:
 - **allow delegation**;
 - **bind to document hash:** changing protected fields invalidates the approval.
 
-Decisions are immutable Approval Decision records; database triggers refuse updates and deletes ([database.md](database.md#immutability-triggers)). The policy field *Escalate After Hours* exists, but **escalation is not implemented yet**.
+Decisions are immutable Approval Decision records; database triggers refuse updates and deletes ([database.md](database.md#immutability-triggers)). A step pending longer than its *Escalate After Hours* is escalated once by the hourly job: its approvers are reminded and the next level is alerted (the next step's approvers; the group controllers after the last step), recorded on the step and in the audit chain.
 
 ## Provisioning internal users
 

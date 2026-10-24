@@ -17,7 +17,7 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - DocType schemas as code with generated JSON and a drift check.
 - Immutable application image (production and reference flavours) with frozen Python
   constraints; production compose on frappe_docker v4.1.1 with Traefik (Let's Encrypt or
-  file certificates), ofelia jobs, restic backups and weekly restore drills, optional
+  file certificates), a socket-free cron service, restic backups and weekly restore drills, optional
   ClamAV and Prometheus/Alertmanager/Grafana overlays.
 - Health (`live`, `ready`) and token-protected Prometheus metrics endpoints; alert rules
   for service health, queues, failed jobs, integration failures, audit sealing, error

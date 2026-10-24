@@ -463,6 +463,22 @@ class TestDealerJourney(JourneyTestCase):
 		self.assertAlmostEqual(value_before, value_after, places=2)
 		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "allocation.released", "reference_name": allocation}))
 
+	def test_inbound_order_change_applies_to_the_accepted_order(self):
+		"""The dealer's system sends the change (dealer_order_change, as the partner's service user)."""
+		from automotive_supply_chain.integrations import handlers
+
+		so = self._order("ASAHI-PO-1003")
+		new_date = add_days(nowdate(), 45)
+		with as_user(self.portal):
+			doctype, name = handlers.dealer_order_change(None, None, {"dealer_reference": "ASAHI-PO-1003",
+				"change_type": "Change Delivery Date", "new_delivery_date": new_date,
+				"reason": "The end customer moved the handover"})
+		self.assertEqual((doctype, frappe.db.get_value(doctype, name, "status")), ("Dealer Order Change", "Applied"))
+		self.assertEqual(str(frappe.db.get_value("Sales Order Item", {"parent": so}, "delivery_date")), str(new_date))
+		with as_user(self.portal), self.assertRaises(handlers.InboundRejected):
+			handlers.dealer_order_change(None, None, {"dealer_reference": "ASAHI-PO-0000", "change_type": "Cancel Order",
+				"reason": "No such order"})
+
 
 class TestSourcing(JourneyTestCase):
 	def test_onboarding_sourcing_and_asl_enforcement(self):
