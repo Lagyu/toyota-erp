@@ -25,3 +25,6 @@ http:
         customFrameOptionsValue: SAMEORIGIN
         referrerPolicy: strict-origin-when-cross-origin
         permissionsPolicy: "camera=(), microphone=(), geolocation=()"
+        # Frappe's desk needs inline scripts and eval, so script-src stays open; these directives
+        # still block framing by other sites, plugins, <base> hijacking and off-site form posts
+        contentSecurityPolicy: "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"

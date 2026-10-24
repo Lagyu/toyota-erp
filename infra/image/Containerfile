@@ -94,7 +94,13 @@ VOLUME ["/home/frappe/frappe-bench/sites", "/home/frappe/frappe-bench/logs"]
 USER root
 COPY --from=frappe_docker resources/core/main-entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY --from=frappe_docker resources/core/start.sh /usr/local/bin/start.sh
-RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/start.sh
+# Security fixes Debian has published since the base image was built (ops/security/findings.md),
+# and no package installers at run time: uv only builds the bench (in the builder stage).
+RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/start.sh \
+  && apt-get update \
+  && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade --no-install-recommends \
+  && rm -rf /var/lib/apt/lists/* \
+  && rm -f /usr/local/bin/uv /usr/local/bin/uvx
 
 USER frappe
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
