@@ -176,6 +176,11 @@ up
 
 ## Alert reference
 
+The rules are unit-tested: `infra/deploy/monitoring/alerts.test.yml` feeds synthetic series to
+`promtool test rules` in CI lint (pinned Prometheus image) and checks that availability,
+latency, error-rate, queue, backup, binary-log and recovery-point alerts fire after their
+period and not before. Change a rule and its test together.
+
 Thresholds are starting points for the 50/150-user profiles; tune them after load measurements. Severity is critical (C) or warning (W).
 
 | Group | Alert | Fires when | Sev |

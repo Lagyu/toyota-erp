@@ -1,0 +1,119 @@
+# Unit tests of the alert rules (promtool test rules; OPS-5): each alert fires on the series
+# that should raise it, after its "for" period, and not before. Run by scripts/ci/lint.sh in
+# the pinned Prometheus image.
+rule_files:
+  - alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      # the backend stops answering at minute 2
+      - series: 'up{job="erp", instance="backend:8000"}'
+        values: "1 1 0x20"
+      - series: 'mysql_up{instance="mysqld-exporter:9104"}'
+        values: "1x20"
+    alert_rule_test:
+      - eval_time: 5m
+        alertname: ErpBackendDown
+        exp_alerts: []
+      - eval_time: 9m
+        alertname: ErpBackendDown
+        exp_alerts:
+          - exp_labels: { severity: critical, job: erp, instance: "backend:8000" }
+            exp_annotations:
+              summary: "ERP backend is not answering the metrics endpoint for 5 minutes"
+      - eval_time: 9m
+        alertname: MariaDBDown
+        exp_alerts: []
+
+  - interval: 1m
+    input_series:
+      # desk reads: most take between 2 and 4 seconds
+      - series: 'erp_http_request_duration_seconds_bucket{verb="read", kind="desk", le="1"}'
+        values: "0+1x40"
+      - series: 'erp_http_request_duration_seconds_bucket{verb="read", kind="desk", le="2"}'
+        values: "0+2x40"
+      - series: 'erp_http_request_duration_seconds_bucket{verb="read", kind="desk", le="4"}'
+        values: "0+20x40"
+      - series: 'erp_http_request_duration_seconds_bucket{verb="read", kind="desk", le="+Inf"}'
+        values: "0+20x40"
+      # one response in eleven is a server error
+      - series: 'erp_http_responses_total{kind="desk", class="2xx"}'
+        values: "0+100x40"
+      - series: 'erp_http_responses_total{kind="desk", class="5xx"}'
+        values: "0+10x40"
+    alert_rule_test:
+      - eval_time: 30m
+        alertname: ErpReadLatencyHigh
+        exp_alerts:
+          - exp_labels: { severity: warning, kind: desk }
+            exp_annotations:
+              summary: "p95 server time of desk reads above 2 s for 15 minutes"
+      - eval_time: 30m
+        alertname: ErpServerErrorRateHigh
+        exp_alerts:
+          - exp_labels: { severity: critical }
+            exp_annotations:
+              summary: "More than 2 % of responses are server errors (5xx) for 10 minutes"
+
+  - interval: 1m
+    input_series:
+      - series: 'erp_queue_jobs{queue="long", instance="backend:8000"}'
+        values: "600x30"
+      - series: 'erp_queue_jobs{queue="short", instance="backend:8000"}'
+        values: "10x30"
+    alert_rule_test:
+      - eval_time: 10m
+        alertname: ErpQueueBacklog
+        exp_alerts: []
+      - eval_time: 20m
+        alertname: ErpQueueBacklog
+        exp_alerts:
+          - exp_labels: { severity: warning, queue: long }
+            exp_annotations:
+              summary: "Queue long has had more than 500 waiting jobs for 15 minutes"
+
+  - interval: 1m
+    input_series:
+      # binary logs last shipped at time 0, and never since; the last drill recovered to 40 minutes
+      - series: 'erp_binlog_last_shipped_timestamp_seconds{instance="backend:8000"}'
+        values: "0x40"
+      - series: 'erp_restore_drill_rpo_seconds{instance="backend:8000"}'
+        values: "2400x40"
+      - series: 'erp_restore_drill_last_ok{instance="backend:8000"}'
+        values: "1x40"
+    alert_rule_test:
+      - eval_time: 20m
+        alertname: ErpBinlogShippingStale
+        exp_alerts: []
+      - eval_time: 30m
+        alertname: ErpBinlogShippingStale
+        exp_alerts:
+          - exp_labels: { severity: critical }
+            exp_annotations:
+              summary: "Binary logs not shipped off the host for 20 minutes: the 15-minute recovery point is not being met"
+      - eval_time: 30m
+        alertname: ErpRecoveryPointLarge
+        exp_alerts:
+          - exp_labels: { severity: warning }
+            exp_annotations:
+              summary: "The last restore drill recovered changes only up to more than 30 minutes before it"
+      - eval_time: 30m
+        alertname: ErpRestoreDrillFailed
+        exp_alerts: []
+
+  - interval: 30m
+    # no backup has ever reported success
+    input_series:
+      - series: 'up{job="erp", instance="backend:8000"}'
+        values: "1x70"
+    alert_rule_test:
+      - eval_time: 29h
+        alertname: ErpBackupNeverRan
+        exp_alerts: []
+      - eval_time: 31h
+        alertname: ErpBackupNeverRan
+        exp_alerts:
+          - exp_labels: { severity: critical }

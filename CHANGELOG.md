@@ -62,6 +62,8 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   Required by default), and an hourly job scans files without a result (uploaded before
   scanning, or while clamd was down). The production rehearsal runs ClamAV and checks an
   EICAR sample end to end.
+- The alert rules have unit tests (`alerts.test.yml`, `promtool test rules` in CI lint), and
+  lint type-checks the e2e suite (TypeScript, strict).
 - A licence inventory comes with each image's SBOM (`scripts/ci/licences.py`; committed copy
   `ops/security/licences.md`), and install-fresh-host.md lists in one table the external
   accounts and credentials a deployment needs and what is missing until each is configured.

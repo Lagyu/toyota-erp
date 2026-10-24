@@ -62,6 +62,15 @@ print("\n".join(bad) or "ok")
 sys.exit(1 if bad else 0)
 PY
 
+step "alert rules: unit tests (promtool, pinned Prometheus image)"
+if docker info >/dev/null 2>&1; then
+	prometheus=$(sed -n 's/^PROMETHEUS_IMAGE=//p' infra/versions.env)
+	docker run --rm -v "$CI_ROOT/infra/deploy/monitoring:/rules:ro" --entrypoint promtool "$prometheus" \
+		test rules /rules/alerts.test.yml || status=1
+else
+	echo "no Docker here: skipped (the CI lint job runs it)"
+fi
+
 step "e2e suite: TypeScript type check"
 if command -v npm >/dev/null; then
 	(cd e2e && npm ci --ignore-scripts --no-audit --no-fund >/dev/null && npx --no-install tsc --noEmit -p .) || status=1

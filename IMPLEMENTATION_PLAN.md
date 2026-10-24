@@ -44,10 +44,13 @@ Exit gate: production and material ledger transactions reconcile. **Met** (small
 
 - [x] Vehicle models, option rules, Vehicle Configuration, variant resolution.
 - [x] BOM revisions (revision, effectivity, supersession), guarded BOM Update Tool.
-- [x] ECR (impact assessment) → ECO (approval, new revisions, parent ripple, effectivity-driven
-      BOM selection, pinned history).
+- [x] ECR (impact assessment of orders, stock, work in progress, open requests and planning
+      proposals) → ECO (approval, new revisions, parent ripple, effectivity-driven BOM selection,
+      pinned history; operation changes as routing versions; approved alternatives, enforced at
+      consumption).
 - [x] Planning Parameter Set (versioned, approved) + Planning Run (stored snapshot, deterministic
-      engine, shortages and capacity exceptions, replay, release through Production Plan).
+      engine with BOM yield and the native MPS as forecast, shortages and capacity exceptions,
+      replay, release through Production Plan); weekly production plan report (the weekly MPS).
 - [x] Plant Schedule (mixed-model leveling, takt, audited resequencing).
 - [x] MES API (idempotent unit/batch/operation reports), Vehicle Unit states, genealogy from
       serial/batch bundles (incl. auto-numbered outputs), WIP / OEE / variance reports.
@@ -91,9 +94,10 @@ green on the small dataset, local reference stack); a green run on hosted CI is 
 - [x] Taxes by party tax category (Tax Rules, zero-rated export, resale exemption, import).
 - [x] Bank statements from a bank partner reconciled with payments and journals.
 - [x] Integration hub: inbox, outbox, signed webhooks, retries, replay protection, EDI and
-      file-drop adapters, desk replay/retry; OpenAPI contract with contract tests against the
-      running API, and concurrency tests (one Idempotency-Key, simultaneous redeliveries,
-      simultaneous submits).
+      file-drop adapters, desk replay/retry; carrier and supplier-invoice messages; versioned
+      OpenAPI contract (D-034) with contract and authorization tests against the running API,
+      and concurrency tests (one Idempotency-Key, simultaneous redeliveries, simultaneous
+      submits); per-user request limits on the portals and the shop floor.
 - [x] KPI catalogue and dashboards, persona workspaces; notifications with templates in the
       recipient's language, preferences and auditable dispatch; approval escalation.
 - [x] Japanese and English: complete catalogues for the custom apps and the upstream strings
@@ -114,11 +118,13 @@ Exit gate: all acceptance gates and operational runbooks verified. **Open.**
 - [~] Load tests: scenarios, runner and workflow ready (`perf/`, `perf.yml`); results await the
       standard dataset; slow-query/index review after them.
 - [~] Production rehearsal on a fresh runner (`rehearsal.yml`): install by the runbook with
-      TLS, monitoring and S3 backups, upgrade from a previous release, HTTPS checks, simulated
-      reboot, backup and restore drill: first run in progress.
-- [~] Security: lint, dependency audit and image scan with reviewed allowlists, SBOM, findings
-      log, configuration review, permission matrix checked by tests; owner decisions on the
-      accepted findings open (C-03, V-02, V-03c/d/g, V-05); C-02 fixed, C-08 mitigated.
+      TLS, monitoring, ClamAV and S3 backups, upgrade from a previous release, HTTPS checks,
+      upload scanning, structured logs, simulated reboot, backup and point-in-time restore drill,
+      rollback to the previous release.
+- [~] Security: lint, dependency audit and image scan with reviewed allowlists, SBOM and licence
+      inventory, findings log, configuration review, permission matrix checked by tests, scoped
+      actions (C-10) kept by a lint check; owner decisions on the accepted findings open (C-03,
+      V-02, V-03c/d/g, V-05); C-02 fixed, C-08 mitigated.
 - [~] Documentation: README, ARCHITECTURE, DECISIONS, CHANGELOG, operations runbooks,
       performance procedure; traceability matrix to refresh with the hosted CI results.
 
