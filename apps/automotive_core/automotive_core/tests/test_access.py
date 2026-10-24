@@ -212,3 +212,33 @@ class TestBankAccountControls(IntegrationTestCase):
 	def test_restricted_fields_are_permlevel_one(self):
 		meta = frappe.get_meta("Bank Account")
 		self.assertEqual(meta.get_field("bank_account_no").permlevel, 1)
+
+
+class TestBackgroundJobs(IntegrationTestCase):
+	"""P-4: a background job runs as the user who queued it, or as a system step that writes past
+	the permissions (sealing, dispatch, inbound processing, scans). Either way only the methods
+	that queue it may start it, and those check the caller: no queued job and no scheduled task
+	of the production apps can be called over HTTP itself."""
+
+	def test_jobs_and_scheduled_tasks_cannot_be_called_over_http(self):
+		import ast
+		from pathlib import Path
+
+		apps = [app for app in frappe.get_installed_apps() if app.startswith("automotive_") and app != "automotive_seed"]
+		self.assertGreaterEqual(len(apps), 4)
+		targets = set()
+		for app in apps:
+			for path in Path(frappe.get_app_path(app)).rglob("*.py"):
+				if "tests" in path.parts:
+					continue
+				for node in ast.walk(ast.parse(path.read_text())):
+					if (isinstance(node, ast.Call) and ast.unparse(node.func) == "frappe.enqueue" and node.args
+							and isinstance(node.args[0], ast.Constant)):
+						targets.add(node.args[0].value)
+			for event, paths in (frappe.get_hooks("scheduler_events", app_name=app) or {}).items():
+				for path in (p for ps in paths.values() for p in ps) if event == "cron" else paths:
+					targets.add(path)
+		self.assertGreaterEqual(len(targets), 15)
+		for target in sorted(targets):
+			with self.subTest(target):
+				self.assertNotIn(frappe.get_attr(target), frappe.whitelisted, f"{target} can be called over HTTP")
