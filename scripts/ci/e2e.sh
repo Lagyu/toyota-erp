@@ -167,7 +167,8 @@ if [[ -n $image ]]; then
 	log "administrator login with this stack's secret before setting it: $login"
 	"${compose[@]}" exec -T backend env/bin/python -c "$SET_ADMIN_PASSWORD_PY" "$site" <"$secrets/admin_password"
 	# the API against its OpenAPI document (integration_tests/), as the stack's administrator
-	"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password"
+	INTEGRATION_CREDENTIALS=$out/credentials.json INTEGRATION_FIXTURES=$out/fixtures.json \
+		"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password"
 fi
 log "running Playwright against $url ($site)"
 docker_cmd run --rm --network host -u "$(id -u):$(id -g)" -e HOME=/tmp -e CI="${CI:-}" \
