@@ -186,12 +186,18 @@ if [[ -n $image ]]; then
 	"${compose[@]}" exec -T backend env/bin/python -c "$SET_ADMIN_PASSWORD_PY" "$site" <"$secrets/admin_password"
 	# the API against its OpenAPI document (integration_tests/), as the stack's administrator
 	INTEGRATION_CREDENTIALS=$out/credentials.json INTEGRATION_FIXTURES=$out/fixtures.json \
-		"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password"
+		"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password" \
+		|| contract=$?
 fi
+# the browser suite runs even when the API tests failed: one run reports both
 log "running Playwright against $url ($site)"
+playwright=0
 docker_cmd run --rm --network host -u "$(id -u):$(id -g)" -e HOME=/tmp -e CI="${CI:-}" \
 	-e E2E_BASE_URL="$url" -e E2E_CREDENTIALS=/creds/credentials.json -e E2E_FIXTURES=/creds/fixtures.json \
 	-e E2E_REPORT_DIR=/report \
 	-v "$REPO_ROOT/e2e:/e2e" -v "$out:/creds:ro" -v "$out:/report" -w /e2e "$PLAYWRIGHT_IMAGE" \
 	bash -lc 'test -d node_modules/@axe-core/playwright || npm ci --no-audit --no-fund >/dev/null; npx playwright test "$@"' \
-	e2e "${pw_args[@]}"
+	e2e "${pw_args[@]}" || playwright=$?
+if ((${contract:-0} || playwright)); then
+	die "API contract and concurrency tests: exit ${contract:-0}; Playwright: exit $playwright"
+fi
