@@ -378,6 +378,43 @@ class TestReworkReinspection(ManufacturingTestCase):
 
 
 class TestRoutedWorkOrders(ManufacturingTestCase):
+	def test_the_mes_completes_an_operation_unless_its_work_order_is_held(self):
+		"""ERP-04.1, ERP-04.4: the MES completes a Job Card in one call (time log and quantity, then
+		submitted once the quantity is reached), and nothing is logged while the work order is held."""
+		import uuid
+
+		from frappe.utils import add_to_date, now_datetime
+
+		from automotive_manufacturing.mes.production import complete_operation
+		from automotive_manufacturing.quality_control.holds import QualityHoldError, raise_hold
+
+		cat = self.cat
+		workstation = frappe.db.get_value("Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name")
+		if not frappe.db.exists("Operation", "TST Seat stitching"):
+			frappe.get_doc({"doctype": "Operation", "__newname": "TST Seat stitching", "workstation": workstation}).insert(
+				ignore_permissions=True)
+		bom = frappe.get_doc({"doctype": "BOM", "item": cat["seat"], "company": AICHI, "quantity": 1, "is_default": 0,
+			"is_active": 1, "with_operations": 1, "items": [{"item_code": cat["foam"], "qty": 1.5}],
+			"operations": [{"operation": "TST Seat stitching", "workstation": workstation, "time_in_mins": 3}]})
+		bom.insert(ignore_permissions=True)
+		bom.submit()
+		wo = catalog.work_order(cat["seat"], 2, bom=bom.name, fg_warehouse=catalog.LINE_SIDE, pinned=True)
+		[card] = frappe.get_all("Job Card", filters={"work_order": wo.name}, pluck="name")
+		employee = frappe.get_doc({"doctype": "Employee", "first_name": "Tst", "last_name": "Stitcher", "gender": "Female",
+			"date_of_birth": "1991-01-01", "date_of_joining": "2021-01-01", "company": AICHI,
+			"create_user_permission": 0}).insert(ignore_permissions=True)
+		# two days back: clear of the time logs other tests record on the same station now
+		start = add_to_date(now_datetime(), days=-2)
+		end = add_to_date(start, minutes=6)
+		hold = raise_hold("Work Order", "Suspect foam lot on this order", AICHI, work_order=wo.name)
+		with self.assertRaises(QualityHoldError):
+			complete_operation(card, 2, employee.name, start, end, idempotency_key=str(uuid.uuid4()))
+		self.assertFalse(frappe.get_all("Job Card Time Log", filters={"parent": card}))
+		frappe.db.set_value("Quality Hold", hold, "status", "Released")
+		result = complete_operation(card, 2, employee.name, start, end, idempotency_key=str(uuid.uuid4()))
+		self.assertEqual((result["job_card"], result["completed_qty"]), (card, 2))
+		self.assertEqual(frappe.db.get_value("Job Card", card, "docstatus"), 1)
+
 	def test_units_post_only_after_their_operations_are_confirmed(self):
 		"""ERP-04.1: a routed work order gets a job card per operation; its units post only once
 		the station confirms them, and the time logs record who did the work."""
@@ -698,6 +735,31 @@ class TestKanbanEscalation(ManufacturingTestCase):
 
 
 class TestPlanning(ManufacturingTestCase):
+	def test_a_run_left_running_by_a_dead_worker_is_failed_for_a_retry(self):
+		"""PRF-8: the hourly recovery turns a run that has stayed Running for more than two hours
+		(its worker died) into Failed, to be started again; a run still working is left alone."""
+		from automotive_manufacturing.production_planning import planning_run
+
+		params = frappe.get_doc({"doctype": "Planning Parameter Set", "parameter_set": "AICHI-STALL",
+			"company": AICHI, "plant": catalog.PLANT, "horizon_days": 7, "frozen_zone_days": 0,
+			"lot_sizing": "Lot For Lot", "capacity_check": 0, "respect_holidays": 0, "include_forecast": 0})
+		params.insert(ignore_permissions=True)
+		approve(params, "Administrator", [DIRECTOR])
+		params.reload()
+		params.submit()
+
+		def running():
+			return frappe.get_doc({"doctype": "Planning Run", "company": AICHI, "plant": catalog.PLANT,
+				"parameter_set": params.name, "status": "Running"}).insert(ignore_permissions=True).name
+
+		stalled, working = running(), running()
+		frappe.db.set_value("Planning Run", stalled, "modified", add_to_date(now_datetime(), hours=-3),
+			update_modified=False)
+		planning_run.recover_stalled()
+		self.assertEqual(frappe.db.get_value("Planning Run", stalled, ["status", "error"]),
+			("Failed", "worker stopped; retry the run"))
+		self.assertEqual(frappe.db.get_value("Planning Run", working, "status"), "Running")
+
 	def test_the_weekly_production_plan_sets_work_orders_against_orders_and_capacity(self):
 		"""ERP-03.3: the weekly MPS view: per ISO week and line, the firm orders due, the units the
 		work orders plan and the line's capacity on its working days, with the week flagged when

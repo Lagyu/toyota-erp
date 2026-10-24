@@ -729,6 +729,34 @@ class TestDealerCreditLimit(JourneyTestCase):
 		self.assertFalse(frappe.db.exists("Sales Order", {"automotive_dealer_order": second}))
 
 
+class TestDealerDiscountApproval(JourneyTestCase):
+	"""ERP-08.4: a dealer order's discount needs the sales manager's approval from 3 %, and the
+	group controller's as well from 8 % (policy Dealer Discount Approval)."""
+
+	def test_the_approvers_grow_with_the_discount(self):
+		from automotive_core.governance.approvals import request_approval
+
+		variant = self.cat["variants"][("Premium", "AWD")]
+		dealer = "Sakura Motors Kofu"
+		if not frappe.db.exists("Customer", dealer):
+			frappe.get_doc({"doctype": "Customer", "customer_name": dealer,
+				"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+				"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name")}).insert(ignore_permissions=True)
+
+		def approvers(discount: float) -> list[str] | None:
+			due = add_days(nowdate(), 30)
+			order = frappe.get_doc({"doctype": "Sales Order", "company": AICHI, "customer": dealer,
+				"transaction_date": nowdate(), "delivery_date": due, "items": [{"item_code": variant, "qty": 1,
+					"price_list_rate": 2_500_000, "discount_percentage": discount, "warehouse": catalog.FG,
+					"delivery_date": due}]}).insert(ignore_permissions=True)
+			self.assertEqual(flt(order.automotive_max_discount_percent), discount)
+			request = request_approval("Sales Order", order.name)
+			return [step["role"] for step in request["steps"]]
+
+		self.assertEqual(approvers(5), ["Sales Manager"])
+		self.assertEqual(approvers(9), ["Sales Manager", "Group Controller"])
+
+
 class TestVehicleCreditNote(JourneyTestCase):
 	"""A credit note against a delivered vehicle's invoice marks the vehicle Credited (it moves no
 	stock: the vehicle stays delivered); cancelling the credit note makes it Invoiced again."""

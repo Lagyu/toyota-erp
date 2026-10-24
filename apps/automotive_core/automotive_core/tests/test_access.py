@@ -30,6 +30,12 @@ class TestTenantStructure(IntegrationTestCase):
 		line = frappe.get_doc("Production Line", "AICHI-FA1")
 		self.assertEqual(line.max_units_per_day, (960 * 60 // 64))
 		self.assertEqual(len(line.stations), 5)
+		# ENT-4: the eleven functions are departments of each company
+		functions = {"Engineering", "Production Planning", "Plant Operations", "Warehousing", "Quality", "Purchasing",
+			"Finance", "Treasury", "Sales", "Logistics", "IT"}
+		for company in (AICHI, KYUSHU, NA):
+			departments = set(frappe.get_all("Department", filters={"company": company}, pluck="department_name"))
+			self.assertLessEqual(functions, departments, company)
 
 	def test_holiday_calendars_include_plant_shutdowns(self):
 		holidays = frappe.get_all("Holiday", filters={"parent": "JP 2026 Plant Calendar"}, pluck="holiday_date")
