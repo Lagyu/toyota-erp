@@ -107,8 +107,8 @@ EOF
 		# the dataset's encrypted fields stay readable with its own key (Frappe creates one only
 		# when a field is first encrypted)
 		if [[ -s $cache/encryption_key ]]; then
-			"${compose[@]}" exec -T -e KEY="$(<"$cache/encryption_key")" backend bash -c \
-				"bench --site '$site' set-config encryption_key \"\$KEY\""
+			"${compose[@]}" exec -T backend python3 -c "$SET_SITE_CONFIG_PY" "$site" encryption_key \
+				<"$cache/encryption_key"
 		fi
 		bench migrate >/dev/null
 	else

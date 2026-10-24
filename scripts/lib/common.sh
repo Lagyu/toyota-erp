@@ -26,3 +26,20 @@ docker_cmd() {
 }
 
 random_secret() { python3 -c 'import secrets; print(secrets.token_urlsafe(24))'; }
+
+# Python for a frappe container (working directory: the bench) that sets one
+# site_config.json key to the value on its stdin. Unlike bench set-config, the value never
+# appears on a command line, and one that starts with "-" (token_urlsafe gives those) is
+# not taken for an option.
+#   compose... exec -T backend python3 -c "$SET_SITE_CONFIG_PY" SITE KEY <<<"$value"
+# shellcheck disable=SC2034
+SET_SITE_CONFIG_PY='import json, os, sys
+site, key = sys.argv[1:3]
+path = os.path.join("sites", site, "site_config.json")
+with open(path) as handle:
+	config = json.load(handle)
+config[key] = sys.stdin.read().rstrip("\n")
+tmp = path + ".tmp"
+with open(os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600), "w") as handle:
+	json.dump(config, handle, indent=1, sort_keys=True)
+os.replace(tmp, path)'

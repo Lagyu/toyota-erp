@@ -17,6 +17,10 @@ MARKERS=$STATE/markers
 export LOG_TAG=bootstrap
 # shellcheck source=../lib/common.sh
 source "$WS/scripts/lib/common.sh"
+# a failing step leaves the ERROR line waiters look for (scripts/lib/wait-for-log.sh);
+# die() logs one itself
+set -E
+trap 'log "ERROR: bootstrap failed (line $LINENO, exit $?)"' ERR
 load_env_file "$WS/infra/versions.env"
 
 SITE=${DEV_SITE:-erp.localhost}

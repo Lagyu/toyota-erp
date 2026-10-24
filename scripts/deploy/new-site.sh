@@ -35,8 +35,7 @@ bench --site "$site" set-config automotive_environment "$ENVIRONMENT"
 # bench backup prunes local backup files older than this; ops/backup/backup.sh keeps three days
 bench --site "$site" set-config -p keep_backups_for_hours 72
 bench --site "$site" set-config host_name "https://$site"
-"${compose[@]}" exec -T -e TOKEN="$token" backend bash -c \
-	"bench --site '$site' set-config automotive_metrics_token \"\$TOKEN\""
+"${compose[@]}" exec -T backend python3 -c "$SET_SITE_CONFIG_PY" "$site" automotive_metrics_token <<<"$token"
 # the tenant setup returns its change log (one JSON line); report its size, keep the detail
 steps=$(bench --site "$site" execute automotive_core.setup.tenant.apply --kwargs "{'tenant': 'hinode'}" | tail -1)
 log "tenant setup: $(python3 -c 'import json, sys; print(len(json.loads(sys.argv[1] or "[]")), "changes")' "$steps" \

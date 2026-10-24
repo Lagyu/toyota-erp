@@ -5,4 +5,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 ./scripts/dev/up.sh
+# up.sh runs the bench bootstrap detached: wait for its result before testing
+./scripts/lib/wait-for-log.sh .local/dev-state/logs/bootstrap.log 'BOOTSTRAP OK' '\[bootstrap\] ERROR' 3600
 ./scripts/dev/test-all.sh "$@"
