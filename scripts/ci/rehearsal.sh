@@ -270,14 +270,24 @@ keys = generate_keys(sys.argv[2])
 frappe.db.commit()
 print("%s:%s" % (keys["api_key"], keys["api_secret"]))
 frappe.destroy()' "$SITE" "$cookie_user" 2>>"$out/scan.log" | tail -1)
+# the key's length and a check of it at the backend and through the proxy (never the key itself)
+direct=$(compose exec -T -e KEYS="$keys" backend sh -c "curl -s -w ' %{http_code}' -H 'Host: $SITE' \
+	-H \"Authorization: token \$KEYS\" http://127.0.0.1:8000/api/method/frappe.auth.get_logged_user" 2>&1 || true)
+proxied=$(https -s -w ' %{http_code}' -H "Authorization: token $keys" \
+	"https://$SITE/api/method/frappe.auth.get_logged_user" 2>&1 || true)
+echo "api key: ${#keys} characters; backend: ${direct:0:200}; through the proxy: ${proxied:0:200}" >>"$out/scan.log"
 files=$(mktemp -d)
 # the EICAR test file, the harmless sample every scanner reports (written in two parts, so that a
 # scanner does not flag this script)
 printf '%s%s' 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR' '-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' >"$files/eicar.txt"
 printf 'Rehearsal: a clean upload\n' >"$files/clean.txt"
-upload() {
-	https -s -H "Authorization: token $keys" -F "file=@$1" -F is_private=1 "https://$SITE/api/method/upload_file" \
-		| python3 -c 'import json, sys; print(json.load(sys.stdin)["message"]["file_url"])' 2>/dev/null || true
+upload() { # the response's status and start go to scan.log; prints the file URL
+	local response
+	response=$(https -s -w '\n%{http_code}' -H "Authorization: token $keys" -F "file=@$1" -F is_private=1 \
+		"https://$SITE/api/method/upload_file" || true)
+	echo "upload ${1##*/}: HTTP ${response##*$'\n'} $(head -c 300 <<<"${response%$'\n'*}")" >>"$out/scan.log"
+	python3 -c 'import json, sys; print(json.loads(sys.argv[1])["message"]["file_url"])' "${response%$'\n'*}" \
+		2>/dev/null || true
 }
 status_of() { bench execute frappe.db.get_value --args "['File', {'file_url': '$1'}, 'automotive_scan_status']" | tail -1; }
 reads() { https -s -o /dev/null -w '%{http_code}' -H "Authorization: token $keys" "https://$SITE$1" || true; }
