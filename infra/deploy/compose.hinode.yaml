@@ -61,6 +61,12 @@ services:
       GUNICORN_WORKERS: ${GUNICORN_WORKERS:-4}
       GUNICORN_THREADS: ${GUNICORN_THREADS:-4}
       GUNICORN_TIMEOUT: ${GUNICORN_TIMEOUT:-120}
+      # gunicorn takes the scheme from X-Forwarded-Proto (set by the TLS proxy, passed on by
+      # the frontend's nginx) only from trusted addresses, by default 127.0.0.1: the frontend
+      # is another container, so the session cookie would lack Secure and generated URLs would
+      # say http. Port 8000 is reachable only on the stack's own networks; gunicorn 23 takes
+      # single addresses or "*", not ranges.
+      FORWARDED_ALLOW_IPS: "*"
     healthcheck:
       <<: *site-health
       test: ["CMD-SHELL", "curl -fsS -H \"Host: $$SITE_NAME\" http://127.0.0.1:8000/api/method/automotive_core.ops.health.live >/dev/null"]

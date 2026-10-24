@@ -13,11 +13,11 @@ SITE=erp.hinode.example
 
 | Secret | Location | Used by |
 |---|---|---|
-| Database root password | `DB_PASSWORD_SECRETS_FILE` → compose secret `db_password` | MariaDB volume initialisation; scheduler (drill, restore); `new-site.sh` |
+| Database root password | `DB_PASSWORD_SECRETS_FILE` → compose secret `db_password` | MariaDB volume initialisation; scheduler and cron (drill, restore); `new-site.sh` |
 | Administrator password | `ADMIN_PASSWORD_FILE` | `new-site.sh` at site creation; `smoke.sh` login check |
 | Metrics token | `METRICS_TOKEN_FILE` → site config `automotive_metrics_token` | metrics endpoint; Prometheus bearer token |
-| Restic password | `RESTIC_PASSWORD_FILE` → compose secret `restic_password` | encryption key of the backup repository |
-| S3 credentials | `RESTIC_AWS_ACCESS_KEY_ID` / `RESTIC_AWS_SECRET_ACCESS_KEY` **in the environment file** | scheduler (backup, restore) |
+| Restic password | `RESTIC_PASSWORD_FILE` → compose secret `restic_password` | encryption key of the backup repository (scheduler and cron) |
+| S3 credentials | `RESTIC_AWS_ACCESS_KEY_ID` / `RESTIC_AWS_SECRET_ACCESS_KEY` **in the environment file** | scheduler and cron (backup, restore) |
 | Grafana admin password | `GRAFANA_ADMIN_PASSWORD_FILE` | Grafana (`MONITORING=1`) |
 | Exporter DB credentials | `MYSQLD_EXPORTER_CNF` | mysqld-exporter (`MONITORING=1`) |
 | TLS private key | `TLS_CERT_DIR/privkey.pem` (or the `letsencrypt` volume) | Traefik |
@@ -63,7 +63,7 @@ The command prompts for the password, so it never appears on a command line. The
 
 1. Open a root shell: `./scripts/deploy/compose.sh "$ENV" exec db mariadb -uroot -p`.
 2. Run `ALTER USER` for each root account. List them with `SELECT user, host FROM mysql.user WHERE user = 'root';`.
-3. Write the new value into `DB_PASSWORD_SECRETS_FILE` and restart `scheduler`.
+3. Write the new value into `DB_PASSWORD_SECRETS_FILE` and restart `scheduler` and `cron`.
 4. Verify with a manual restore drill ([backup-restore.md](backup-restore.md#weekly-restore-drill)).
 
 Rotating a site's own database password is **not scripted**.
@@ -85,13 +85,13 @@ restic supports several keys per repository.
    ./scripts/deploy/compose.sh "$ENV" exec -T scheduler restic key list
    ```
 
-3. Put the new password into `RESTIC_PASSWORD_FILE`, restart `scheduler`, and check that `restic snapshots` works.
+3. Put the new password into `RESTIC_PASSWORD_FILE`, restart `scheduler` and `cron`, and check that `restic snapshots` works.
 4. **Escrow the new password.**
 5. Remove the old key with `restic key remove <old key id>`, and delete `/tmp/new-restic-password` in the container.
 
 #### Other secrets
 
-- **S3 credentials:** create new keys at the storage provider and update `RESTIC_AWS_*` in `$ENV`. Run `./scripts/deploy/compose.sh "$ENV" up -d scheduler` (the environment changed, so it is recreated). Run a manual backup, then revoke the old keys.
+- **S3 credentials:** create new keys at the storage provider and update `RESTIC_AWS_*` in `$ENV`. Run `./scripts/deploy/compose.sh "$ENV" up -d scheduler cron` (the environment changed, so they are recreated). Run a manual backup, then revoke the old keys.
 - **Grafana admin password:** Grafana applies `GF_SECURITY_ADMIN_PASSWORD__FILE` when it creates its admin user. Change the password in Grafana itself, then update the file so a rebuilt monitoring stack gets the same value.
 - **TLS certificate (`TLS_MODE=files`):**
   - Replace `fullchain.pem` and `privkey.pem` in `TLS_CERT_DIR`, then `./scripts/deploy/compose.sh "$ENV" restart proxy`.
@@ -99,7 +99,7 @@ restic supports several keys per repository.
     - `preflight.sh` warns 30 days before expiry.
     - With `MONITORING=1`, Prometheus scrapes Traefik's certificate metrics and alerts at 14 days (`ErpCertificateExpiringSoon`) and 3 days (`ErpCertificateExpiring`).
   - Let's Encrypt certificates are renewed by Traefik.
-- **Partner signing secrets:** see [integration-operations.md](integration-operations.md#rotating-partner-secrets).
+- **Partner signing secrets:** inbound secrets rotate with an overlap (*Rotate Inbound Secret*); see [integration-operations.md](integration-operations.md#rotating-partner-secrets).
 - **User API keys:**
   - Users get keys on their User form (API Access).
   - Deactivation removes them ([access-review.md](access-review.md#deprovisioning)).
@@ -268,7 +268,10 @@ The TLS modes are described in [install-fresh-host.md](install-fresh-host.md#5-t
 
 **Client IP behind the proxy.** nginx in `frontend` trusts `X-Forwarded-For` from `UPSTREAM_REAL_IP_ADDRESS`, which defaults to `0.0.0.0/0`. This is only safe because, in the TLS modes, the frontend is reachable only through Traefik. With `TLS_MODE=none`, clients can spoof their address. The address ends up in Approval Decisions (`client_ip`).
 
-**Session cookies** use Frappe's defaults. On production the session expires after 8 hours.
+**Session cookies.** Frappe sets `sid` HttpOnly and SameSite=Lax, and Secure when the request
+is HTTPS. Behind the TLS proxy that depends on the backend trusting the forwarded scheme
+(`FORWARDED_ALLOW_IPS` in `infra/deploy/compose.hinode.yaml`, findings C-09); the production
+rehearsal checks the flags on a real login. On production the session expires after 8 hours.
 
 ## Least-privilege notes
 

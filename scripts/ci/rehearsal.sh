@@ -186,13 +186,32 @@ fi
 # 4. HTTPS ---------------------------------------------------------------------------------
 step "HTTPS: redirect, headers and cookies"
 redirect=$(curl -sS -o /dev/null -w '%{http_code} %{redirect_url}' "http://$SITE/login" || true)
-headers=$(https -D - -o /dev/null "https://$SITE/login" | tr -d '\r')
+headers=$(https -D - -o /dev/null "https://$SITE/login" | tr -d '\r' || true)
 missing=()
 for header in "strict-transport-security: max-age=31536000" "x-content-type-options: nosniff" \
 		"x-frame-options: sameorigin" "content-security-policy: frame-ancestors 'self'" "referrer-policy:"; do
 	grep -qi "^${header}" <<<"$headers" || missing+=("$header")
 done
-cookie=$(grep -i '^set-cookie: sid=' <<<"$headers" | head -1)
+# the session cookie comes with a login, not with the guest login page; Administrator gets
+# the OTP challenge on production, so a user without a two-factor role logs in (password on stdin)
+cookie_user=rehearsal.cookie@hinode.test
+cookie_password=$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')
+compose exec -T backend env/bin/python -c 'import sys
+import frappe
+from frappe.utils.password import update_password
+frappe.init(site=sys.argv[1], sites_path="sites")
+frappe.connect()
+if not frappe.db.exists("User", sys.argv[2]):
+	user = frappe.get_doc({"doctype": "User", "email": sys.argv[2], "first_name": "Rehearsal", "send_welcome_email": 0})
+	user.append("roles", {"role": "Purchase User"})
+	user.insert(ignore_permissions=True)
+update_password(sys.argv[2], sys.stdin.read().strip())
+frappe.db.commit()
+frappe.destroy()' "$SITE" "$cookie_user" <<<"$cookie_password" >"$out/cookie-user.log" 2>&1 || true
+login=$(https -D - -o /dev/null -H 'Content-Type: application/json' --data-binary @- "https://$SITE/api/method/login" \
+	<<<"{\"usr\": \"$cookie_user\", \"pwd\": \"$cookie_password\"}" | tr -d '\r' || true)
+cookie=$(grep -i '^set-cookie: sid=' <<<"$login" | head -1 || true)
+[[ -n $cookie ]] || missing+=("sid cookie from a login (see cookie-user.log)")
 for flag in secure httponly samesite; do grep -qi "$flag" <<<"$cookie" || missing+=("sid cookie $flag"); done
 if [[ $redirect =~ ^30[178]\ https:// && ${#missing[@]} -eq 0 ]]; then
 	pass "HTTP $redirect; HSTS, CSP, nosniff, frame options, referrer policy; session cookie Secure, HttpOnly, SameSite"

@@ -66,9 +66,9 @@ The brief (§7) asks for RPO ≤ 15 minutes and RTO ≤ 2 hours where the archit
 **Off-host repository.**
 
 - `RESTIC_REPOSITORY` is an S3-compatible bucket at another site. The production example uses `s3:https://backup.example.net/hinode-erp-production`.
-- Credentials: `RESTIC_AWS_ACCESS_KEY_ID` / `RESTIC_AWS_SECRET_ACCESS_KEY`, passed to the scheduler as `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
+- Credentials: `RESTIC_AWS_ACCESS_KEY_ID` / `RESTIC_AWS_SECRET_ACCESS_KEY`, passed to `scheduler` and `cron` as `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`.
 - The reference example keeps its repository in the sites volume (`/home/frappe/frappe-bench/sites/.restic-reference`). That is **not off-host** and is acceptable only for rebuildable reference data; `preflight.sh` refuses it for production.
-- **Protecting the copies.** The scheduler holds credentials that can also delete snapshots: it runs `forget --prune`. Protecting the off-host copies against a compromised host needs storage-side features such as bucket versioning or object lock. These are **not configured by this repository**: set them up on the storage side.
+- **Protecting the copies.** `scheduler` and `cron` hold credentials that can also delete snapshots: the backup runs `forget --prune`. Protecting the off-host copies against a compromised host needs storage-side features such as bucket versioning or object lock. These are **not configured by this repository**: set them up on the storage side.
 - **Escrow** the restic password off the host. Without it no snapshot can be decrypted.
 
 ## Check backup health

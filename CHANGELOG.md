@@ -38,6 +38,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - Integration hub: signed HTTPS inbound endpoint with replay protection and rate limits,
   idempotent inbox, durable outbox with retries/backoff/dead letters, HTTPS allowlist,
   Hinode EDI format, file-drop adapter, correlation IDs; replay and retry from the desk.
+- Inbound partner secrets rotate with an overlap: the server generates the new secret and
+  shows it once, the previous one is accepted until the overlap ends (at most 7 days), and
+  each delivery still signed with it is logged.
 - Approval escalation: a step pending past its escalation time reminds its approvers and
   alerts the next level (hourly). Attachments of DocTypes without a retention rule follow the
   default retention period.
@@ -89,7 +92,7 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - Storage at the plants: put-away rules fill each forward store (the raw material store) up
   to a part's capacity and keep the rest in reserve storage; reorder rules on the forward
   store raise a daily transfer request from on-hand stock, which the warehouse clerk
-  fulfils with a pick list from reserve storage.
+  fulfils with a pick list from reserve storage, for what the forward store has room for.
 - Print formats (A4, Japanese/English): shipment manifest with driver and receiver
   signature boxes, advance shipping notice, kanban card with a QR code, vehicle
   certificate. Every role that can read a document can print it.
@@ -140,6 +143,8 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   integration tests could start before the bench bootstrap finished.
 - The North America export picked the same vehicles for two open orders; master data of
   the synthetic dataset was dated after the history that uses it.
+- The synthetic opening stock exceeded the forward stores' put-away capacity (it now puts the
+  excess in reserve storage), and the generator expedited parts that reserve storage held.
 
 ### Operations
 - Dataset workflow: the standard profile generated on hosted runners in chained,
@@ -154,3 +159,7 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - Findings log with the image scan (SBOM, Trivy) and a configuration review
   (`ops/security/findings.md`); Content-Security-Policy header; the runtime image applies
   Debian security updates and carries no package installer.
+- No container mounts the Docker socket: Traefik reads its routes from files and the backup
+  and restore-drill schedules run in a socket-free `cron` service.
+- Behind the TLS proxy the session cookie is marked Secure: gunicorn takes the forwarded
+  scheme from the stack's own front end.
