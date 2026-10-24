@@ -151,6 +151,28 @@ class TestMasterData(IntegrationTestCase):
 			frappe.get_doc({"doctype": "Supplier", "supplier_name": "HOSHIZORA ELECTRONICS", "supplier_group": group}).insert(
 				ignore_permissions=True)
 
+	def test_items_are_unique_by_supplier_part_number_and_by_name_in_their_group(self):
+		group = frappe.db.get_value("Supplier Group", {"is_group": 0}, "name")
+		supplier = frappe.get_doc({"doctype": "Supplier", "supplier_name": "Akatsuki Fastener Works",
+			"supplier_group": group}).insert(ignore_permissions=True).name
+
+		def item(code, name, group="Raw Material", part_no=None, **extra):
+			return frappe.get_doc({"doctype": "Item", "item_code": code, "item_name": name, "item_group": group,
+				"stock_uom": "Nos", "is_stock_item": 1, **extra,
+				"supplier_items": [{"supplier": supplier, "supplier_part_no": part_no}] if part_no else []})
+
+		item("DUP-BRACKET-1", "Hinge bracket 40 mm", part_no="AFW-4410").insert(ignore_permissions=True)
+		with self.assertRaises(DuplicateMasterDataError):  # the supplier's part number is taken
+			item("DUP-BRACKET-2", "Hinge bracket 40 mm zinc", part_no="AFW-4410").insert(ignore_permissions=True)
+		with self.assertRaises(DuplicateMasterDataError):  # same name in the same group
+			item("DUP-BRACKET-3", "Hinge bracket 40 mm").insert(ignore_permissions=True)
+		item("DUP-BRACKET-4", "Hinge bracket 40 mm", group="Sub Assemblies").insert(ignore_permissions=True)
+		reviewed = item("DUP-BRACKET-5", "Hinge bracket 40 mm")
+		reviewed.flags.accept_similar_name = True
+		reviewed.insert(ignore_permissions=True)
+		self.assertTrue(frappe.db.exists("Audit Event", {"event_type": "master_data.similar_name_accepted",
+			"reference_name": "DUP-BRACKET-5"}))
+
 
 class TestBankAccountControls(IntegrationTestCase):
 	@classmethod

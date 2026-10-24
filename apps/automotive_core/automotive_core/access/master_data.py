@@ -1,9 +1,14 @@
-"""Master-data duplicate prevention for partners (ERP-01).
+"""Master-data duplicate prevention (ERP-01).
 
-Blocks exact duplicates (tax id, partner code) and near-duplicate names (fuzzy match
-via rapidfuzz, an ERPNext dependency) among active partners. A near-duplicate can be
+Partners: blocks exact duplicates (tax id, partner code) and near-duplicate names (fuzzy
+match via rapidfuzz, an ERPNext dependency) among active partners. A near-duplicate can be
 accepted deliberately by setting ``doc.flags.accept_similar_name`` from a reviewed
 onboarding flow, which is then recorded in the audit chain.
+
+Items: one active item per supplier part number of a supplier, and per name within an
+item group (a template's variants excepted). Exact rules only: a fuzzy comparison over
+the catalogue's thousands of parts on every save would be too slow, and engineering
+revisions of a part legitimately carry near-identical names.
 """
 
 from __future__ import annotations
@@ -72,3 +77,28 @@ def validate_supplier(doc, method=None) -> None:
 
 def validate_customer(doc, method=None) -> None:
 	_check(doc, "customer_name", _("Customer"))
+
+
+def validate_item(doc, method=None) -> None:
+	if doc.disabled:
+		return
+	for row in doc.get("supplier_items") or []:
+		if not (row.supplier and row.supplier_part_no):
+			continue
+		clash = frappe.db.sql("""select isup.parent from `tabItem Supplier` isup join `tabItem` i on i.name = isup.parent
+			where isup.supplier = %s and isup.supplier_part_no = %s and isup.parent != %s and i.disabled = 0 limit 1""",
+			(row.supplier, row.supplier_part_no.strip(), doc.name or ""))
+		if clash:
+			raise DuplicateMasterDataError(_("Part number {0} of supplier {1} is already item {2}.").format(
+				row.supplier_part_no, row.supplier, clash[0][0]))
+	if doc.variant_of or not (doc.is_new() or doc.has_value_changed("item_name") or doc.has_value_changed("item_group")):
+		return
+	clash = frappe.db.get_value("Item", {"item_name": (doc.item_name or "").strip(), "item_group": doc.item_group,
+		"disabled": 0, "variant_of": ("is", "not set"), "name": ("!=", doc.name or "")}, "name")
+	if not clash:
+		return
+	if doc.flags.get("accept_similar_name"):
+		audit.record("master_data.similar_name_accepted", doc.doctype, doc.name, {"similar_to": clash, "score": 100})
+		return
+	raise DuplicateMasterDataError(_("Item {0} in {1} already has the name {2}.").format(clash, doc.item_group,
+		doc.item_name))

@@ -112,6 +112,9 @@ doc_events = {
 	"Customer": {
 		"validate": "automotive_core.access.master_data.validate_customer",
 	},
+	"Item": {
+		"validate": "automotive_core.access.master_data.validate_item",
+	},
 }
 
 has_permission = {

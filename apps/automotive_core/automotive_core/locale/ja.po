@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:05+0919\n"
+"POT-Creation-Date: 2026-10-24 17:09+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -9191,7 +9191,7 @@ msgstr "カスタムレポート"
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:74
+#: automotive_core/access/master_data.py:79
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
 #: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
@@ -19545,6 +19545,11 @@ msgstr "品目{0}の納品数量に変更がありません。数量を更新し
 msgid "Item {0} has reached its end of life on {1}"
 msgstr "品目{0}は{1}に廃番になりました。"
 
+#: automotive_core/access/master_data.py:103
+#, python-brace-format
+msgid "Item {0} in {1} already has the name {2}."
+msgstr "{1} の品目 {0} がすでに名称 {2} を使用しています。"
+
 #: erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:598
 #, python-brace-format
 msgid "Item {0} is already reserved/delivered against Sales Order {1}."
@@ -26124,6 +26129,11 @@ msgstr "親{0}がファイル内に見つかりません。"
 msgid "Parent-to-child or child-to-different-child grouping is not allowed."
 msgstr "親ドキュメントから子テーブル、または子テーブルから別の子テーブルへのグループ化はできません。"
 
+#: automotive_core/access/master_data.py:92
+#, python-brace-format
+msgid "Part number {0} of supplier {1} is already item {2}."
+msgstr "仕入先 {1} の部品番号 {0} はすでに品目 {2} で使われています。"
+
 #: erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1246
 msgid "Partial Payment in POS Transactions are not allowed."
 msgstr "POS取引では一部支払はできません。"
@@ -26273,7 +26283,7 @@ msgstr "パートナーユーザーアクセス"
 msgid "Partner access is for portal (Website) users; {0} is a desk user."
 msgstr "パートナーアクセスはポータル（ウェブサイト）ユーザー専用です。{0}はデスクユーザーです。"
 
-#: automotive_core/access/master_data.py:50
+#: automotive_core/access/master_data.py:55
 #, python-brace-format
 msgid "Partner code {0} is already used by {1}."
 msgstr "パートナーコード{0}はすでに{1}で使用されています。"
@@ -39656,7 +39666,7 @@ msgstr "支給品目"
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:70
+#: automotive_core/access/master_data.py:75
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:55
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
@@ -48498,7 +48508,7 @@ msgstr "{0}は一意である必要があります。"
 msgid "{0} must be {1} {2}"
 msgstr "{0}は{1} {2}である必要があります。"
 
-#: automotive_core/access/master_data.py:65
+#: automotive_core/access/master_data.py:70
 #, python-brace-format
 msgid "{0} name is too similar to existing {1} ({2}%)."
 msgstr "{0}名が既存の{1}と類似しすぎています（類似度{2}%）。"
@@ -48825,7 +48835,7 @@ msgstr "{0} {1}をダッシュボード{2}に追加しました。"
 msgid "{0} {1} already exists"
 msgstr "{0} {1}はすでに存在します。"
 
-#: automotive_core/access/master_data.py:42
+#: automotive_core/access/master_data.py:47
 #, python-brace-format
 msgid "{0} {1} already uses tax id {2}."
 msgstr "{0} {1}がすでに税番号{2}を使用しています。"

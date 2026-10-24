@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 17:05+0919\n"
-"PO-Revision-Date: 2026-10-24 17:05+0919\n"
+"POT-Creation-Date: 2026-10-24 17:09+0919\n"
+"PO-Revision-Date: 2026-10-24 17:09+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -9162,7 +9162,7 @@ msgstr ""
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:74
+#: automotive_core/access/master_data.py:79
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
 #: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
@@ -19507,6 +19507,11 @@ msgstr ""
 msgid "Item {0} has reached its end of life on {1}"
 msgstr ""
 
+#: automotive_core/access/master_data.py:103
+#, python-brace-format
+msgid "Item {0} in {1} already has the name {2}."
+msgstr ""
+
 #: erpnext/stock/doctype/stock_reservation_entry/stock_reservation_entry.py:598
 #, python-brace-format
 msgid "Item {0} is already reserved/delivered against Sales Order {1}."
@@ -26084,6 +26089,11 @@ msgstr ""
 msgid "Parent-to-child or child-to-different-child grouping is not allowed."
 msgstr ""
 
+#: automotive_core/access/master_data.py:92
+#, python-brace-format
+msgid "Part number {0} of supplier {1} is already item {2}."
+msgstr ""
+
 #: erpnext/accounts/doctype/sales_invoice/sales_invoice.py:1246
 msgid "Partial Payment in POS Transactions are not allowed."
 msgstr ""
@@ -26233,7 +26243,7 @@ msgstr ""
 msgid "Partner access is for portal (Website) users; {0} is a desk user."
 msgstr ""
 
-#: automotive_core/access/master_data.py:50
+#: automotive_core/access/master_data.py:55
 #, python-brace-format
 msgid "Partner code {0} is already used by {1}."
 msgstr ""
@@ -39590,7 +39600,7 @@ msgstr ""
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:70
+#: automotive_core/access/master_data.py:75
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:55
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
@@ -48432,7 +48442,7 @@ msgstr ""
 msgid "{0} must be {1} {2}"
 msgstr ""
 
-#: automotive_core/access/master_data.py:65
+#: automotive_core/access/master_data.py:70
 #, python-brace-format
 msgid "{0} name is too similar to existing {1} ({2}%)."
 msgstr ""
@@ -48759,7 +48769,7 @@ msgstr ""
 msgid "{0} {1} already exists"
 msgstr ""
 
-#: automotive_core/access/master_data.py:42
+#: automotive_core/access/master_data.py:47
 #, python-brace-format
 msgid "{0} {1} already uses tax id {2}."
 msgstr ""

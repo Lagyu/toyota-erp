@@ -38,6 +38,8 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - Integration hub: signed HTTPS inbound endpoint with replay protection and rate limits,
   idempotent inbox, durable outbox with retries/backoff/dead letters, HTTPS allowlist,
   Hinode EDI format, file-drop adapter, correlation IDs; replay and retry from the desk.
+- Item master duplicates: one active item per supplier part number and per name within an
+  item group (a reviewed exception is recorded in the audit chain).
 - Period close checklist (checks, waivers, approval, accounting period closing), group
   consolidation view, verified supplier bank accounts, KPI catalogue with reconciliation.
 - Tax determination: tax categories (domestic, export zero-rated, resale exempt, import),
