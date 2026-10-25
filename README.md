@@ -124,6 +124,16 @@ portal checks, encrypted backup, restore drill) on one host.
 | Supply chain | `./scripts/ci/audit.sh`, `./scripts/ci/sbom.sh IMAGE` | dependency advisories, SBOM and image scan |
 
 The CI workflow ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs the same scripts.
+Workflows started by hand cover the rest on hosted runners:
+
+| Workflow | What it covers |
+|---|---|
+| [`rehearsal.yml`](.github/workflows/rehearsal.yml) | install by the runbook, upgrade, backups and drills, rollback (`rehearsal.sh`); the Let's Encrypt mode (`acme-check.sh`); a real reboot and power loss of a VM (`reboot-check.sh`); the high-availability option's application tier (`ha-check.sh`) |
+| [`dataset.yml`](.github/workflows/dataset.yml), [`dataset-compare.yml`](.github/workflows/dataset-compare.yml) | a synthetic dataset profile generated in resumable segments and validated; two runs compared document by document |
+| [`journeys.yml`](.github/workflows/journeys.yml) | the browser and API suites on a dataset export with the scheduler on |
+| [`perf.yml`](.github/workflows/perf.yml) | the load tests on the standard dataset |
+
+Procedures: [ops/runbooks/testing.md](ops/runbooks/testing.md).
 
 ## Identity and data
 
