@@ -722,9 +722,6 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 			)
 			doc = frappe.copy_doc(template)
 			doc.workstation_name = station
-			# a type of its own: ERPNext refuses time logs that overlap others of the same type, and
-			# the other routed tests log on the template's station at the same minutes
-			doc.workstation_type = None
 			doc.set(
 				"workstation_costs", [{"operating_component": OPERATING_COMPONENT, "operating_cost": 6_000}]
 			)
@@ -796,7 +793,8 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 				"create_user_permission": 0,
 			}
 		).insert(ignore_permissions=True)
-		end = now_datetime()
+		# five hours back: clear of the time logs the other routed tests record now and two days back
+		end = add_to_date(now_datetime(), hours=-5)
 		# the station logged 9 minutes for the two seats, not the 8 the BOM plans
 		record_operation(card, 2, employee.name, add_to_date(end, minutes=-9), end)
 		[operation] = frappe.get_doc("Work Order", wo.name).operations

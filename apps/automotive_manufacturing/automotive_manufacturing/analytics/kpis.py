@@ -255,10 +255,10 @@ def wip_value(company, from_date, to_date, plant=None) -> KpiResult:
 
 
 def reconcile_wip(company, from_date, to_date, plant, result) -> tuple[bool, str]:
-	"""The GL balance of the stock accounts the WIP warehouses post to, against the stock ledger of
-	every warehouse posting to those accounts. A warehouse posts to its own account, else to its
-	parent group's, else to the company's default inventory account (ERPNext's map): WIP
-	warehouses without an account of their own share the company's with every other warehouse."""
+	"""The WIP value against the GL of the stock accounts the WIP warehouses post to. A warehouse
+	posts to its own account, else to its parent group's, else to the company's default inventory
+	account (ERPNext's map): WIP warehouses without an account of their own share the company's
+	with every other warehouse, whose stock ledger value then counts on the WIP side too."""
 	from erpnext.stock import get_warehouse_account_map
 
 	warehouses = set(result.inputs.get("warehouses", []))
@@ -270,13 +270,17 @@ def reconcile_wip(company, from_date, to_date, plant, result) -> tuple[bool, str
 	accounts = sorted({account_of[w] for w in warehouses if account_of.get(w)})
 	if not accounts:
 		return True, "the WIP warehouses post to no stock account: not applicable"
-	posting = sorted(w for w, account in account_of.items() if account in accounts)
-	sle = flt(
-		frappe.db.sql(
-			"""select sum(stock_value_difference) from `tabStock Ledger Entry`
-			where is_cancelled=0 and warehouse in %s and posting_date <= %s""",
-			(tuple(posting), to_date),
-		)[0][0]
+	others = sorted(w for w, account in account_of.items() if account in accounts and w not in warehouses)
+	other_value = (
+		flt(
+			frappe.db.sql(
+				"""select sum(stock_value_difference) from `tabStock Ledger Entry`
+				where is_cancelled=0 and warehouse in %s and posting_date <= %s""",
+				(tuple(others), to_date),
+			)[0][0]
+		)
+		if others
+		else 0.0
 	)
 	gl = flt(
 		frappe.db.sql(
@@ -284,12 +288,12 @@ def reconcile_wip(company, from_date, to_date, plant, result) -> tuple[bool, str
 			(tuple(accounts), to_date),
 		)[0][0]
 	)
-	ok = abs(gl - sle) <= 1
-	if set(posting) <= warehouses:
-		return ok, f"SLE {sle:.2f} vs GL {gl:.2f}"
+	ok = abs(gl - (flt(result.numerator) + other_value)) <= 1
+	if not others:
+		return ok, f"SLE {flt(result.numerator):.2f} vs GL {gl:.2f}"
 	return ok, (
-		f"the WIP warehouses share {', '.join(accounts)} with {len(posting) - len(warehouses & set(posting))} "
-		f"other warehouse(s): its GL {gl:.2f} vs the stock ledger of all {len(posting)} {sle:.2f}"
+		f"GL {gl:.2f} of {', '.join(accounts)} vs WIP {flt(result.numerator):.2f} plus the "
+		f"{len(others)} other warehouse(s) posting to it {other_value:.2f}"
 	)
 
 
