@@ -206,6 +206,7 @@ Edit at least these:
 | `BACKUP_SCHEDULE`, `RESTORE_DRILL_SCHEDULE` | Cron with **seconds first, in UTC** (`ops/backup/cron.py` evaluates them in UTC). Defaults: `0 30 17 * * *` = 02:30 JST daily; `0 30 19 * * 6` = Sunday 04:30 JST. |
 | `MONITORING` | `1` deploys Prometheus, Alertmanager, Grafana and exporters |
 | `CLAMAV`, `VIRUS_SCAN_MODE` | `CLAMAV=1` (the default) deploys ClamAV, and `new-site.sh` then sets *Virus Scan Mode* to `VIRUS_SCAN_MODE` (`Required`, the default, or `Best Effort`) and the clamd host. `CLAMAV=0` leaves ClamAV out and the scanning settings as they are. |
+| `DATASTORES`, `SINGLETONS` | Leave out (defaults `bundled`, `1`) on a single host. The high-availability option's application hosts set `DATASTORES=external` with `DB_HOST`, `DB_PORT`, `REDIS_CACHE`, `REDIS_QUEUE`, and `SINGLETONS=0` on all but one ([high-availability.md](high-availability.md)). |
 
 Optional tuning variables and their defaults are listed in the [appendix](#appendix-tuning-variables).
 

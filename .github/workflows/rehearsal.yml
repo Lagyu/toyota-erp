@@ -2,8 +2,9 @@
 # the install runbook with TLS, monitoring and an S3 backup repository, upgrade it to this
 # commit with scripts/deploy/upgrade.sh, then check HTTPS, a simulated reboot, an off-host
 # backup, the restore drill and monitoring (scripts/ci/rehearsal.sh). Beside it: the
-# Let's Encrypt mode against an ACME test server, and a real reboot and power loss of a VM
-# installed by the runbook. The reports are the run's summary and its artifacts.
+# Let's Encrypt mode against an ACME test server, a real reboot and power loss of a VM
+# installed by the runbook, and the high-availability option's application tier (two hosts
+# behind a load balancer, one failing). The reports are the run's summary and its artifacts.
 name: rehearsal
 
 on:
@@ -109,5 +110,33 @@ jobs:
         with:
           name: reboot
           path: .local/reboot/
+          include-hidden-files: true
+          retention-days: 90
+
+  # the high-availability option's application tier: two application hosts on external
+  # datastores and shared storage behind a health-checking load balancer, the singleton host
+  # failing (scripts/ci/ha-check.sh)
+  ha:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - name: Build this commit's image
+        run: ./scripts/image/build.sh | tee .local-image.txt
+      - name: Two application hosts, one failing
+        run: ./scripts/ci/ha-check.sh "$(tail -1 .local-image.txt)"
+      - name: Report
+        if: always()
+        run: if [[ -f .local/ha/report.md ]]; then cat .local/ha/report.md >>"$GITHUB_STEP_SUMMARY"; fi
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: ha
+          path: .local/ha/
           include-hidden-files: true
           retention-days: 90

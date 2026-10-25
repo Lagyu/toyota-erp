@@ -1,0 +1,64 @@
+# MariaDB and Redis on the application host (DATASTORES=bundled, the default; with
+# DATASTORES=external the stack uses the DB_HOST, REDIS_CACHE and REDIS_QUEUE given instead:
+# ops/runbooks/high-availability.md). Applied after frappe_docker's compose.mariadb.yaml and
+# compose.redis.yaml, whose services these tune: the database and Redis have no route out.
+
+x-logging: &logging
+  driver: local
+  options: { max-size: 20m, max-file: "5" }
+
+services:
+  db:
+    image: ${MARIADB_IMAGE:?}
+    networks: [backend]
+    logging: *logging
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --innodb-buffer-pool-size=${DB_BUFFER_POOL:-2G}
+      - --innodb-log-file-size=512M
+      # InnoDB's locking reads as ERPNext expects them: wait for the other transaction, then
+      # read its committed row. MariaDB 11.6+ turns snapshot isolation on by default, which
+      # makes such a read fail instead ("Record has changed since last read", 1020), so
+      # concurrent stock postings would error intermittently (docs: database.md)
+      - --innodb-snapshot-isolation=OFF
+      - --max-connections=${DB_MAX_CONNECTIONS:-400}
+      - --max-allowed-packet=256M
+      # binary log: point-in-time recovery between nightly backups
+      - --log-bin=mariadb-bin
+      - --binlog-format=ROW
+      - --binlog-expire-logs-seconds=${DB_BINLOG_RETENTION_SECONDS:-1209600}
+      # the immutability triggers (automotive_core.setup.db_guards) are created by the site user
+      - --log-bin-trust-function-creators=1
+    mem_limit: ${DB_MEM_LIMIT:-6g}
+    cpus: ${DB_CPUS:-4}
+
+  redis-cache:
+    image: ${REDIS_IMAGE:?}
+    networks: [backend]
+    logging: *logging
+    command: ["redis-server", "--maxmemory", "${REDIS_CACHE_MAXMEMORY:-768mb}", "--maxmemory-policy", "allkeys-lru",
+      "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    security_opt: [no-new-privileges:true]
+    mem_limit: 1g
+
+  redis-queue:
+    image: ${REDIS_IMAGE:?}
+    networks: [backend]
+    logging: *logging
+    # jobs survive a restart: append-only file, fsync every second
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    security_opt: [no-new-privileges:true]
+    mem_limit: 512m
+

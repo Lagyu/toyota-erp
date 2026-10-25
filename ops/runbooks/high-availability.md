@@ -28,27 +28,38 @@ several application hosts, the load balancer must keep a client on one `websocke
 
 ## Configuration on the application hosts
 
-The images, compose files and scripts are the single-host ones; per host:
+The images, compose files and scripts are the single-host ones, with two settings of the
+environment file ([install-fresh-host.md](install-fresh-host.md)):
 
-1. The environment file of [install-fresh-host.md](install-fresh-host.md) with the external
-   datastores: `DB_HOST`, `DB_PORT`, `REDIS_CACHE`, `REDIS_QUEUE` (frappe_docker's
-   configurator writes them into the common site config).
-2. The `sites` volume bound to the shared storage mount, identical on every host.
-3. On the hosts that do not carry the singletons, stop `scheduler` and `cron` after `up -d`
-   (`compose.sh "$ENV" stop scheduler cron`) and keep them stopped.
-4. One `routes.yaml` on the load balancers listing every application host's front end.
+| Setting | Single host (default) | Application host of this option |
+|---|---|---|
+| `DATASTORES` | `bundled`: the stack runs MariaDB and Redis (`infra/deploy/compose.datastores.yaml`) | `external`: they are left out; `DB_HOST`, `DB_PORT` (default 3306), `REDIS_CACHE` and `REDIS_QUEUE` (`host:port`) name the operator's, and frappe_docker's configurator writes them into the common site config. `DB_PASSWORD_SECRETS_FILE` holds that MariaDB's administrator password (site creation, backups, restores) |
+| `SINGLETONS` | `1`: the host runs `scheduler` and `cron` | `1` on exactly one host, `0` on the others: their `scheduler` and `cron` have no container |
 
-**Not packaged yet.** The deploy compose (`scripts/deploy/compose.sh`) always starts the
-MariaDB and Redis containers, and has no switch to leave them out or to keep the singletons
-on one host: an HA installation edits the compose files for those two points. Packaging
-both as settings is the next step of this option.
+Per host, besides:
+
+1. The `sites` volume on the shared storage mount, the same on every host (for example a
+   compose file of the site's own in `COMPOSE_EXTRA_FILES` declaring `sites` as an external
+   volume on the mount).
+2. One `routes.yaml` on the load balancers listing every application host's front end, with a
+   health check on `/api/method/automotive_core.ops.health.ready` (it checks the database,
+   Redis and that the scheduler is enabled, not where the scheduler runs, so every healthy
+   host stays in the rotation while the singletons move).
+3. Commands that act on the site through the scheduler container (`upgrade.sh`, a backup or
+   drill by hand, `restore.sh`) run on the host with `SINGLETONS=1`.
+
+`preflight.sh` reports both settings; with `DATASTORES=external` it warns that binary log
+shipping needs the external server's binary log (with a managed database, use its own
+point-in-time recovery and set `BINLOG_SCHEDULE=off`). With `MONITORING=1`, the Redis
+exporter follows `REDIS_CACHE` and `REDIS_QUEUE`; point the host in `mysqld_exporter.cnf` at
+the external MariaDB.
 
 ## Failover and recovery
 
 | Failure | Effect | Recovery | Expected time |
 |---|---|---|---|
 | One application host | The load balancer stops sending it requests after its health checks fail; open realtime connections reconnect elsewhere | Repair or replace the host, `up -d` | seconds (users), hours (repair) |
-| The singleton host | Scheduled jobs (ERPNext's and the backup/drill) pause | Start `scheduler` and `cron` on another host | minutes |
+| The singleton host | Scheduled jobs (ERPNext's and the backup/drill) pause | On another host set `SINGLETONS=1` and `compose.sh "$ENV" up -d scheduler cron`. Before the failed host rejoins, set `SINGLETONS=0` there and run `up -d` (its scheduler and cron containers are removed): a host that restarts with its old settings starts them again, and then two cron services run every backup twice and two schedulers can enqueue the same job twice | minutes |
 | Database primary | Writes fail until the proxy promotes a replica | Automatic with the proxy; rebuild the old primary as a replica | under a minute to a few minutes |
 | Redis queue | Jobs being queued fail until Sentinel promotes a replica | Automatic with Sentinel | seconds |
 | Shared storage | Uploads and attachments fail | The storage system's own redundancy | depends on it |
@@ -56,9 +67,19 @@ both as settings is the next step of this option.
 
 ## What has been rehearsed
 
-- The single-host topology: install from the runbook, upgrade, simulated reboot, off-host
+- The single-host topology: install from the runbook, upgrade, reboot and power loss, off-host
   backup and restore drill (`rehearsal.yml`; [install-fresh-host.md](install-fresh-host.md)).
-- **Not rehearsed:** any part of this page's high-availability option (replication,
-  failover, shared storage, several application hosts). Treat it as a design until a
-  rehearsal on the target infrastructure records failover times; only then can the
-  availability and recovery objectives be stated for it.
+- **The application tier of this option** (`rehearsal.yml` job `ha`,
+  `scripts/ci/ha-check.sh`, on one runner, each host a compose project): a datastores host
+  (MariaDB and Redis), two application hosts with `DATASTORES=external` sharing the `sites`
+  volume, one with `SINGLETONS=1`, and a Traefik load balancer health-checking both. It checks
+  that both hosts serve the site, that a change made through one and a file written on one
+  are seen on the other, and that one scheduler runs; then the singleton host fails (all its
+  containers stop) and the report records how many requests through the balancer failed and
+  for how long, the singletons move to the other host, and the failed host returns without
+  them.
+- **Not rehearsed:** database replication and failover, Redis Sentinel, shared storage on a
+  real file service, a load balancer pair with a virtual IP, and any of it on separate
+  machines. Treat those as a design until a rehearsal on the target infrastructure records
+  their failover times; only then can the availability and recovery objectives be stated for
+  this option.

@@ -1,16 +1,18 @@
 # Hinode production/staging override, applied on top of the pinned frappe_docker files:
 #
 #   frappe_docker/compose.yaml
-#   frappe_docker/overrides/compose.mariadb.yaml        (+ compose.mariadb-secrets.yaml)
-#   frappe_docker/overrides/compose.redis.yaml
+#   frappe_docker/overrides/compose.mariadb.yaml        (+ compose.mariadb-secrets.yaml) \  DATASTORES=bundled
+#   frappe_docker/overrides/compose.redis.yaml                                          /  (the default)
 #   frappe_docker/overrides/compose.https.yaml          (Let's Encrypt)  or  compose.tls-files.yaml
 #   infra/deploy/compose.hinode.yaml                    (this file)
+#   infra/deploy/compose.datastores.yaml                (DATASTORES=bundled: MariaDB and Redis tuning)
 #   infra/deploy/compose.monitoring.yaml                (optional)
 #
 # Assembled by scripts/deploy/compose.sh <environment>. It adds: the immutable application
 # image, private networks (the database and Redis have no route out), resource limits,
-# health checks, container hardening, MariaDB/Redis tuning and the scheduled, encrypted
-# off-host backup job. ClamAV: compose.clamav.yaml.
+# health checks, container hardening and the scheduled, encrypted off-host backup job.
+# ClamAV: compose.clamav.yaml. SINGLETONS=0 leaves the scheduler and the cron service out
+# (the application hosts of the high-availability option but one: high-availability.md).
 
 x-app: &app
   image: ${CUSTOM_IMAGE:?set CUSTOM_IMAGE}:${CUSTOM_TAG:?set CUSTOM_TAG}
@@ -119,6 +121,8 @@ services:
 
   scheduler:
     <<: [*app, *backup-jobs]
+    deploy:
+      replicas: ${SINGLETONS:-1}
     mem_limit: 512m
     cpus: 1
 
@@ -132,65 +136,13 @@ services:
     # (not in x-app: the one-shot configurator must keep on-failure, or its dependants wait forever)
     restart: ${RESTART_POLICY:-unless-stopped}
     command: ["/home/frappe/frappe-bench/env/bin/python", "/opt/hinode/ops/backup/cron.py"]
+    deploy:
+      replicas: ${SINGLETONS:-1}
     volumes:
       - sites:/home/frappe/frappe-bench/sites
       - ../../ops/backup:/opt/hinode/ops/backup:ro
     mem_limit: 512m
     cpus: 1
-
-  db:
-    image: ${MARIADB_IMAGE:?}
-    networks: [backend]
-    logging: *logging
-    command:
-      - --character-set-server=utf8mb4
-      - --collation-server=utf8mb4_unicode_ci
-      - --skip-character-set-client-handshake
-      - --innodb-buffer-pool-size=${DB_BUFFER_POOL:-2G}
-      - --innodb-log-file-size=512M
-      # InnoDB's locking reads as ERPNext expects them: wait for the other transaction, then
-      # read its committed row. MariaDB 11.6+ turns snapshot isolation on by default, which
-      # makes such a read fail instead ("Record has changed since last read", 1020), so
-      # concurrent stock postings would error intermittently (docs: database.md)
-      - --innodb-snapshot-isolation=OFF
-      - --max-connections=${DB_MAX_CONNECTIONS:-400}
-      - --max-allowed-packet=256M
-      # binary log: point-in-time recovery between nightly backups
-      - --log-bin=mariadb-bin
-      - --binlog-format=ROW
-      - --binlog-expire-logs-seconds=${DB_BINLOG_RETENTION_SECONDS:-1209600}
-      # the immutability triggers (automotive_core.setup.db_guards) are created by the site user
-      - --log-bin-trust-function-creators=1
-    mem_limit: ${DB_MEM_LIMIT:-6g}
-    cpus: ${DB_CPUS:-4}
-
-  redis-cache:
-    image: ${REDIS_IMAGE:?}
-    networks: [backend]
-    logging: *logging
-    command: ["redis-server", "--maxmemory", "${REDIS_CACHE_MAXMEMORY:-768mb}", "--maxmemory-policy", "allkeys-lru",
-      "--save", "", "--appendonly", "no"]
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-    security_opt: [no-new-privileges:true]
-    mem_limit: 1g
-
-  redis-queue:
-    image: ${REDIS_IMAGE:?}
-    networks: [backend]
-    logging: *logging
-    # jobs survive a restart: append-only file, fsync every second
-    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-    security_opt: [no-new-privileges:true]
-    mem_limit: 512m
 
 networks:
   edge: {}
@@ -201,3 +153,7 @@ networks:
 secrets:
   restic_password:
     file: ${RESTIC_PASSWORD_FILE:?set RESTIC_PASSWORD_FILE}
+  # the database's administrator password (frappe_docker's compose.mariadb-secrets.yaml declares
+  # it too, for the bundled MariaDB): site creation, backups and restores need it either way
+  db_password:
+    file: ${DB_PASSWORD_SECRETS_FILE:?set DB_PASSWORD_SECRETS_FILE}

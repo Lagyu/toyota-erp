@@ -2,7 +2,10 @@
 # The deploy compose as Docker Compose resolves it (`config`: nothing is started), for each
 # TLS mode with monitoring and ClamAV on: every service restarts with the Docker daemon
 # except frappe_docker's one-shot configurator (whose dependants wait for it to complete),
-# and no container mounts the Docker socket (ops/security/findings.md C-02).
+# and no container mounts the Docker socket (ops/security/findings.md C-02). Then an
+# application host of the high-availability option (DATASTORES=external, SINGLETONS=0): no
+# MariaDB or Redis of its own, the external ones in the configurator's settings, and no
+# scheduler or cron running.
 #   compose-check.sh   (CI lint job; needs the docker CLI with the compose plugin)
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
@@ -34,4 +37,29 @@ print(f"TLS_MODE={sys.argv[2]}: {len(config['services'])} services, "
 sys.exit(1 if problems else 0)
 EOF
 done
+
+# an application host of the high-availability option
+sed -e "s/^TLS_MODE=.*/TLS_MODE=files/" "$REPO_ROOT/config/env/production.env.example" >"$work/ha.env"
+printf 'DATASTORES=external\nDB_HOST=db.ha.example\nREDIS_CACHE=cache.ha.example:6379\nREDIS_QUEUE=queue.ha.example:6379\nSINGLETONS=0\n' \
+	>>"$work/ha.env"
+"$REPO_ROOT/scripts/deploy/compose.sh" "$work/ha.env" config --format json >"$work/ha.json"
+python3 - "$work/ha.json" <<'EOF' || status=1
+import json
+import sys
+
+config = json.load(open(sys.argv[1]))
+services = config["services"]
+problems = [f"{name}: still in the stack" for name in ("db", "redis-cache", "redis-queue") if name in services]
+env = services["configurator"].get("environment") or {}
+wanted = {"DB_HOST": "db.ha.example", "DB_PORT": "3306", "REDIS_CACHE": "cache.ha.example:6379",
+	"REDIS_QUEUE": "queue.ha.example:6379"}
+problems += [f"configurator {k}={env.get(k)!r}, not {v!r}" for k, v in wanted.items() if str(env.get(k)) != v]
+for name in ("scheduler", "cron"):
+	replicas = (services[name].get("deploy") or {}).get("replicas")
+	if replicas != 0:
+		problems.append(f"{name}: {replicas} replicas on a host without the singletons")
+print(f"DATASTORES=external SINGLETONS=0: {len(services)} services, "
+	+ ("ok" if not problems else "\n  " + "\n  ".join(problems)))
+sys.exit(1 if problems else 0)
+EOF
 exit $status

@@ -100,6 +100,28 @@ case ${RESTIC_REPOSITORY:-} in
 	*) warn "restic repository $RESTIC_REPOSITORY: make sure the scheduler container can reach it" ;;
 esac
 
+# the high-availability option: datastores outside the host, singletons on one host only
+case ${DATASTORES:-bundled} in
+	bundled) pass "MariaDB and Redis run in this stack" ;;
+	external)
+		missing=()
+		for var in DB_HOST REDIS_CACHE REDIS_QUEUE; do [[ -n ${!var:-} ]] || missing+=("$var"); done
+		if ((${#missing[@]})); then
+			fail "DATASTORES=external needs ${missing[*]}"
+		else
+			pass "external datastores: MariaDB $DB_HOST:${DB_PORT:-3306}, Redis $REDIS_CACHE (cache) and $REDIS_QUEUE (queue)"
+		fi
+		if [[ ${BINLOG_SCHEDULE:-on} != off ]]; then
+			warn "binary log shipping reads the external MariaDB's binary log (log_bin, ROW format, REPLICATION CLIENT): with a managed database use its point-in-time recovery and set BINLOG_SCHEDULE=off"
+		fi ;;
+	*) fail "DATASTORES must be bundled or external" ;;
+esac
+case ${SINGLETONS:-1} in
+	1) pass "this host runs the scheduler and the cron service (one host of a deployment does)" ;;
+	0) warn "SINGLETONS=0: no scheduler and no backups from this host; exactly one host of the deployment must run them" ;;
+	*) fail "SINGLETONS must be 1 or 0" ;;
+esac
+
 image="${CUSTOM_IMAGE:-}:${CUSTOM_TAG:-}"
 if docker_cmd image inspect "$image" >/dev/null 2>&1; then
 	pass "image $image present"
