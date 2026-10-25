@@ -200,9 +200,22 @@ class TestConsignment(IntegrationTestCase):
 			report("KAZE-CNT-3", "CNT-0003", [{"item_code": self.wheel, "counted_qty": 1}]).status, "Rejected"
 		)
 		# the clerk posts the reviewed count: the consignment stock follows it, still at zero value
+		from automotive_supply_chain.analytics import kpis
+
+		accuracy = kpis.stock_accuracy(AICHI, nowdate(), nowdate())
 		with as_user(h.WAREHOUSE):
 			count.reload()
 			count.submit()
+		# the stock-accuracy KPI counts the posted count's line, and its variance has a stock
+		# reconciliation
+		posted = frappe.get_doc("Cycle Count", count.name)
+		after = kpis.stock_accuracy(AICHI, nowdate(), nowdate())
+		self.assertEqual(
+			(after.numerator - accuracy.numerator, after.denominator - accuracy.denominator),
+			(posted.lines_within_tolerance, 1),
+		)
+		ok, detail = kpis.reconcile_stock_accuracy(AICHI, nowdate(), nowdate(), None, after)
+		self.assertTrue(ok, detail)
 		self.assertEqual(flt(get_batch_qty(batch_no=batch, warehouse=CONSIGNMENT)), expected - 2)
 		self.assertEqual(flt(self._bin(CONSIGNMENT).stock_value), 0)
 		self.assertEqual(frappe.db.get_value("Cycle Count", count.name, "status"), "Posted")

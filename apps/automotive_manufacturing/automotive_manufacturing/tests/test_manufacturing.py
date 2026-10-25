@@ -1468,6 +1468,14 @@ class TestPlanning(ManufacturingTestCase):
 		wo = frappe.get_doc("Work Order", created["Work Order"][0])
 		self.assertEqual(wo.automotive_plant, catalog.PLANT)
 		self.assertEqual(wo.production_plan, run.production_plan)
+		# the shortage-risk KPI reads the plant's latest run (not its replay) and reconciles
+		from automotive_manufacturing.analytics import kpis
+
+		risk = kpis.shortage_risk(AICHI, nowdate(), nowdate(), catalog.PLANT)
+		self.assertEqual(risk.inputs["runs"], [run_name])
+		self.assertEqual(risk.numerator, frappe.db.count("Planning Run Shortage", {"parent": run_name}))
+		ok, detail = kpis.reconcile_shortage_risk(AICHI, nowdate(), nowdate(), catalog.PLANT, risk)
+		self.assertTrue(ok, detail)
 
 
 class TestSequencing(ManufacturingTestCase):

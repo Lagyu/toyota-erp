@@ -286,3 +286,57 @@ class TestLineReportValues(IntegrationTestCase):
 		self.assertAlmostEqual(row["actual_cost"], consumed, places=2)
 		self.assertAlmostEqual(row["cost_variance"], consumed - standard, places=2)
 		self.assertEqual(row["variance_percent"], round((consumed - standard) / standard * 100, 2))
+
+	def test_the_wip_value_kpi_follows_stock_moved_into_wip(self):
+		from automotive_manufacturing.analytics import kpis
+
+		cat = self.cat
+		today = getdate(nowdate())
+		before = kpis.wip_value(AICHI, today, today, catalog.PLANT)
+		self.assertIn(catalog.WIP, before.inputs["warehouses"])
+		batch = catalog.make_batch(cat["wheel"], f"WIPV-{frappe.generate_hash(length=8)}")
+		catalog.receive(cat["wheel"], 5, rate=123, batch_no=batch)
+		transfer = frappe.get_doc(
+			{
+				"doctype": "Stock Entry",
+				"purpose": "Material Transfer",
+				"stock_entry_type": "Material Transfer",
+				"company": AICHI,
+				"items": [
+					{
+						"item_code": cat["wheel"],
+						"qty": 5,
+						"s_warehouse": catalog.LINE_SIDE,
+						"t_warehouse": catalog.WIP,
+						"use_serial_batch_fields": 1,
+						"batch_no": batch,
+					}
+				],
+			}
+		)
+		transfer.insert(ignore_permissions=True)
+		transfer.submit()
+		after = kpis.wip_value(AICHI, today, today, catalog.PLANT)
+		self.assertAlmostEqual(after.numerator - before.numerator, 5 * 123, places=2)
+		ok, detail = kpis.reconcile_wip(AICHI, today, today, catalog.PLANT, after)
+		self.assertTrue(ok, detail)
+
+	def test_attainment_counts_the_units_built_and_reconciles(self):
+		from automotive_manufacturing.analytics import kpis
+
+		cat = self.cat
+		today = getdate(nowdate())
+		before = kpis.production_attainment(AICHI, today, today, catalog.PLANT)
+		for item, qty in ((cat["wheel"], 4), (cat["seat"], 2)):
+			catalog.receive(
+				item, qty, batch_no=catalog.make_batch(item, f"AT-{frappe.generate_hash(length=8)}")
+			)
+		catalog.receive(
+			cat["ecu"], 1, serial_nos=[f"TECU-{frappe.generate_hash(length=8).upper()}"], rate=900
+		)
+		wo = catalog.work_order(cat["variants"][("Base", "FWD")], 1)
+		build_entry(wo.name, 1)
+		after = kpis.production_attainment(AICHI, today, today, catalog.PLANT)
+		self.assertEqual(after.numerator - before.numerator, 1)
+		ok, detail = kpis.reconcile_attainment(AICHI, today, today, catalog.PLANT, after)
+		self.assertTrue(ok, detail)

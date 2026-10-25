@@ -272,3 +272,60 @@ class TestSupplierReportValues(IntegrationTestCase):
 			)[0][0]
 		)
 		self.assertAlmostEqual(credited, 600, places=2)
+
+	def test_otif_counts_the_lines_delivered_on_time_in_full(self):
+		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
+
+		from automotive_supply_chain.analytics import kpis
+
+		today = getdate(nowdate())
+		catalog.receive("TST-BRACKET", 2, warehouse=catalog.FG, rate=118)
+		customer = frappe.db.get_value("Customer", {"customer_name": "OTIF Test Customer"}) or (
+			frappe.get_doc(
+				{
+					"doctype": "Customer",
+					"customer_name": "OTIF Test Customer",
+					"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+					"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				}
+			)
+			.insert(ignore_permissions=True)
+			.name
+		)
+		before = kpis.otif(AICHI, today, today)
+		# two lines due today: the brackets shipped in full today, the housings not at all
+		so = frappe.get_doc(
+			{
+				"doctype": "Sales Order",
+				"company": AICHI,
+				"customer": customer,
+				"transaction_date": today,
+				"delivery_date": today,
+				"items": [
+					{
+						"item_code": "TST-BRACKET",
+						"qty": 2,
+						"rate": 300,
+						"warehouse": catalog.FG,
+						"delivery_date": today,
+					},
+					{
+						"item_code": "TST-HOUSING",
+						"qty": 3,
+						"rate": 900,
+						"warehouse": catalog.FG,
+						"delivery_date": today,
+					},
+				],
+			}
+		)
+		so.insert(ignore_permissions=True)
+		so.submit()
+		dn = make_delivery_note(so.name)
+		dn.items = [row for row in dn.items if row.item_code == "TST-BRACKET"]
+		dn.insert(ignore_permissions=True)
+		dn.submit()
+		after = kpis.otif(AICHI, today, today)
+		self.assertEqual((after.numerator - before.numerator, after.denominator - before.denominator), (1, 2))
+		ok, detail = kpis.reconcile_otif(AICHI, today, today, None, after)
+		self.assertTrue(ok, detail)
