@@ -102,9 +102,10 @@ USER root
 COPY --from=frappe_docker resources/core/main-entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY --from=frappe_docker resources/core/start.sh /usr/local/bin/start.sh
 # Security fixes Debian has published since the base image was built (ops/security/findings.md),
-# and no package installers at run time: uv only builds the bench (in the builder stage), and
-# the base image's Node keeps only node itself (the realtime server); npm, npx, corepack and
-# yarn built the assets.
+# and no package installers at run time: uv only builds the bench (in the builder stage), pip
+# leaves both Pythons once the bench is built (with the copies of urllib3, msgpack and
+# pkg_resources it vendors), and the base image's Node keeps only node itself (the realtime
+# server); npm, npx, corepack and yarn built the assets.
 RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/start.sh \
   && apt-get update \
   && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade --no-install-recommends \
@@ -112,6 +113,10 @@ RUN chmod 755 /usr/local/bin/entrypoint.sh /usr/local/bin/start.sh \
   && (python3 -m pip uninstall --yes --quiet uv || true) \
   && rm -rf /usr/local/bin/uv /usr/local/bin/uvx /usr/local/lib/python3*/site-packages/uv \
        /usr/local/lib/python3*/site-packages/uv-*.dist-info \
+  && /home/frappe/frappe-bench/env/bin/python -m pip uninstall --yes --quiet pip \
+  && python3 -m pip uninstall --yes --quiet pip \
+  && rm -f /usr/local/lib/python3*/ensurepip/_bundled/*.whl \
+  && ! python3 -m pip --version 2>/dev/null && ! /home/frappe/frappe-bench/env/bin/python -m pip --version 2>/dev/null \
   && for node in /home/frappe/.nvm/versions/node/*; do \
        rm -rf "${node}/lib/node_modules/npm" "${node}/lib/node_modules/corepack" "${node}/lib/node_modules/yarn" \
          "${node}/bin/npm" "${node}/bin/npx" "${node}/bin/corepack" "${node}/bin/yarn" "${node}/bin/yarnpkg" \

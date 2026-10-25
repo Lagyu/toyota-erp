@@ -397,7 +397,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   smoke test. The production rehearsal runs it and checks that the old password is refused.
 - Findings log with the image scan (SBOM, Trivy) and a configuration review
   (`ops/security/findings.md`); Content-Security-Policy header; the runtime image applies
-  Debian security updates and carries no package installer.
+  Debian security updates and carries no package installer: pip had stayed in both Pythons
+  (with the copies of urllib3, msgpack and pkg_resources it vendors, which the scan listed
+  without a path) and is now removed after the build, ensurepip's wheel with it.
 - No container mounts the Docker socket: Traefik reads its routes from files and the backup
   and restore-drill schedules run in a socket-free `cron` service.
 - Behind the TLS proxy the session cookie is marked Secure: gunicorn takes the forwarded

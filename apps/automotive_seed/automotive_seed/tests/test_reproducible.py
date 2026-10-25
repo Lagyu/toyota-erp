@@ -1,4 +1,5 @@
-"""The generator's preconditions for a reproducible run (DV-1)."""
+"""The generator's preconditions for a reproducible run (DV-1). Not test_runner.py: Frappe's test
+discovery skips files of that name."""
 
 from __future__ import annotations
 
