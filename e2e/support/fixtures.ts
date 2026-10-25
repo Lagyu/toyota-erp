@@ -17,6 +17,8 @@ export type Fixtures = {
 		bank: { partner: string; format: string; secret: string; account_number: string; currency: string } | null } | null;
 	j07: { item_code: string; rate: number; seller: string; buyer: string; supplier: string; seller_warehouse: string;
 		buyer_warehouse: string } | null;
+	j07na: { item_code: string; qty: number; rate: number; currency: string; price_list: string; seller: string;
+		buyer: string; supplier: string; seller_warehouse: string; buyer_warehouse: string } | null;
 	j08: { vin: string; dealer: string; batch_item: string; batch_no: string; batch_supplier: string; batch_level: number;
 		serial_item: string; serial_no: string } | null;
 	j09: Variant | null;

@@ -191,7 +191,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 
 ### End-to-end acceptance
 - Playwright suite: journeys J-01 … J-10, role surfaces of 13 personas, supplier and
-  dealer portals and the shop-floor andon on desktop and tablet.
+  dealer portals and the shop-floor andon on desktop and tablet. J-07 also runs the other
+  way in the browser: Aichi exports to North America in dollars (the order at the agreed
+  transfer price, the shipment, North America's receipt, both invoices matched, the yen and
+  dollar sides balancing).
 
 ### Fixed during end-to-end testing
 - Create ECO from a change request produced an invalid draft (no company, disposition or

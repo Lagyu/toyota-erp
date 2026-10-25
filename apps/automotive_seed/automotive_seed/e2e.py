@@ -22,7 +22,7 @@ import os
 import traceback
 
 import frappe
-from frappe.utils import flt, now_datetime, nowdate
+from frappe.utils import add_days, flt, now_datetime, nowdate
 from frappe.utils.password import update_password
 
 from automotive_seed.runner import guard
@@ -205,7 +205,8 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	  statement channel with a fresh inbound signing secret (the test sends the statement the
 	  bank would);
 	- ``j07`` intercompany supply: a powertrain Kyushu has in stock and an agreed transfer
-	  price to Aichi;
+	  price to Aichi; ``j07na`` the export the other way: a kit in Aichi's finished goods store
+	  with a dollar transfer price to North America;
 	- ``j10`` partner messaging: an EDI supplier with an open, unannounced order line and a
 	  fresh inbound signing secret for its HTTPS channel (the test signs like the partner's
 	  system would);
@@ -232,6 +233,7 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	fixtures["j02"] = _current_blanket_orders()
 	fixtures["j06"] = _receipt_to_invoice(company)
 	fixtures["j07"] = _intercompany_supply()
+	fixtures["j07na"] = _export_to_north_america()
 	fixtures["j04"] = _engineering_change()
 	fixtures["j05"] = _batch_in_use()
 	fixtures["j08"] = _traced_vehicle()
@@ -242,7 +244,8 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 		return (
 			f"journeys: j01 {(fixtures['j01'] or {}).get('variant')} ({staged} components staged), "
 			f"j04 {(fixtures['j04'] or {}).get('bom')}, j05 {(fixtures['j05'] or {}).get('batch_no')}, j06 {(fixtures['j06'] or {}).get('purchase_receipt')}, "
-			f"j07 {(fixtures['j07'] or {}).get('item_code')}, j08 {(fixtures['j08'] or {}).get('vin')}, "
+			f"j07 {(fixtures['j07'] or {}).get('item_code')}, j07na {(fixtures['j07na'] or {}).get('rate')} "
+			f"{(fixtures['j07na'] or {}).get('currency')}, j08 {(fixtures['j08'] or {}).get('vin')}, "
 			f"j09 {(fixtures['j09'] or {}).get('variant')}, j10 {(fixtures['j10'] or {}).get('partner')}, "
 			f"j02 {len(fixtures['j02']['renewed'])} blanket order(s) renewed"
 		)
@@ -667,6 +670,101 @@ def _intercompany_supply() -> dict | None:
 				"buyer_warehouse": store_for(PLANT),
 			}
 	return None
+
+
+EXPORT_KIT = "E2E-EXPORT-KIT"
+
+
+def _export_to_north_america() -> dict | None:
+	"""J-07 the other way: an accessory kit in Aichi's finished goods store with a dollar transfer
+	price to North America, agreed as the generator agrees its prices (the controller approves).
+	The dataset exports vehicles, whose units the allocation holds; a kit keeps the journey to
+	the order, the shipment, the receipt and both companies' books."""
+	from automotive_core.governance import approvals
+	from automotive_seed.generator.catalog import AICHI, NA
+	from automotive_seed.generator.flows.common import fg_for
+	from automotive_supply_chain.intercompany.transfer_pricing import agreed_price
+
+	supplier = frappe.db.get_value(
+		"Supplier", {"is_internal_supplier": 1, "represents_company": AICHI}, "name"
+	)
+	controller = _user_with("Group Controller", None)
+	if not (supplier and controller and frappe.db.exists("Price List", "Intercompany USD")):
+		return None
+	seller_store, buyer_store = fg_for(PLANT), fg_for("NA-PDC")
+	if not frappe.db.exists("Item", EXPORT_KIT):
+		frappe.get_doc(
+			{
+				"doctype": "Item",
+				"item_code": EXPORT_KIT,
+				"item_name": "E2E export accessory kit",
+				"item_group": "Sub Assemblies",
+				"stock_uom": "Nos",
+				"is_stock_item": 1,
+				"valuation_rate": 100_000,
+				"item_defaults": [
+					{"company": AICHI, "default_warehouse": seller_store},
+					{"company": NA, "default_warehouse": buyer_store},
+				],
+			}
+		).insert(ignore_permissions=True)
+	qty = 4
+	held = flt(frappe.db.get_value("Bin", {"item_code": EXPORT_KIT, "warehouse": seller_store}, "actual_qty"))
+	if held < qty:
+		receipt = frappe.get_doc(
+			{
+				"doctype": "Stock Entry",
+				"purpose": "Material Receipt",
+				"stock_entry_type": "Material Receipt",
+				"company": AICHI,
+				"items": [
+					{
+						"item_code": EXPORT_KIT,
+						"qty": qty - held,
+						"t_warehouse": seller_store,
+						"basic_rate": 100_000,
+					}
+				],
+			}
+		)
+		receipt.insert(ignore_permissions=True)
+		receipt.submit()
+	if not agreed_price(AICHI, NA, EXPORT_KIT, nowdate()):
+		tpa = frappe.get_doc(
+			{
+				"doctype": "Transfer Price Agreement",
+				"seller_company": AICHI,
+				"buyer_company": NA,
+				"item_code": EXPORT_KIT,
+				"pricing_method": "Fixed Price",
+				"price": 900,
+				"currency": "USD",
+				"valid_from": add_days(nowdate(), -1),
+				"basis": "Cost plus 6% (limited-risk distributor), accessory kits",
+			}
+		).insert(ignore_permissions=True)
+		if approvals.get_status(tpa.doctype, tpa.name)["policy"]:
+			request = approvals.request_approval(tpa.doctype, tpa.name)
+			frappe.set_user(controller)
+			try:
+				approvals.decide(request["name"], "Approve")
+			finally:
+				frappe.set_user("Administrator")
+		tpa.reload()
+		tpa.submit()
+	price = agreed_price(AICHI, NA, EXPORT_KIT, nowdate())
+	return {
+		"item_code": EXPORT_KIT,
+		"qty": qty,
+		"rate": price[0],
+		"currency": price[1],
+		"price_list": "Intercompany USD",
+		"seller": AICHI,
+		"buyer": NA,
+		"supplier": supplier,
+		"seller_warehouse": seller_store,
+		"buyer_warehouse": buyer_store,
+	}
 
 
 def _engineering_change() -> dict | None:
