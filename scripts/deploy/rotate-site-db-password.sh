@@ -6,12 +6,13 @@
 # 2. a new random password for the site's database account, on every host the account has,
 #    and in the site config, in one step in the backend container (the database root password
 #    and the new one reach it on stdin, never on a command line; DATASTORES=external included)
-# 3. the processes that hold database connections restarted with the new config
+# 3. the processes that hold database connections restarted with the new config, then the
+#    front end (it resolves the backend's address when it starts)
 # 4. maintenance mode off, wait until every worker serves it, smoke test
 # The old password stops working at step 2. The new one is in the site config and in every
 # later backup set (*-site_config_backup.json): nothing else needs it. The high-availability
 # option's other application hosts read the shared site config, but their running processes
-# keep the old connections' settings: restart their backend and workers too.
+# keep the old connections' settings: restart their backend, workers and front end too.
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 export LOG_TAG=rotate-db
@@ -62,6 +63,12 @@ for service in backend queue-short queue-long scheduler cron; do
 	grep -qx "$service" <<<"$running" && restart+=("$service")
 done
 "${compose[@]}" restart "${restart[@]}" >/dev/null
+# the front end (nginx) resolves the backend's address when it starts, and containers restarted
+# together can come back with each other's addresses: it starts again after them
+if grep -qx frontend <<<"$running"; then
+	"${compose[@]}" restart frontend >/dev/null
+	restart+=(frontend)
+fi
 log "restarted: ${restart[*]}"
 "${compose[@]}" exec -T backend bench --site "$site" set-maintenance-mode off
 wait_ready "$env_file" "$site" 61 || true  # the smoke test below reports what is wrong

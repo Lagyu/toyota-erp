@@ -76,12 +76,15 @@ The account the application connects with (`db_name` in the site config). One co
 
 It turns maintenance mode on, sets a new random password on every host of the account and in
 the site config in one step (the root password and the new one reach the backend container on
-stdin), restarts the backend, the workers, `scheduler` and `cron`, turns maintenance mode off,
-waits until every worker serves the site again and runs the smoke test. Users see 503 for about
-a minute. Later backup sets carry the new password in their `*-site_config_backup.json`.
+stdin), restarts the backend, the workers, `scheduler` and `cron`, then the front end (nginx
+resolves the backend's address when it starts, and containers restarted together can swap
+addresses), turns maintenance mode off, waits until every worker serves the site again and runs
+the smoke test. Users see 503 for about a minute. Later backup sets carry the new password in
+their `*-site_config_backup.json`.
 
-With the high-availability option, restart the backend and workers of the other application
-hosts as well: they share the site config, but their running processes keep the old settings.
+With the high-availability option, restart the backend, the workers and the front end of the
+other application hosts as well: they share the site config, but their running processes keep
+the old settings.
 Rehearsed by `rehearsal.yml` (the old password is refused afterwards).
 
 #### Restic password
