@@ -13,7 +13,8 @@ export type Fixtures = {
 	j05: { item_code: string; batch_no: string; supplier: string; line: string; workstation: string; line_side: string;
 		store: string; quarantine: string; line_side_qty: number; purchase_receipt: string; receipt_row: string;
 		company: string } | null;
-	j06: { purchase_receipt: string; supplier: string; company: string; paid_from: string; bank_account: string } | null;
+	j06: { purchase_receipt: string; supplier: string; company: string; paid_from: string; bank_account: string;
+		bank: { partner: string; format: string; secret: string; account_number: string; currency: string } | null } | null;
 	j07: { item_code: string; rate: number; seller: string; buyer: string; supplier: string; seller_warehouse: string;
 		buyer_warehouse: string } | null;
 	j08: { vin: string; dealer: string; batch_item: string; batch_no: string; batch_supplier: string; batch_level: number;

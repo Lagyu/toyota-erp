@@ -201,7 +201,9 @@ def prepare_journeys(output: str | None = None) -> str | dict:
 	- ``j08`` traceability: a vehicle delivered to a dealer whose genealogy holds a serialised
 	  component and a supplier batch at least two levels down;
 	- ``j06`` invoice matching: a receipt nobody has invoiced yet, from a supplier whose bank
-	  account is verified (payments go only to verified accounts);
+	  account is verified (payments go only to verified accounts), and the settlement bank's
+	  statement channel with a fresh inbound signing secret (the test sends the statement the
+	  bank would);
 	- ``j07`` intercompany supply: a powertrain Kyushu has in stock and an agreed transfer
 	  price to Aichi;
 	- ``j10`` partner messaging: an EDI supplier with an open, unannounced order line and a
@@ -565,11 +567,12 @@ def _receipt_to_invoice(company: str) -> dict | None:
 	)
 	if not rows:
 		return None
+	paid_from = company_bank_account(company)
 	return {
 		"purchase_receipt": rows[0].name,
 		"supplier": rows[0].supplier,
 		"company": company,
-		"paid_from": company_bank_account(company),
+		"paid_from": paid_from,
 		"bank_account": frappe.db.get_value(
 			"Bank Account",
 			{
@@ -579,7 +582,47 @@ def _receipt_to_invoice(company: str) -> dict | None:
 			},
 			"name",
 		),
+		"bank": _statement_channel(company, paid_from),
 	}
+
+
+def _statement_channel(company: str, account: str) -> dict | None:
+	"""The bank partner that sends statements of the company's account ``account`` (its
+	number and currency), with a new inbound secret for this test run."""
+	for partner in frappe.get_all(
+		"Integration Partner",
+		filters={"partner_type": "Bank", "is_active": 1, "bank": ("is", "set")},
+		fields=["name", "bank", "message_format", "allowed_message_types"],
+		order_by="name asc",
+	):
+		if "bank_statement" not in (partner.allowed_message_types or "").split():
+			continue
+		number = frappe.db.get_value(
+			"Bank Account",
+			{
+				"company": company,
+				"is_company_account": 1,
+				"account": account,
+				"bank": partner.bank,
+				"disabled": 0,
+			},
+			"bank_account_no",
+		)
+		if not number:
+			continue
+		secret = frappe.generate_hash(length=48)
+		doc = frappe.get_doc("Integration Partner", partner.name)
+		doc.inbound_secret = secret
+		doc.flags.ignore_permissions = True
+		doc.save()
+		return {
+			"partner": partner.name,
+			"format": partner.message_format,
+			"secret": secret,
+			"account_number": number,
+			"currency": frappe.get_cached_value("Account", account, "account_currency"),
+		}
+	return None
 
 
 def _intercompany_supply() -> dict | None:

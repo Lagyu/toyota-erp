@@ -1,5 +1,6 @@
 // J-06: supplier invoice -> PO/receipt match -> exception resolution -> finance approval ->
-// settlement. The payable and the bank/payment audit chain must reconcile.
+// settlement -> the bank's statement. The payable and the bank/payment audit chain must
+// reconcile.
 import { expect, test } from "@playwright/test";
 import {
 	answerPrompt, approve, call, clickAction, getDoc, getList, insertDoc, mapDoc, openDesk, openForm, requestApproval,
@@ -7,9 +8,12 @@ import {
 } from "../support/frappe";
 import { fixtures } from "../support/fixtures";
 import { stages } from "../support/journey";
+import { deliver } from "../support/partner";
 import { as } from "../support/personas";
 
-test("J-06 a supplier invoice is matched, corrected, approved by two people and paid", async ({ browser }) => {
+test("J-06 a supplier invoice is matched, corrected, approved by two people and paid", async ({
+	browser, playwright, baseURL,
+}) => {
 	const fx = fixtures().j06;
 	test.skip(!fx, "no uninvoiced receipt from a supplier with a verified bank account on this dataset");
 	if (!fx) return;
@@ -82,5 +86,31 @@ test("J-06 a supplier invoice is matched, corrected, approved by two people and 
 	const events = (await getList(auditor.page, "Audit Event", { reference_name: pe.name }, ["event_type"], 50))
 		.map((e) => e.event_type);
 	expect(events).toEqual(expect.arrayContaining(["approval.requested", "approval.approve", "document.submitted"]));
+
+	stage("8. the bank's statement of the day shows the wire: it is matched to the payment");
+	expect(fx.bank, "the settlement bank sends statements of the paying account").toBeTruthy();
+	const paid = await getDoc<any>(ap.page, "Payment Entry", pe.name);
+	const entryId = `E2E-${pe.name}-${Date.now()}`;
+	const bank = await playwright.request.newContext({ baseURL });
+	const delivery = await deliver(bank, fx.bank!, {
+		message_id: `STMT.${entryId}`, message_type: "bank_statement",
+		data: {
+			statement_id: entryId, account_number: fx.bank!.account_number, currency: fx.bank!.currency,
+			from_date: today, to_date: today, opening_balance: 0, closing_balance: -paid.paid_amount,
+			entries: [{ entry_id: entryId, booking_date: today, amount: -paid.paid_amount, reference: paid.reference_no,
+				counterparty_name: paid.party_name }],
+		},
+	});
+	expect(delivery.status).toBe(202);
+	const transaction = async () =>
+		(await getList<any>(ap.page, "Bank Transaction", { transaction_id: entryId }, ["name", "status"], 1))[0];
+	await expect.poll(async () => (await transaction())?.status, { timeout: 60_000 }).toBe("Reconciled");
+	const statementLine = await getDoc<any>(ap.page, "Bank Transaction", (await transaction()).name);
+	expect(statementLine.withdrawal).toBeCloseTo(paid.paid_amount, 2);
+	expect(statementLine.unallocated_amount).toBeCloseTo(0, 2);
+	expect(statementLine.payment_entries.map((r: any) => [r.payment_document, r.payment_entry]))
+		.toEqual([["Payment Entry", pe.name]]);
+	expect((await getDoc<any>(ap.page, "Payment Entry", pe.name)).clearance_date).toBe(today);
+	await bank.dispose();
 	for (const ctx of [auditor, ap, procurement, first, second]) await ctx.context.close();
 });

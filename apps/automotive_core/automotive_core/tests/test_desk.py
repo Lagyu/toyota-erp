@@ -182,3 +182,101 @@ class TestPreparedReports(IntegrationTestCase):
 				},
 			)
 		)
+
+
+class TestFinanceKpiValues(IntegrationTestCase):
+	"""ERP-12.4: the finance KPIs move by exactly what a sale posts (the receivable and the credit
+	sales of the DSO, the income and the cost of goods sold of the gross margin), and both
+	reconcile with the ledgers they are checked against."""
+
+	def test_a_sale_moves_dso_and_gross_margin_by_what_it_posts(self):
+		from automotive_core.analytics import kpis
+
+		today = nowdate()
+		item = "TST-KPI-PART"
+		if not frappe.db.exists("Item", item):
+			frappe.get_doc(
+				{
+					"doctype": "Item",
+					"item_code": item,
+					"item_name": "KPI test part",
+					"item_group": frappe.db.get_value("Item Group", {"is_group": 0}, "name"),
+					"stock_uom": "Nos",
+					"is_stock_item": 1,
+				}
+			).insert(ignore_permissions=True)
+		warehouse = frappe.db.get_value(
+			"Warehouse",
+			{"company": AICHI, "is_group": 0, "warehouse_name": ("like", "%Parts Store%")},
+			"name",
+		)
+		customer = frappe.db.get_value("Customer", {"customer_name": "KPI Test Customer"}) or (
+			frappe.get_doc(
+				{
+					"doctype": "Customer",
+					"customer_name": "KPI Test Customer",
+					"customer_group": frappe.db.get_value("Customer Group", {"is_group": 0}, "name"),
+					"territory": frappe.db.get_value("Territory", {"is_group": 0}, "name"),
+				}
+			)
+			.insert(ignore_permissions=True)
+			.name
+		)
+		receipt = frappe.get_doc(
+			{
+				"doctype": "Stock Entry",
+				"purpose": "Material Receipt",
+				"stock_entry_type": "Material Receipt",
+				"company": AICHI,
+				"items": [{"item_code": item, "qty": 5, "t_warehouse": warehouse, "basic_rate": 400}],
+			}
+		)
+		receipt.insert(ignore_permissions=True)
+		receipt.submit()
+		dso, margin = kpis.days_sales_outstanding(AICHI, today, today), kpis.gross_margin(AICHI, today, today)
+
+		# two parts valued at 400 sold at 1,000 from stock
+		invoice = frappe.get_doc(
+			{
+				"doctype": "Sales Invoice",
+				"company": AICHI,
+				"customer": customer,
+				"update_stock": 1,
+				"ignore_default_payment_terms_template": 1,
+				"due_date": add_days(today, 30),
+				"items": [{"item_code": item, "qty": 2, "rate": 1000, "warehouse": warehouse}],
+			}
+		)
+		invoice.insert(ignore_permissions=True)
+		invoice.submit()
+		self.assertEqual(invoice.base_net_total, 2000)
+
+		dso_after = kpis.days_sales_outstanding(AICHI, today, today)
+		margin_after = kpis.gross_margin(AICHI, today, today)
+		self.assertAlmostEqual(
+			dso_after.inputs["receivable"] - dso.inputs["receivable"], invoice.base_grand_total, places=2
+		)
+		self.assertAlmostEqual(
+			dso_after.inputs["credit_sales"] - dso.inputs["credit_sales"], invoice.base_grand_total, places=2
+		)
+		# one day's period: the DSO is the receivable over that day's credit sales
+		self.assertEqual(
+			dso_after.value, round(dso_after.inputs["receivable"] / dso_after.inputs["credit_sales"], 2)
+		)
+		self.assertAlmostEqual(margin_after.inputs["income"] - margin.inputs["income"], 2000, places=2)
+		self.assertAlmostEqual(margin_after.inputs["cogs"] - margin.inputs["cogs"], 800, places=2)
+		self.assertEqual(
+			margin_after.value,
+			round(
+				(margin_after.inputs["income"] - margin_after.inputs["cogs"])
+				/ margin_after.inputs["income"]
+				* 100,
+				4,
+			),
+		)
+		for reconcile, result in (
+			(kpis.reconcile_receivables, dso_after),
+			(kpis.reconcile_revenue, margin_after),
+		):
+			ok, detail = reconcile(AICHI, today, today, None, result)
+			self.assertTrue(ok, detail)
