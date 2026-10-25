@@ -118,13 +118,19 @@ Exit gate: all acceptance gates and operational runbooks verified. **Open.**
       backups with verified restore drills, monitoring and alerting.
 - [x] Latency alerting: request-duration histogram and the `ErpReadLatencyHigh` / `ErpWriteLatencyHigh` alerts.
 - [~] Load tests: scenarios, runner and workflow ready (`perf/`, `perf.yml`); results await the
-      standard dataset; slow-query/index review after them.
+      standard dataset. Capacity (`ops/performance/capacity.md`): statement digests,
+      `slow-queries.sh`, database size metrics and queue workers in place; its reference
+      measurements, and the slow statement and index review, follow the load test.
 - [x] Production rehearsal on a fresh runner (`rehearsal.yml`): install by the runbook with
       TLS, monitoring, ClamAV and S3 backups, upgrade from a previous release, HTTPS checks,
-      upload scanning, structured logs, simulated reboot, backup and point-in-time restore drill,
-      rollback to the previous release: all 18 steps pass (the reboot is a Docker daemon restart).
+      upload scanning, structured logs, site database password rotation, simulated reboot,
+      backup and point-in-time restore drill, rollback to the previous release; its jobs `acme`
+      (Let's Encrypt mode against Pebble), `reboot` (a VM installed by the runbook: a real reboot
+      and a power loss) and `ha` (two application hosts behind a balancer, one failing): all pass.
 - [~] Security: lint, dependency audit and image scan with reviewed allowlists, SBOM and licence
-      inventory, findings log, configuration review, permission matrix checked by tests, scoped
+      inventory (every package's licence classified), findings log, configuration review,
+      permission matrix and export rights checked by tests, restricted fields (bank details,
+      employees' personal details) and logged exports (SEC-4), scoped
       actions (C-10) kept by a lint check; owner decisions on the accepted findings open (C-03,
       V-02, V-03c/d/g, V-05); C-02 fixed, C-08 mitigated; the account expiry (C-11) and the
       scan gate of private file downloads (C-12) fixed after the hosted runs found them.
