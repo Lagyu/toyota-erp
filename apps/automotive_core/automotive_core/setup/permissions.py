@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import frappe
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
-from frappe.permissions import add_permission, update_permission_property
+from frappe.permissions import add_permission
 
 READ = ("read", "report", "print")
 WRITE = ("read", "write", "create", "report", "print")
@@ -218,14 +218,43 @@ PERMLEVEL_1 = [
 ]
 
 
+RIGHT_FIELDS = (
+	"read",
+	"write",
+	"create",
+	"delete",
+	"submit",
+	"cancel",
+	"amend",
+	"report",
+	"export",
+	"import",
+	"share",
+	"print",
+	"email",
+	"select",
+	"mask",
+)
+
+
 def _grant(doctype: str, role: str, ptypes: tuple[str, ...], permlevel: int = 0) -> None:
+	"""The role's rule on the DocType holds the rights listed. A rule that ERPNext's own
+	permissions have as well keeps their rights and gains these; a rule only these grants make
+	holds exactly them (a new Custom DocPerm reads and exports by default: SEC-4)."""
 	if not frappe.db.exists("DocType", doctype) or not frappe.db.exists("Role", role):
 		return
-	exists = frappe.db.exists("Custom DocPerm", {"parent": doctype, "role": role, "permlevel": permlevel})
-	if not exists:
+	where = {"parent": doctype, "role": role, "permlevel": permlevel, "if_owner": 0}
+	if not frappe.db.exists("Custom DocPerm", where):
 		add_permission(doctype, role, permlevel)
-	for ptype in ptypes:
-		update_permission_property(doctype, role, permlevel, ptype, 1, validate=False)
+	name = frappe.db.get_value("Custom DocPerm", where, "name")
+	shared = frappe.db.exists("DocPerm", where)
+	meta = frappe.get_meta("Custom DocPerm")
+	rights = [p for p in RIGHT_FIELDS if meta.has_field(p)]
+	current = frappe.db.get_value("Custom DocPerm", name, rights, as_dict=True)
+	wanted = {p: int(p in ptypes or bool(shared and current[p])) for p in rights}
+	changed = {p: v for p, v in wanted.items() if int(current[p] or 0) != v}
+	if changed:
+		frappe.db.set_value("Custom DocPerm", name, changed, update_modified=False)
 
 
 def apply() -> None:

@@ -74,7 +74,8 @@ DEFINITIONS = [
 		"formula": "Stock value in Work In Progress warehouses at period end (SLE stock_value_difference sum)",
 		"source_doctypes": "Stock Ledger Entry, Warehouse, GL Entry",
 		"authorization_filter": "Company User Permission; plant filter when given.",
-		"reconciliation_check": "SLE value equals the GL balance of the WIP warehouses' stock accounts (±1).",
+		"reconciliation_check": "The GL balance of the WIP warehouses' stock accounts equals the stock ledger value of "
+		"every warehouse posting to them (±1): the WIP value itself when they have accounts of their own.",
 	},
 	{
 		"kpi_code": "MFG-OEE",
@@ -254,35 +255,42 @@ def wip_value(company, from_date, to_date, plant=None) -> KpiResult:
 
 
 def reconcile_wip(company, from_date, to_date, plant, result) -> tuple[bool, str]:
-	warehouses = result.inputs.get("warehouses", [])
-	accounts = sorted(
-		{
-			frappe.get_cached_value("Warehouse", w, "account")
-			or frappe.get_cached_value("Company", company, "default_inventory_account")
-			for w in warehouses
-		}
-	)
-	if not accounts:
+	"""The GL balance of the stock accounts the WIP warehouses post to, against the stock ledger of
+	every warehouse posting to those accounts. A warehouse posts to its own account, else to its
+	parent group's, else to the company's default inventory account (ERPNext's map): WIP
+	warehouses without an account of their own share the company's with every other warehouse."""
+	from erpnext.stock import get_warehouse_account_map
+
+	warehouses = set(result.inputs.get("warehouses", []))
+	if not warehouses:
 		return True, "no WIP warehouses: not applicable"
-	shared = frappe.get_all(
-		"Warehouse",
-		filters={"account": ("in", accounts), "name": ("not in", warehouses or [""])},
-		pluck="name",
-		limit=1,
+	account_of = {
+		name: row.account for name, row in get_warehouse_account_map(company).items() if not row.is_group
+	}
+	accounts = sorted({account_of[w] for w in warehouses if account_of.get(w)})
+	if not accounts:
+		return True, "the WIP warehouses post to no stock account: not applicable"
+	posting = sorted(w for w, account in account_of.items() if account in accounts)
+	sle = flt(
+		frappe.db.sql(
+			"""select sum(stock_value_difference) from `tabStock Ledger Entry`
+			where is_cancelled=0 and warehouse in %s and posting_date <= %s""",
+			(tuple(posting), to_date),
+		)[0][0]
 	)
-	if shared:
-		return (
-			True,
-			"WIP warehouses share their stock account with other warehouses; ledger-level check not applicable",
-		)
 	gl = flt(
 		frappe.db.sql(
 			"""select sum(debit - credit) from `tabGL Entry` where is_cancelled=0 and account in %s and posting_date <= %s""",
 			(tuple(accounts), to_date),
 		)[0][0]
 	)
-	ok = abs(gl - flt(result.numerator)) <= 1
-	return ok, f"SLE {flt(result.numerator):.2f} vs GL {gl:.2f}"
+	ok = abs(gl - sle) <= 1
+	if set(posting) <= warehouses:
+		return ok, f"SLE {sle:.2f} vs GL {gl:.2f}"
+	return ok, (
+		f"the WIP warehouses share {', '.join(accounts)} with {len(posting) - len(warehouses & set(posting))} "
+		f"other warehouse(s): its GL {gl:.2f} vs the stock ledger of all {len(posting)} {sle:.2f}"
+	)
 
 
 def oee(company, from_date, to_date, plant=None) -> KpiResult:

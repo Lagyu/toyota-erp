@@ -484,15 +484,16 @@ class TestDataMinimization(IntegrationTestCase):
 	def _export(self, user, fields):
 		from frappe.desk.reportview import export_query
 
-		frappe.local.form_dict = frappe._dict(
-			doctype="Employee",
-			fields=frappe.as_json([f"`tabEmployee`.`{fieldname}`" for fieldname in fields]),
-			filters=frappe.as_json([["Employee", "name", "=", self.subject]]),
-			file_format_type="CSV",
-			title="Employee",
-		)
 		frappe.response.pop("filecontent", None)
 		with as_user(user):
+			# after the switch: frappe.set_user empties the request's arguments
+			frappe.local.form_dict = frappe._dict(
+				doctype="Employee",
+				fields=frappe.as_json([f"`tabEmployee`.`{fieldname}`" for fieldname in fields]),
+				filters=frappe.as_json([["Employee", "name", "=", self.subject]]),
+				file_format_type="CSV",
+				title="Employee",
+			)
 			export_query()
 		content = frappe.response.get("filecontent")
 		return content.decode() if isinstance(content, bytes) else content or ""
@@ -548,8 +549,8 @@ class TestDataMinimization(IntegrationTestCase):
 			("Administrator", "Segregation of Duties Rule", "CSV"),
 		)
 		# without the export right on the report's DocType: refused, nothing logged
-		frappe.local.form_dict = frappe._dict(report_name=report, file_format_type="CSV", filters="{}")
 		with as_user(self.colleague), self.assertRaises(frappe.PermissionError):
+			frappe.local.form_dict = frappe._dict(report_name=report, file_format_type="CSV", filters="{}")
 			download()
 		self.assertEqual(frappe.db.count("Access Log", {"report_name": report}), before + 1)
 

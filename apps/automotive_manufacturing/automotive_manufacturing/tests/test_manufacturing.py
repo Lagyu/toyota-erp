@@ -722,11 +722,40 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 			)
 			doc = frappe.copy_doc(template)
 			doc.workstation_name = station
+			# a type of its own: ERPNext refuses time logs that overlap others of the same type, and
+			# the other routed tests log on the template's station at the same minutes
+			doc.workstation_type = None
 			doc.set(
 				"workstation_costs", [{"operating_component": OPERATING_COMPONENT, "operating_cost": 6_000}]
 			)
 			doc.insert(ignore_permissions=True)
 		self.assertEqual(flt(frappe.db.get_value("Workstation", station, "hour_rate")), 6_000)
+		# the tenant costs the lines that have an hour rate, Kyushu's: Aichi gets an absorption
+		# account here, as a tenant with costed Aichi lines would
+		account = frappe.db.get_value(
+			"Account", {"company": AICHI, "account_name": "Labour and Overhead Absorbed"}, "name"
+		)
+		if not account:
+			parent = frappe.db.get_value(
+				"Account", {"company": AICHI, "root_type": "Expense", "is_group": 1}, "name", order_by="lft"
+			)
+			account = (
+				frappe.get_doc(
+					{
+						"doctype": "Account",
+						"account_name": "Labour and Overhead Absorbed",
+						"company": AICHI,
+						"parent_account": parent,
+						"is_group": 0,
+					}
+				)
+				.insert(ignore_permissions=True)
+				.name
+			)
+		component = frappe.get_doc("Workstation Operating Component", OPERATING_COMPONENT)
+		if not any(row.company == AICHI for row in component.accounts):
+			component.append("accounts", {"company": AICHI, "expense_account": account})
+			component.save(ignore_permissions=True)
 		if not frappe.db.exists("Operation", "TST Costed sewing"):
 			frappe.get_doc(
 				{"doctype": "Operation", "__newname": "TST Costed sewing", "workstation": station}

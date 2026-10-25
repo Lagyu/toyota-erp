@@ -287,6 +287,16 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   and a DocType a request names must exist (404); the portal and MES methods use the same
   helper. Found by the new request test of every state-changing method (TST-4,
   `integration_tests/test_api_requests.py`).
+- Every automotive permission grant also gave the *export* right, and the Warehouse Clerk's
+  select-only grant on Account also gave *read*: a new Custom DocPerm reads and exports by
+  default, and the grants only switched rights on. A rule that only the automotive grants make
+  now holds exactly the rights they list (re-applied on migrate, so existing sites are
+  corrected); rules ERPNext has as well keep its rights. Found by the new export matrix test
+  (SEC-4).
+- The WIP value KPI's reconciliation compared the GL of the company's whole stock account with
+  the stock ledger of the WIP warehouses alone whenever they had no stock account of their own
+  (a warehouse without one posts to its group's or the company's): it now compares the account
+  with the stock ledger of every warehouse posting to it.
 - The rehearsal's Let's Encrypt check could fail when Traefik asked the ACME test server for
   its directory before it listened: Traefik does not ask again before its daily renewal check.
   The check restarts the proxy once the server answers; troubleshooting.md has the same step
