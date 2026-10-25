@@ -4,7 +4,8 @@
 # Installs ERPNext and the automotive apps (plus automotive_seed on reference images),
 # applies the Hinode tenant configuration, sets the metrics token, configures upload
 # scanning when ClamAV runs (CLAMAV=1, VIRUS_SCAN_MODE) and enables the scheduler.
-# Idempotent: an existing site is only re-configured.
+# Idempotent: an existing site is only re-configured. Returns once every worker serves the new
+# settings (a minute after they were written).
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 export LOG_TAG=new-site
@@ -54,4 +55,7 @@ if [[ ${CLAMAV:-1} == 1 ]]; then
 fi
 bench --site "$site" enable-scheduler
 bench use "$site"
+# Frappe's workers keep a site's config for up to 60 s: until then some still answer without
+# the settings written above (the metrics token: 403 to Prometheus and the smoke test)
+wait_ready "$env_file" "$site" 61 || true
 log "site $site ready ($ENVIRONMENT)"
