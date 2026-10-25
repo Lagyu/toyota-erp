@@ -372,6 +372,224 @@ class TestBankAccountControls(IntegrationTestCase):
 		self.assertEqual(meta.get_field("bank_account_no").permlevel, 1)
 
 
+class TestDataMinimization(IntegrationTestCase):
+	"""SEC-4: restricted fields (supplier bank details, an employee's personal details) reach only
+	the roles that need them, in every read path: the form and the REST API, lists, and exports,
+	which also need the export right and are recorded in the Access Log. No report, page or API
+	of the production apps uses a restricted field except the reviewed finance controls."""
+
+	EXPORTER = "Minimization Test Exporter"
+	PERSONAL = {
+		"cell_number": "090-0000-0001",
+		"personal_email": "subject.private@example.invalid",
+		"current_address": "1-2-3 Example-cho, Toyota",
+		"passport_number": "TZ0000001",
+		"bank_ac_no": "0000001",
+		"health_details": "synthetic test record",
+	}
+
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		cls.addClassCleanup(cls._drop_exporter)
+		gender = frappe.db.get_value("Gender", {}, "name")
+		cls.subject = cls._employee("Subject", None, gender, cls.PERSONAL)
+		# linking a user to an Employee gives it ERPNext's "Employee" role, which reads all employees
+		cls.colleague = make_user("minimization.colleague@hinode.example", ["Line Operator"])
+		cls._employee("Colleague", cls.colleague, gender, {})
+		cls.hr_roles = sorted(r for r in ("HR Manager", "HR User") if frappe.db.exists("Role", r))
+
+	@staticmethod
+	def _employee(last_name, user, gender, values):
+		name = frappe.db.get_value("Employee", {"first_name": "Minimization", "last_name": last_name})
+		doc = frappe.get_doc("Employee", name) if name else frappe.new_doc("Employee")
+		doc.update(
+			{
+				"first_name": "Minimization",
+				"last_name": last_name,
+				"company": AICHI,
+				"status": "Active",
+				"gender": gender,
+				"date_of_birth": "1990-01-01",
+				"date_of_joining": "2020-04-01",
+				"user_id": user,
+				**values,
+			}
+		)
+		doc.flags.ignore_permissions = True
+		doc.save()
+		return doc.name
+
+	@classmethod
+	def _drop_exporter(cls):
+		frappe.db.delete("Custom DocPerm", {"parent": "Employee", "role": cls.EXPORTER})
+		frappe.db.delete("Has Role", {"role": cls.EXPORTER})
+		frappe.db.delete("Role", cls.EXPORTER)
+		frappe.clear_cache(doctype="Employee")
+
+	def test_the_restricted_fields_are_read_only_by_the_named_roles(self):
+		from automotive_core.setup.permissions import PERMLEVEL_1, RESTRICTED_FIELDS
+		from automotive_core.setup.roles import ROLE_PROFILES
+
+		persona_roles = {role for roles in ROLE_PROFILES.values() for role in roles}
+		for doctype in sorted({doctype for doctype, _ in RESTRICTED_FIELDS}):
+			meta = frappe.get_meta(doctype)
+			for dt, fieldname in RESTRICTED_FIELDS:
+				if dt == doctype and meta.has_field(fieldname):
+					self.assertEqual(meta.get_field(fieldname).permlevel, 1, f"{doctype}.{fieldname}")
+			readers = set(
+				frappe.get_all(
+					"Custom DocPerm", filters={"parent": doctype, "permlevel": 1, "read": 1}, pluck="role"
+				)
+			)
+			named = {role for dt, role, _ in PERMLEVEL_1 if dt == doctype and frappe.db.exists("Role", role)}
+			self.assertEqual(readers, named, doctype)
+			# Data Export reads child tables past their table field's level: only its readers export
+			if any(
+				dt == doctype and meta.has_field(f) and meta.get_field(f).fieldtype == "Table"
+				for dt, f in RESTRICTED_FIELDS
+			):
+				exporters = set(
+					frappe.get_all(
+						"Custom DocPerm",
+						filters={"parent": doctype, "permlevel": 0, "export": 1},
+						pluck="role",
+					)
+				)
+				self.assertLessEqual(exporters, readers, doctype)
+		self.assertTrue(self.hr_roles, "ERPNext's HR roles")
+		self.assertFalse(
+			set(self.hr_roles) & persona_roles, "no persona reads an employee's personal details"
+		)
+
+	def test_a_colleague_reads_the_directory_not_the_personal_details(self):
+		self.assertIn("Employee", frappe.get_roles(self.colleague))
+		with as_user(self.colleague):
+			doc = frappe.client.get("Employee", self.subject)
+			self.assertEqual(doc["employee_name"], "Minimization Subject")
+			self.assertEqual(doc["company"], AICHI)
+			for fieldname in (*self.PERSONAL, "date_of_birth", "gender"):
+				self.assertFalse(doc.get(fieldname), fieldname)
+			listed = frappe.get_list("Employee", filters={"name": self.subject}, fields=["*"])
+			self.assertEqual(listed[0]["employee_name"], "Minimization Subject")
+			self.assertFalse(set(listed[0]) & {*self.PERSONAL, "date_of_birth", "gender"})
+			# the Employee role reads, but exports nothing
+			self.assertFalse(frappe.has_permission("Employee", "export"))
+		hr = make_user("minimization.hr@hinode.example", self.hr_roles)
+		with as_user(hr):
+			doc = frappe.client.get("Employee", self.subject)
+			for fieldname, value in self.PERSONAL.items():
+				self.assertEqual(doc.get(fieldname), value, fieldname)
+
+	def _export(self, user, fields):
+		from frappe.desk.reportview import export_query
+
+		frappe.local.form_dict = frappe._dict(
+			doctype="Employee",
+			fields=frappe.as_json([f"`tabEmployee`.`{fieldname}`" for fieldname in fields]),
+			filters=frappe.as_json([["Employee", "name", "=", self.subject]]),
+			file_format_type="CSV",
+			title="Employee",
+		)
+		frappe.response.pop("filecontent", None)
+		with as_user(user):
+			export_query()
+		content = frappe.response.get("filecontent")
+		return content.decode() if isinstance(content, bytes) else content or ""
+
+	def test_an_export_leaves_out_what_the_user_cannot_read_and_is_logged(self):
+		from frappe.permissions import add_permission, update_permission_property
+
+		if not frappe.db.exists("Role", self.EXPORTER):
+			frappe.get_doc({"doctype": "Role", "role_name": self.EXPORTER, "desk_access": 1}).insert(
+				ignore_permissions=True
+			)
+		add_permission("Employee", self.EXPORTER, 0)
+		for ptype in ("read", "report", "export"):
+			update_permission_property("Employee", self.EXPORTER, 0, ptype, 1, validate=False)
+		frappe.clear_cache(doctype="Employee")
+		exporter = make_user("minimization.exporter@hinode.example", [self.EXPORTER])
+		before = frappe.db.count("Access Log", {"user": exporter, "export_from": "Employee"})
+		try:
+			csv = self._export(exporter, ["name", "employee_name", "cell_number", "personal_email"])
+		finally:
+			self._drop_exporter()
+		self.assertIn("Minimization Subject", csv)
+		for value in self.PERSONAL.values():
+			self.assertNotIn(value, csv)
+		self.assertEqual(
+			frappe.db.count("Access Log", {"user": exporter, "export_from": "Employee", "file_type": "CSV"}),
+			before + 1,
+		)
+		# with the field level, the same export carries them
+		csv = self._export(
+			make_user("minimization.hr@hinode.example", self.hr_roles), ["name", "cell_number"]
+		)
+		self.assertIn(self.PERSONAL["cell_number"], csv)
+		# without the export right, no export
+		with self.assertRaises(frappe.PermissionError):
+			self._export(self.colleague, ["name", "employee_name"])
+
+	def test_a_report_download_is_logged_like_the_other_exports(self):
+		report = "Segregation of Duties Review"
+		target = frappe.get_hooks("override_whitelisted_methods", {})["frappe.desk.query_report.export_query"]
+		download = frappe.get_attr(target[-1])
+		before = frappe.db.count("Access Log", {"report_name": report})
+		frappe.local.form_dict = frappe._dict(
+			report_name=report, file_format_type="CSV", filters="{}", visible_idx="[]"
+		)
+		frappe.response.pop("filecontent", None)
+		download()
+		self.assertTrue(frappe.response.get("filecontent"))
+		self.assertEqual(frappe.db.count("Access Log", {"report_name": report}), before + 1)
+		log = frappe.get_last_doc("Access Log", filters={"report_name": report})
+		self.assertEqual(
+			(log.user, log.export_from, log.file_type),
+			("Administrator", "Segregation of Duties Rule", "CSV"),
+		)
+		# without the export right on the report's DocType: refused, nothing logged
+		frappe.local.form_dict = frappe._dict(report_name=report, file_format_type="CSV", filters="{}")
+		with as_user(self.colleague), self.assertRaises(frappe.PermissionError):
+			download()
+		self.assertEqual(frappe.db.count("Access Log", {"report_name": report}), before + 1)
+
+	def test_restricted_fields_are_used_only_where_reviewed(self):
+		"""Reports, dashboards, pages, print formats, portals and APIs show only what they need: a new
+		use of a restricted field fails here until it is reviewed and listed."""
+		import re
+		from pathlib import Path
+
+		from automotive_core.setup.permissions import RESTRICTED_FIELDS
+
+		reviewed = {
+			# the bank account change control: verification status, audit event (values not shown)
+			"automotive_core/finance_controls/bank_accounts.py",
+			# inbound bank statements resolve the company account by its number
+			"automotive_core/finance_controls/bank_statements.py",
+			"automotive_core/setup/permissions.py",
+		}
+		names = sorted({fieldname for _, fieldname in RESTRICTED_FIELDS})
+		pattern = re.compile(r"\b(" + "|".join(names) + r")\b")
+		found = []
+		for app in frappe.get_installed_apps():
+			if not app.startswith("automotive_") or app == "automotive_seed":
+				continue
+			root = Path(frappe.get_app_path(app))
+			for path in sorted(root.rglob("*")):
+				relative = path.relative_to(root.parent).as_posix()
+				if (
+					not path.is_file()
+					or path.suffix not in (".py", ".json", ".js", ".html", ".sql", ".vue", ".ts")
+					or {"tests", "node_modules", "dist"} & set(path.parts)
+					or relative in reviewed
+				):
+					continue
+				for number, line in enumerate(path.read_text(errors="replace").splitlines(), 1):
+					if match := pattern.search(line):
+						found.append(f"{relative}:{number} ({match.group(1)})")
+		self.assertEqual(found, [])
+
+
 class TestBackgroundJobs(IntegrationTestCase):
 	"""P-4: a background job runs as the user who queued it, or as a system step that writes past
 	the permissions (sealing, dispatch, inbound processing, scans). Either way only the methods

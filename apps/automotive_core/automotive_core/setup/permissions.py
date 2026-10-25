@@ -6,7 +6,9 @@ Grants are written as Custom DocPerm rows (the supported Role Permission Manager
 mechanism) and re-applied idempotently on every migrate.
 
 Field-level restrictions use permlevel property setters: supplier bank account
-numbers are permlevel 1 and readable only by finance roles.
+numbers are permlevel 1 and readable only by finance roles, an employee's personal
+details only by HR. Lists, reports, exports and the REST API leave out the fields
+of a level the user cannot read.
 """
 
 from __future__ import annotations
@@ -149,11 +151,60 @@ GRANTS: list[tuple[str, str, tuple[str, ...]]] = [
 	],
 ]
 
+# An employee's personal details, terms of employment, pay and exit (SEC-4 data minimization).
+# ERPNext gives every user linked to an Employee the "Employee" role, which reads all employees:
+# colleagues keep the directory (name, company, department, designation, plant, reports to, user,
+# company email), HR the rest.
+EMPLOYEE_PERSONAL_FIELDS = (
+	"gender",
+	"date_of_birth",
+	"emergency_phone_number",
+	"person_to_be_contacted",
+	"relation",
+	"scheduled_confirmation_date",
+	"final_confirmation_date",
+	"contract_end_date",
+	"notice_number_of_days",
+	"date_of_retirement",
+	"salary_mode",
+	"bank_name",
+	"bank_ac_no",
+	"iban",
+	"salary_currency",
+	"ctc",
+	"cell_number",
+	"prefered_email",
+	"personal_email",
+	"permanent_accommodation_type",
+	"permanent_address",
+	"current_accommodation_type",
+	"current_address",
+	"passport_number",
+	"date_of_issue",
+	"valid_upto",
+	"place_of_issue",
+	"marital_status",
+	"blood_group",
+	"family_background",
+	"health_details",
+	"education",
+	"external_work_history",
+	"internal_work_history",
+	"resignation_letter_date",
+	"relieving_date",
+	"reason_for_leaving",
+	"leave_encashed",
+	"encashment_date",
+	"held_on",
+	"new_workplace",
+	"feedback",
+)
 # (doctype, fieldname): restricted to permlevel 1
 RESTRICTED_FIELDS = [
 	("Bank Account", "bank_account_no"),
 	("Bank Account", "iban"),
 	("Bank Account", "branch_code"),
+	*(("Employee", fieldname) for fieldname in EMPLOYEE_PERSONAL_FIELDS),
 ]
 PERMLEVEL_1 = [
 	("Bank Account", "Treasury Approver", ("read",)),
@@ -161,6 +212,9 @@ PERMLEVEL_1 = [
 	("Bank Account", "Accounts Manager", ("read", "write")),
 	("Bank Account", "AP Clerk", ("read", "write")),
 	("Bank Account", "System Manager", ("read", "write")),
+	# ERPNext's HR roles, held by HR staff (no persona of this ERP): not System Manager either
+	("Employee", "HR Manager", ("read", "write")),
+	("Employee", "HR User", ("read", "write")),
 ]
 
 

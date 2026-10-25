@@ -55,9 +55,20 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   transactions that reconcile automatically with payment and journal entries.
 - Request limits per signed-in user and minute for the partner portals (reads, changes and
   partner uploads) and the shop floor, set in Automotive Settings; HTTP 429 over the limit.
-- The custom methods' OpenAPI contract is versioned (1.1.0): additions raise the minor
+- The custom methods' OpenAPI contract is versioned (1.2.0): additions raise the minor
   version, breaking changes come as new paths with the old ones deprecated, and CI checks
   that the version follows each change of the contract (D-034).
+- Data minimization in exports and reports (SEC-4): an employee's personal details (date of
+  birth, gender, private contact details and addresses, emergency contact, passport, health,
+  family, education, work history, salary and bank details, terms of employment, exit) are
+  at permission level 1, read by ERPNext's HR roles only. Before, ERPNext's "Employee" role,
+  which every user linked to an Employee record holds, read them for all employees. Report
+  downloads are recorded in the Access Log like the report view and Data Export (contract
+  1.2.0: `automotive_core.governance.exports.export_query`, which the desk's download path
+  now runs). The permission matrix documents the restricted fields and the export rights of
+  each persona; tests check both against the live tables, and that no report, page or API
+  uses a restricted field outside the reviewed finance controls. The access review goes
+  through the Access Log.
 - Upload scanning is configured at site creation when ClamAV runs (`VIRUS_SCAN_MODE`,
   Required by default), and an hourly job scans files without a result (uploaded before
   scanning, or while clamd was down). The production rehearsal runs ClamAV and checks an

@@ -80,6 +80,10 @@ boot_session = "automotive_core.boot.boot_session"
 
 # File: unreadable PDF content is refused like any mismatch (automotive_core.files.policy)
 override_doctype_class = {"File": "automotive_core.files.policy.AutomotiveFile"}
+# report downloads are recorded in the Access Log like the other exports (SEC-4)
+override_whitelisted_methods = {
+	"frappe.desk.query_report.export_query": "automotive_core.governance.exports.export_query",
+}
 
 doc_events = {
 	"*": {

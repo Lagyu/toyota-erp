@@ -31,7 +31,7 @@ ROOT = Path(__file__).resolve().parents[2]
 APPS = ("automotive_core", "automotive_manufacturing", "automotive_supply_chain", "automotive_portals")
 OUT = ROOT / "apps/automotive_core/automotive_core/integration_hub/openapi.json"
 # semantic version of the contract (D-034): bump it with every change of the operations
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 PARTY_HELPERS = {"_supplier": "Supplier", "_dealer": "Customer"}
 
 

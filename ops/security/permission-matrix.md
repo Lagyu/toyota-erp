@@ -10,7 +10,8 @@ persona's roles plus the automotive grants (`automotive_core.setup.permissions`)
 Row-level scope narrows these rights further: company and plant User Permissions from
 provisioning and plant assignments (`automotive_core.access`), partner scope in the portals,
 and the approval service's maker/checker and delegation rules. Restricted fields (supplier
-bank details) sit at permission level 1.
+bank details, an employee's personal details) sit at permission level 1:
+[restricted fields and exports](#restricted-fields-and-exports-sec-4).
 
 Actions that change a document past these rights (acknowledging an andon, releasing a hold,
 completing an operation, releasing a planning run, building a plant schedule, accepting a
@@ -60,3 +61,70 @@ this table: change both together.
 
 Approval Request is created and advanced only by the approval service; its read right
 lets an approver open a request from the inbox. Audit Event is append-only for everyone.
+
+## Restricted fields and exports (SEC-4)
+
+Data minimization for exports and reports. Fields of permission level 1 reach only the roles
+granted that level (`RESTRICTED_FIELDS` and `PERMLEVEL_1` in `automotive_core.setup.permissions`).
+Frappe leaves them out of every read of a user without the level: the form and
+`/api/resource`, lists and the report view, `frappe.client.get_list`/`get_value`, and the
+exports (the report view export drops the columns, the Data Export tool leaves them empty).
+The Data Export tool reads child tables without the field level of their table field, so a
+DocType with a restricted table (Employee: education, work history) keeps its export right with
+the readers of that level; `TestDataMinimization` checks it.
+
+| Restricted fields | Level 1 granted to | Personas that read them | ... and change them |
+|---|---|---|---|
+| Bank Account: account number, IBAN, branch code | read: Treasury Approver, Group Controller; read and write: AP Clerk, Accounts Manager, System Manager | Treasury Approver, AP Clerk, Group Controller | AP Clerk, Group Controller |
+| Employee: gender, date of birth, emergency contact, contact details other than the company email (mobile, personal and preferred email, addresses), passport, marital status, blood group, family background, health, education, work history, salary, bank details, terms of employment (confirmation, contract end, notice, retirement), resignation and exit | read and write: HR User, HR Manager | none | none |
+
+ERPNext gives every user linked to an Employee record the "Employee" role, which reads all
+employees: colleagues keep the directory (name, company, department, designation, plant,
+reports to, user, company email) and nothing else. HR staff hold ERPNext's HR roles, which no
+persona includes: not even an IT Operator reads an employee's personal details. ERPNext copies
+the date of birth and gender to the User record, which only System Managers read.
+
+**Exports.** An export needs the *export* right on its DocType: the report view and list
+(Menu → Export), the Data Export tool, and the download of a query or script report (which
+checks the right on the report's DocType). Each export is recorded in the **Access Log**
+(user, DocType or report, file type, filters, time): by Frappe for the report view and Data
+Export, by `automotive_core.governance.exports` for report downloads (Frappe does not log
+those; the desk's download path runs it). Log Settings does not clear the Access Log; the
+[access review](../runbooks/access-review.md#periodic-access-review) goes through it, and only
+System Managers (IT Operators) read it. The
+rights of each persona on the DocTypes above, ERPNext's own except where the automotive grants
+add rights (they never add *export*):
+
+| Persona | Exports |
+|---|---|
+| AP Clerk | Payment Entry, Item, Bank Account |
+| Auditor | Item, Approval Policy, Approval Request, Period Close Checklist, Audit Event, Integration Partner |
+| Automotive Executive | Item |
+| Buyer | Item, Advance Shipping Notice |
+| Dealer Liaison | Item |
+| Engineering Manager | Pick List, Job Card, Item, Engineering Change Order |
+| Group Controller | Payment Entry, Journal Entry, Item, Bank Account, Approval Policy, Period Close Checklist |
+| IT Operator | Job Card, Item, Quality Hold, Engineering Change Order, Approval Policy, Approval Request, Andon Event, Kanban Card, Vehicle Unit, Shipment Manifest, Advance Shipping Notice, Period Close Checklist, Audit Event, Integration Partner, Shift Handover |
+| Line Operator | Item |
+| Logistics Coordinator | Delivery Note, Pick List, Item, Shipment Manifest, Advance Shipping Notice |
+| Plant Director | Pick List, Job Card, Item, Andon Event, Kanban Card, Shift Handover |
+| Procurement Manager | Material Request, Item, Advance Shipping Notice |
+| Product Engineer | Item, Engineering Change Order |
+| Production Planner | Pick List, Work Order, Job Card, Item, Vehicle Unit |
+| Production Supervisor | Pick List, Work Order, Job Card, Item, Quality Hold, Andon Event, Kanban Card, Shift Handover |
+| Quality Inspector | Item, Quality Hold, Andon Event |
+| Quality Manager | Item, Quality Hold, Andon Event |
+| Sales Manager | Sales Order, Item |
+| Treasury Approver | Item |
+| Warehouse Clerk | Pick List, Item, Shipment Manifest, Advance Shipping Notice |
+
+Every desk user may export the Item list at its *select* level (code, name and the search
+fields): ERPNext's own right. Portal users have no desk and export nothing. `test_permission_matrix`
+checks this table against the live tables as well.
+
+**Reports.** The reports, dashboards, pages, portals and APIs of the production apps select the
+columns they show, and none uses a restricted field: `TestDataMinimization` fails on a new
+use until it is reviewed and listed (today: the bank account change control and the inbound
+bank statement match, which use the account number without showing it). Company, plant and
+partner scope apply to reports and exports as to lists
+(`test_an_export_holds_only_the_user_s_own_plant`).

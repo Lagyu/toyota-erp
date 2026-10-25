@@ -353,3 +353,20 @@ tablets of a line, would share one budget).
 additions in the contract's minor versions. A method whose shape must change keeps a
 deprecated twin for a release. The limits are site settings an IT operator can raise; the
 429s show in the 4xx responses of the metrics.
+
+## D-035 An employee's personal details are HR's; every export is logged
+
+**Decision.** The personal fields of ERPNext's Employee (date of birth, gender, private contact
+details, emergency contact, identity documents, health, family, education, work history, pay,
+bank details, terms of employment, exit) are at permission level 1, granted to ERPNext's HR User
+and HR Manager roles only; no persona includes them, System Manager neither. Report downloads
+are logged in the Access Log through a replacement of Frappe's download method
+(`override_whitelisted_methods`), as Frappe already logs the report view and Data Export.
+**Alternatives.** A User Permission on each user's own Employee record (ERPNext's
+`create_user_permission`): it would also hide the employees that job cards and plant
+assignments name, and ERPNext adds a company permission with it (D-007); removing the
+"Employee" role ERPNext grants on every link (it re-adds it on each save of the Employee).
+**Consequences.** Colleagues read the directory fields of all employees; nobody but HR the
+rest, including the employee's own record. A deployment without HR staff in the ERP keeps the
+personal details empty or in its HR system. Each update of the Frappe pin is checked for a new
+download path in the desk that would bypass the replacement (upgrade.md).

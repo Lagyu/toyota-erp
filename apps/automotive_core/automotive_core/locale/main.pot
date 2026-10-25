@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-24 20:50+0919\n"
-"PO-Revision-Date: 2026-10-24 20:50+0919\n"
+"POT-Creation-Date: 2026-10-25 10:12+0919\n"
+"PO-Revision-Date: 2026-10-25 10:12+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language-Team: erp-team@hinode.example\n"
 "MIME-Version: 1.0\n"
@@ -530,7 +530,7 @@ msgstr ""
 msgid "A bill to a customer for what you sold."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:356
+#: automotive_core/governance/approvals.py:403
 msgid "A comment is required when rejecting."
 msgstr ""
 
@@ -549,7 +549,7 @@ msgstr ""
 msgid "A customer's confirmed order."
 msgstr ""
 
-#: automotive_core/governance/delegation.py:114
+#: automotive_core/governance/delegation.py:123
 msgid "A delegation cannot start in the past."
 msgstr ""
 
@@ -650,8 +650,8 @@ msgstr ""
 msgid "A request to buy, transfer or make items."
 msgstr ""
 
-#: automotive_core/integration_hub/idempotency.py:88
-#: automotive_core/integration_hub/idempotency.py:111
+#: automotive_core/integration_hub/idempotency.py:89
+#: automotive_core/integration_hub/idempotency.py:118
 msgid "A request with this Idempotency-Key is still being processed."
 msgstr ""
 
@@ -663,7 +663,7 @@ msgstr ""
 msgid "A separate Purchase Order is created for each Supplier."
 msgstr ""
 
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:25
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:29
 msgid "A service user is required to process inbound messages."
 msgstr ""
 
@@ -734,7 +734,7 @@ msgstr ""
 msgid "A unit you measure items in, like kg or box."
 msgstr ""
 
-#: automotive_core/governance/delegation.py:107
+#: automotive_core/governance/delegation.py:116
 msgid "A user cannot delegate to themselves."
 msgstr ""
 
@@ -876,7 +876,7 @@ msgid "Access"
 msgstr ""
 
 #. Label of the tab_break_1 (Tab Break) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:43
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:48
 msgid "Access & Audit"
 msgstr ""
 
@@ -890,7 +890,7 @@ msgstr ""
 msgid "Access added."
 msgstr ""
 
-#: automotive_core/governance/provisioning.py:56
+#: automotive_core/governance/provisioning.py:59
 msgid "Access expiry cannot be in the past."
 msgstr ""
 
@@ -2937,7 +2937,7 @@ msgstr ""
 #. Label of the allowed_extensions (Small Text) field in DocType 'Automotive
 #. Settings'
 #: automotive_core/automotive_setup/doctype/attachment_policy_rule/attachment_policy_rule.json:27
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:152
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:185
 msgid "Allowed Extensions"
 msgstr ""
 
@@ -3340,7 +3340,7 @@ msgstr ""
 msgid "Applies Up To Amount"
 msgstr ""
 
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:27
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:35
 msgid "Applies Up To Amount must be at least Applies From Amount."
 msgstr ""
 
@@ -3552,12 +3552,12 @@ msgstr ""
 msgid "Approval Request Step"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:354
+#: automotive_core/governance/approvals.py:396
 #, python-brace-format
 msgid "Approval Request {0} has no pending step."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:351
+#: automotive_core/governance/approvals.py:393
 #, python-brace-format
 msgid "Approval Request {0} is {1}, not Pending."
 msgstr ""
@@ -4197,16 +4197,16 @@ msgid "Attachment Removed"
 msgstr ""
 
 #. Label of the attachment_rules (Table) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:192
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:225
 msgid "Attachment Rules"
 msgstr ""
 
 #. Label of the tab_break_3 (Tab Break) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:139
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:172
 msgid "Attachments"
 msgstr ""
 
-#: automotive_core/files/policy.py:108
+#: automotive_core/files/policy.py:122
 msgid "Attachments to business documents must be private."
 msgstr ""
 
@@ -4278,13 +4278,13 @@ msgstr ""
 
 #. Label of the audit_chain_head (Read Only) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:77
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:82
 msgid "Audit Chain Head"
 msgstr ""
 
 #. Label of the audit_chain_verified_at (Data) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:82
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:87
 msgid "Audit Chain Last Verified"
 msgstr ""
 
@@ -4312,7 +4312,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:267
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:148
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:232
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:265
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:166
 #: automotive_core/automotive_setup/doctype/plant/plant.json:375
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:192
@@ -4473,7 +4473,7 @@ msgstr ""
 #. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Link in the Automotive Setup Workspace
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:214
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:247
 #: automotive_core/automotive_setup/sidebar/automotive_setup/automotive_setup.json:92
 #: automotive_core/automotive_setup/workspace/automotive_setup/automotive_setup.json:132
 msgid "Automotive Settings"
@@ -4952,7 +4952,7 @@ msgstr ""
 msgid "Bank Transaction {0} is already fully reconciled"
 msgstr ""
 
-#: automotive_core/finance_controls/bank_accounts.py:85
+#: automotive_core/finance_controls/bank_accounts.py:111
 #, python-brace-format
 msgid "Bank account {0} is {1}; a Treasury Approver must verify it before payment."
 msgstr ""
@@ -4962,12 +4962,12 @@ msgstr ""
 msgid "Bank and Cash"
 msgstr ""
 
-#: automotive_core/finance_controls/bank_statements.py:84
+#: automotive_core/finance_controls/bank_statements.py:93
 #, python-brace-format
 msgid "Bank statement {0} from {1}"
 msgstr ""
 
-#: automotive_core/finance_controls/bank_accounts.py:81
+#: automotive_core/finance_controls/bank_accounts.py:106
 msgid "Bank transfers to suppliers need the supplier's verified bank account."
 msgstr ""
 
@@ -5240,7 +5240,7 @@ msgstr ""
 
 #. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:160
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:193
 msgid "Best Effort"
 msgstr ""
 
@@ -5896,12 +5896,12 @@ msgstr ""
 msgid "Cancelled transactions cannot be deleted when Immutable Ledger is enabled."
 msgstr ""
 
-#: automotive_core/governance/cancellation.py:51
+#: automotive_core/governance/cancellation.py:53
 #, python-brace-format
 msgid "Cancelled with reason: {0}"
 msgstr ""
 
-#: automotive_core/governance/cancellation.py:65
+#: automotive_core/governance/cancellation.py:67
 #, python-brace-format
 msgid "Cancelled with {0}"
 msgstr ""
@@ -6630,7 +6630,7 @@ msgstr ""
 msgid "Check to display the full numeric value (e.g., 1,234,567 instead of 1.2M)."
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:164
+#: automotive_core/finance_controls/period_close.py:252
 #, python-brace-format
 msgid "Check {0} cannot be waived."
 msgstr ""
@@ -6735,12 +6735,12 @@ msgid "Claimed Landed Cost Amount (Company Currency)"
 msgstr ""
 
 #. Label of the clamd_host (Data) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:169
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:202
 msgid "ClamAV (clamd) Host"
 msgstr ""
 
 #. Label of the clamd_port (Int) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:175
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:208
 msgid "ClamAV (clamd) Port"
 msgstr ""
 
@@ -7109,7 +7109,7 @@ msgstr ""
 
 #. Description of the 'Allowed Extensions' (Small Text) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:149
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:182
 msgid "Comma separated, lower case."
 msgstr ""
 
@@ -7718,7 +7718,7 @@ msgstr ""
 msgid "Confirmation Date"
 msgstr ""
 
-#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:19
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:26
 msgid "Conflicting Role"
 msgstr ""
 
@@ -8276,7 +8276,7 @@ msgstr ""
 msgid "Cost Center with existing transactions can not be converted to ledger"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:39
+#: automotive_core/automotive_setup/doctype/plant/plant.py:48
 #, python-brace-format
 msgid "Cost Center {0} does not belong to {1}."
 msgstr ""
@@ -8740,7 +8740,7 @@ msgstr ""
 msgid "Created {0}"
 msgstr ""
 
-#: automotive_core/governance/provisioning.py:92
+#: automotive_core/governance/provisioning.py:99
 #, python-brace-format
 msgid "Created {0} with {1} role(s)."
 msgstr ""
@@ -8981,7 +8981,7 @@ msgstr ""
 msgid "Currency"
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:96
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:130
 msgid "Currency Translation Difference"
 msgstr ""
 
@@ -9166,7 +9166,7 @@ msgstr ""
 #. Option for the 'Restrict To' (Select) field in DocType 'User Provisioning
 #. Scope'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:91
+#: automotive_core/access/master_data.py:97
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
 #: automotive_core/governance/doctype/user_provisioning_scope/user_provisioning_scope.json:18
@@ -9774,7 +9774,7 @@ msgstr ""
 msgid "Deactivate"
 msgstr ""
 
-#: automotive_core/governance/provisioning.py:105
+#: automotive_core/governance/provisioning.py:112
 #, python-brace-format
 msgid "Deactivated {0}; sessions and API keys revoked."
 msgstr ""
@@ -9931,7 +9931,7 @@ msgstr ""
 msgid "Decision"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:347
+#: automotive_core/governance/approvals.py:389
 msgid "Decision must be Approve or Reject."
 msgstr ""
 
@@ -9990,7 +9990,7 @@ msgstr ""
 
 #. Label of the default_retention_days (Int) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:182
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:215
 msgid "Default Attachment Retention (Days)"
 msgstr ""
 
@@ -10132,7 +10132,7 @@ msgid "Default Material Request Type"
 msgstr ""
 
 #. Label of the max_upload_mb (Int) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:145
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:178
 msgid "Default Max Upload Size (MB)"
 msgstr ""
 
@@ -10383,7 +10383,7 @@ msgstr ""
 msgid "Delegate"
 msgstr ""
 
-#: automotive_core/governance/delegation.py:118
+#: automotive_core/governance/delegation.py:131
 #, python-brace-format
 msgid "Delegate {0} is not an active user."
 msgstr ""
@@ -10393,7 +10393,7 @@ msgstr ""
 msgid "Delegation"
 msgstr ""
 
-#: automotive_core/governance/delegation.py:112
+#: automotive_core/governance/delegation.py:121
 #, python-brace-format
 msgid "Delegations are limited to {0} days."
 msgstr ""
@@ -10924,7 +10924,7 @@ msgstr ""
 
 #. Description of the 'Enforce Plant Scope' (Check) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:47
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:52
 msgid "Derive and require the Plant on plant-scoped documents."
 msgstr ""
 
@@ -11201,7 +11201,7 @@ msgstr ""
 
 #. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:160
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:193
 msgid "Disabled"
 msgstr ""
 
@@ -12094,7 +12094,7 @@ msgstr ""
 msgid "Each Step Needs A Different Approver"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:341
+#: automotive_core/governance/approvals.py:382
 #, python-brace-format
 msgid "Each step of {0} must be approved by a different person."
 msgstr ""
@@ -12761,14 +12761,14 @@ msgstr ""
 
 #. Label of the enforce_plant_scope (Check) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:50
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:55
 msgid "Enforce Plant Scope"
 msgstr ""
 
 #. Label of the enforcement (Select) field in DocType 'Segregation of Duties
 #. Rule'
 #: automotive_core/governance/doctype/segregation_of_duties_rule/segregation_of_duties_rule.json:46
-#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:20
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:31
 msgid "Enforcement"
 msgstr ""
 
@@ -13527,7 +13527,7 @@ msgstr ""
 msgid "Expiry Date Mandatory"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:160
+#: automotive_core/finance_controls/period_close.py:248
 msgid "Explain the waiver (at least 10 characters)."
 msgstr ""
 
@@ -14023,7 +14023,7 @@ msgstr ""
 msgid "File URL is required when copying an existing attachment."
 msgstr ""
 
-#: automotive_core/files/policy.py:99
+#: automotive_core/files/policy.py:111
 #, python-brace-format
 msgid "File exceeds the {0} MB limit."
 msgstr ""
@@ -14053,7 +14053,7 @@ msgstr ""
 msgid "File {0} does not exist"
 msgstr ""
 
-#: automotive_core/files/policy.py:96
+#: automotive_core/files/policy.py:108
 #, python-brace-format
 msgid "Files of type .{0} are not allowed here."
 msgstr ""
@@ -14549,7 +14549,7 @@ msgstr ""
 
 #. Description of the 'Default Attachment Retention (Days)' (Int) field in
 #. DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:179
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:212
 msgid "For DocTypes without a rule below; the system's own records (users, letter heads, print formats, web pages) keep theirs. 0 keeps attachments forever."
 msgstr ""
 
@@ -15414,7 +15414,7 @@ msgstr ""
 msgid "Get your globally recognized avatar from Gravatar.com"
 msgstr ""
 
-#: automotive_core/governance/cancellation.py:44
+#: automotive_core/governance/cancellation.py:46
 #, python-brace-format
 msgid "Give a reason of at least {0} characters."
 msgstr ""
@@ -15722,7 +15722,7 @@ msgstr ""
 msgid "Group Controller"
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:87
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:108
 msgid "Group Total"
 msgstr ""
 
@@ -15731,7 +15731,7 @@ msgstr ""
 msgid "Group Warehouses cannot be used in transactions. Please change the value of {0}"
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:91
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:122
 msgid "Group excl. Intercompany"
 msgstr ""
 
@@ -16271,7 +16271,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:164
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:244
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:226
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:259
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:139
 #: automotive_core/automotive_setup/doctype/plant/plant.json:271
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:174
@@ -17055,7 +17055,7 @@ msgstr ""
 
 #. Label of the inbound_max_attempts (Int) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:128
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:133
 msgid "Inbound Max Attempts"
 msgstr ""
 
@@ -17068,7 +17068,7 @@ msgstr ""
 
 #. Label of the inbound_rate_limit_per_minute (Int) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:134
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:139
 msgid "Inbound Requests Per Minute Per Partner"
 msgstr ""
 
@@ -17692,7 +17692,7 @@ msgid "Integration partner {0} is inactive."
 msgstr ""
 
 #. Label of the tab_break_2 (Tab Break) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:94
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:99
 msgid "Integrations"
 msgstr ""
 
@@ -18178,7 +18178,7 @@ msgstr ""
 msgid "Invalid json added in the custom options: {0}"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:146
+#: automotive_core/integration_hub/inbound.py:158
 #, python-brace-format
 msgid "Invalid message: {0}"
 msgstr ""
@@ -19536,7 +19536,7 @@ msgstr ""
 msgid "Item {0} has reached its end of life on {1}"
 msgstr ""
 
-#: automotive_core/access/master_data.py:115
+#: automotive_core/access/master_data.py:138
 #, python-brace-format
 msgid "Item {0} in {1} already has the name {2}."
 msgstr ""
@@ -20255,7 +20255,7 @@ msgstr ""
 
 #. Label of the audit_chain_last_result (Small Text) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:88
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:93
 msgid "Last Verification Result"
 msgstr ""
 
@@ -22094,7 +22094,7 @@ msgstr ""
 
 #. Label of the max_delegation_days (Int) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:68
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:73
 msgid "Maximum Delegation Length (Days)"
 msgstr ""
 
@@ -22271,7 +22271,7 @@ msgstr ""
 msgid "Message for Supplier"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:161
+#: automotive_core/integration_hub/inbound.py:173
 #, python-brace-format
 msgid "Message id already used with a different payload (inbound {0})."
 msgstr ""
@@ -22281,8 +22281,8 @@ msgstr ""
 msgid "Message {0} ({1}) for partner {2} failed {3} times and will not be retried automatically."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:121
-#: automotive_core/integration_hub/inbound.py:125
+#: automotive_core/integration_hub/inbound.py:122
+#: automotive_core/integration_hub/inbound.py:127
 #, python-brace-format
 msgid "Message {0} is being stored by another delivery; retry."
 msgstr ""
@@ -23040,7 +23040,7 @@ msgstr ""
 msgid "Net Hour Rate"
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:95
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:129
 msgid "Net Profit (Income - Expense)"
 msgstr ""
 
@@ -23710,7 +23710,7 @@ msgstr ""
 msgid "No active Subcontracting BOM found for Finished Good {0}. Please select the Service Item manually for these rows."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:194
+#: automotive_core/governance/approvals.py:205
 #, python-brace-format
 msgid "No active approval policy applies to {0} {1}."
 msgstr ""
@@ -23811,7 +23811,7 @@ msgstr ""
 msgid "No documents found."
 msgstr ""
 
-#: automotive_core/governance/notifications.py:137
+#: automotive_core/governance/notifications.py:190
 msgid "No e-mail address, or the address unsubscribed"
 msgstr ""
 
@@ -23823,7 +23823,7 @@ msgstr ""
 msgid "No email account associated with the User. Please add an account under User > Settings > User Emails."
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:52
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:60
 #, python-brace-format
 msgid "No exchange rate {0} → {1} on or before {2}."
 msgstr ""
@@ -24736,7 +24736,7 @@ msgstr ""
 
 #. Description of the 'Outbound Host Allowlist' (Small Text) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:97
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:102
 msgid "One hostname per line. Outbound webhooks to any other host are refused."
 msgstr ""
 
@@ -24803,7 +24803,7 @@ msgstr ""
 msgid "Only Workspace Manager can edit public workspaces"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:167
+#: automotive_core/finance_controls/period_close.py:255
 msgid "Only a failed check can be waived."
 msgstr ""
 
@@ -24819,15 +24819,15 @@ msgstr ""
 msgid "Only draft documents can be discarded"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:191
+#: automotive_core/governance/approvals.py:202
 msgid "Only draft documents can be sent for approval."
 msgstr ""
 
-#: automotive_core/integration_hub/outbox.py:214
+#: automotive_core/integration_hub/outbox.py:235
 msgid "Only failed or dead-lettered messages can be retried."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:336
+#: automotive_core/integration_hub/inbound.py:383
 msgid "Only failed, rejected or dead-lettered messages can be replayed."
 msgstr ""
 
@@ -24875,7 +24875,7 @@ msgstr ""
 msgid "Only own"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:282
+#: automotive_core/governance/approvals.py:308
 msgid "Only pending requests can be withdrawn."
 msgstr ""
 
@@ -24887,7 +24887,7 @@ msgstr ""
 msgid "Only reports of type Report Builder can be edited"
 msgstr ""
 
-#: automotive_core/governance/cancellation.py:48
+#: automotive_core/governance/cancellation.py:50
 msgid "Only submitted documents can be cancelled."
 msgstr ""
 
@@ -24895,11 +24895,11 @@ msgstr ""
 msgid "Only the Administrator can delete a standard DocType."
 msgstr ""
 
-#: automotive_core/governance/delegation.py:132
+#: automotive_core/governance/delegation.py:153
 msgid "Only the delegator or an IT Operator can create this delegation."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:284
+#: automotive_core/governance/approvals.py:313
 msgid "Only the requester can withdraw an approval request."
 msgstr ""
 
@@ -25549,7 +25549,7 @@ msgstr ""
 
 #. Label of the outbound_host_allowlist (Small Text) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:100
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:105
 msgid "Outbound Host Allowlist"
 msgstr ""
 
@@ -25573,13 +25573,13 @@ msgstr ""
 
 #. Label of the outbox_base_backoff_seconds (Int) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:122
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:127
 msgid "Outbox Base Backoff (Seconds)"
 msgstr ""
 
 #. Label of the outbox_max_attempts (Int) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:116
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:121
 msgid "Outbox Max Attempts"
 msgstr ""
 
@@ -26133,7 +26133,7 @@ msgstr ""
 msgid "Parent-to-child or child-to-different-child grouping is not allowed."
 msgstr ""
 
-#: automotive_core/access/master_data.py:104
+#: automotive_core/access/master_data.py:113
 #, python-brace-format
 msgid "Part number {0} of supplier {1} is already item {2}."
 msgstr ""
@@ -26282,17 +26282,17 @@ msgstr ""
 msgid "Partner User Access"
 msgstr ""
 
-#: automotive_core/automotive_setup/access_sync.py:175
+#: automotive_core/automotive_setup/access_sync.py:187
 #, python-brace-format
 msgid "Partner access is for portal (Website) users; {0} is a desk user."
 msgstr ""
 
-#: automotive_core/access/master_data.py:55
+#: automotive_core/access/master_data.py:59
 #, python-brace-format
 msgid "Partner code {0} is already used by {1}."
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:208
+#: automotive_core/integration_hub/inbound.py:238
 msgid "Partner has no inbound credentials configured."
 msgstr ""
 
@@ -26951,6 +26951,12 @@ msgstr ""
 msgid "Per Transferred"
 msgstr ""
 
+#. Description of the 'Request Limits' (Section Break) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:142
+msgid "Per signed-in user and minute; a request over the limit is refused with HTTP 429. Desk work is not limited."
+msgstr ""
+
 #. Label of the accounts (Table) field in DocType 'Supplier'
 #: erpnext/buying/doctype/supplier/supplier.json:345
 msgid "Per-Company Accounts"
@@ -26958,7 +26964,7 @@ msgstr ""
 
 #. Label of the section_break_1 (Section Break) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:187
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:220
 msgid "Per-DocType Rules"
 msgstr ""
 
@@ -27036,7 +27042,7 @@ msgstr ""
 msgid "Period Start"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:117
+#: automotive_core/finance_controls/period_close.py:188
 msgid "Period start must not be after period end."
 msgstr ""
 
@@ -28291,12 +28297,12 @@ msgstr ""
 msgid "Policy No"
 msgstr ""
 
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:40
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:48
 #, python-brace-format
 msgid "Policy {0} has approval history; deactivate it instead."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:206
+#: automotive_core/governance/approvals.py:221
 #, python-brace-format
 msgid "Policy {0} has no step for an amount of {1}."
 msgstr ""
@@ -28307,6 +28313,18 @@ msgstr ""
 
 #: frappe/www/me.html:81
 msgid "Portal"
+msgstr ""
+
+#. Label of the portal_changes_per_minute (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:157
+msgid "Portal Changes Per Minute Per User"
+msgstr ""
+
+#. Label of the portal_reads_per_minute (Int) field in DocType 'Automotive
+#. Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:151
+msgid "Portal Reads Per Minute Per User"
 msgstr ""
 
 #. Label of the portal_users_tab (Tab Break) field in DocType 'Supplier'
@@ -29684,7 +29702,7 @@ msgstr ""
 msgid "Production Variance"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:17
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:21
 #, python-brace-format
 msgid "Production line {0} is not in plant {1}."
 msgstr ""
@@ -31028,7 +31046,7 @@ msgstr ""
 msgid "Rate at which this tax is applied"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:232
+#: automotive_core/integration_hub/inbound.py:263
 #, python-brace-format
 msgid "Rate limit exceeded for partner {0}."
 msgstr ""
@@ -31166,7 +31184,7 @@ msgstr ""
 msgid "Reactivate"
 msgstr ""
 
-#: automotive_core/governance/provisioning.py:108
+#: automotive_core/governance/provisioning.py:115
 #, python-brace-format
 msgid "Reactivated {0}."
 msgstr ""
@@ -32060,7 +32078,7 @@ msgstr ""
 msgid "Replay"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:244
+#: automotive_core/integration_hub/inbound.py:277
 msgid "Replayed request (nonce already used)."
 msgstr ""
 
@@ -32240,6 +32258,11 @@ msgstr ""
 msgid "Report {0} is disabled"
 msgstr ""
 
+#: automotive_core/governance/exports.py:25
+#, python-brace-format
+msgid "Report {0} not found"
+msgstr ""
+
 #: frappe/desk/reportview.py:415
 #, python-brace-format
 msgid "Report {0} saved"
@@ -32324,6 +32347,12 @@ msgstr ""
 #: automotive_core/public/js/automotive_core.bundle.js:30
 #: automotive_core/public/js/automotive_core.bundle.js:47
 msgid "Request Approval"
+msgstr ""
+
+#. Label of the request_limits_section (Section Break) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:145
+msgid "Request Limits"
 msgstr ""
 
 #. Label of the request_sha256 (Data) field in DocType 'Idempotency Record'
@@ -32420,13 +32449,13 @@ msgstr ""
 
 #. Label of the require_cancel_reason (Check) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:56
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:61
 msgid "Require Reason To Cancel Governed Documents"
 msgstr ""
 
 #. Option for the 'Virus Scan Mode' (Select) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:160
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:193
 msgid "Required"
 msgstr ""
 
@@ -32478,7 +32507,7 @@ msgstr ""
 
 #. Description of the 'Virus Scan Mode' (Select) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:156
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:189
 msgid "Required: unscanned or infected files cannot be downloaded."
 msgstr ""
 
@@ -33092,7 +33121,7 @@ msgstr ""
 
 #. Label of the role (Link) field in DocType 'User Provisioning Role'
 #: automotive_core/governance/doctype/user_provisioning_role/user_provisioning_role.json:15
-#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:18
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:23
 msgid "Role"
 msgstr ""
 
@@ -34615,7 +34644,7 @@ msgstr ""
 msgid "Row {0}: {1} {2} cannot be same as {3} (Party Account) {4}"
 msgstr ""
 
-#: automotive_core/governance/provisioning.py:54
+#: automotive_core/governance/provisioning.py:56
 #, python-brace-format
 msgid "Row {0}: {1} {2} does not exist."
 msgstr ""
@@ -34669,7 +34698,7 @@ msgstr ""
 msgid "Rows: {0} in {1} section are Invalid. Reference Name should point to a valid Payment Entry or Journal Entry."
 msgstr ""
 
-#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:16
+#: automotive_core/governance/report/segregation_of_duties_review/segregation_of_duties_review.py:18
 msgid "Rule"
 msgstr ""
 
@@ -34706,7 +34735,7 @@ msgstr ""
 msgid "Run parallel job cards in a workstation"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:179
+#: automotive_core/finance_controls/period_close.py:272
 msgid "Run the checks and resolve or waive every failure before closing the period."
 msgstr ""
 
@@ -35480,7 +35509,7 @@ msgstr ""
 
 #. Label of the audit_chain_enabled (Check) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:62
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:67
 msgid "Seal Audit Events In A Hash Chain"
 msgstr ""
 
@@ -35686,7 +35715,7 @@ msgstr ""
 msgid "Segregation of duties warning ({0}): {1} and {2}. {3}"
 msgstr ""
 
-#: automotive_core/governance/delegation.py:127
+#: automotive_core/governance/delegation.py:144
 #, python-brace-format
 msgid "Segregation of duties warning ({0}): {1} would hold {2} and {3}."
 msgstr ""
@@ -35696,7 +35725,7 @@ msgstr ""
 msgid "Segregation of duties: {0} cannot hold both {1}."
 msgstr ""
 
-#: automotive_core/governance/delegation.py:124
+#: automotive_core/governance/delegation.py:138
 #, python-brace-format
 msgid "Segregation of duties: {0} may not act as {1} ({2})."
 msgstr ""
@@ -36099,7 +36128,7 @@ msgstr ""
 msgid "Select the {0} this partner represents."
 msgstr ""
 
-#: automotive_core/automotive_setup/access_sync.py:178
+#: automotive_core/automotive_setup/access_sync.py:190
 #, python-brace-format
 msgid "Select the {0}."
 msgstr ""
@@ -36778,7 +36807,7 @@ msgstr ""
 msgid "Service User"
 msgstr ""
 
-#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:23
+#: automotive_core/integration_hub/doctype/integration_partner/integration_partner.py:27
 #, python-brace-format
 msgid "Service user {0} is disabled."
 msgstr ""
@@ -37399,6 +37428,12 @@ msgstr ""
 msgid "Shipping Zipcode"
 msgstr ""
 
+#. Label of the shop_floor_requests_per_minute (Int) field in DocType
+#. 'Automotive Settings'
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:167
+msgid "Shop Floor Requests Per Minute Per User"
+msgstr ""
+
 #. Option for the 'Order Type' (Select) field in DocType 'Quotation'
 #. Label of the shopping_cart_section (Section Break) field in DocType
 #. 'Quotation Item'
@@ -37753,11 +37788,11 @@ msgstr ""
 
 #. Label of the webhook_tolerance_seconds (Int) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:106
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:111
 msgid "Signature Timestamp Tolerance (Seconds)"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:221
+#: automotive_core/integration_hub/inbound.py:251
 #, python-brace-format
 msgid "Signature rejected: {0}"
 msgstr ""
@@ -38352,7 +38387,7 @@ msgstr ""
 msgid "Starting import..."
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:82
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:94
 msgid "Statement Line"
 msgstr ""
 
@@ -38372,7 +38407,7 @@ msgstr ""
 msgid "Station Type"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/production_line/production_line.py:27
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:31
 #, python-brace-format
 msgid "Station {0} appears twice."
 msgstr ""
@@ -38466,7 +38501,7 @@ msgstr ""
 msgid "Step is skipped below this amount."
 msgstr ""
 
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:30
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:38
 msgid "Step numbers must be unique."
 msgstr ""
 
@@ -39645,7 +39680,7 @@ msgstr ""
 msgid "Superscript"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:201
+#: automotive_core/governance/approvals.py:212
 msgid "Superseded by a new request after the document changed."
 msgstr ""
 
@@ -39671,7 +39706,7 @@ msgstr ""
 #. Option for the 'Partner Type' (Select) field in DocType 'Integration
 #. Partner'
 #. Option for the 'Party Type' (Select) field in DocType 'Integration Partner'
-#: automotive_core/access/master_data.py:87
+#: automotive_core/access/master_data.py:93
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:47
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:55
 #: automotive_core/finance_controls/doctype/tax_category_default/tax_category_default.json:19
@@ -40065,7 +40100,7 @@ msgstr ""
 #. Name of a role
 #: automotive_core/analytics/doctype/kpi_definition/kpi_definition.json:155
 #: automotive_core/analytics/doctype/kpi_snapshot/kpi_snapshot.json:141
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:220
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:253
 #: automotive_core/automotive_setup/doctype/partner_user_access/partner_user_access.json:126
 #: automotive_core/automotive_setup/doctype/plant/plant.json:258
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.json:161
@@ -40365,7 +40400,7 @@ msgstr ""
 
 #. Label of the tax_category_defaults (Table) field in DocType 'Automotive
 #. Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:204
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:237
 msgid "Tax Category Defaults"
 msgstr ""
 
@@ -40543,7 +40578,7 @@ msgstr ""
 
 #. Description of the 'Tax Category Defaults' (Table) field in DocType
 #. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:201
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:234
 msgid "Tax category for new dealers, suppliers and intercompany parties, from the company's and the party's country (the most specific row wins). The category picks each document's tax template through Tax Rules."
 msgstr ""
 
@@ -40556,7 +40591,7 @@ msgid "Taxable Amount"
 msgstr ""
 
 #. Label of the tab_break_4 (Tab Break) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:198
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:231
 msgid "Taxes"
 msgstr ""
 
@@ -41077,11 +41112,11 @@ msgstr ""
 msgid "The dock as this arrangement leaves it."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:367
+#: automotive_core/governance/approvals.py:409
 msgid "The document changed after approval was requested."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:368
+#: automotive_core/governance/approvals.py:411
 msgid "The document changed; a new approval request is needed."
 msgstr ""
 
@@ -41126,7 +41161,7 @@ msgstr ""
 msgid "The fieldname you've specified in Attached To Field is invalid"
 msgstr ""
 
-#: automotive_core/files/policy.py:62 automotive_core/files/policy.py:106
+#: automotive_core/files/policy.py:64 automotive_core/files/policy.py:119
 #, python-brace-format
 msgid "The file content does not match its .{0} extension."
 msgstr ""
@@ -41208,7 +41243,7 @@ msgstr ""
 msgid "The link you trying to login is invalid or expired."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:336
+#: automotive_core/governance/approvals.py:373
 #, python-brace-format
 msgid "The maker of {0} cannot approve it (maker/checker)."
 msgstr ""
@@ -41247,17 +41282,17 @@ msgstr ""
 msgid "The outstanding amount {0} in {1} is lesser than {2}. Updating the outstanding to this invoice."
 msgstr ""
 
-#: automotive_core/integration_hub/partners.py:44
+#: automotive_core/integration_hub/partners.py:48
 #, python-brace-format
 msgid "The overlap must be between 0 and {0} hours."
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:120
+#: automotive_core/finance_controls/period_close.py:191
 #, python-brace-format
 msgid "The period must lie within fiscal year {0}."
 msgstr ""
 
-#: automotive_core/finance_controls/bank_accounts.py:60
+#: automotive_core/finance_controls/bank_accounts.py:78
 msgid "The person who entered or changed the account cannot verify it."
 msgstr ""
 
@@ -41553,7 +41588,7 @@ msgstr ""
 msgid "This DocType is deprecated and may be removed in a future release"
 msgstr ""
 
-#: automotive_core/integration_hub/idempotency.py:109
+#: automotive_core/integration_hub/idempotency.py:116
 msgid "This Idempotency-Key was already used for a different request."
 msgstr ""
 
@@ -42128,9 +42163,9 @@ msgstr ""
 msgid "To Date cannot be before From Date"
 msgstr ""
 
-#: automotive_core/automotive_setup/access_sync.py:189
+#: automotive_core/automotive_setup/access_sync.py:204
 #: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:15
-#: automotive_core/governance/delegation.py:109
+#: automotive_core/governance/delegation.py:118
 msgid "To Date must be on or after From Date."
 msgstr ""
 
@@ -42353,6 +42388,10 @@ msgstr ""
 
 #: frappe/templates/includes/login/login.js:382
 msgid "Too many requests. Please try again later."
+msgstr ""
+
+#: automotive_core/access/request_budgets.py:72
+msgid "Too many requests. Please wait a minute and try again."
 msgstr ""
 
 #: frappe/core/doctype/user/user.py:1210
@@ -43229,7 +43268,7 @@ msgstr ""
 msgid "Tuesday"
 msgstr ""
 
-#: automotive_core/governance/notifications.py:114
+#: automotive_core/governance/notifications.py:137
 msgid "Turned off in the recipient's notification preferences"
 msgstr ""
 
@@ -43241,7 +43280,7 @@ msgstr ""
 msgid "Two Factor Authentication"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/production_line/production_line.py:29
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:33
 #, python-brace-format
 msgid "Two stations share sequence {0}."
 msgstr ""
@@ -43685,13 +43724,13 @@ msgstr ""
 msgid "Unknown inbound message types: {0}"
 msgstr ""
 
-#: automotive_core/governance/notifications.py:103
-#: automotive_core/governance/notifications.py:177
+#: automotive_core/governance/notifications.py:126
+#: automotive_core/governance/notifications.py:239
 #, python-brace-format
 msgid "Unknown notification event {0}"
 msgstr ""
 
-#: automotive_core/integration_hub/inbound.py:192
+#: automotive_core/integration_hub/inbound.py:216
 msgid "Unknown partner."
 msgstr ""
 
@@ -43857,7 +43896,7 @@ msgstr ""
 msgid "Untitled Column"
 msgstr ""
 
-#: automotive_core/finance_controls/bank_accounts.py:86
+#: automotive_core/finance_controls/bank_accounts.py:112
 msgid "Unverified"
 msgstr ""
 
@@ -44067,7 +44106,7 @@ msgstr ""
 msgid "Updated {0} selected {1}. Save the form to keep changes."
 msgstr ""
 
-#: automotive_core/governance/provisioning.py:102
+#: automotive_core/governance/provisioning.py:109
 #, python-brace-format
 msgid "Updated {0}: {1} role(s)."
 msgstr ""
@@ -44945,7 +44984,7 @@ msgid "Virtual DocType {} requires overriding an instance method called {} found
 msgstr ""
 
 #. Label of the virus_scan_mode (Select) field in DocType 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:159
+#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json:192
 msgid "Virus Scan Mode"
 msgstr ""
 
@@ -46037,7 +46076,7 @@ msgstr ""
 msgid "Workstation used for line-level capacity and Downtime Entries."
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/production_line/production_line.py:34
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:38
 #, python-brace-format
 msgid "Workstation {0} belongs to plant {1}."
 msgstr ""
@@ -46340,7 +46379,7 @@ msgstr ""
 msgid "You are not allowed to update this onboarding step"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:327
+#: automotive_core/governance/approvals.py:361
 #, python-brace-format
 msgid "You are not authorised to approve step {0} ({1}) of {2}."
 msgstr ""
@@ -46584,7 +46623,7 @@ msgstr ""
 msgid "You have no access to company {0}."
 msgstr ""
 
-#: automotive_core/analytics/kpi.py:51 automotive_core/analytics/scope.py:34
+#: automotive_core/analytics/kpi.py:51 automotive_core/analytics/scope.py:38
 #, python-brace-format
 msgid "You have no access to plant {0}."
 msgstr ""
@@ -46985,7 +47024,7 @@ msgstr ""
 msgid "dealer_order_change"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:51
+#: automotive_core/finance_controls/period_close.py:78
 #, python-brace-format
 msgid "debit {0}, credit {1}"
 msgstr ""
@@ -47187,15 +47226,15 @@ msgstr ""
 msgid "new"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:96
+#: automotive_core/finance_controls/period_close.py:160
 msgid "no foreign-currency monetary balances"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:99
+#: automotive_core/finance_controls/period_close.py:170
 msgid "no submitted Exchange Rate Revaluation in the period"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:60
+#: automotive_core/finance_controls/period_close.py:95
 msgid "none"
 msgstr ""
 
@@ -47212,7 +47251,7 @@ msgstr ""
 msgid "of"
 msgstr ""
 
-#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:89
+#: automotive_core/finance_controls/report/group_consolidation/group_consolidation.py:115
 msgid "of which Intercompany"
 msgstr ""
 
@@ -47304,7 +47343,7 @@ msgstr ""
 msgid "received from"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:74
+#: automotive_core/finance_controls/period_close.py:118
 msgid "reconciled"
 msgstr ""
 
@@ -47425,7 +47464,7 @@ msgstr ""
 msgid "sold"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:86
+#: automotive_core/finance_controls/period_close.py:146
 #, python-brace-format
 msgid "stock ledger {0} vs GL {1}"
 msgstr ""
@@ -47785,12 +47824,12 @@ msgstr ""
 msgid "{0} against Sales Order {1}"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:125
+#: automotive_core/finance_controls/period_close.py:204
 #, python-brace-format
 msgid "{0} already closes an overlapping period for {1}."
 msgstr ""
 
-#: automotive_core/governance/delegation.py:146
+#: automotive_core/governance/delegation.py:168
 #, python-brace-format
 msgid "{0} already delegates {1} in this period ({2})."
 msgstr ""
@@ -47800,12 +47839,12 @@ msgstr ""
 msgid "{0} already exists. Select another name"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:26
+#: automotive_core/automotive_setup/doctype/plant_assignment/plant_assignment.py:37
 #, python-brace-format
 msgid "{0} already has an overlapping assignment to {1} ({2})."
 msgstr ""
 
-#: automotive_core/automotive_setup/access_sync.py:186
+#: automotive_core/automotive_setup/access_sync.py:199
 #, python-brace-format
 msgid "{0} already represents {1}; a portal user belongs to exactly one partner."
 msgstr ""
@@ -47974,7 +48013,7 @@ msgstr ""
 msgid "{0} does not hold a Serial and Batch Bundle"
 msgstr ""
 
-#: automotive_core/governance/delegation.py:116
+#: automotive_core/governance/delegation.py:126
 #, python-brace-format
 msgid "{0} does not hold the role {1} and cannot delegate it."
 msgstr ""
@@ -47990,7 +48029,7 @@ msgstr ""
 msgid "{0} equals {1}"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:108
+#: automotive_core/finance_controls/period_close.py:179
 #, python-brace-format
 msgid "{0} events checked"
 msgstr ""
@@ -48030,8 +48069,8 @@ msgstr ""
 msgid "{0} has children but Is Group is 0 — parent must be a group node"
 msgstr ""
 
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:17
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:25
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:21
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:33
 #, python-brace-format
 msgid "{0} has no field {1}."
 msgstr ""
@@ -48086,7 +48125,7 @@ msgstr ""
 msgid "{0} is already on the sidebar"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:136
+#: automotive_core/finance_controls/period_close.py:215
 #, python-brace-format
 msgid "{0} is already submitted."
 msgstr ""
@@ -48195,7 +48234,7 @@ msgstr ""
 msgid "{0} is mandatory. Maybe Currency Exchange record is not created for {1} to {2}."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:361
+#: automotive_core/governance/approvals.py:405
 #, python-brace-format
 msgid "{0} is no longer a draft."
 msgstr ""
@@ -48260,7 +48299,7 @@ msgstr ""
 msgid "{0} is not a valid Workflow State. Please update your Workflow and try again."
 msgstr ""
 
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:23
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:31
 #, python-brace-format
 msgid "{0} is not a valid child-table field path."
 msgstr ""
@@ -48318,7 +48357,7 @@ msgstr ""
 msgid "{0} is not set"
 msgstr ""
 
-#: automotive_core/governance/doctype/approval_policy/approval_policy.py:15
+#: automotive_core/governance/doctype/approval_policy/approval_policy.py:16
 #, python-brace-format
 msgid "{0} is not submittable; approval policies govern submission."
 msgstr ""
@@ -48532,7 +48571,7 @@ msgstr ""
 msgid "{0} must be {1} {2}"
 msgstr ""
 
-#: automotive_core/access/master_data.py:69
+#: automotive_core/access/master_data.py:75
 #, python-brace-format
 msgid "{0} name is too similar to existing {1} ({2}%)."
 msgstr ""
@@ -48859,12 +48898,12 @@ msgstr ""
 msgid "{0} {1} already exists"
 msgstr ""
 
-#: automotive_core/access/master_data.py:47
+#: automotive_core/access/master_data.py:48
 #, python-brace-format
 msgid "{0} {1} already uses tax id {2}."
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/production_line/production_line.py:23
+#: automotive_core/automotive_setup/doctype/production_line/production_line.py:24
 #, python-brace-format
 msgid "{0} {1} belongs to plant {2}."
 msgstr ""
@@ -48879,7 +48918,7 @@ msgstr ""
 msgid "{0} {1} cannot be updated. If you need to make changes, we recommend canceling the existing entry and creating a new one."
 msgstr ""
 
-#: automotive_core/governance/approvals.py:443
+#: automotive_core/governance/approvals.py:487
 #, python-brace-format
 msgid "{0} {1} changed after it was approved ({2}); request approval again."
 msgstr ""
@@ -49000,7 +49039,7 @@ msgstr ""
 msgid "{0} {1} must be submitted"
 msgstr ""
 
-#: automotive_core/governance/approvals.py:437
+#: automotive_core/governance/approvals.py:481
 #, python-brace-format
 msgid "{0} {1} needs approval under policy {2} before it can be submitted."
 msgstr ""
@@ -49030,7 +49069,7 @@ msgstr ""
 msgid "{0} {1}: approval {2}"
 msgstr ""
 
-#: automotive_core/access/plant_scope.py:121
+#: automotive_core/access/plant_scope.py:123
 #, python-brace-format
 msgid "{0} {1}: set the Plant (it could not be derived from warehouses or the work order)."
 msgstr ""
@@ -49071,7 +49110,7 @@ msgstr ""
 msgid "{0}: '{1}' ({3}) will get truncated, as max characters allowed is {2}"
 msgstr ""
 
-#: automotive_core/finance_controls/period_close.py:73
+#: automotive_core/finance_controls/period_close.py:117
 #, python-brace-format
 msgid "{0}: GL {1} vs payment ledger {2}"
 msgstr ""
@@ -49096,12 +49135,12 @@ msgstr ""
 msgid "{0}: select the typed value {1} from the list or clear it"
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:33
+#: automotive_core/automotive_setup/doctype/plant/plant.py:34
 #, python-brace-format
 msgid "{0}: warehouse {1} belongs to {2}, not {3}."
 msgstr ""
 
-#: automotive_core/automotive_setup/doctype/plant/plant.py:36
+#: automotive_core/automotive_setup/doctype/plant/plant.py:40
 #, python-brace-format
 msgid "{0}: warehouse {1} is assigned to plant {2}."
 msgstr ""
@@ -49206,36 +49245,3 @@ msgstr ""
 msgid "{} {} is not affecting bank account {}"
 msgstr ""
 
-#. Label of the request_limits_section (Section Break) field in DocType
-#. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
-msgid "Request Limits"
-msgstr ""
-
-#. Description of the request_limits_section (Section Break) field in DocType
-#. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
-msgid "Per signed-in user and minute; a request over the limit is refused with HTTP 429. Desk work is not limited."
-msgstr ""
-
-#. Label of the portal_reads_per_minute (Int) field in DocType
-#. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
-msgid "Portal Reads Per Minute Per User"
-msgstr ""
-
-#. Label of the portal_changes_per_minute (Int) field in DocType
-#. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
-msgid "Portal Changes Per Minute Per User"
-msgstr ""
-
-#. Label of the shop_floor_requests_per_minute (Int) field in DocType
-#. 'Automotive Settings'
-#: automotive_core/automotive_setup/doctype/automotive_settings/automotive_settings.json
-msgid "Shop Floor Requests Per Minute Per User"
-msgstr ""
-
-#: automotive_core/access/request_budgets.py:72
-msgid "Too many requests. Please wait a minute and try again."
-msgstr ""

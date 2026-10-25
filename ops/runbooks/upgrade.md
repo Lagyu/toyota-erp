@@ -81,6 +81,7 @@ Every clone is verified against the pinned commit (`scripts/lib/verify-checkout.
 
 5. Run `./scripts/ci/audit.sh`. Remove allowlist entries whose advisories are fixed by the new pins, and justify any new ones (see [security-operations.md](security-operations.md#dependency-audit-and-the-allowlist)).
 6. Run the full test suite ([testing.md](testing.md)), build both image flavours, and run `scripts/ci/sbom.sh` and `scripts/ci/smoke.sh`.
+   - Read the upstream changes to the methods the apps replace (`override_whitelisted_methods` in `automotive_core/hooks.py`: the report download, `frappe.desk.query_report.export_query`). The replacement runs Frappe's own function, so a new parameter keeps working, but a new download path in the desk would not be logged in the Access Log (D-035).
 7. Rehearse the upgrade on staging with a recent production backup (below) before production.
 
 ## Upgrade procedure

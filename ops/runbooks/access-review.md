@@ -44,7 +44,10 @@ Each persona is a **Role Profile**: one persona role plus the ERPNext roles it n
 | Dealer Portal User | Dealer Portal User (no desk access) |
 
 - **Least-privilege grants.** Persona roles get rights on standard ERPNext DocTypes only as listed in `setup/permissions.py`. These are Custom DocPerm rows, re-applied on every migrate.
-- **Bank account fields.** Supplier bank account number, IBAN and branch code are permlevel 1. Treasury Approver and Group Controller can read them. Accounts Manager, AP Clerk and System Manager can read and write them.
+- **Restricted fields** (permlevel 1; [permission matrix](../security/permission-matrix.md#restricted-fields-and-exports-sec-4)):
+  - Supplier bank account number, IBAN and branch code: Treasury Approver and Group Controller read them; Accounts Manager, AP Clerk and System Manager read and write them.
+  - An employee's personal details (date of birth, gender, private contact details and addresses, emergency contact, passport, health, family, education and work history, salary and bank details, terms of employment, exit): only ERPNext's HR User and HR Manager roles, which no persona includes. Colleagues, who hold ERPNext's "Employee" role once linked to an Employee record, read the directory fields only.
+  - Lists, reports, exports and the API leave these fields out for everyone else.
 - **Privileged roles** (flag *Two Factor Authentication* on the Role): System Manager, IT Operator, Treasury Approver, Group Controller, Automotive Executive. They need an OTP app when 2FA is enabled in System Settings. The tenant setup enables it only on sites with `automotive_environment` = `production`. See [security-operations.md](security-operations.md#privileged-mfa).
 
 ### Row-level scope
@@ -231,10 +234,13 @@ Run at the interval your control framework requires, for example quarterly, and 
    - List Partner User Access with Status Active and confirm each with the partner's owner (Procurement Manager or Dealer Liaison).
    - Confirm that partners which ended the relationship have only Ended or Revoked rows, and that their users are disabled.
 6. **Plant access.** List Plant Assignments with Status Active per plant with the Plant Director.
-7. **Delegations.**
+7. **Exports.** Open the **Access Log** (`/desk/access-log`), which records every export (report view, Data Export, report downloads) with the user, DocType or report, file type and filters.
+   - Filter on the review period and look for exports of finance and party data (Payment Entry, Journal Entry, Bank Account, Supplier, Customer) and for unusually large or repeated exports.
+   - Confirm each exporting user still needs the export right of the persona ([exports per persona](../security/permission-matrix.md#restricted-fields-and-exports-sec-4)).
+8. **Delegations.**
    - List Approval Delegations with Status Active or Scheduled, and confirm each is still needed.
    - Block conflicts are refused, or ignored once they arise. Review delegations that were accepted with a *Warn* SoD warning.
-8. **Evidence.**
+9. **Evidence.**
    - Export the SoD report and the lists used (Menu → Export).
    - Record the outcome in your access-review register. **There is no review-record DocType in the application (not implemented yet).**
    - Changes made as a result go through User Provisioning Requests, so they are approved and audited.

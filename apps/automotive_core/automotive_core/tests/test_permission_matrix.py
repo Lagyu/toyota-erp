@@ -27,15 +27,31 @@ def matrix_file() -> Path | None:
 	return path if path.exists() else None
 
 
+def tables(path: Path) -> dict[str, list[list[str]]]:
+	"""The Markdown tables of the file by their first header cell, without the separator rows."""
+	found: dict[str, list[list[str]]] = {}
+	rows: list[list[str]] = []
+	for line in [*path.read_text().splitlines(), ""]:
+		if line.startswith("|"):
+			cells = [c.strip() for c in line.strip().strip("|").split("|")]
+			if not set(cells[0]) <= {"-", ":"}:
+				rows.append(cells)
+		elif rows:
+			found[rows[0][0]] = rows
+			rows = []
+	return found
+
+
 def parse(path: Path) -> tuple[list[str], dict[str, dict[str, str]]]:
-	rows = [
-		[c.strip() for c in line.strip().strip("|").split("|")]
-		for line in path.read_text().splitlines()
-		if line.startswith("| ")
-	]
-	header, body = rows[0], [r for r in rows[1:] if not set(r[0]) <= {"-"}]
+	header, *body = tables(path)["DocType"]
 	personas = header[1:]
 	return personas, {r[0]: dict(zip(personas, r[1:], strict=True)) for r in body}
+
+
+def parse_exports(path: Path) -> dict[str, set[str]]:
+	"""Persona -> the DocTypes of the matrix it may export."""
+	_header, *body = tables(path)["Persona"]
+	return {r[0]: {d.strip() for d in r[1].split(",") if d.strip() not in ("", "-")} for r in body}
 
 
 class TestPermissionMatrix(IntegrationTestCase):
@@ -67,6 +83,27 @@ class TestPermissionMatrix(IntegrationTestCase):
 				if actual != rights:
 					wrong.append(f"{doctype} / {persona}: documented {rights}, actual {actual}")
 		self.assertEqual(wrong, [])
+
+	def test_personas_export_exactly_the_documented_doctypes(self):
+		"""SEC-4: the export right (Menu -> Export, Data Export, report downloads) per persona on the
+		DocTypes of the matrix. On a difference the message holds the table as it is."""
+		path = matrix_file()
+		if not path:
+			self.skipTest("the permission matrix is documented in the repository, not in an image")
+		personas, matrix = parse(path)
+		documented = parse_exports(path)
+		self.assertEqual(sorted(documented), sorted(personas))
+		actual = {}
+		for persona in personas:
+			user = make_user(f"matrix.{frappe.scrub(persona)}@hinode.example", ROLE_PROFILES[persona])
+			actual[persona] = {
+				doctype for doctype in matrix if frappe.has_permission(doctype, "export", user=user)
+			}
+		table = "\n".join(
+			f"| {persona} | {', '.join(d for d in matrix if d in actual[persona]) or '-'} |"
+			for persona in personas
+		)
+		self.assertEqual(actual, documented, "\n" + table)
 
 	def _journal(self, company: str):
 		def account(**filters):
