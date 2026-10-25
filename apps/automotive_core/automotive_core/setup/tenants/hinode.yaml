@@ -219,6 +219,20 @@ approval_policies:
       - {step: 1, name: Procurement review, role: Procurement Manager}
       - {step: 2, name: Plant director, role: Plant Director, min_amount: 10000000}
       - {step: 3, name: Executive, role: Automotive Executive, min_amount: 100000000}
+  # a commodity's own matrix, ahead of the general one (priority): castings and forgings are
+  # safety-critical and tooling-bound, so supplier quality signs after procurement
+  - name: Purchase Order Approval - Castings and Forgings
+    doctype: Purchase Order
+    companies: [Hinode Automotive Manufacturing Japan, Hinode Powertrain Components]
+    priority: 20
+    amount_field: base_grand_total
+    category_field: items.item_group
+    category_values: [Castings & Forgings]
+    steps:
+      - {step: 1, name: Procurement review, role: Procurement Manager}
+      - {step: 2, name: Supplier quality, role: Quality Manager}
+      - {step: 3, name: Plant director, role: Plant Director, min_amount: 10000000}
+      - {step: 4, name: Executive, role: Automotive Executive, min_amount: 100000000}
   - name: Purchase Order Approval - USD
     doctype: Purchase Order
     companies: [Hinode Automotive Distribution North America]

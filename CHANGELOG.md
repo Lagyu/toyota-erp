@@ -122,6 +122,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   matrices; blanket orders and call-offs; versioned delivery schedules; order
   acknowledgements; ASNs; receipts from ASNs; receipt discrepancies; three-way match with
   an exception workflow.
+- A commodity's own purchase matrix in the reference tenant: orders of castings and forgings
+  in the Japanese companies need supplier quality (Quality Manager) after procurement, then
+  the general amount thresholds; the general matrix keeps the other materials.
 - Cycle counts, consignment agreements and movements, transport bookings, shipment
   manifests with proof of dispatch and delivery, transport exceptions.
 - Dealer registration and authorised models, dealer orders with configuration and promise
