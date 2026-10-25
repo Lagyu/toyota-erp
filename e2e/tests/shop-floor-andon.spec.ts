@@ -33,3 +33,42 @@ test("an operator calls for help from the station; the supervisor responds and c
 	await expect.poll(async () => (await getDoc(supervisor.page, "Andon Event", andon)).status).toBe("Closed");
 	for (const ctx of [operator, supervisor]) await ctx.context.close();
 });
+
+// ERP-12.3, TST-8: the desk form works from the keyboard alone: Tab reaches each field, a link
+// takes its value from the suggestions with Enter, the select from typing, Ctrl+S saves.
+test("an operator raises a call with the keyboard alone", async ({ browser }) => {
+	const operator = await as(browser, "operator");
+	const page = operator.page;
+	await openDesk(page, "/desk/andon-event/new");
+	const [, station] = (await getDoc(page, "Production Line", "AICHI-FA1")).stations;
+	const focused = () => page.evaluate(() =>
+		document.activeElement?.closest(".frappe-control")?.getAttribute("data-fieldname") ?? null);
+	const tabTo = async (fieldname: string) => {
+		for (let i = 0; i < 60 && (await focused()) !== fieldname; i++) await page.keyboard.press("Tab");
+		expect(await focused(), `Tab reaches ${fieldname}`).toBe(fieldname);
+	};
+	const control = (fieldname: string) => page.locator(`.form-layout .frappe-control[data-fieldname="${fieldname}"]`);
+	const pick = async (fieldname: string, value: string) => {
+		await tabTo(fieldname);
+		await page.keyboard.type(value);
+		await expect(page.locator(".awesomplete [role=option]", { hasText: value }).first()).toBeVisible();
+		await page.keyboard.press("Enter");
+		await expect(control(fieldname).locator("input").first()).toHaveValue(value);
+	};
+	await pick("production_line", "AICHI-FA1");
+	await pick("workstation", station.workstation);
+	await pick("reason_code", "P-HELP");
+	await tabTo("stop_type");
+	await page.keyboard.type("Call");
+	await expect(control("stop_type").locator("select")).toHaveValue("Call");
+	await tabTo("description");
+	await page.keyboard.type("Raised from the keyboard: torque gun check.");
+	await page.keyboard.press("Control+s");
+	await page.waitForURL(/andon-event\/AND-/);
+	const andon = decodeURIComponent(page.url().split("/andon-event/")[1].split(/[?#]/)[0]);
+	expect(await getDoc(page, "Andon Event", andon)).toMatchObject({
+		status: "Raised", stop_type: "Call", workstation: station.workstation, reason_code: "P-HELP",
+		description: "Raised from the keyboard: torque gun check.",
+	});
+	await operator.context.close();
+});
