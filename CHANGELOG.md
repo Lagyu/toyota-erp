@@ -227,6 +227,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   write and read of a File. It now answers True and refuses only reading a file that is not yet
   clean while scanning is required; a test attaches and reads files as a desk user. Found by the
   production rehearsal's upload through ClamAV.
+- Site creation could fail with "Site already exists" (runbook step 8): the cron service ships
+  the binary logs every 5 minutes from its first start, and a run before the site existed
+  created the site's state directory. The cron jobs now wait until the site exists, and the
+  shipping itself creates nothing before it. Found by the VM reboot check's install.
 - An invoice made from a receipt with rejected goods could not be submitted: ERPNext's default
   bills the rejected quantity too, which the three-way match refuses (billed above accepted).
   The tenant turns that off, and a patch does on existing sites; rejected goods are returned,

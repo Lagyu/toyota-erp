@@ -12,8 +12,10 @@ The service runs the application image with the scheduler's environment and secr
 the jobs see exactly what they would see in the scheduler container. Each lane runs one job
 at a time: the backup and the drill share one, and the binary log shipping has its own, so
 the recovery point keeps moving while a backup or drill runs. A run missed (the service was
-down, or the lane busy) is not caught up: the next one comes at its schedule. Output goes to
-the service log with the job name and exit status.
+down, or the lane busy) is not caught up: the next one comes at its schedule. Before the site
+exists (between the stack's first start and new-site.sh) every run is skipped: a job would
+create the site's directory, and Frappe refuses to create a site whose directory exists.
+Output goes to the service log with the job name and exit status.
 
 Uses croniter, which Frappe itself depends on (the bench's Python).
 """
@@ -27,10 +29,12 @@ import subprocess
 import sys
 import threading
 import time
+from pathlib import Path
 
 from croniter import croniter
 
 PYTHON = "/home/frappe/frappe-bench/env/bin/python"
+SITES = Path("/home/frappe/frappe-bench/sites")
 JOBS = {
 	"backup": (
 		"maintenance",
@@ -89,10 +93,14 @@ def lane(jobs: list[str]) -> None:
 		if wait > 0:
 			time.sleep(min(wait, 60))
 			continue
-		log(f"{name}: starting")
-		started = time.monotonic()
-		status = subprocess.call(JOBS[name][3], cwd="/home/frappe/frappe-bench")  # noqa: S603 (fixed commands)
-		log(f"{name}: exit status {status} after {time.monotonic() - started:.0f} s")
+		site = os.environ.get("SITE_NAME", "")
+		if not (SITES / site / "site_config.json").exists():
+			log(f"{name}: skipped, the site {site} does not exist yet")
+		else:
+			log(f"{name}: starting")
+			started = time.monotonic()
+			status = subprocess.call(JOBS[name][3], cwd="/home/frappe/frappe-bench")  # noqa: S603 (fixed commands)
+			log(f"{name}: exit status {status} after {time.monotonic() - started:.0f} s")
 		due[name] = next_run(schedule(name))
 
 

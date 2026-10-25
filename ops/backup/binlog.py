@@ -146,6 +146,10 @@ def _keep_from(state: Path, closed: list[str]) -> int:
 
 def ship() -> int:
 	site = site_name()
+	if not (BENCH / "sites" / site / "site_config.json").exists():
+		# creating its state directory would make Frappe refuse to create the site
+		log(f"the site {site} does not exist yet: nothing to ship")
+		return 0
 	state = state_dir(site)
 	mirror = state / "logs"
 	mirror.mkdir(parents=True, exist_ok=True)
