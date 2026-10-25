@@ -700,6 +700,92 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 			[{"employee": employee.name, "completed_qty": 2}],
 		)
 
+	def test_the_station_rate_costs_the_operation_time_into_the_units(self):
+		"""ERP-09.3: a routed order's operation is costed at its station's rate per hour, planned
+		from the BOM's time and actual from the time the station logged; each unit built carries
+		its share as an additional cost of the Manufacture entry, into its valuation and the
+		operating cost account."""
+		from frappe.utils import add_to_date, now_datetime
+
+		from automotive_core.setup.tenant import OPERATING_COMPONENT
+		from automotive_manufacturing.mes.production import record_operation
+
+		cat = self.cat
+		station = "TST Costed Sewing Station"
+		if not frappe.db.exists("Workstation", station):
+			frappe.get_doc(
+				{
+					"doctype": "Workstation",
+					"workstation_name": station,
+					"production_capacity": 1,
+					"automotive_plant": catalog.PLANT,
+					"workstation_costs": [
+						{"operating_component": OPERATING_COMPONENT, "operating_cost": 6_000}
+					],
+				}
+			).insert(ignore_permissions=True)
+		self.assertEqual(flt(frappe.db.get_value("Workstation", station, "hour_rate")), 6_000)
+		if not frappe.db.exists("Operation", "TST Costed sewing"):
+			frappe.get_doc(
+				{"doctype": "Operation", "__newname": "TST Costed sewing", "workstation": station}
+			).insert(ignore_permissions=True)
+		bom = frappe.get_doc(
+			{
+				"doctype": "BOM",
+				"item": cat["seat"],
+				"company": AICHI,
+				"quantity": 1,
+				"is_default": 0,
+				"is_active": 1,
+				"with_operations": 1,
+				"rm_cost_as_per": "Valuation Rate",
+				"items": [{"item_code": cat["foam"], "qty": 1.5}],
+				"operations": [{"operation": "TST Costed sewing", "workstation": station, "time_in_mins": 4}],
+			}
+		)
+		bom.insert(ignore_permissions=True)
+		bom.submit()
+		self.assertEqual(flt(bom.operating_cost), 400)  # 4 minutes at 6,000 an hour
+		foam_batch = catalog.make_batch(
+			cat["foam"], f"TFOAM-{frappe.generate_hash(length=6)}", "Shiranui Foam Industries"
+		)
+		catalog.receive(cat["foam"], 3, batch_no=foam_batch, rate=40)
+		wo = catalog.work_order(cat["seat"], 2, bom=bom.name, fg_warehouse=catalog.LINE_SIDE, pinned=True)
+		self.assertEqual(flt(wo.planned_operating_cost), 800)
+		[card] = frappe.get_all("Job Card", filters={"work_order": wo.name}, pluck="name")
+		employee = frappe.get_doc(
+			{
+				"doctype": "Employee",
+				"first_name": "Tst",
+				"last_name": "Costed",
+				"gender": "Female",
+				"date_of_birth": "1990-01-01",
+				"date_of_joining": "2020-01-01",
+				"company": AICHI,
+				"create_user_permission": 0,
+			}
+		).insert(ignore_permissions=True)
+		end = now_datetime()
+		# the station logged 9 minutes for the two seats, not the 8 the BOM plans
+		record_operation(card, 2, employee.name, add_to_date(end, minutes=-9), end)
+		[operation] = frappe.get_doc("Work Order", wo.name).operations
+		self.assertEqual(flt(operation.actual_operation_time), 9)
+		self.assertEqual(flt(operation.actual_operating_cost), 900)
+		operating_account = frappe.get_cached_value("Company", AICHI, "default_operating_cost_account")
+		for _ in range(2):
+			entry = build_entry(wo.name, 1)
+			[seat] = [row for row in entry.items if row.is_finished_item]
+			self.assertEqual(flt(entry.total_additional_costs), 450)  # 900 over the two seats
+			self.assertAlmostEqual(flt(seat.valuation_rate), 1.5 * 40 + 450, places=2)
+			credited = flt(
+				frappe.db.sql(
+					"""select sum(credit - debit) from `tabGL Entry` where voucher_type = 'Stock Entry'
+					and voucher_no = %s and account = %s and is_cancelled = 0""",
+					(entry.name, operating_account),
+				)[0][0]
+			)
+			self.assertAlmostEqual(credited, 450, places=2)
+
 
 AICHI_MES = "mes.aichi.mfg@hinode.example"
 KYUSHU_MES = "mes.kyushu.mfg@hinode.example"
