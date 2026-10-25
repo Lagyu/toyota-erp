@@ -95,6 +95,63 @@ CURATED = {
 	"gui-64": "MIT",
 	"gui-arm64": "MIT",
 }
+# packages whose SBOM licence is only a hash of their copyright file (or an ad-hoc name),
+# classified from the copyright files of their sources (Debian: sources.debian.org, reviewed
+# 2026-10-25 for the versions of the inventory)
+REVIEWED = {
+	# libxcrypt: LGPL-2.1-or-later overall, some files BSD or public domain (its LICENSING file)
+	"libcrypt1": "LGPL-2.1-or-later AND BSD-3-Clause AND BSD-2-Clause AND 0BSD AND LicenseRef-public-domain",
+	# X.Org, Mesa and freedesktop.org libraries, fonts and data: MIT and HPND-style grants
+	**dict.fromkeys(
+		(
+			"libdrm-amdgpu1",
+			"libdrm-common",
+			"libdrm-intel1",
+			"libdrm2",
+			"libpixman-1-0",
+			"libxcb1",
+			"libxcb-dri3-0",
+			"libxcb-glx0",
+			"libxcb-present0",
+			"libxcb-randr0",
+			"libxcb-render0",
+			"libxcb-shape0",
+			"libxcb-shm0",
+			"libxcb-sync1",
+			"libxcb-xfixes0",
+		),
+		"MIT",
+	),
+	**dict.fromkeys(
+		("libice6", "libsm6", "libxau6", "libxdmcp6", "libxkbfile1", "xfonts-75dpi"), "HPND-sell-variant"
+	),
+	**dict.fromkeys(
+		(
+			"libxext6",
+			"libxi6",
+			"libxinerama1",
+			"libxkbcommon0",
+			"libxmu6",
+			"libxmuu1",
+			"libxt6t64",
+			"libxtst6",
+			"x11-utils",
+			"xfonts-utils",
+			"xkb-data",
+		),
+		"MIT AND HPND-sell-variant",
+	),
+	"xfonts-base": "MIT AND HPND-sell-variant AND LicenseRef-public-domain",
+	"xfonts-encodings": "LicenseRef-public-domain",
+	# "public information compiled from around the 'net" (debian/copyright)
+	"media-types": "LicenseRef-public-domain",
+	"honcho": "MIT",
+	# not a package: Frappe's DocType file frappe/core/doctype/package/package.json, read as an
+	# npm manifest
+	"Package": "MIT",
+	# setuptools' test data (pkg_resources/tests/data)
+	"my-test-package": "MIT",
+}
 UNNAMED = {"NOASSERTION", "NONE", "LicenseRef-UNKNOWN", "LicenseRef-Dual-License"}
 
 
@@ -155,9 +212,11 @@ def inventory(sbom: dict) -> str:
 			licence = package.get("licenseConcluded") or "NOASSERTION"
 		if licence in UNNAMED and package.get("name") in CURATED:
 			licence = f"{CURATED[package['name']]} (curated)"
-		rows[(ecosystem(package), classify(licence.removesuffix(" (curated)")))].append(
-			(package.get("name", "?"), package.get("versionInfo", ""), licence)
-		)
+		elif classify(licence) == "unknown" and package.get("name") in REVIEWED:
+			licence = f"{REVIEWED[package['name']]} (reviewed)"
+		rows[
+			(ecosystem(package), classify(licence.removesuffix(" (curated)").removesuffix(" (reviewed)")))
+		].append((package.get("name", "?"), package.get("versionInfo", ""), licence))
 	name = sbom.get("name", "the image")
 	version = next((p.get("versionInfo") for p in sbom.get("packages", []) if p.get("name") == name), "")
 	created = (sbom.get("creationInfo") or {}).get("created", "")
@@ -170,7 +229,9 @@ def inventory(sbom: dict) -> str:
 		"`scripts/ci/licences.py`. Classes: permissive; weak copyleft (LGPL, MPL, EPL: obligations on "
 		"the component itself); strong copyleft (GPL: on works distributed with it); network copyleft "
 		"(AGPL and similar: also towards users of a network service); unknown (no licence recorded, "
-		"or one not classified). The owner's licence decisions are DECISIONS.md D-025.",
+		"or one not classified). *(curated)*: from the package's own licence file, where its metadata "
+		"names none; *(reviewed)*: from the copyright files of its sources, where the SBOM records "
+		"only their hash. The owner's licence decisions are DECISIONS.md D-025.",
 		"",
 		"| Ecosystem | " + " | ".join(c.capitalize() for c in CLASSES) + " | Total |",
 		"|---|" + "---|" * (len(CLASSES) + 1),

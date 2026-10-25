@@ -78,6 +78,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - A licence inventory comes with each image's SBOM (`scripts/ci/licences.py`; committed copy
   `ops/security/licences.md`), and install-fresh-host.md lists in one table the external
   accounts and credentials a deployment needs and what is missing until each is configured.
+  The 39 packages the SBOM recorded only by a hash of their copyright file (X.Org libraries
+  and fonts, libxcrypt, media-types, honcho, and two test and DocType files read as packages)
+  are classified from their sources' copyright files.
 - Upgrades put the site in maintenance mode before the pre-upgrade backup, so the backup is
   exactly the state being upgraded; a rollback restores it with `--no-replay` (the shipped
   binary logs after it hold the upgrade's own migration; upgrade.md said to replay them).
