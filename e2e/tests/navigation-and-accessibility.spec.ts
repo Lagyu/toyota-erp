@@ -2,10 +2,11 @@
 // Dead links: for each function's persona, every sidebar and workspace link the desk offers
 // opens for that person (the DocType list, the report or the page exists and they may read
 // it). Accessibility: the supplier and dealer portals, on every tab, have no serious or
-// critical WCAG 2.1 A/AA violations (axe-core); the desk login page has no critical ones.
+// critical WCAG 2.1 A/AA violations (axe-core); the desk login page and the forms of the
+// apps' own documents (the form body: the fields of the DocType) have no critical ones.
 import AxeBuilder from "@axe-core/playwright";
 import { expect, type Page, test } from "@playwright/test";
-import { call, openDesk } from "../support/frappe";
+import { call, getList, openDesk, openForm } from "../support/frappe";
 import { as, type Persona } from "../support/personas";
 
 // one persona per internal role profile (the 20 of setup/roles.py)
@@ -111,5 +112,26 @@ test("the sign-in page has no critical accessibility violations", async ({ brows
 	const page = await context.newPage();
 	await page.goto("/login");
 	expect(await violations(page, ["critical"])).toEqual([]);
+	await context.close();
+});
+
+// the forms of documents the apps define, one per domain, as the auditor reads them
+const DESK_FORMS = ["Andon Event", "Kanban Signal", "Vehicle Unit", "Dealer Order", "Engineering Change Order",
+	"Advance Shipping Notice", "Approval Request", "Integration Inbound Message"];
+
+test("the apps' desk forms have no critical accessibility violations", async ({ browser }) => {
+	const { context, page } = await as(browser, "auditor");
+	await openDesk(page);
+	const found: string[] = [];
+	for (const doctype of DESK_FORMS) {
+		const [doc] = await getList<any>(page, doctype, {}, ["name"], 1);
+		expect(doc, `a ${doctype} in the dataset`).toBeTruthy();
+		await openForm(page, doctype, doc.name);
+		await expect(page.locator(".form-layout").first()).toBeVisible();
+		const result = await new AxeBuilder({ page }).include(".form-layout").withTags(WCAG).analyze();
+		found.push(...result.violations.filter((v) => v.impact === "critical")
+			.map((v) => `[${doctype}] ${v.id}: ${v.help} — ${v.nodes.slice(0, 5).map((n) => n.target.join(" ")).join(", ")}`));
+	}
+	expect(found).toEqual([]);
 	await context.close();
 });
