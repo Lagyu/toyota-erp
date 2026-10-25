@@ -420,6 +420,22 @@ else
 	fail "$up of $total up; down: $why"
 fi
 
+step "Statement digests and table sizes (slow-queries.sh, mysqld-exporter)"
+"$REPO_ROOT/scripts/deploy/slow-queries.sh" "$ENV" --limit 5 >"$out/slow-queries.md" 2>&1 || true
+statements=$(grep -cE '^\| .+ \| [0-9]+ \| [0-9.]+ \| ' "$out/slow-queries.md" || true)
+series() {
+	compose exec -T prometheus wget -qO- "http://localhost:9090/api/v1/query?query=count($1)" 2>/dev/null \
+		| python3 -c 'import json, sys; r = json.load(sys.stdin)["data"]["result"]; print(r[0]["value"][1] if r else 0)' \
+		2>/dev/null || echo 0
+}
+digests=$(series mysql_perf_schema_events_statements_total)
+tables=$(series erp_database_table_size_bytes)
+if ((statements > 0 && digests > 0 && tables > 0)); then
+	pass "$statements statements in the report; Prometheus holds $digests digest and $tables table size series"
+else
+	fail "$statements statements (see slow-queries.md); $digests digest and $tables table size series"
+fi
+
 # 6. rollback ------------------------------------------------------------------------------
 step "Rollback to the previous release (upgrade.md)"
 # the snapshot upgrade.sh took in the maintenance window, the previous release's tree and image,

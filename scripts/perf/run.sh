@@ -8,8 +8,8 @@
 # production. Results per phase in perf/results/raw/<timestamp>/<phase>/: Locust's stats
 # (JSON, CSV, HTML), the server's metrics before and after, the queue lengths sampled during
 # the phase, a digest of the database's slow query log (statements over 0.5 s, literals
-# masked), the database's and the files' size before and after, the titles of the errors the
-# site logged during the phase, summary.txt and summary.json
+# masked), the database's, the binary logs' and the files' size before and after, the titles of
+# the errors the site logged during the phase, summary.txt and summary.json
 # (perf/summary.py: p95 against the targets). Exit status: 0 when every phase met them.
 #
 # Runs where Docker may use most of the machine: the CI workflow .github/workflows/perf.yml
@@ -79,6 +79,9 @@ db_snapshot() { # OUTPUT.json: each table's estimated rows and data and index by
 rows = [line.rstrip("\n").split("\t") for line in sys.stdin if line.strip()]
 json.dump({r[0]: {"rows": int(r[1]), "bytes": int(r[2])} for r in rows}, open(sys.argv[1], "w"))' "$1" || true
 }
+binlog_size() { # OUTPUT: the bytes of the binary logs the server holds (point-in-time recovery)
+	db_query "SHOW BINARY LOGS" 2>/dev/null | awk '{s += $2} END {print s + 0}' >"$1" || true
+}
 files_size() { # OUTPUT: du -sb of the private and public files
 	"${stack_compose[@]}" exec -T backend du -sb "sites/$stack_site/private/files" "sites/$stack_site/public/files" \
 		>"$1" 2>/dev/null || true
@@ -136,6 +139,7 @@ PY
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" scrape "$stack_url" "$stack_secrets/metrics_token" \
 		"$dir/metrics-before.prom" || true
 	db_snapshot "$dir/db-before.json"
+	binlog_size "$dir/binlog-before.txt"
 	files_size "$dir/files-before.txt"
 	errors_from=$(db_query "SELECT IFNULL(MAX(creation), '1970-01-01') FROM \`$(site_db)\`.\`tabError Log\`" \
 		2>/dev/null || echo 1970-01-01)
@@ -158,6 +162,7 @@ PY
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" slowlog "$dir/.slow.log" "$dir/slow-queries.json" || true
 	rm -f "$dir/.slow.log"
 	db_snapshot "$dir/db-after.json"
+	binlog_size "$dir/binlog-after.txt"
 	files_size "$dir/files-after.txt"
 	errors_since "$errors_from" "$dir/errors.txt"
 	"$venv/bin/python" "$REPO_ROOT/perf/summary.py" scrape "$stack_url" "$stack_secrets/metrics_token" \

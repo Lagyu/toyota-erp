@@ -28,6 +28,7 @@ Server options from `infra/deploy/compose.hinode.yaml`:
 | `--log-bin=mariadb-bin`, `--binlog-format=ROW` | | binary log ([below](#binary-logs-and-point-in-time-recovery)) |
 | `--binlog-expire-logs-seconds` | `${DB_BINLOG_RETENTION_SECONDS:-1209600}` (14 days) | binary log retention |
 | `--log-bin-trust-function-creators=1` | | with binary logging on, MariaDB requires this for the site user (not SUPER) to create the immutability triggers |
+| `--performance-schema=ON` | | statement digests (normalised SQL, counts and times) for `slow-queries.sh` and the exporter; memory sized by MariaDB at start (a few hundred MB at most) |
 | `mem_limit` / `cpus` | `${DB_MEM_LIMIT:-6g}` / `${DB_CPUS:-4}` (production example `12g` / `6`) | keep the buffer pool well below the memory limit |
 
 **Site database user.** Each site gets its own database and user, created by `bench new-site`.
@@ -94,16 +95,16 @@ Rules:
 
 - Use read-only queries.
 - Never edit ledgers (`tabGL Entry`, `tabStock Ledger Entry`), Audit Events or Approval Decisions by SQL. ERPNext documents must be corrected through cancel and amend, which the application audits.
-- The slow query log is **not enabled** by the deployment. Enable it only temporarily while investigating, and note that it writes to the `db-data` volume.
+- The slow statements: `scripts/deploy/slow-queries.sh "$ENV"` (`--by mean`, `--limit N`, `--reset`) lists MariaDB's statement digests: normalised SQL without values, with calls, times, rows and index use ([capacity.md](../performance/capacity.md#slow-statements)). The slow query log stays off: it would hold the statements' values and grow in the `db-data` volume.
 
 ## Monitoring
 
 With `MONITORING=1`:
 
-- `mysqld-exporter` connects with the credentials in `MYSQLD_EXPORTER_CNF` (collector `info_schema.processlist`);
+- `mysqld-exporter` connects with the credentials in `MYSQLD_EXPORTER_CNF` (collectors `info_schema.processlist` and `perf_schema.eventsstatements`: the 100 statements with the most time over 24 hours). The tables' sizes come from the site's metrics endpoint (`erp_database_size_bytes`, `erp_database_table_size_bytes`, read every 15 minutes): the exporter's `info_schema.tables` would open every table's definition on each scrape;
 - Prometheus scrapes it as job `mariadb`;
 - alert `MariaDBDown` fires on `mysql_up == 0` for 2 minutes;
-- Grafana shows *MariaDB connections*.
+- Grafana shows *MariaDB connections*, *Database size*, *Largest tables*, *Statements by database time* and *Mean statement time*.
 
 See [monitoring.md](monitoring.md).
 

@@ -51,6 +51,8 @@ class TestHealth(IntegrationTestCase):
 		self.assertIn('erp_outbox_messages{site="' + frappe.local.site + '",status="Dead Letter"}', body)
 		self.assertIn("erp_quality_holds_active", body)  # contributed by automotive_manufacturing
 		self.assertIn("erp_match_exceptions_open", body)  # contributed by automotive_supply_chain
+		self.assertRegex(body, r"erp_database_size_bytes\{site=\"[^\"]+\"\} [1-9]")
+		self.assertIn('erp_database_table_size_bytes{site="' + frappe.local.site + '",table="tab', body)
 		for line in body.splitlines():
 			if line and not line.startswith("#"):
 				name, _, value = line.rpartition(" ")

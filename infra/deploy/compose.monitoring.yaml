@@ -51,7 +51,11 @@ services:
   mysqld-exporter:
     image: ${MYSQLD_EXPORTER_IMAGE:?}
     restart: unless-stopped
-    command: [--config.my-cnf=/etc/exporter/my.cnf, --collect.info_schema.processlist]
+    # processlist; the statements by digest (top 100 by time, the last 24 hours). Not the table
+    # sizes (info_schema.tables would open every table's definition each scrape): the site's
+    # metrics endpoint reports them (erp_database_size_bytes)
+    command: [--config.my-cnf=/etc/exporter/my.cnf, --collect.info_schema.processlist,
+      --collect.perf_schema.eventsstatements, --collect.perf_schema.eventsstatements.limit=100]
     networks: [backend]
     volumes:
       - ${MYSQLD_EXPORTER_CNF:?set MYSQLD_EXPORTER_CNF}:/etc/exporter/my.cnf:ro

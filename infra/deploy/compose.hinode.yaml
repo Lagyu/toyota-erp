@@ -107,15 +107,20 @@ services:
     mem_limit: ${WEBSOCKET_MEM_LIMIT:-512m}
     cpus: 1
 
+  # more workers per queue for a queue that keeps a backlog (ops/performance/capacity.md)
   queue-short:
     <<: *app
     command: bench worker --queue short,default
+    deploy:
+      replicas: ${QUEUE_SHORT_WORKERS:-1}
     mem_limit: ${WORKER_MEM_LIMIT:-2g}
     cpus: ${WORKER_CPUS:-2}
 
   queue-long:
     <<: *app
     command: bench worker --queue long,default,short
+    deploy:
+      replicas: ${QUEUE_LONG_WORKERS:-1}
     mem_limit: ${WORKER_MEM_LIMIT:-2g}
     cpus: ${WORKER_CPUS:-2}
 

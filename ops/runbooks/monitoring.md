@@ -153,13 +153,21 @@ ssh -L 3000:127.0.0.1:3000 <deploy user>@<erp host>
   - Quality holds and Andon
   - MariaDB connections
   - Redis memory
-- **No latency panel yet.** Use *Explore* with:
+  - Requests per second by kind
+  - p95 server time by kind
+  - Database size
+  - Largest tables
+  - Statements by database time (top 10)
+  - Mean statement time (top 10)
+- **Ad hoc**, in *Explore*:
 
 ```text
 histogram_quantile(0.95, sum by (le, kind, verb) (rate(erp_http_request_duration_seconds_bucket[10m])))
 sum by (kind, verb) (rate(erp_http_request_duration_seconds_count[5m]))
 up
 ```
+
+  The capacity limits behind these panels, and what to change: [capacity.md](../performance/capacity.md).
 
 **After enabling the overlay:**
 
@@ -283,11 +291,11 @@ General first steps for any alert:
 1. Find the affected `kind` (api, desk or portal) in the alert label, and run the Explore queries above.
 2. Check for concurrent load:
    - queue backlog;
-   - MariaDB connections;
+   - MariaDB connections, and the statements taking the database's time (*Statements by database time*, or `scripts/deploy/slow-queries.sh`);
    - host CPU and memory;
    - long reports, planning runs or imports.
 3. The Traefik access log (`logs proxy`) shows slow requests by path.
-4. Mitigate by adding capacity (`GUNICORN_WORKERS`, `BACKEND_CPUS`, `DB_BUFFER_POOL`; see [upgrade.md](upgrade.md#configuration-changes-without-a-new-image)), or by rescheduling heavy jobs.
+4. Mitigate by adding capacity (`GUNICORN_WORKERS`, `BACKEND_CPUS`, `DB_BUFFER_POOL`, `QUEUE_LONG_WORKERS`; see [upgrade.md](upgrade.md#configuration-changes-without-a-new-image) and [capacity.md](../performance/capacity.md)), an index for a slow statement, or by rescheduling heavy jobs.
 
 Reference performance measurements do not exist yet, so record the occurrence.
 
@@ -482,6 +490,8 @@ See [troubleshooting.md](troubleshooting.md#disk-pressure).
 ```
 
 **Metrics:** `erp_queue_jobs` and `erp_queue_failed_jobs`, shown in the Grafana panels *Queue depth* and *Failed jobs*.
+
+A queue that keeps a backlog needs more workers: `QUEUE_SHORT_WORKERS` or `QUEUE_LONG_WORKERS` in the environment file, then `compose.sh "$ENV" up -d` ([capacity.md](../performance/capacity.md#queue-saturation)).
 
 ## Logs and correlation ids
 

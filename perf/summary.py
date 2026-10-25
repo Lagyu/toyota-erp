@@ -21,8 +21,9 @@ sample appends the RQ queue lengths (erp_queue_jobs) to OUTPUT every SECONDS (de
 until it is stopped; slowlog digests a MariaDB slow query log into statements grouped by their
 shape (literals masked), with their count and time. When RESULTS_DIR holds them, the report
 adds: throughput; the queue lengths sampled during the phase (queues.txt); the slow statements
-(slow-queries.json); the database and file storage before and after the phase (db-before.json,
-db-after.json, files-before.txt, files-after.txt); the errors the site logged (errors.txt).
+(slow-queries.json); the database, binary log and file storage before and after the phase
+(db-before.json, db-after.json, binlog-*.txt, files-before.txt, files-after.txt); the errors the
+site logged (errors.txt).
 
 Groups follow the request names of the locustfile: read:* (GET), write:* (other methods),
 job:* (completion times of background jobs, no target). Client-side times include the
@@ -385,6 +386,9 @@ def storage(results: Path) -> dict | None:
 			out[f"files_bytes_{label}"] = sum(
 				int(line.split()[0]) for line in path.read_text().splitlines() if line.split()[:1] != []
 			)
+		path = results / f"binlog-{label}.txt"
+		if path.exists() and path.read_text().strip().isdigit():
+			out[f"binlog_bytes_{label}"] = int(path.read_text().strip())
 	return out
 
 
@@ -545,8 +549,14 @@ def evaluate(results: Path, targets_s: dict[str, float], max_fail_ratio: float) 
 				for name, row in disk["most_rows_added"].items()
 				if row["rows_growth"] > 0
 			),
-			"",
 		]
+		if "binlog_bytes_before" in disk and "binlog_bytes_after" in disk:
+			grown = disk["binlog_bytes_after"] - disk["binlog_bytes_before"]
+			lines.append(
+				f"Binary logs: {disk['binlog_bytes_before'] / mib:.1f} MiB before, "
+				f"{disk['binlog_bytes_after'] / mib:.1f} MiB after (+{grown / mib:.1f} MiB in the phase)"
+			)
+		lines.append("")
 	lines.append("RESULT: " + ("targets met" if not reasons else "FAILED - " + "; ".join(reasons)))
 	text = "\n".join(lines)
 	print(text)

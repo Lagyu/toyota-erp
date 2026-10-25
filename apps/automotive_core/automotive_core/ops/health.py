@@ -9,7 +9,8 @@ the header ``X-Hinode-Metrics-Token: <automotive_metrics_token>`` (site config) 
 served without a configured token. Not ``Authorization``: Frappe takes any credentials
 there for a login, and refuses the request when they are not a user's. Every metric is read from the live system: queue lengths from
 Redis, work backlogs from their DocTypes, the last successful backup from the marker the
-backup job writes; nothing is cached or estimated.
+backup job writes. Only the database's size is an estimate (InnoDB's), read at most every 15
+minutes: the query opens every table's definition.
 """
 
 from __future__ import annotations
@@ -92,6 +93,39 @@ def _count(doctype: str, filters: dict) -> int:
 	return cint(frappe.db.count(doctype, filters))
 
 
+SIZES_KEY = "automotive:metrics:database_sizes"
+
+
+def _database_sizes() -> list[tuple[str, str, dict, float]]:
+	"""The site database's data and index bytes, and its ten largest tables (capacity.md)."""
+	sizes = frappe.cache.get_value(SIZES_KEY)
+	if sizes is None:
+		rows = frappe.db.sql(
+			"""select table_name, ifnull(data_length, 0) + ifnull(index_length, 0) from information_schema.tables
+			where table_schema = database() order by 2 desc"""
+		)
+		sizes = {"total": float(sum(r[1] for r in rows)), "tables": [[r[0], float(r[1])] for r in rows[:10]]}
+		frappe.cache.set_value(SIZES_KEY, sizes, expires_in_sec=900)
+	out = [
+		(
+			"erp_database_size_bytes",
+			"Data and index bytes of the site database (InnoDB estimate, read every 15 minutes)",
+			{},
+			sizes["total"],
+		)
+	]
+	for table, size in sizes["tables"]:
+		out.append(
+			(
+				"erp_database_table_size_bytes",
+				"Data and index bytes of the site database's ten largest tables",
+				{"table": table},
+				size,
+			)
+		)
+	return out
+
+
 def collect() -> list[tuple[str, str, dict, float]]:
 	"""(name, help, labels, value) for every metric."""
 	from frappe.utils.background_jobs import get_queue, get_queue_list
@@ -162,6 +196,7 @@ def collect() -> list[tuple[str, str, dict, float]]:
 			),
 		)
 	)
+	out.extend(_database_sizes())
 	for path in hook_list("automotive_metrics"):  # app-specific work queues (holds, andon, kanban, ...)
 		out.extend(frappe.get_attr(path)())
 	marker = Path(frappe.get_site_path(*BACKUP_MARKER))

@@ -432,6 +432,7 @@ Optional variables, read from the environment file by the compose files.
 | `FRONTEND_MEM_LIMIT`, `FRONTEND_CPUS` | 256m, 1 | frontend |
 | `WEBSOCKET_MEM_LIMIT` | 512m | websocket |
 | `WORKER_MEM_LIMIT`, `WORKER_CPUS` | 2g, 2 | queue-short, queue-long |
+| `QUEUE_SHORT_WORKERS`, `QUEUE_LONG_WORKERS` | 1, 1 | containers per queue worker service ([capacity.md](../performance/capacity.md#queue-saturation)) |
 
 **Database and Redis:**
 

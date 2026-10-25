@@ -1,5 +1,8 @@
 # Performance tests
 
+Throughput, slow statements, indexes, queues, growth and storage, and what to change when a
+limit is reached: [capacity.md](capacity.md) (PRF-5).
+
 Requirements: PRF-2 (50 concurrent users plus background jobs on the standard dataset),
 PRF-3 (a 150-user peak; p95 of common list and detail responses at most 2 s, of ordinary
 form submissions at most 4 s, no unbounded growth of failed jobs), TST-9 and GATE-7

@@ -55,18 +55,26 @@ stack_up >"$out/stack-up.log" 2>&1 || fatal "see stack-up.log"
 stack_restore "$dataset" >"$out/restore-dataset.log" 2>&1 || fatal "see restore-dataset.log"
 sizes=$(sched bash -c "cd /home/frappe/frappe-bench && du -sm sites/$stack_site/public/files sites/$stack_site/private/files \
 	2>/dev/null | awk '{s += \$1} END {print s}'")
-db_mb=$("${stack_compose[@]}" exec -T -e DB_ROOT="$(<"$stack_secrets/db_root_password")" db sh -c \
-	'mariadb -uroot -p"$DB_ROOT" -N -e "select round(sum(data_length + index_length) / 1048576)
-	from information_schema.tables where table_schema not in (\"mysql\", \"sys\", \"information_schema\", \"performance_schema\")"' \
-	2>/dev/null | tail -1)
-pass "database ${db_mb:-?} MB (data and indexes), files ${sizes:-?} MB"
+# every table's estimated rows and size (data and indexes, MB), largest first (capacity.md)
+"${stack_compose[@]}" exec -T -e DB_ROOT="$(<"$stack_secrets/db_root_password")" db sh -c \
+	'mariadb -uroot -p"$DB_ROOT" -N -B -e "select table_name, ifnull(table_rows, 0),
+	round((data_length + index_length) / 1048576, 1) from information_schema.tables
+	where table_schema not in (\"mysql\", \"sys\", \"information_schema\", \"performance_schema\")
+	order by data_length + index_length desc"' 2>/dev/null >"$out/tables.tsv" || true
+db_mb=$(awk -F'\t' '{s += $3} END {printf "%d", s}' "$out/tables.tsv")
+largest=$(head -5 "$out/tables.tsv" | awk -F'\t' '{printf "%s%s %s MB", (NR > 1 ? ", " : ""), $1, $3}')
+pass "database ${db_mb:-?} MB (data and indexes; largest: ${largest:-?}), files ${sizes:-?} MB"
 
 step "Nightly backup (bench backup with files, restic)"
 if sched bash /opt/hinode/ops/backup/backup.sh >"$out/backup.log" 2>&1; then
 	snapshot=$(sched restic snapshots --tag "site:$stack_site" --latest 1 --json 2>/dev/null \
 		| python3 -c 'import json, sys; print(json.load(sys.stdin)[-1]["short_id"])' 2>/dev/null || true)
-	added=$(grep -o 'Added to the repository: [^(]*' "$out/backup.log" | tail -1 | cut -d: -f2- | xargs || true)
-	pass "snapshot ${snapshot:-?}; added to the repository: ${added:-?}"
+	# the set's own size and what the repository stores for it (compressed, deduplicated)
+	size() {
+		sched restic stats --mode "$1" --json 2>/dev/null \
+			| python3 -c 'import json, sys; print(round(json.load(sys.stdin)["total_size"] / 1048576))' 2>/dev/null || true
+	}
+	pass "snapshot ${snapshot:-?}: $(size restore-size) MB backed up, $(size raw-data) MB stored in the repository"
 else
 	fatal "see backup.log"
 fi

@@ -293,6 +293,16 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   for a production host that started without its certificate.
 
 ### Operations
+- Capacity (PRF-5, `ops/performance/capacity.md`): throughput, slow statements, indexes, queue
+  saturation, database growth and storage, each with where it is measured and what to change.
+  MariaDB keeps statement digests (`--performance-schema=ON`): `scripts/deploy/slow-queries.sh`
+  lists the statements by total or mean time without their values, and mysqld-exporter exports
+  the top 100. The site's metrics report the database's size and largest tables
+  (`erp_database_size_bytes`, `erp_database_table_size_bytes`, every 15 minutes). New dashboard
+  panels: requests per second and p95 by kind, database size, largest tables, statements by
+  time. `QUEUE_SHORT_WORKERS` and `QUEUE_LONG_WORKERS` add queue workers. The load test records
+  the binary logs' growth per phase, the drill at scale every table's size and the backup's
+  stored size; the rehearsal checks the digests and the size metrics.
 - The backup and the restore drill can be measured at the acceptance size: `drill.yml` restores a
   dataset.yml export on a reference stack, backs it up, ships a change and runs the drill,
   recording the sizes, the durations and the recovery point (`scripts/ci/drill-at-scale.sh`).

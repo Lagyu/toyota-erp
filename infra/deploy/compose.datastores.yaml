@@ -31,6 +31,9 @@ services:
       - --binlog-expire-logs-seconds=${DB_BINLOG_RETENTION_SECONDS:-1209600}
       # the immutability triggers (automotive_core.setup.db_guards) are created by the site user
       - --log-bin-trust-function-creators=1
+      # statement digests (normalised SQL without values) with their counts and times: the slow
+      # statements without a slow query log file to rotate (docs: database.md, capacity.md)
+      - --performance-schema=ON
     mem_limit: ${DB_MEM_LIMIT:-6g}
     cpus: ${DB_CPUS:-4}
 
