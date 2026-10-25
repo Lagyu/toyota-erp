@@ -771,6 +771,19 @@ class Procurement:
 			with ctx.step(16, 0):
 				with ctx.as_user(clerk):
 					pi = frappe.get_doc(make_purchase_invoice(pr))
+					# the supplier bills what was accepted: rejected lots go back to it (ERPNext's
+					# draft bills the received quantity, which the three-way match refuses)
+					accepted = dict(
+						frappe.get_all(
+							"Purchase Receipt Item",
+							filters={"parent": pr},
+							fields=["name", "qty"],
+							as_list=True,
+						)
+					)
+					pi.items = [row for row in pi.items if flt(accepted.get(row.pr_detail)) > 0]
+					for row in pi.items:
+						row.qty = min(flt(row.qty), flt(accepted[row.pr_detail]))
 					if not pi.items:
 						self.s["to_invoice"].pop(pr, None)
 						continue

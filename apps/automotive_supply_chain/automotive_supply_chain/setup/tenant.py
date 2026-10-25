@@ -99,13 +99,6 @@ def apply(definition, log) -> None:
 		settings.update(changes)
 		settings.flags.ignore_permissions = True
 		settings.save()
-	# rejected goods go back to the supplier and are not paid for: an invoice made from a
-	# receipt bills the accepted quantity, as the three-way match requires (ERPNext's default
-	# bills the rejected quantity too, and every such invoice stopped at the match)
-	if frappe.db.get_single_value(
-		"Buying Settings", "bill_for_rejected_quantity_in_purchase_invoice"
-	) and log.change("Buying Settings: bill for rejected quantity off"):
-		frappe.db.set_single_value("Buying Settings", "bill_for_rejected_quantity_in_purchase_invoice", 0)
 	for policy in POLICIES:
 		approval_policy(policy, log)
 	# Purchase order policies must not catch blanket-order call-offs (already approved spend).

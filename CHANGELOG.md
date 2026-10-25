@@ -231,11 +231,12 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the binary logs every 5 minutes from its first start, and a run before the site existed
   created the site's state directory. The cron jobs now wait until the site exists, and the
   shipping itself creates nothing before it. Found by the VM reboot check's install.
-- An invoice made from a receipt with rejected goods could not be submitted: ERPNext's default
-  bills the rejected quantity too, which the three-way match refuses (billed above accepted).
-  The tenant turns that off, and a patch does on existing sites; rejected goods are returned,
-  not paid for. Found by the new supplier report test; no generated dataset had rejected a
-  lot yet.
+- The generator billed the received quantity of a receipt with a rejected lot (ERPNext's draft
+  from the receipt does), which the three-way match refuses: the run would have stopped at the
+  first rejected lot, which no generated dataset had reached. It bills the accepted quantity,
+  as the supplier does. (ERPNext's "bill for rejected quantity" stays on: turning it off makes
+  ERPNext refuse every invoice above the receipt at save, before the three-way match can record
+  the exception for review.)
 - A smoke test right after `new-site.sh` (runbook steps 8 and 9) could get 403 for the metrics
   token: Frappe's workers keep a site's config for up to a minute. `new-site.sh` now returns
   once every worker serves the new settings. Found by the VM reboot check's install.

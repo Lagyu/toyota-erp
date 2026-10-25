@@ -125,10 +125,13 @@ class TestSupplierReportValues(IntegrationTestCase):
 		on_time.rejected_warehouse = catalog.QUARANTINE
 		pr.insert(ignore_permissions=True)
 		pr.submit()
-		# billed below the order on the late line: 117 instead of 120
+		# the supplier bills the accepted quantities, below the order on the late line (117, not
+		# 120); ERPNext's draft from the receipt bills the received ones, rejected included
 		with as_user(h.AP_CLERK):
 			pi = frappe.get_doc(make_purchase_invoice(pr.name))
+			self.assertEqual([flt(r.qty) for r in pi.items], [10, 10])
 			pi.items[0].rate = 117
+			pi.items[1].qty = 8
 			pi.insert()
 			pi.submit()
 		self.assertEqual([flt(r.qty) for r in pi.items], [10, 8])
