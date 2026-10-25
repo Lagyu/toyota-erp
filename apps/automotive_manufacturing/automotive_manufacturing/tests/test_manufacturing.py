@@ -713,17 +713,19 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 		cat = self.cat
 		station = "TST Costed Sewing Station"
 		if not frappe.db.exists("Workstation", station):
-			frappe.get_doc(
-				{
-					"doctype": "Workstation",
-					"workstation_name": station,
-					"production_capacity": 1,
-					"automotive_plant": catalog.PLANT,
-					"workstation_costs": [
-						{"operating_component": OPERATING_COMPONENT, "operating_cost": 6_000}
-					],
-				}
-			).insert(ignore_permissions=True)
+			# the plant's calendar and working hours, as the tenant's stations have them
+			template = frappe.get_doc(
+				"Workstation",
+				frappe.db.get_value(
+					"Workstation", {"automotive_plant": catalog.PLANT}, "name", order_by="name"
+				),
+			)
+			doc = frappe.copy_doc(template)
+			doc.workstation_name = station
+			doc.set(
+				"workstation_costs", [{"operating_component": OPERATING_COMPONENT, "operating_cost": 6_000}]
+			)
+			doc.insert(ignore_permissions=True)
 		self.assertEqual(flt(frappe.db.get_value("Workstation", station, "hour_rate")), 6_000)
 		if not frappe.db.exists("Operation", "TST Costed sewing"):
 			frappe.get_doc(
@@ -771,17 +773,18 @@ class TestRoutedWorkOrders(ManufacturingTestCase):
 		[operation] = frappe.get_doc("Work Order", wo.name).operations
 		self.assertEqual(flt(operation.actual_operation_time), 9)
 		self.assertEqual(flt(operation.actual_operating_cost), 900)
-		operating_account = frappe.get_cached_value("Company", AICHI, "default_operating_cost_account")
 		for _ in range(2):
 			entry = build_entry(wo.name, 1)
 			[seat] = [row for row in entry.items if row.is_finished_item]
 			self.assertEqual(flt(entry.total_additional_costs), 450)  # 900 over the two seats
 			self.assertAlmostEqual(flt(seat.valuation_rate), 1.5 * 40 + 450, places=2)
+			# the cost's accounts are credited what the stock was debited for it
+			accounts = tuple({row.expense_account for row in entry.additional_costs})
 			credited = flt(
 				frappe.db.sql(
 					"""select sum(credit - debit) from `tabGL Entry` where voucher_type = 'Stock Entry'
-					and voucher_no = %s and account = %s and is_cancelled = 0""",
-					(entry.name, operating_account),
+					and voucher_no = %s and account in %s and is_cancelled = 0""",
+					(entry.name, accounts),
 				)[0][0]
 			)
 			self.assertAlmostEqual(credited, 450, places=2)
