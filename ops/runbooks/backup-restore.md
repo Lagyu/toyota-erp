@@ -145,6 +145,12 @@ target's name; the replay is not logged again. The newest files snapshot is then
 the site's files. The logs must run without a gap from the set's position, otherwise the
 replay stops with an error and the site keeps the backup's point.
 
+Tables without transactions are left as the set has them. Frappe keeps its Error Log, Data
+Import Log and global search index in MyISAM tables, which the dump reads when it reaches them
+rather than at its snapshot: a row written in between would be in the set and in the logs, and
+applying it twice fails. The replay leaves those tables' row events out (the report lists them
+under `skipped_rows_of`).
+
 **Limits.**
 
 - A loss of the host loses the changes since the last shipment (normally under 5 minutes).
@@ -153,6 +159,9 @@ replay stops with an error and the site keeps the backup's point.
   kept 15 days) and run `replay.sh` from the scheduler container.
 - The replay applies whole logs up to `--until` (UTC): it cannot leave out one bad transaction
   in the middle. To recover from a mistake, replay to just before it.
+- Error and import logs written after the set are not recovered, and neither are the search
+  index's entries for documents changed after it: after a restore that replayed logs, rebuild
+  the index (`bench --site "$SITE" rebuild-global-search`, from the backend container).
 - Turning `BINLOG_SCHEDULE` off (or a server without binary logging) leaves only the nightly
   backups; the alert `ErpBinlogNeverShipped` fires after an hour.
 

@@ -26,6 +26,13 @@ Position: bench backup's dump runs through bin/mariadb-dump, which adds --master
 with --single-transaction MariaDB writes the binary log position of the dump's own snapshot
 into the dump (a comment), without locking. Replaying from it applies each later change
 exactly once: the dump holds everything committed before it, the logs everything after.
+
+Except in tables without transactions: Frappe keeps its Error Log, Data Import Log and global
+search index in MyISAM tables, which the dump reads when it reaches them, not at its snapshot.
+A row written between the two is in the dump and in the logs, and applying it again fails
+(duplicate key). The replay leaves such tables as the dump has them: their later rows (error
+and import logs, search entries) are not recovered; `bench rebuild-global-search` rebuilds
+the index.
 """
 
 from __future__ import annotations
@@ -40,6 +47,7 @@ import re
 import subprocess
 import sys
 import tempfile
+from collections import Counter
 from pathlib import Path
 
 BENCH = Path(os.environ.get("BENCH_DIR") or "/home/frappe/frappe-bench")
@@ -47,6 +55,8 @@ KEEP_BACKUPS = 3
 # the image's tools, by absolute path (the commands below are fixed: no user input reaches them)
 RESTIC, MARIADB, MARIADB_BINLOG = "/usr/bin/restic", "/usr/bin/mariadb", "/usr/bin/mariadb-binlog"
 HEARTBEAT = "__hinode_heartbeat"
+TABLE_MAP = re.compile(rb"^#.*\sTable_map: `[^`]*`\.`([^`]+)` mapped to number")
+STATEMENT_END = b"'/*!*/;"
 POSITION = re.compile(r"CHANGE MASTER TO MASTER_LOG_FILE='([^']+)', MASTER_LOG_POS=(\d+)")
 GTID = re.compile(r"SET GLOBAL gtid_slave_pos='([^']*)'")
 
@@ -260,6 +270,50 @@ def logs_from(first: str, logs: Path) -> list[Path]:
 	return files
 
 
+def without_rows_of(lines, skip: set[str], skipped: list[str]):
+	"""mariadb-binlog's output (bytes lines) without the row events of the ``skip`` tables: a
+	BINLOG statement whose table maps all name such a table is left out (its table names go
+	to ``skipped``); everything else passes unchanged."""
+	tables: list[str] = []
+	block: list[bytes] | None = None
+	for line in lines:
+		if block is not None:
+			block.append(line)
+			if line.rstrip().endswith(STATEMENT_END):
+				if tables and all(t in skip for t in tables):
+					skipped.extend(tables)
+				else:
+					yield from block
+				block, tables = None, []
+			continue
+		if line.startswith(b"BINLOG '"):
+			if line.rstrip().endswith(STATEMENT_END) and line.rstrip() != b"BINLOG '":
+				# a statement on one line
+				if tables and all(t in skip for t in tables):
+					skipped.extend(tables)
+				else:
+					yield line
+				tables = []
+			else:
+				block = [line]
+			continue
+		match = TABLE_MAP.match(line)
+		if match:
+			tables.append(match.group(1).decode())
+		yield line
+
+
+def non_transactional(database: str) -> set[str]:
+	"""The tables of ``database`` without transactions (MyISAM and the like)."""
+	with connect(database) as conn, conn.cursor() as cur:
+		cur.execute(
+			"""SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = %s
+			AND TABLE_TYPE = 'BASE TABLE' AND ENGINE NOT IN ('InnoDB')""",
+			(database,),
+		)
+		return {row[0] for row in cur.fetchall()}
+
+
 def replay(
 	position_file: str, logs: str, database: str, source: str | None, until: str | None, report: str | None
 ) -> int:
@@ -279,22 +333,30 @@ def replay(
 	if until:
 		command.append(f"--stop-datetime={until}")
 	command.extend(str(f) for f in files)
+	skip = non_transactional(database)
+	skipped: list[str] = []
 	with client_options() as options:
 		reader = subprocess.Popen(command, stdout=subprocess.PIPE, env={**os.environ, "TZ": "UTC"})  # noqa: S603
-		applied = subprocess.run(  # noqa: S603
+		writer = subprocess.Popen(  # noqa: S603
 			[
 				MARIADB,
 				f"--defaults-extra-file={options}",
 				"--init-command=SET sql_log_bin=0",
 				database,
 			],
-			stdin=reader.stdout,
-			check=False,
+			stdin=subprocess.PIPE,
 		)
+		try:
+			for line in without_rows_of(reader.stdout, skip, skipped):
+				writer.stdin.write(line)
+			writer.stdin.close()
+		except BrokenPipeError:  # mariadb stopped at an error: its status says so
+			pass
+		applied = writer.wait()
 		reader.stdout.close()
 		status = reader.wait()
-	if status or applied.returncode:
-		log(f"replay failed (mariadb-binlog {status}, mariadb {applied.returncode})")
+	if status or applied:
+		log(f"replay failed (mariadb-binlog {status}, mariadb {applied})")
 		return 1
 	with connect(database) as conn, conn.cursor() as cur:
 		cur.execute(
@@ -312,6 +374,8 @@ def replay(
 		"last_log": files[-1].name,
 		"until": until,
 		"recovered_to": beat,
+		# row events of tables without transactions, left as the dump has them
+		"skipped_rows_of": dict(sorted(Counter(skipped).items())),
 	}
 	if report:
 		Path(report).write_text(json.dumps(result))

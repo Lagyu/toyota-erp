@@ -224,6 +224,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   write and read of a File. It now answers True and refuses only reading a file that is not yet
   clean while scanning is required; a test attaches and reads files as a desk user. Found by the
   production rehearsal's upload through ClamAV.
+- A point-in-time replay could fail with a duplicate key: Frappe's Error Log, Data Import Log
+  and global search index are MyISAM tables, which the dump reads after its snapshot, so a row
+  written during a backup can be in the set and in the logs. The replay leaves those tables'
+  row events out (`skipped_rows_of` in its report); the restore runbook says to rebuild the
+  search index afterwards.
 - Two line stops at once on one line: the second one's restart failed, because its downtime
   overlapped the first's on the line's workstation and ERPNext refuses overlapping Downtime
   Entries. It is now booked on the stopping station's workstation. The OEE (report and KPI)
