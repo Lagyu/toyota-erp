@@ -27,7 +27,7 @@ The brief (§7) asks for RPO ≤ 15 minutes and RTO ≤ 2 hours where the archit
 
 - Every CI smoke test (`scripts/ci/smoke.sh`, artifact `image-evidence`) runs a backup into a local restic repository, ships the binary logs and runs a drill, and fails unless the drill brought its copy forward to the newest shipped change.
 - The production rehearsal of 2026-10-24 (`rehearsal.yml` run 40087480153; restic on S3): backup, one shipment, then a **drill that passed in 40 s with a recovery point of 1.5 s** on the rehearsal's fresh site (all checks ok: trial balances, audit chain, attachments, encrypted fields).
-- **Nothing has been measured on a standard-size dataset yet.** Before claiming an RTO or RPO, run drills on a staging stack loaded with production-size data and record the times.
+- **At the acceptance size:** `drill.yml` (`scripts/ci/drill-at-scale.sh`) restores a dataset.yml export (the standard dataset) on a reference stack, backs it up, ships a change in the binary logs and runs the drill, recording the database and file sizes, the backup's and the drill's durations and the recovery point (artifact `drill`). Results: see REQUIREMENTS_TRACEABILITY.md (PRF-7). A hosted runner (4 vCPU) is slower than the reference hardware, so its restore time is an upper bound for that size, not the RTO of a production host, which also includes provisioning it.
 
 **History note.** Before the fix of 2026-10-24, restores and drills looked only for `.tar` file archives. `bench backup --compress` writes `.tgz`, so attachments were silently not restored, and drills did not check them. Drills recorded before this fix, and before the *attachments restored* and *encrypted fields decrypt* checks existed, prove less than the ones above.
 

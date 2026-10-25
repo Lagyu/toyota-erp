@@ -131,6 +131,7 @@ Workflows started by hand cover the rest on hosted runners:
 | [`rehearsal.yml`](.github/workflows/rehearsal.yml) | install by the runbook, upgrade, backups and drills, rollback (`rehearsal.sh`); the Let's Encrypt mode (`acme-check.sh`); a real reboot and power loss of a VM (`reboot-check.sh`); the high-availability option's application tier (`ha-check.sh`) |
 | [`dataset.yml`](.github/workflows/dataset.yml), [`dataset-compare.yml`](.github/workflows/dataset-compare.yml) | a synthetic dataset profile generated in resumable segments and validated; two runs compared document by document |
 | [`journeys.yml`](.github/workflows/journeys.yml) | the browser and API suites on a dataset export with the scheduler on |
+| [`drill.yml`](.github/workflows/drill.yml) | the backup and the restore drill with point-in-time recovery on a dataset export (sizes, durations, recovery point) |
 | [`perf.yml`](.github/workflows/perf.yml) | the load tests on the standard dataset |
 
 Procedures: [ops/runbooks/testing.md](ops/runbooks/testing.md).

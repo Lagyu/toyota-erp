@@ -193,6 +193,7 @@ Other workflows, started by hand (`gh workflow run …`):
 | `dataset.yml` | the standard dataset, generated in chained 4-hour segments (up to 18; `resume_run` continues a run that stopped) and validated ([seed-reference-data.md](seed-reference-data.md)) |
 | `dataset-compare.yml` | two dataset runs of one profile compared document by document (their fingerprints): an uninterrupted run against one stopped in the middle of days ([seed-reference-data.md](seed-reference-data.md#pause-and-resume)) |
 | `journeys.yml` | the browser and API suites, the ten journeys among them, on a dataset.yml export (the standard dataset) with the scheduler on, so background jobs run beside the journeys (`e2e.sh IMAGE --dataset DIR --scheduler`) |
+| `drill.yml` | the nightly backup and the weekly restore drill (point-in-time replay, verification) on a dataset.yml export (the standard dataset): sizes, durations, recovery point ([backup-restore.md](backup-restore.md#recovery-objectives-and-evidence)) |
 | `perf.yml` | the load tests on that dataset ([ops/performance/README.md](../performance/README.md)) |
 
 ## Not covered by automated tests yet

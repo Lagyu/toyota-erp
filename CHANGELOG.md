@@ -265,6 +265,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the standard fields and the comment count). Found by a short run on the closing dataset.
 
 ### Operations
+- The backup and the restore drill can be measured at the acceptance size: `drill.yml` restores a
+  dataset.yml export on a reference stack, backs it up, ships a change and runs the drill,
+  recording the sizes, the durations and the recovery point (`scripts/ci/drill-at-scale.sh`).
 - The high-availability option is packaged as settings: `DATASTORES=external` leaves MariaDB
   and Redis out of the stack for `DB_HOST`, `DB_PORT`, `REDIS_CACHE` and `REDIS_QUEUE`
   (`infra/deploy/compose.datastores.yaml` holds the bundled ones), and `SINGLETONS=0` leaves

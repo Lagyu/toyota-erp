@@ -1,0 +1,56 @@
+# The nightly backup and the weekly restore drill at the acceptance size (PRF-7, OPS-4): a
+# dataset.yml export (the standard dataset) restored on a reference stack, backed up, changed,
+# its binary logs shipped, then restored into a scratch site with point-in-time recovery and
+# verified (scripts/ci/drill-at-scale.sh). The report records the sizes, the durations and the
+# recovery point reached: the run's summary and the drill artifact.
+name: drill
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Profile of the dataset run
+        type: choice
+        options: [standard, closing, small, large]
+        default: standard
+      dataset_run:
+        description: Run ID of the dataset.yml run whose export is restored
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  actions: read  # the dataset run's export
+
+jobs:
+  drill:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/local/share/boost
+          df -h /
+      - name: The dataset export
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: "dataset-${{ inputs.profile }}"
+          path: .local/dataset
+          run-id: ${{ inputs.dataset_run }}
+          github-token: ${{ github.token }}
+      - name: Build the reference image
+        run: ./scripts/image/build.sh --reference | tee .local-image-reference.txt
+      - name: Backup and restore drill
+        run: ./scripts/ci/drill-at-scale.sh "$(tail -1 .local-image-reference.txt)" .local/dataset
+      - name: Report
+        if: always()
+        run: if [[ -f .local/drill/report.md ]]; then cat .local/drill/report.md >>"$GITHUB_STEP_SUMMARY"; fi
+      - name: Evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: drill
+          path: .local/drill/
+          include-hidden-files: true
+          retention-days: 90
