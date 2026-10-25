@@ -298,12 +298,33 @@ def transfer_prices(ctx: SeedContext, roster) -> None:
 
 
 def exchange_rate(ctx: SeedContext, day: dt.date) -> float:
-	"""Synthetic USD/JPY random walk with mean reversion (deterministic per day)."""
+	"""Synthetic USD/JPY random walk with mean reversion (deterministic per day). The walk is
+	kept in the Currency Exchange records: a run resumed in another process (the in-memory
+	path starts empty) takes the day's recorded rate, or continues from the latest one,
+	instead of restarting the walk."""
 	key = "fx-path"
 	path = ctx.cache.setdefault(key, {})
 	if day in path:
 		return path[day]
-	previous = path.get(add_days(day, -1)) or 149.8
+	recorded = frappe.db.get_value(
+		"Currency Exchange", {"date": day, "from_currency": "USD", "to_currency": "JPY"}, "exchange_rate"
+	)
+	if recorded:
+		path[day] = flt(recorded)
+		return path[day]
+	previous = path.get(add_days(day, -1))
+	if previous is None:
+		previous = (
+			flt(
+				frappe.db.get_value(
+					"Currency Exchange",
+					{"date": ("<", day), "from_currency": "USD", "to_currency": "JPY"},
+					"exchange_rate",
+					order_by="date desc",
+				)
+			)
+			or 149.8
+		)
 	rng = ctx.rng("fx", day)
 	value = round(previous + (150 - previous) * 0.02 + rng.gauss(0, 0.45), 4)
 	path[day] = value

@@ -139,6 +139,9 @@ def run(profile: str = "small", seed: int | None = None, until: str | None = Non
 			"end_date": ctx.end,
 			"started_at": frappe.db.get_value("Seed Run", name, "started_at") or now_datetime(),
 			"error": None,
+			# a stop asked of a process that was killed before it saw the request: this run
+			# is a new start, not that process
+			"stop_requested": 0,
 		},
 	)
 	frappe.db.commit()

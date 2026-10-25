@@ -231,6 +231,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the binary logs every 5 minutes from its first start, and a run before the site existed
   created the site's state directory. The cron jobs now wait until the site exists, and the
   shipping itself creates nothing before it. Found by the VM reboot check's install.
+- A dataset run resumed in another process did not reproduce an uninterrupted one (the
+  reproducibility check of two closing runs differed from 25 March on): the generator's USD/JPY
+  random walk lived in memory and restarted from 149.8 after a resume, which changed every
+  dollar transfer price. The walk now continues from the recorded rates. A run also kept the
+  stop request of a process stopped before it saw it, and paused after its first day.
 - The generator billed the received quantity of a receipt with a rejected lot (ERPNext's draft
   from the receipt does), which the three-way match refuses: the run would have stopped at the
   first rejected lot, which no generated dataset had reached. It bills the accepted quantity,
