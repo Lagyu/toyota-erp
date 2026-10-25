@@ -304,6 +304,37 @@ else
 	fail "echoed '${echoed:-none}'; log line '${logged:0:160}'"
 fi
 
+step "Site database password rotation (rotate-site-db-password.sh)"
+# the old password stays in this shell's memory only: after the rotation it must be refused
+SITE_DB_PY='import json, sys
+import pymysql
+site = sys.argv[1]
+config = json.load(open(f"sites/{site}/site_config.json"))
+common = json.load(open("sites/common_site_config.json"))
+if sys.argv[2] == "show":
+	print(config["db_password"])
+	raise SystemExit
+old = sys.stdin.read().strip()
+try:
+	pymysql.connect(host=config.get("db_host") or common["db_host"], port=int(common.get("db_port") or 3306),
+		user=config.get("db_user") or config["db_name"], password=old).close()
+	verdict = "the old password still works"
+except pymysql.err.OperationalError as exc:
+	verdict = "the old password is refused" if exc.args[0] == 1045 else f"error {exc.args[0]}"
+print(verdict + ("; the site config holds a new one" if config["db_password"] != old else "; the site config is unchanged"))'
+old_db_password=$(compose exec -T backend env/bin/python -c "$SITE_DB_PY" "$SITE" show 2>/dev/null | tail -1)
+if "$REPO_ROOT/scripts/deploy/rotate-site-db-password.sh" "$ENV" >"$out/rotate-db.log" 2>&1; then
+	verdict=$(printf '%s' "$old_db_password" | compose exec -T backend env/bin/python -c "$SITE_DB_PY" "$SITE" check 2>&1 | tail -1)
+	if [[ $verdict == "the old password is refused; the site config holds a new one" ]]; then
+		pass "$verdict; $(grep -c ' ok ' "$out/rotate-db.log") smoke checks ok after the restart"
+	else
+		fail "$verdict (see rotate-db.log)"
+	fi
+else
+	fail "see rotate-db.log"
+fi
+unset old_db_password
+
 # 5. reboot, backup, restore drill, monitoring --------------------------------------------
 step "Simulated reboot (Docker daemon restart)"
 sudo systemctl restart docker

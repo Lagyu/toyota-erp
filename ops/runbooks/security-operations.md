@@ -66,7 +66,23 @@ The command prompts for the password, so it never appears on a command line. The
 3. Write the new value into `DB_PASSWORD_SECRETS_FILE` and restart `scheduler` and `cron`.
 4. Verify with a manual restore drill ([backup-restore.md](backup-restore.md#weekly-restore-drill)).
 
-Rotating a site's own database password is **not scripted**.
+#### The site's own database password
+
+The account the application connects with (`db_name` in the site config). One command:
+
+```bash
+./scripts/deploy/rotate-site-db-password.sh "$ENV"
+```
+
+It turns maintenance mode on, sets a new random password on every host of the account and in
+the site config in one step (the root password and the new one reach the backend container on
+stdin), restarts the backend, the workers, `scheduler` and `cron`, turns maintenance mode off,
+waits until every worker serves the site again and runs the smoke test. Users see 503 for about
+a minute. Later backup sets carry the new password in their `*-site_config_backup.json`.
+
+With the high-availability option, restart the backend and workers of the other application
+hosts as well: they share the site config, but their running processes keep the old settings.
+Rehearsed by `rehearsal.yml` (the old password is refused afterwards).
 
 #### Restic password
 

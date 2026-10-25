@@ -325,6 +325,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   configurator and cannot start.
 
 ### Security
+- The site's own database password rotates with one command
+  (`scripts/deploy/rotate-site-db-password.sh`): maintenance mode, the new password in MariaDB
+  and the site config at once (secrets on stdin only), the connection holders restarted, the
+  smoke test. The production rehearsal runs it and checks that the old password is refused.
 - Findings log with the image scan (SBOM, Trivy) and a configuration review
   (`ops/security/findings.md`); Content-Security-Policy header; the runtime image applies
   Debian security updates and carries no package installer.
