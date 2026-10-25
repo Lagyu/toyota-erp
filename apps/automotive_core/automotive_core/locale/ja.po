@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-25 10:21+0919\n"
+"POT-Creation-Date: 2026-10-25 11:42+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -14113,6 +14113,11 @@ msgstr "フィルター基準"
 #: erpnext/accounts/doctype/bank_reconciliation_tool/bank_reconciliation_tool.json:108
 msgid "Filter by Reference Date"
 msgstr "参照日でフィルター"
+
+#: automotive_core/public/js/automotive_core.bundle.js:262
+#, python-brace-format
+msgid "Filter by {0}"
+msgstr "{0}で絞り込み"
 
 #: frappe/core/doctype/data_import/data_import.js:2910
 msgid "Filter import log"
@@ -34318,6 +34323,10 @@ msgstr "変更された行の値"
 msgid "Row errors"
 msgstr "行のエラー"
 
+#: automotive_core/public/js/automotive_core.bundle.js:262
+msgid "Row number"
+msgstr "行番号"
+
 #: frappe/core/doctype/data_import/importer.py:526
 msgid "Row validation failed"
 msgstr "行の検証に失敗しました。"
@@ -36039,6 +36048,10 @@ msgstr "品目{0}の仕入先を選択してください。"
 msgid "Select a group {0} first."
 msgstr "先にグループの{0}を選択してください。"
 
+#: automotive_core/public/js/automotive_core.bundle.js:249
+msgid "Select all rows"
+msgstr "すべての行を選択"
+
 #: frappe/public/js/frappe/form/form_tour.js:321
 msgid "Select an Image"
 msgstr "画像を選択"
@@ -36121,6 +36134,15 @@ msgstr "割り当てるレコードを選択してください。"
 #: frappe/public/js/frappe/list/bulk_operations.js:280
 msgid "Select records for removing assignment"
 msgstr "割り当てを解除するレコードを選択してください。"
+
+#: automotive_core/public/js/automotive_core.bundle.js:252
+msgid "Select row"
+msgstr "行を選択"
+
+#: automotive_core/public/js/automotive_core.bundle.js:251
+#, python-brace-format
+msgid "Select row {0}"
+msgstr "行{0}を選択"
 
 #: erpnext/manufacturing/doctype/bom/bom.js:478
 msgid "Select template item"

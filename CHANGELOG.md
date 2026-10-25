@@ -311,6 +311,10 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the order documents are made in now has a total order, and the generator requires
   `PYTHONHASHSEED=0` (set by the scripts): a resumed run is another process, and Python
   orders sets of strings by per-process hashes otherwise.
+- Desk forms with child tables had controls without an accessible name: Frappe's grids render
+  their row selection checkboxes and their search inputs unlabelled (axe `label`, critical;
+  found by the new scan of the apps' desk forms). The desk bundle labels them as they are
+  rendered ("Select row 3", "Select all rows", "Filter by Old BOM"), in English and Japanese.
 - The rehearsal's Let's Encrypt check could fail when Traefik asked the ACME test server for
   its directory before it listened: Traefik does not ask again before its daily renewal check.
   The check restarts the proxy once the server answers; troubleshooting.md has the same step

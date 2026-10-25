@@ -231,3 +231,47 @@ frappe.ui.form.on("Integration Outbound Message", {
 		);
 	},
 });
+
+// Accessible names for the controls of Frappe's child-table grids, which carry none of their own
+// (WCAG 2.1, 4.1.2): the row selection checkboxes and the grid's search inputs, labelled as they
+// are rendered.
+automotive.a11y = {
+	label(root) {
+		const within = (selector) => [
+			...(root.matches?.(selector) ? [root] : []),
+			...(root.querySelectorAll?.(selector) || []),
+		];
+		for (const box of within(".grid-row-check:not([aria-label])")) {
+			const index = box.closest(".grid-row")?.querySelector(".row-index span")?.textContent?.trim();
+			box.setAttribute(
+				"aria-label",
+				box.closest(".grid-heading-row")
+					? __("Select all rows")
+					: index
+						? __("Select row {0}", [index])
+						: __("Select row")
+			);
+		}
+		for (const input of within(".grid-row .search input:not([aria-label])")) {
+			const field = input.closest("[data-fieldname]")?.dataset.fieldname;
+			const heading = field
+				&& input
+					.closest(".form-grid")
+					?.querySelector(`.grid-heading-row [data-fieldname="${CSS.escape(field)}"] .static-area`)
+					?.textContent?.trim();
+			input.setAttribute("aria-label", __("Filter by {0}", [heading || __("Row number")]));
+		}
+	},
+};
+(() => {
+	const observe = () =>
+		new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				for (const node of mutation.addedNodes) {
+					if (node.nodeType === Node.ELEMENT_NODE) automotive.a11y.label(node);
+				}
+			}
+		}).observe(document.body, { childList: true, subtree: true });
+	if (document.body) observe();
+	else document.addEventListener("DOMContentLoaded", observe);
+})();
