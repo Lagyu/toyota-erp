@@ -14,7 +14,7 @@ from frappe.utils import add_days, flt, nowdate
 
 from automotive_core.governance.approvals import ApprovalRequiredError
 from automotive_core.integration_hub import inbound
-from automotive_core.tests.utils import AICHI, KYUSHU, approve, as_user, make_user
+from automotive_core.tests.utils import AICHI, KYUSHU, NA, approve, as_user, make_user
 from automotive_manufacturing.mes.production import build_entry
 from automotive_manufacturing.tests import catalog
 from automotive_supply_chain.tests import helpers as h
@@ -692,6 +692,128 @@ class TestIntercompanyJourney(JourneyTestCase):
 			flt(frappe.db.get_value("Bin", {"item_code": inverter, "warehouse": h.KYUSHU_FG}, "actual_qty")),
 			0,
 		)
+
+	def test_an_export_to_north_america_balances_in_both_currencies(self):
+		"""J-07 the other way: Aichi ships to North America in dollars at the agreed transfer price;
+		Aichi's receivable (yen at the day's rate) and North America's payable (its dollars) match
+		invoice by invoice, and the stock moves once."""
+		from erpnext.accounts.doctype.sales_invoice.sales_invoice import make_inter_company_purchase_invoice
+		from erpnext.selling.doctype.sales_order.sales_order import make_delivery_note
+		from erpnext.stock.doctype.delivery_note.delivery_note import make_sales_invoice
+
+		from automotive_supply_chain.intercompany.handoff import create_buyer_receipt, create_seller_order
+		from automotive_supply_chain.intercompany.report.goods_in_transit.goods_in_transit import in_transit
+		from automotive_supply_chain.intercompany.transfer_pricing import reconciliation
+
+		na_stock = "NA Vehicle Inventory - HADNA"
+		for currency, other, rate in (("USD", "JPY", 150), ("JPY", "USD", 1 / 150)):
+			if not frappe.db.exists(
+				"Currency Exchange", {"date": nowdate(), "from_currency": currency, "to_currency": other}
+			):
+				frappe.get_doc(
+					{
+						"doctype": "Currency Exchange",
+						"date": nowdate(),
+						"from_currency": currency,
+						"to_currency": other,
+						"exchange_rate": rate,
+						"for_buying": 1,
+						"for_selling": 1,
+					}
+				).insert(ignore_permissions=True)
+		kit = "TST-EXPORT-KIT"
+		if not frappe.db.exists("Item", kit):
+			frappe.get_doc(
+				{
+					"doctype": "Item",
+					"item_code": kit,
+					"item_name": "Test export accessory kit",
+					"item_group": "Sub Assemblies",
+					"stock_uom": "Nos",
+					"is_stock_item": 1,
+					"valuation_rate": 100_000,
+					"item_defaults": [
+						{"company": AICHI, "default_warehouse": catalog.FG},
+						{"company": NA, "default_warehouse": na_stock},
+					],
+				}
+			).insert(ignore_permissions=True)
+		receipt = frappe.get_doc(
+			{
+				"doctype": "Stock Entry",
+				"purpose": "Material Receipt",
+				"stock_entry_type": "Material Receipt",
+				"company": AICHI,
+				"items": [{"item_code": kit, "qty": 4, "t_warehouse": catalog.FG, "basic_rate": 100_000}],
+			}
+		)
+		receipt.insert(ignore_permissions=True)
+		receipt.submit()
+		h.transfer_price(AICHI, NA, kit, 900, currency="USD")
+		internal_supplier = frappe.db.get_value(
+			"Supplier", {"is_internal_supplier": 1, "represents_company": AICHI}, "name"
+		)
+		with as_user(h.BUYER):
+			po = frappe.get_doc(
+				{
+					"doctype": "Purchase Order",
+					"supplier": internal_supplier,
+					"company": NA,
+					"currency": "USD",
+					"buying_price_list": "Intercompany USD",
+					"transaction_date": nowdate(),
+					"schedule_date": add_days(nowdate(), 28),
+					"items": [
+						{
+							"item_code": kit,
+							"qty": 4,
+							"rate": 900,
+							"warehouse": na_stock,
+							"schedule_date": add_days(nowdate(), 28),
+						}
+					],
+				}
+			).insert()
+		approve(po, h.BUYER, [h.PROC_MGR])
+		with as_user(h.BUYER):
+			po.reload()
+			po.submit()
+		with as_user(h.SALES_MGR):
+			so = frappe.get_doc(
+				"Sales Order", create_seller_order(po.name, add_days(nowdate(), 7), catalog.FG)
+			)
+			so.submit()
+		self.assertEqual((so.company, so.currency, flt(so.conversion_rate)), (AICHI, "USD", 150))
+		self.assertEqual([(r.item_code, flt(r.qty), flt(r.rate)) for r in so.items], [(kit, 4, 900)])
+		dn = make_delivery_note(so.name)
+		dn.insert(ignore_permissions=True)
+		dn.submit()
+		self.assertEqual({r.delivery_note: r.buyer for r in in_transit(nowdate())}.get(dn.name), NA)
+		pr = frappe.get_doc("Purchase Receipt", create_buyer_receipt(dn.name, na_stock))
+		pr.submit()
+		si = make_sales_invoice(dn.name)
+		si.insert(ignore_permissions=True)
+		si.submit()
+		pi = make_inter_company_purchase_invoice(si.name)
+		pi.insert(ignore_permissions=True)
+		pi.reload()
+		self.assertEqual(pi.automotive_match_status, "Matched")
+		pi.submit()
+		# the same dollars on both sides; Aichi carries them in yen at the day's rate
+		self.assertEqual((si.currency, pi.currency), ("USD", "USD"))
+		self.assertEqual(flt(pi.grand_total), flt(si.grand_total))
+		self.assertEqual(flt(si.net_total), 3_600)
+		self.assertAlmostEqual(flt(si.base_grand_total), flt(si.grand_total) * 150, places=2)
+		self.assertAlmostEqual(flt(pi.base_grand_total), flt(pi.grand_total), places=2)
+		result = reconciliation(AICHI, NA)
+		self.assertTrue(result["balanced"], result)
+		bins = {
+			warehouse: flt(
+				frappe.db.get_value("Bin", {"item_code": kit, "warehouse": warehouse}, "actual_qty")
+			)
+			for warehouse in (catalog.FG, na_stock)
+		}
+		self.assertEqual(bins, {catalog.FG: 0, na_stock: 4})
 
 
 class TestDealerJourney(JourneyTestCase):
