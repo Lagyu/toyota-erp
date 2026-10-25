@@ -44,7 +44,11 @@ case ${TLS_MODE:-files} in
 	*) die "TLS_MODE must be letsencrypt, files or none" ;;
 esac
 files+=(-f "$deploy/compose.hinode.yaml")
-[[ ${DATASTORES:-bundled} == bundled ]] && files+=(-f "$deploy/compose.datastores.yaml")
+if [[ ${DATASTORES:-bundled} == bundled ]]; then
+	files+=(-f "$deploy/compose.datastores.yaml")
+else
+	files+=(-f "$deploy/compose.external-datastores.yaml")
+fi
 [[ ${CLAMAV:-1} == 1 ]] && files+=(-f "$deploy/compose.clamav.yaml")
 if [[ ${MONITORING:-0} == 1 ]]; then
 	# Prometheus has no environment expansion: render the site name into its config

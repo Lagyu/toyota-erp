@@ -1,13 +1,16 @@
 #!/usr/bin/env bash
 # The application tier of the high-availability option rehearsed on one runner (PRF-6;
 # ops/runbooks/high-availability.md), each host a compose project of the deploy compose:
-# - the datastores: the stack's MariaDB and Redis only (project hinode-ha-ds), reached under
-#   one name each over a network standing in for the hosts' LAN;
+# - the datastores: the stack's MariaDB and Redis only (project hinode-ha-ds), their ports
+#   published on the runner, which the other hosts reach under one name each;
 # - two application hosts from IMAGE (hinode-ha-a, hinode-ha-b) with DATASTORES=external and
 #   the `sites` volume shared, standing in for shared storage; host A carries the singletons
 #   (SINGLETONS=1), host B does not (SINGLETONS=0);
 # - a load balancer (the deploy's Traefik) in front of both front ends, health-checking the
 #   ready endpoint, as high-availability.md describes.
+# The hosts share no Docker network: like separate machines, each reaches the others' services
+# by a name and a published port (host-gateway), so no host can resolve another host's
+# `backend` as its own.
 # Checks: both hosts serve the site; a change made through one is read through the other, a
 # file written on one is read on the other; one scheduler in the deployment. Then host A fails
 # (all its containers stop): the balancer keeps serving through B (the requests that failed,
@@ -61,8 +64,6 @@ ADMIN_PASSWORD_FILE=$work/secrets/admin_password
 METRICS_TOKEN_FILE=$work/secrets/metrics_token
 RESTIC_PASSWORD_FILE=$work/secrets/restic_password
 RESTIC_REPOSITORY=/home/frappe/frappe-bench/sites/.restic-ha
-BACKUP_SCHEDULE=off
-RESTORE_DRILL_SCHEDULE=off
 BINLOG_SCHEDULE=off
 GUNICORN_WORKERS=2
 BACKEND_MEM_LIMIT=1536m
@@ -81,45 +82,46 @@ COMPOSE_PROJECT_NAME=hinode-ha-ds
 HTTP_PUBLISH_PORT=127.0.0.1:18129
 COMPOSE_EXTRA_FILES=$work/ds-lan.yaml
 EOF
+# the datastores reachable from the other hosts: published ports need a network with a route
 cat >"$work/ds-lan.yaml" <<'EOF'
 services:
   db:
-    networks: { backend: {}, ha-lan: { aliases: [ha-db] } }
+    networks: [backend, egress]
+    ports: ["13306:3306"]
   redis-cache:
-    networks: { backend: {}, ha-lan: { aliases: [ha-redis-cache] } }
+    networks: [backend, egress]
+    ports: ["16379:6379"]
   redis-queue:
-    networks: { backend: {}, ha-lan: { aliases: [ha-redis-queue] } }
-networks:
-  ha-lan: { external: true }
+    networks: [backend, egress]
+    ports: ["16380:6379"]
 EOF
 # an application host: HOST (a, b), PORT, SINGLETONS
 app_host() {
 	common >"$work/$1.env"
 	cat >>"$work/$1.env" <<EOF
 COMPOSE_PROJECT_NAME=hinode-ha-$1
-HTTP_PUBLISH_PORT=127.0.0.1:$2
+HTTP_PUBLISH_PORT=$2
 DATASTORES=external
 DB_HOST=ha-db
-DB_PORT=3306
-REDIS_CACHE=ha-redis-cache:6379
-REDIS_QUEUE=ha-redis-queue:6379
+DB_PORT=13306
+REDIS_CACHE=ha-redis-cache:16379
+REDIS_QUEUE=ha-redis-queue:16380
 SINGLETONS=$3
 COMPOSE_EXTRA_FILES=$work/$1-lan.yaml
 EOF
+	# the datastores host's names, and the shared storage for the sites volume
+	local names='["ha-db:host-gateway", "ha-redis-cache:host-gateway", "ha-redis-queue:host-gateway"]'
 	cat >"$work/$1-lan.yaml" <<EOF
 services:
-  configurator: { networks: { backend: {}, ha-lan: {} } }
-  backend: { networks: { backend: {}, egress: {}, ha-lan: {} } }
-  websocket: { networks: { backend: {}, ha-lan: {} } }
-  queue-short: { networks: { backend: {}, egress: {}, ha-lan: {} } }
-  queue-long: { networks: { backend: {}, egress: {}, ha-lan: {} } }
-  scheduler: { networks: { backend: {}, egress: {}, ha-lan: {} } }
-  cron: { networks: { backend: {}, egress: {}, ha-lan: {} } }
-  frontend: { networks: { edge: {}, backend: {}, ha-lan: { aliases: [ha-$1-frontend] } } }
+  configurator: { extra_hosts: $names }
+  backend: { extra_hosts: $names }
+  websocket: { extra_hosts: $names }
+  queue-short: { extra_hosts: $names }
+  queue-long: { extra_hosts: $names }
+  scheduler: { extra_hosts: $names }
+  cron: { extra_hosts: $names }
 volumes:
   sites: { external: true, name: ha-sites }
-networks:
-  ha-lan: { external: true }
 EOF
 }
 app_host a 18121 1
@@ -128,7 +130,11 @@ ds() { "$REPO_ROOT/scripts/deploy/compose.sh" "$work/ds.env" "$@"; }
 host() { local h=$1; shift; "$REPO_ROOT/scripts/deploy/compose.sh" "$work/$h.env" "$@"; }
 on() { local h=$1; shift; host "$h" exec -T backend bench --site "$SITE" "$@"; }
 # the HTTP status of PATH through the balancer or a host's own front end (port)
-status_at() { curl -s -o /dev/null -m 5 -w '%{http_code}' -H "Host: $SITE" "http://127.0.0.1:$1$2" || echo 000; }
+status_at() {
+	local code
+	code=$(curl -s -o /dev/null -m 5 -w '%{http_code}' -H "Host: $SITE" "http://127.0.0.1:$1$2" 2>/dev/null) || true
+	echo "${code:-000}"
+}
 READY=/api/method/automotive_core.ops.health.ready
 
 finish() {
@@ -141,7 +147,6 @@ finish() {
 	done
 	docker_cmd rm -f ha-lb >/dev/null 2>&1 || true
 	docker_cmd volume rm ha-sites >/dev/null 2>&1 || true
-	docker_cmd network rm ha-lan >/dev/null 2>&1 || true
 	rm -rf "$work/secrets"
 	{ echo; echo "$failures failed step(s)."; } >>"$report"
 	cat "$report"
@@ -149,14 +154,13 @@ finish() {
 }
 fatal() { fail "$1"; finish; }
 
-step "Datastores host: MariaDB and Redis, reached over the hosts' network"
-docker_cmd network create ha-lan >/dev/null
+step "Datastores host: MariaDB and Redis, reached by name and published port"
 docker_cmd volume create ha-sites >/dev/null
 if ! ds up -d --quiet-pull db redis-cache redis-queue >"$out/ds-up.log" 2>&1; then
 	fatal "see ds-up.log"
 fi
 for _ in $(seq 1 60); do ds exec -T db healthcheck.sh --connect >/dev/null 2>&1 && break; sleep 5; done
-pass "$(ds ps --format '{{.Service}}' | tr '\n' ' ')on ha-lan as ha-db, ha-redis-cache, ha-redis-queue"
+pass "$(ds ps --format '{{.Service}}' | tr '\n' ' ')as ha-db:13306, ha-redis-cache:16379, ha-redis-queue:16380"
 
 step "Host A (singletons): first start and the site on the external database and shared storage"
 if ! timeout 900 "$REPO_ROOT/scripts/deploy/compose.sh" "$work/a.env" up -d --quiet-pull >"$out/a-up.log" 2>&1 \
@@ -196,10 +200,11 @@ http:
           interval: 2s
           timeout: 2s
         servers:
-          - url: http://ha-a-frontend:8080
-          - url: http://ha-b-frontend:8080
+          - url: http://ha-a:18121
+          - url: http://ha-b:18122
 EOF
-docker_cmd run -d --name ha-lb --network ha-lan -p 127.0.0.1:18120:80 -v "$work/lb:/etc/traefik/dynamic:ro" \
+docker_cmd run -d --name ha-lb --add-host ha-a:host-gateway --add-host ha-b:host-gateway -p 127.0.0.1:18120:80 \
+	-v "$work/lb:/etc/traefik/dynamic:ro" \
 	"$TRAEFIK_IMAGE" --entrypoints.web.address=:80 --providers.file.directory=/etc/traefik/dynamic \
 	--providers.file.watch=true --log.level=INFO >/dev/null
 for _ in $(seq 1 30); do [[ $(status_at 18120 "$READY") == 200 ]] && break; sleep 2; done
@@ -282,6 +287,7 @@ set_env_in b SINGLETONS=1
 host b up -d scheduler cron >"$out/b-singletons.log" 2>&1 || true
 for _ in $(seq 1 30); do
 	running=$(singletons)
+	# the cron service logs each schedule's next run when it starts
 	cron_logged=$(host b logs --no-color cron 2>/dev/null | grep -c 'next at' || true)
 	[[ $running == "b:cron b:scheduler" && $cron_logged -ge 1 ]] && break
 	sleep 5

@@ -58,6 +58,10 @@ for name in ("scheduler", "cron"):
 	replicas = (services[name].get("deploy") or {}).get("replicas")
 	if replicas != 0:
 		problems.append(f"{name}: {replicas} replicas on a host without the singletons")
+# every service that uses MariaDB or Redis can reach them: the backend network has no route out
+for name in ("backend", "queue-short", "queue-long", "websocket"):
+	if "egress" not in (services[name].get("networks") or {}):
+		problems.append(f"{name}: not on the outbound network, cannot reach external datastores")
 print(f"DATASTORES=external SINGLETONS=0: {len(services)} services, "
 	+ ("ok" if not problems else "\n  " + "\n  ".join(problems)))
 sys.exit(1 if problems else 0)

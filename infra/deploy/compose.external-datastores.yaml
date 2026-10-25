@@ -1,0 +1,6 @@
+# DATASTORES=external: MariaDB and Redis are reached over the network, which the stack's
+# internal backend network has no route to. The services that use them are on the outbound
+# network already (x-app), except the realtime server, which needs Redis.
+services:
+  websocket:
+    networks: [backend, egress]

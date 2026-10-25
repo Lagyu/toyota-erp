@@ -48,6 +48,11 @@ Per host, besides:
 3. Commands that act on the site through the scheduler container (`upgrade.sh`, a backup or
    drill by hand, `restore.sh`) run on the host with `SINGLETONS=1`.
 
+With `DATASTORES=external` the services that use the datastores reach them over the stack's
+outbound network (`compose.external-datastores.yaml` puts the realtime server on it too). Keep
+the datastores on a private network, or give Redis a password (`REDIS_CACHE` and `REDIS_QUEUE`
+take `user:password@host:port`).
+
 `preflight.sh` reports both settings; with `DATASTORES=external` it warns that binary log
 shipping needs the external server's binary log (with a managed database, use its own
 point-in-time recovery and set `BINLOG_SCHEDULE=off`). With `MONITORING=1`, the Redis
@@ -70,7 +75,8 @@ the external MariaDB.
 - The single-host topology: install from the runbook, upgrade, reboot and power loss, off-host
   backup and restore drill (`rehearsal.yml`; [install-fresh-host.md](install-fresh-host.md)).
 - **The application tier of this option** (`rehearsal.yml` job `ha`,
-  `scripts/ci/ha-check.sh`, on one runner, each host a compose project): a datastores host
+  `scripts/ci/ha-check.sh`, on one runner, each host a compose project that reaches the others
+  only by name and published port, as separate machines would): a datastores host
   (MariaDB and Redis), two application hosts with `DATASTORES=external` sharing the `sites`
   volume, one with `SINGLETONS=1`, and a Traefik load balancer health-checking both. It checks
   that both hosts serve the site, that a change made through one and a file written on one

@@ -277,8 +277,9 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
 - The high-availability option is packaged as settings: `DATASTORES=external` leaves MariaDB
   and Redis out of the stack for `DB_HOST`, `DB_PORT`, `REDIS_CACHE` and `REDIS_QUEUE`
   (`infra/deploy/compose.datastores.yaml` holds the bundled ones), and `SINGLETONS=0` leaves
-  the scheduler and cron service out on all application hosts but one; preflight and the CI
-  compose check cover both. The rehearsal workflow's `ha` job rehearses the application tier:
+  the scheduler and cron service out on all application hosts but one (with external
+  datastores the realtime server joins the outbound network, its only route to Redis); preflight
+  and the CI compose check cover both. The rehearsal workflow's `ha` job rehearses the application tier:
   two hosts on external datastores and shared storage behind a health-checking Traefik, the
   singleton host failing, the singletons moved (`scripts/ci/ha-check.sh`).
 - The journeys can run on a deployment closer to a live one: `journeys.yml` restores a
