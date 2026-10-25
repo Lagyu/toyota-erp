@@ -227,6 +227,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   write and read of a File. It now answers True and refuses only reading a file that is not yet
   clean while scanning is required; a test attaches and reads files as a desk user. Found by the
   production rehearsal's upload through ClamAV.
+- An invoice made from a receipt with rejected goods could not be submitted: ERPNext's default
+  bills the rejected quantity too, which the three-way match refuses (billed above accepted).
+  The tenant turns that off, and a patch does on existing sites; rejected goods are returned,
+  not paid for. Found by the new supplier report test; no generated dataset had rejected a
+  lot yet.
 - A smoke test right after `new-site.sh` (runbook steps 8 and 9) could get 403 for the metrics
   token: Frappe's workers keep a site's config for up to a minute. `new-site.sh` now returns
   once every worker serves the new settings. Found by the VM reboot check's install.
