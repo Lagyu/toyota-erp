@@ -108,6 +108,20 @@ restic supports several keys per repository.
 4. **Escrow the new password.**
 5. Remove the old key with `restic key remove <old key id>`, and delete `/tmp/new-restic-password` in the container.
 
+#### Exporter database password
+
+The MariaDB account mysqld-exporter signs in with (`MONITORING=1`). Put a new password into
+`MYSQLD_EXPORTER_CNF` (as when it was made, [install-fresh-host.md](install-fresh-host.md#3-provision-secrets)),
+then:
+
+```bash
+./scripts/deploy/monitoring-account.sh "$ENV"
+```
+
+It sets the account to the file's password, resets its rights to what the collectors need (no
+access to the ERP's data) and restarts mysqld-exporter. Rehearsed by `rehearsal.yml` (the
+monitoring targets are up afterwards).
+
 #### Other secrets
 
 - **S3 credentials:** create new keys at the storage provider and update `RESTIC_AWS_*` in `$ENV`. Run `./scripts/deploy/compose.sh "$ENV" up -d scheduler cron` (the environment changed, so they are recreated). Run a manual backup, then revoke the old keys.

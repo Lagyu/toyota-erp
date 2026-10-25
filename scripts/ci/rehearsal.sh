@@ -412,6 +412,18 @@ else
 	fail "jobs ok $ran of 2, newest snapshot $snapshot_before -> $snapshot_after, drill ok '${drill_ok:-?}' (see cron-schedule.log)"
 fi
 
+step "Exporter password rotation (monitoring-account.sh)"
+# a new password in the exporter's credentials file, then the script: the account follows it and
+# the exporter signs in again (the monitoring targets below include it)
+printf '[client]\nuser=exporter\npassword=%s\nhost=db\nport=3306\n' "$(random_secret)" \
+	| sudo tee "$SECRETS/mysqld_exporter.cnf" >/dev/null
+if "$REPO_ROOT/scripts/deploy/monitoring-account.sh" "$ENV" >"$out/monitoring-account.log" 2>&1 \
+	&& grep -q 'password and rights set for exporter@%' "$out/monitoring-account.log"; then
+	pass "$(grep -o 'password and rights set for exporter@%' "$out/monitoring-account.log"); mysqld-exporter restarted"
+else
+	fail "see monitoring-account.log"
+fi
+
 step "Monitoring targets"
 monitoring_targets "$REPO_ROOT/scripts/deploy/compose.sh"
 if [[ $total -gt 0 && $up == "$total" ]]; then

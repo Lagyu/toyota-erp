@@ -313,6 +313,11 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   time. `QUEUE_SHORT_WORKERS` and `QUEUE_LONG_WORKERS` add queue workers. The load test records
   the binary logs' growth per phase, the drill at scale every table's size and the backup's
   stored size; the rehearsal checks the digests and the size metrics.
+- `scripts/deploy/monitoring-account.sh` creates the MariaDB account of mysqld-exporter from
+  `MYSQLD_EXPORTER_CNF`, and rotates its password: no script did before. The account gets only
+  what the collectors need (PROCESS, REPLICATION CLIENT, SLAVE MONITOR, SELECT on
+  performance_schema); the documented `SELECT ON *.*` let the exporter's credentials read every
+  table of the ERP. The rehearsal rotates the exporter's password with it.
 - The backup and the restore drill can be measured at the acceptance size: `drill.yml` restores a
   dataset.yml export on a reference stack, backs it up, ships a change and runs the drill,
   recording the sizes, the durations and the recovery point (`scripts/ci/drill-at-scale.sh`).

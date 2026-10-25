@@ -53,7 +53,7 @@ provision_secrets() {
 	exporter_password=$(random_secret)
 	printf '[client]\nuser=exporter\npassword=%s\nhost=db\nport=3306\n' "$exporter_password" \
 		| sudo tee "$SECRETS/mysqld_exporter.cnf" >/dev/null
-	sudo chown 65534 "$SECRETS/mysqld_exporter.cnf" && sudo chmod 0400 "$SECRETS/mysqld_exporter.cnf"
+	sudo chown 65534:"$(id -gn)" "$SECRETS/mysqld_exporter.cnf" && sudo chmod 0440 "$SECRETS/mysqld_exporter.cnf"
 }
 
 # Step 5 with TLS_MODE=files: fullchain.pem and privkey.pem for SITE from a CA made for the
@@ -92,7 +92,8 @@ s3_store() {
 monitoring_account() {
 	"$1" "$ENV" exec -T -e ROOT="$(<"$SECRETS/db_root_password")" db sh -c 'mariadb -uroot -p"$ROOT"' <<SQL
 CREATE USER IF NOT EXISTS 'exporter'@'%' IDENTIFIED BY '$exporter_password' WITH MAX_USER_CONNECTIONS 3;
-GRANT PROCESS, REPLICATION CLIENT, SELECT ON *.* TO 'exporter'@'%';
+GRANT PROCESS, REPLICATION CLIENT, SLAVE MONITOR ON *.* TO 'exporter'@'%';
+GRANT SELECT ON performance_schema.* TO 'exporter'@'%';
 SQL
 }
 

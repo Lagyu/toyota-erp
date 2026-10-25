@@ -62,7 +62,7 @@ column says.
 | S3-compatible bucket and access key | off-host backups and binary log shipping | `RESTIC_REPOSITORY`, `RESTIC_AWS_ACCESS_KEY_ID`, `RESTIC_AWS_SECRET_ACCESS_KEY` | yes | backups stay on the host only; preflight fails |
 | Outgoing e-mail account (SMTP host, user, password) | notification e-mails, password resets, the authenticator QR code a privileged user gets at first sign-in | Email Account in the desk, after site creation | yes, before privileged users sign in | e-mails fail visibly (Notification Dispatch: Failed); privileged users cannot enrol their authenticator |
 | Alert receiver (the operations team's webhook, mail or chat credentials) | alert delivery | `infra/deploy/monitoring/alertmanager.yml` | with `MONITORING=1` | alerts fire in Prometheus and Alertmanager but reach no one |
-| Database monitoring account | MariaDB metrics | `mysqld_exporter.cnf` ([3](#3-provision-secrets)) | with `MONITORING=1` | the `mysql` target is down |
+| Database monitoring account | MariaDB metrics | `mysqld_exporter.cnf` ([3](#3-provision-secrets)), then `monitoring-account.sh` ([10](#10-enable-backups-clamav-and-monitoring)) | with `MONITORING=1` | the `mariadb` target is down |
 | Container registry login | pulling a private image | `docker login` on the host | if the registry is private | build the image on the host instead |
 | Identity provider (OIDC/SAML single sign-on, LDAP) | central sign-in | Social Login Key or LDAP Settings ([security-operations.md](security-operations.md#identity-provider-sso-and-ldap)) | no | local accounts with privileged MFA |
 | Partner endpoints: each partner's webhook URL, and its host in the allowlist | outbound messages to partners | Integration Partner, Automotive Settings → *Outbound Host Allowlist* ([integration-operations.md](integration-operations.md)) | per partner | messages wait in the outbox; the partner's *Connection Status* stays Not Configured or Configured (Unverified), never Live before a verified delivery |
@@ -141,7 +141,7 @@ Secrets are files. The environment file only points at them.
 | `/etc/hinode/secrets/admin_password` | `ADMIN_PASSWORD_FILE` | `new-site.sh` (Administrator password at site creation) and `smoke.sh`, on the host | readable by the deploy user, e.g. `0400` |
 | `/etc/hinode/secrets/metrics_token` | `METRICS_TOKEN_FILE` | `new-site.sh` (site config `automotive_metrics_token`); Prometheus (uid **65534**) when `MONITORING=1` | `MONITORING=1`: `chown 65534:<deploy group>`, `0440`. Otherwise readable by the deploy user. |
 | `/etc/hinode/secrets/grafana_admin_password` | `GRAFANA_ADMIN_PASSWORD_FILE` | Grafana (uid **472**), when `MONITORING=1` | owner uid 472, `0400` |
-| `/etc/hinode/secrets/mysqld_exporter.cnf` | `MYSQLD_EXPORTER_CNF` | mysqld-exporter (uid **65534**), when `MONITORING=1` | owner uid 65534, `0400`. A MySQL client option file with the credentials of a monitoring account. **No script creates the account or the file.** |
+| `/etc/hinode/secrets/mysqld_exporter.cnf` | `MYSQLD_EXPORTER_CNF` | mysqld-exporter (uid **65534**), when `MONITORING=1`; `monitoring-account.sh` on the host | `chown 65534:<deploy group>`, `0440`. A MySQL client option file with the monitoring account's credentials: made below, the account itself by `scripts/deploy/monitoring-account.sh` after the first start ([10](#10-enable-backups-clamav-and-monitoring)). |
 
 No secret may be readable by "other" (preflight fails).
 
@@ -162,7 +162,14 @@ sudo chown 472 grafana_admin_password && sudo chmod 0400 grafana_admin_password 
 cd /srv/toyota-erp
 ```
 
-With `MONITORING=1`, also create `mysqld_exporter.cnf` with the credentials of a MariaDB monitoring account (`chown 65534`, `chmod 0400`).
+With `MONITORING=1`, also the exporter's credentials file (with external datastores, `host` and `port` are `DB_HOST` and `DB_PORT`):
+
+```bash
+cd /etc/hinode/secrets
+sudo sh -c "umask 077; printf '[client]\nuser=exporter\npassword=%s\nhost=db\nport=3306\n' \"\$(python3 -c 'import secrets; print(secrets.token_urlsafe(24))')\" > mysqld_exporter.cnf"
+sudo chown 65534:"$(id -gn)" mysqld_exporter.cnf && sudo chmod 0440 mysqld_exporter.cnf
+cd /srv/toyota-erp
+```
 
 **Escrow before go-live.** Store copies of these, off the host, in your password vault:
 
@@ -376,8 +383,9 @@ Keep the output of both as installation evidence (brief §8.2 gate 6). No script
 
   See [security-operations.md](security-operations.md#file-uploads-and-clamav).
 - **Monitoring** (`MONITORING=1`):
-  1. Point `ALERTMANAGER_CONFIG` at an Alertmanager file with your team's receiver. The default sends to a placeholder URL.
-  2. Open Grafana through an SSH tunnel.
+  1. Create the MariaDB account of `mysqld_exporter.cnf`: `./scripts/deploy/monitoring-account.sh "$ENV"`. It has only the rights the exporter's collectors need (process list, replication and binary log status, `performance_schema`), none on the ERP's data, and the script restarts mysqld-exporter.
+  2. Point `ALERTMANAGER_CONFIG` at an Alertmanager file with your team's receiver. The default sends to a placeholder URL.
+  3. Open Grafana through an SSH tunnel.
 
   See [monitoring.md](monitoring.md). The production rehearsal (`rehearsal.yml`) runs the overlay and checks that every Prometheus target is up; check them on your host too after enabling it.
 - **Outgoing email.** Configure an Email Account in the desk for welcome mails, password resets and notifications. No script does this. On production it is needed before any privileged user (two-factor roles, IT Operator included) logs in for the first time: Frappe e-mails them the link to their authenticator QR code, and their login fails until it can ([security-operations.md](security-operations.md#privileged-mfa)).
