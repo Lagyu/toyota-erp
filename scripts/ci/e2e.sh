@@ -223,6 +223,12 @@ docker_cmd run --rm --network host -u "$(id -u):$(id -g)" -e HOME=/tmp -e CI="${
 	-v "$REPO_ROOT/e2e:/e2e" -v "$out:/creds:ro" -v "$out:/report" -w /e2e "$PLAYWRIGHT_IMAGE" \
 	bash -lc 'test -d node_modules/@axe-core/playwright || npm ci --no-audit --no-fund >/dev/null; npx playwright test "$@"' \
 	e2e "${pw_args[@]}" || playwright=$?
-if ((${contract:-0} || playwright)); then
-	die "API contract and concurrency tests: exit ${contract:-0}; Playwright: exit $playwright"
+if [[ -n $image ]]; then
+	# every state-changing method against its documented request schema, with placeholders that
+	# name nothing: after the browser suite, since a call may leave a record behind
+	"$REPO_ROOT/scripts/ci/contract.sh" --url "$url" --site "$site" --password-file "$secrets/admin_password" \
+		test_api_requests || requests=$?
+fi
+if ((${contract:-0} || playwright || ${requests:-0})); then
+	die "API contract and concurrency tests: exit ${contract:-0}; Playwright: exit $playwright; state-changing requests: exit ${requests:-0}"
 fi

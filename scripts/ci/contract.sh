@@ -2,7 +2,10 @@
 # API tests (integration_tests/) against a running site: the API against the committed OpenAPI
 # document, authorization as signed-in users without the right, and concurrent requests to
 # critical workflows.
-#   contract.sh --url http://small.localhost:18000 --site small.localhost [--password-file FILE]
+#   contract.sh --url http://small.localhost:18000 --site small.localhost [--password-file FILE] [MODULE ...]
+# MODULE: the test modules to run (default: test_api_contract, test_authorization,
+# test_concurrency). test_api_requests calls every state-changing method with placeholder
+# values: only on a disposable stack, after the browser suite (e2e.sh runs it there).
 # The authorization and concurrency tests also need the run's personas and journey fixtures
 # (INTEGRATION_CREDENTIALS, INTEGRATION_FIXTURES: scripts/ci/e2e.sh sets them); without them
 # they are skipped.
@@ -12,15 +15,18 @@
 set -euo pipefail
 source "$(dirname "$0")/../lib/common.sh"
 export LOG_TAG=contract
-url="" site="" password_file=""
+url="" site="" password_file="" modules=()
 while (($#)); do
 	case $1 in
 		--url) url=$2; shift 2 ;;
 		--site) site=$2; shift 2 ;;
 		--password-file) password_file=$2; shift 2 ;;
-		*) die "usage: contract.sh --url URL [--site SITE] [--password-file FILE]" ;;
+		test_*) modules+=("integration_tests.$1"); shift ;;
+		*) die "usage: contract.sh --url URL [--site SITE] [--password-file FILE] [MODULE ...]" ;;
 	esac
 done
+((${#modules[@]})) || modules=(integration_tests.test_api_contract integration_tests.test_authorization \
+	integration_tests.test_concurrency)
 [[ -n $url ]] || die "--url is required"
 if [[ -n $password_file ]]; then
 	INTEGRATION_PASSWORD=$(<"$password_file")
@@ -31,4 +37,4 @@ fi
 export INTEGRATION_URL=$url INTEGRATION_HOST=${site:-} INTEGRATION_PASSWORD
 cd "$REPO_ROOT"
 log "API tests against $url${site:+ ($site)}"
-python3 -m unittest -v integration_tests.test_api_contract integration_tests.test_authorization integration_tests.test_concurrency
+python3 -m unittest -v "${modules[@]}"

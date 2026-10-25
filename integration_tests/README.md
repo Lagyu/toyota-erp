@@ -12,7 +12,12 @@ Contract tests of the running API against the committed OpenAPI document
   method that names the roles it requires refuses a line operator without them and a partner
   portal user, every partner-portal method refuses the other kind of partner, and a Kyushu
   user's lists and reads hold no Aichi documents (`test_authorization.py`); concurrent
-  requests to critical workflows create one document (`test_concurrency.py`).
+  requests to critical workflows create one document (`test_concurrency.py`);
+- every state-changing method, called with a body of its documented shape whose references
+  name nothing, answers with a documented status and never a server error, and a 200 body
+  matches its response schema (`test_api_requests.py`). The calls can leave records behind:
+  `scripts/ci/e2e.sh` runs this module last, on its disposable stack
+  (`contract.sh ... test_api_requests`).
 
 They use only the Python standard library and run from the host against a site that serves
 the API:
