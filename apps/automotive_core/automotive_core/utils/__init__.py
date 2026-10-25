@@ -9,6 +9,7 @@ import json
 from typing import Any
 
 import frappe
+from frappe import _
 
 
 def _default(value: Any) -> Any:
@@ -94,3 +95,30 @@ def commit() -> None:
 	generator (automotive_seed) owns its transaction boundaries (one per simulated day)."""
 	if not (frappe.flags.in_test or frappe.flags.automotive_bulk):
 		frappe.db.commit()
+
+
+_NOT_JSON = object()
+
+
+def json_argument(value: Any, name: str, expected: type | tuple[type, ...] | None = None) -> Any:
+	"""A request argument that may arrive as JSON text, parsed (empty text: None). Text that is
+	not JSON, or JSON of another type than ``expected``, is the caller's mistake: a validation
+	error (HTTP 417), not a server error."""
+	if isinstance(value, str):
+		if not value.strip():
+			return None
+		try:
+			value = json.loads(value)
+		except ValueError:
+			value = _NOT_JSON
+	if value is _NOT_JSON or (expected and value is not None and not isinstance(value, expected)):
+		frappe.throw(_("{0} is not valid JSON of the expected type.").format(name), frappe.ValidationError)
+	return value
+
+
+def requested_doc(doctype: str, name: str):
+	"""The document a request names by DocType and name. An unknown DocType is "not found"
+	(HTTP 404) like an unknown document, not a server error."""
+	if not isinstance(doctype, str) or not frappe.db.exists("DocType", doctype):
+		frappe.throw(_("{0} {1} not found").format(doctype, name), frappe.DoesNotExistError)
+	return frappe.get_doc(doctype, name)

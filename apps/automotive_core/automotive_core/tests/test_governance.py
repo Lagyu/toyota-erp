@@ -12,7 +12,7 @@ from automotive_core.governance import audit, cancellation, provisioning
 from automotive_core.governance.cancellation import CancelReasonRequiredError
 from automotive_core.governance.sod import SegregationOfDutiesError
 from automotive_core.tests.utils import TEST_VOUCHER, as_user, make_user, make_voucher
-from automotive_core.utils import hook_set
+from automotive_core.utils import hook_set, json_argument, requested_doc
 
 
 class TestAuditChain(IntegrationTestCase):
@@ -84,6 +84,25 @@ class TestCancellation(IntegrationTestCase):
 			)
 			self.assertIn("Duplicate voucher entered twice", event[0].payload)
 		frappe.local.automotive_hook_sets = {}
+
+
+class TestRequestArguments(IntegrationTestCase):
+	"""TST-4: what a request names or sends in the wrong shape is refused as the caller's mistake
+	(404, 417), not a server error."""
+
+	def test_json_arguments_are_parsed_or_refused(self):
+		self.assertEqual(json_argument('[{"item_code": "X"}]', "lines", list), [{"item_code": "X"}])
+		self.assertEqual(json_argument([1], "lines", list), [1])
+		self.assertIsNone(json_argument(" ", "lines", list))
+		for value in ("CONTRACT-PLACEHOLDER", '{"a": 1}', "[1"):
+			with self.assertRaises(frappe.ValidationError, msg=value):
+				json_argument(value, "lines", list)
+
+	def test_an_unknown_doctype_is_not_found(self):
+		with self.assertRaises(frappe.DoesNotExistError):
+			requested_doc("No Such Doctype Anywhere", "X")
+		with self.assertRaises(frappe.DoesNotExistError):
+			cancellation.cancel_with_reason("No Such Doctype Anywhere", "X", "A reason long enough to pass")
 
 
 class TestSegregationOfDuties(IntegrationTestCase):

@@ -15,6 +15,7 @@ from frappe.utils import flt, now_datetime
 
 from automotive_core.governance import elevation
 from automotive_core.integration_hub.idempotency import idempotent
+from automotive_core.utils import json_argument
 from automotive_supply_chain.partners import capabilities, require_capability, require_party
 
 PAGE = 50
@@ -147,11 +148,9 @@ def order(name: str) -> dict:
 def acknowledge(
 	purchase_order: str, response: str, lines: list | str | None = None, supplier_reference: str | None = None
 ) -> dict:
-	import json
-
 	supplier = _supplier("acknowledge")
 	_owned("Purchase Order", purchase_order, supplier)
-	rows = json.loads(lines) if isinstance(lines, str) else (lines or [])
+	rows = json_argument(lines, "lines", list) or []
 	doc = frappe.get_doc(
 		{
 			"doctype": "Supplier Order Acknowledgement",
@@ -184,10 +183,8 @@ def create_asn(
 	tracking_no: str | None = None,
 	packages: int | None = None,
 ) -> dict:
-	import json
-
 	supplier = _supplier("ship")
-	rows = json.loads(lines) if isinstance(lines, str) else lines
+	rows = json_argument(lines, "lines", list)
 	for row in rows:
 		_owned("Purchase Order", row["purchase_order"], supplier)
 	doc = frappe.get_doc(
@@ -525,8 +522,6 @@ def submit_quotation(
 	remarks: str | None = None,
 ) -> dict:
 	"""The supplier's binding offer: a submitted Supplier Quotation (buyers cannot alter it)."""
-	import json
-
 	from erpnext.accounts.party import get_party_account_currency
 	from erpnext.buying.doctype.request_for_quotation.request_for_quotation import (
 		add_items,
@@ -536,7 +531,7 @@ def submit_quotation(
 	supplier = _supplier("quote")
 	doc = _invited(rfq_name, supplier)
 	validate_existing_supplier_quotation(supplier, doc.name)
-	rows = json.loads(lines) if isinstance(lines, str) else lines
+	rows = json_argument(lines, "lines", list)
 	if not rows:
 		frappe.throw(_("Quote at least one line."))
 	for row in rows:

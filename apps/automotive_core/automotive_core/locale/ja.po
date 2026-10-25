@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Automotive Core VERSION\n"
 "Report-Msgid-Bugs-To: erp-team@hinode.example\n"
-"POT-Creation-Date: 2026-10-25 10:12+0919\n"
+"POT-Creation-Date: 2026-10-25 10:21+0919\n"
 "PO-Revision-Date: 2026-10-24 13:45+0919\n"
 "Last-Translator: erp-team@hinode.example\n"
 "Language: ja\n"
@@ -48432,6 +48432,11 @@ msgstr "{0}は提出できないドキュメントタイプです。承認ポリ
 msgid "{0} is not the default supplier for any items."
 msgstr "{0}はどの品目の既定の仕入先でもありません。"
 
+#: automotive_core/utils/__init__.py:115
+#, python-brace-format
+msgid "{0} is not valid JSON of the expected type."
+msgstr "{0}は想定された型の有効なJSONではありません。"
+
 #: erpnext/accounts/doctype/payment_entry/payment_entry.py:2992
 #, python-brace-format
 msgid "{0} is on hold till {1}"
@@ -49109,7 +49114,7 @@ msgstr "{0} {1}を提出する必要があります。"
 msgid "{0} {1} needs approval under policy {2} before it can be submitted."
 msgstr "{0} {1}を提出するには、ポリシー{2}に基づく承認が必要です。"
 
-#: frappe/model/document.py:297 frappe/permissions.py:616
+#: automotive_core/utils/__init__.py:123
 #, python-brace-format
 msgid "{0} {1} not found"
 msgstr "{0} {1}が見つかりません。"

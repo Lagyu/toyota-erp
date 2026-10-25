@@ -13,6 +13,7 @@ from frappe.utils import add_days, nowdate
 
 from automotive_core.access.user_permissions import scoped_values
 from automotive_core.analytics.kpi import get_kpi
+from automotive_core.utils import json_argument
 
 FIELDTYPE = {"Percent": "Percent", "Days": "Float", "Hours": "Float", "Count": "Int", "Amount": "Currency"}
 
@@ -36,7 +37,7 @@ def viewer_scope(user: str | None = None) -> tuple[str | None, str | None]:
 
 @frappe.whitelist()
 def kpi_card(filters: str | dict | None = None) -> dict:
-	filters = frappe.parse_json(filters) or {}
+	filters = frappe._dict(json_argument(filters, "filters", dict) or {})
 	kpi_code = filters.get("kpi_code")
 	company, plant = viewer_scope()
 	company = filters.get("company") or company

@@ -76,8 +76,12 @@ cat >"$report" <<EOF
 |---|---|---|
 EOF
 stack_up
+# Traefik asks for the certificate of the router's Host rule when it starts, and after a failed
+# attempt not before its next renewal check: Pebble may not have been listening yet, so once it
+# answers, the proxy starts again (with a certificate already stored it asks for none)
+for _ in $(seq 1 30); do curl -skf -o /dev/null "https://127.0.0.1:15000/roots/0" && break; sleep 2; done
+"${stack_compose[@]}" restart proxy >/dev/null 2>&1 || true
 
-# Traefik asks for the certificate of the router's Host rule when it starts
 issuer="" names=""
 for _ in $(seq 1 60); do
 	cert=$(openssl s_client -connect "127.0.0.1:$https_port" -servername "$site" </dev/null 2>/dev/null || true)

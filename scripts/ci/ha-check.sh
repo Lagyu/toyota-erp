@@ -208,7 +208,7 @@ docker_cmd run -d --name ha-lb --add-host ha-a:host-gateway --add-host ha-b:host
 	"$TRAEFIK_IMAGE" --entrypoints.web.address=:80 --providers.file.directory=/etc/traefik/dynamic \
 	--providers.file.watch=true --log.level=INFO >/dev/null
 for _ in $(seq 1 30); do [[ $(status_at 18120 "$READY") == 200 ]] && break; sleep 2; done
-codes=$(for _ in $(seq 1 20); do status_at 18120 "$READY"; echo; done | sort | uniq -c | xargs)
+codes=$(for _ in $(seq 1 20); do status_at 18120 "$READY"; done | sort | uniq -c | xargs)
 if [[ $codes == "20 200" ]]; then
 	pass "20 of 20 requests answered 200 ($LB)"
 else
@@ -306,7 +306,7 @@ host a up -d --remove-orphans >>"$out/a-return.log" 2>&1 || true
 wait_ready "$work/a.env" "$SITE" 0 || true
 for _ in $(seq 1 30); do [[ $(status_at 18121 "$READY") == 200 ]] && break; sleep 2; done
 sleep 6  # two health checks of the balancer
-codes=$(for _ in $(seq 1 20); do status_at 18120 "$READY"; echo; done | sort | uniq -c | xargs)
+codes=$(for _ in $(seq 1 20); do status_at 18120 "$READY"; done | sort | uniq -c | xargs)
 running=$(singletons)
 if [[ $(status_at 18121 "$READY") == 200 && $codes == "20 200" && $running == "b:cron b:scheduler" ]]; then
 	pass "host A ready again behind the balancer (20 of 20 answered 200); singletons still on B only"

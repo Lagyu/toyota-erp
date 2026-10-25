@@ -18,6 +18,7 @@ from frappe import _
 from frappe.utils import add_to_date, get_time, getdate, now_datetime
 
 from automotive_core.access.plant_scope import get_scoped_doc
+from automotive_core.utils import json_argument
 from automotive_manufacturing.engine import sequencing
 from automotive_manufacturing.production_planning.snapshot import working_days
 
@@ -202,7 +203,7 @@ def resequence(name: str, order: str | list, reason: str) -> str:
 		frappe.throw(_("Schedule {0} is {1}.").format(name, doc.status))
 	if doc.status == "Released" and not (reason or "").strip():
 		frappe.throw(_("Resequencing a released schedule needs a reason."))
-	order = json.loads(order) if isinstance(order, str) else order
+	order = json_argument(order, "order", list)
 	current = {s.sequence_no: s for s in doc.slots}
 	if sorted(order) != sorted(current):
 		frappe.throw(_("The new order must contain every slot exactly once."))

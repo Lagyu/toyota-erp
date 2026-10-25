@@ -3,13 +3,13 @@ and resolve them to a buildable variant item (ERP-02, ERP-08 configuration check
 
 from __future__ import annotations
 
-import json
 from typing import Any
 
 import frappe
 from frappe import _
 from frappe.utils import getdate, now_datetime, nowdate
 
+from automotive_core.utils import json_argument
 from automotive_manufacturing.engine import options
 
 
@@ -124,8 +124,7 @@ def resolve_variant(model: str, selections: dict[str, str]) -> str:
 def check(vehicle_model: str, selections: str | dict) -> dict[str, Any]:
 	"""Configurator API (desk and dealer portal): validity and violations without side effects."""
 	frappe.has_permission("Vehicle Model", "read", doc=vehicle_model, throw=True)
-	if isinstance(selections, str):
-		selections = json.loads(selections)
+	selections = json_argument(selections, "selections", dict) or {}
 	result = check_selections(vehicle_model, {k: str(v) for k, v in selections.items()})
 	if result["valid"]:
 		template = frappe.get_cached_value("Vehicle Model", vehicle_model, "template_item")
@@ -154,8 +153,7 @@ def apply_to_document(doc) -> None:
 @frappe.whitelist(methods=["POST"])
 def configure(vehicle_model: str, selections: str | dict) -> dict[str, Any]:
 	"""Create (or reuse) a valid configuration; raise if the selections are invalid."""
-	if isinstance(selections, str):
-		selections = json.loads(selections)
+	selections = json_argument(selections, "selections", dict) or {}
 	key = options.configuration_key(vehicle_model, selections)
 	existing = frappe.db.get_value(
 		"Vehicle Configuration",

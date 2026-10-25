@@ -65,6 +65,7 @@ Checks and fixes:
   ```
 
 - **TLS handshake errors.** Traefik uses strict SNI, so the certificate must name the host. `preflight.sh` checks the SAN for `TLS_MODE=files`. For Let's Encrypt, port 80 must be reachable from the internet.
+- **No Let's Encrypt certificate** (Traefik's default certificate, `proxy` logs *Unable to obtain ACME certificate*). Traefik asks when it starts and, after a failed attempt, not again before its daily renewal check. Fix the cause (DNS name, port 80 from the internet, the directory unreachable), then `scripts/deploy/compose.sh ENV_FILE restart proxy`.
 - **Site missing.** `new-site.sh` was not run, or failed. Check:
 
   ```bash

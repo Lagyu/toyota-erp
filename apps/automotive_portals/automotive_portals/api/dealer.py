@@ -4,7 +4,6 @@ dealership only (party resolved from Partner User Access on the server)."""
 
 from __future__ import annotations
 
-import json
 from typing import Any
 
 import frappe
@@ -12,6 +11,7 @@ from frappe import _
 from frappe.utils import flt
 
 from automotive_core.integration_hub.idempotency import idempotent
+from automotive_core.utils import json_argument
 from automotive_supply_chain.partners import capabilities, require_capability, require_party
 
 PAGE = 50
@@ -133,8 +133,7 @@ def check_configuration(
 	from automotive_supply_chain.dealer_operations.orders import _price, promise_date
 
 	dealer = _dealer("catalogue")
-	if isinstance(selections, str):
-		selections = json.loads(selections)
+	selections = json_argument(selections, "selections", dict) or {}
 	selections = {k: str(v) for k, v in selections.items() if v not in (None, "")}
 	result = check_selections(vehicle_model, selections)
 	out = {"valid": result["valid"], "violations": result["violations"]}
@@ -172,7 +171,7 @@ def place_order(
 	from automotive_manufacturing.product_engineering.configuration import configure
 
 	dealer = _dealer("order")
-	rows = json.loads(lines) if isinstance(lines, str) else lines
+	rows = json_argument(lines, "lines", list)
 	if not rows:
 		frappe.throw(_("Add at least one vehicle."))
 	items = []
@@ -295,7 +294,7 @@ def request_change(
 		"reason": reason,
 	}
 	if new_selections:
-		selections = json.loads(new_selections) if isinstance(new_selections, str) else new_selections
+		selections = json_argument(new_selections, "new_selections", dict) or {}
 		model = order_doc.items[int(item_row) - 1].vehicle_model
 		values["new_configuration"] = configure(model, selections)["configuration"]
 	doc = frappe.get_doc(values)

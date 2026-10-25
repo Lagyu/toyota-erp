@@ -280,6 +280,17 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   summary found no statistics, and the list reads asked for `_comments`, which Frappe v16 refuses
   in a query. The list reads are now the desk's own request (`frappe.desk.reportview.get` with
   the standard fields and the comment count). Found by a short run on the closing dataset.
+- Six methods answered a malformed request with a server error (500) instead of a refusal:
+  arguments that must be JSON (`kpi_card` filters, configuration selections) and DocType names
+  that name no DocType (approval status and request, cancel with reason). Request arguments
+  sent as JSON text are now parsed by one helper that refuses text of the wrong shape (417),
+  and a DocType a request names must exist (404); the portal and MES methods use the same
+  helper. Found by the new request test of every state-changing method (TST-4,
+  `integration_tests/test_api_requests.py`).
+- The rehearsal's Let's Encrypt check could fail when Traefik asked the ACME test server for
+  its directory before it listened: Traefik does not ask again before its daily renewal check.
+  The check restarts the proxy once the server answers; troubleshooting.md has the same step
+  for a production host that started without its certificate.
 
 ### Operations
 - The backup and the restore drill can be measured at the acceptance size: `drill.yml` restores a

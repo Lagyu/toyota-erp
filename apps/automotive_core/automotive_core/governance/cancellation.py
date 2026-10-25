@@ -11,7 +11,7 @@ from __future__ import annotations
 import frappe
 from frappe import _
 
-from automotive_core.utils import hook_set
+from automotive_core.utils import hook_set, requested_doc
 
 MIN_REASON_LENGTH = 10
 
@@ -44,7 +44,7 @@ def cancel_with_reason(doctype: str, name: str, reason: str) -> dict:
 	reason = (reason or "").strip()
 	if len(reason) < MIN_REASON_LENGTH:
 		frappe.throw(_("Give a reason of at least {0} characters.").format(MIN_REASON_LENGTH))
-	doc = frappe.get_doc(doctype, name)
+	doc = requested_doc(doctype, name)
 	doc.check_permission("cancel")
 	if doc.docstatus != 1:
 		frappe.throw(_("Only submitted documents can be cancelled."))

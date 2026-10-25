@@ -25,7 +25,7 @@ from frappe import _
 from frappe.utils import cint, flt, get_datetime, getdate, now_datetime, nowdate
 
 from automotive_core.governance import audit
-from automotive_core.utils import canonical_json, sha256_hex
+from automotive_core.utils import canonical_json, requested_doc, sha256_hex
 
 GOVERNED_CACHE_KEY = "automotive_governed_doctypes"
 HEADER_HASH_FIELDS = (
@@ -196,7 +196,7 @@ def _save_request(req) -> None:
 
 @frappe.whitelist(methods=["POST"])
 def request_approval(doctype: str, name: str, remarks: str | None = None) -> dict:
-	doc = frappe.get_doc(doctype, name)
+	doc = requested_doc(doctype, name)
 	doc.check_permission("write")
 	if doc.docstatus != 0:
 		frappe.throw(_("Only draft documents can be sent for approval."))
@@ -552,7 +552,7 @@ def get_inbox() -> list[dict]:
 
 @frappe.whitelist()
 def get_status(doctype: str, name: str) -> dict:
-	doc = frappe.get_doc(doctype, name)
+	doc = requested_doc(doctype, name)
 	doc.check_permission("read")
 	policy = find_policy(doc) if doc.docstatus == 0 else None
 	req = latest_request(doctype, name)

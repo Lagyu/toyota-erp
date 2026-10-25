@@ -10,7 +10,6 @@ same Idempotency-Key return the first result (integration_hub.idempotency).
 
 from __future__ import annotations
 
-import json
 from typing import Any
 
 import frappe
@@ -19,6 +18,7 @@ from frappe.utils import cint, flt, getdate, now_datetime, nowdate, nowtime
 
 from automotive_core.access.plant_scope import get_scoped_doc
 from automotive_core.integration_hub.idempotency import idempotent
+from automotive_core.utils import json_argument
 from automotive_manufacturing.traceability.vehicle_units import planned_vins
 
 MES_ROLES = ("Production Supervisor", "Line Operator", "Manufacturing User", "System Manager")
@@ -132,8 +132,7 @@ def report_unit_built(
 ) -> dict[str, Any]:
 	"""Station/MES call: one unit finished. components: [{"item_code","serial_no"|"batch_no"}]."""
 	frappe.only_for(MES_ROLES)
-	if isinstance(components, str):
-		components = json.loads(components)
+	components = json_argument(components, "components", list)
 	se = build_entry(work_order, 1, [serial_no] if serial_no else None, components)
 	built = [r.serial_no for r in se.items if r.is_finished_item]
 	return {

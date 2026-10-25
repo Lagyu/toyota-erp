@@ -15,6 +15,7 @@ import frappe
 from frappe import _
 
 from automotive_core.governance import audit
+from automotive_core.utils import json_argument
 from automotive_manufacturing.quality_control.holds import active_holds_for, raise_hold
 
 
@@ -176,7 +177,7 @@ def make_reinspection(
 	)
 	if original.quality_inspection_template:
 		doc.manual_inspection = 0
-		doc.set("readings", frappe.parse_json(readings) if isinstance(readings, str) else (readings or []))
+		doc.set("readings", json_argument(readings, "readings", list) or [])
 	else:
 		doc.update({"manual_inspection": 1, "status": status})
 	doc.insert()
