@@ -18,7 +18,7 @@ brief: RPO ≤ 15 minutes, RTO ≤ 2 hours.
 | Application | `frontend`, `backend`, `websocket`, `queue-short`, `queue-long` | The same services on two or more application hosts, from the same image tag. Stateless: sessions and caches are in Redis and the database |
 | Singletons | `scheduler`, `cron` | Exactly one active instance, on one application host. If that host fails, start them on another; scheduled jobs missed meanwhile run at their next time. The binary log mirror (`private/ops/binlog`) is on the shared `sites` storage, so another host continues it |
 | Database | MariaDB container | A primary and at least one replica (semi-synchronous replication), with failover by a proxy (e.g. MaxScale) that the application reaches under one name (`DB_HOST`). Operator-provided or a managed MariaDB |
-| Cache and queue | Two Redis containers (the queue with AOF) | Redis with Sentinel or a managed Redis, the queue with persistence; `REDIS_CACHE` and `REDIS_QUEUE` point at them |
+| Cache and queue | Two Redis containers (the queue with AOF) | Redis with Sentinel or a managed Redis, the queue with persistence; `REDIS_CACHE` and `REDIS_QUEUE` point at them, with Sentinel as [below](#configuration-on-the-application-hosts) |
 | Files | the `sites` volume on the host | The `sites` directory on shared storage mounted on every application host (NFS, CephFS or a cloud file service), backed up with the database |
 | Backups | nightly restic to S3, binary logs and new files shipped every 5 minutes, weekly drill with point-in-time recovery | Unchanged (from the singleton host), plus replication; with a managed database, its own point-in-time recovery may replace the binary log shipping |
 
@@ -52,6 +52,23 @@ With `DATASTORES=external` the services that use the datastores reach them over 
 outbound network (`compose.external-datastores.yaml` puts the realtime server on it too). Keep
 the datastores on a private network, or give Redis a password (`REDIS_CACHE` and `REDIS_QUEUE`
 take `user:password@host:port`).
+
+**Redis with Sentinel.** Frappe's Python processes (backend, workers, scheduler, cron) follow
+Sentinel when the common site config names it, for the cache and for the queue separately:
+
+```bash
+B=(./scripts/deploy/compose.sh "$ENV" exec -T backend bench set-config -g)
+"${B[@]}" redis_queue_sentinel_enabled 1 --parse
+"${B[@]}" redis_queue_sentinels '["sentinel-1:26379","sentinel-2:26379","sentinel-3:26379"]' --parse
+"${B[@]}" redis_queue_master_service queue           # the name Sentinel monitors
+# the same with redis_cache_* for the cache; *_sentinel_username/_password and
+# *_master_username/_password when they need credentials
+```
+
+The realtime server (`websocket`) reads `redis_queue` only (Frappe's `node_utils.js` has no
+Sentinel client). Give `REDIS_QUEUE` an address that reaches the current primary: the managed
+service's primary endpoint, or a TCP proxy that follows the primary (for example HAProxy with
+a `tcp-check` expecting `role:master`). Not rehearsed.
 
 `preflight.sh` reports both settings; with `DATASTORES=external` it warns that binary log
 shipping needs the external server's binary log (with a managed database, use its own
