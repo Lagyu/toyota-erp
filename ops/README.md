@@ -80,6 +80,9 @@ Desk pages are at `https://<site>/desk/<doctype-in-kebab-case>`, for example `/d
 | `scripts/deploy/smoke.sh ENV` | Post-deploy checks |
 | `scripts/deploy/upgrade.sh ENV` | Backup, maintenance, new image, migrate, smoke |
 | `scripts/deploy/restore.sh ENV [SNAPSHOT]` | Restore a snapshot over the site (destructive, asks for confirmation) |
+| `scripts/deploy/rotate-site-db-password.sh ENV` | A new password for the site's database account, in MariaDB and the site config ([security-operations.md](runbooks/security-operations.md#the-sites-own-database-password)) |
+| `scripts/deploy/monitoring-account.sh ENV` | mysqld-exporter's MariaDB account from `MYSQLD_EXPORTER_CNF`, least privilege; again to rotate its password |
+| `scripts/deploy/slow-queries.sh ENV [--by total\|mean] [--limit N] [--reset]` | The statements taking the database's time, from MariaDB's digests ([capacity.md](performance/capacity.md#slow-statements)) |
 | `ops/backup/backup.sh`, `ops/backup/restore-drill.sh`, `ops/backup/cron.py` | The jobs (in `scheduler` by hand, in `cron` on their schedules) and their scheduler |
 | `scripts/ci/*.sh` | The CI suites ([testing.md](runbooks/testing.md)) |
 
@@ -105,7 +108,7 @@ Each item is detailed in the runbook named.
 
 - **RPO and RTO are measured on test sites only.** Binary logs and new uploads are shipped off the host every 5 minutes and replayed on restore; every drill records its restore time and recovery point. The CI smoke test and the production rehearsal run them on small sites; a production-size measurement is still to be recorded. See [backup-restore.md](runbooks/backup-restore.md).
 - **Exercised only by the production rehearsal** (`rehearsal.yml`, not by every CI run): the monitoring overlay and the TLS mode `files`. The mode `letsencrypt` needs a public name and is not exercised. See [monitoring.md](runbooks/monitoring.md) and [install-fresh-host.md](runbooks/install-fresh-host.md).
-- **Performance** is measured by `perf.yml` on the standard dataset: see [ops/performance/README.md](performance/README.md) for the recorded results.
+- **Performance** is measured by `perf.yml` on the standard dataset: see [ops/performance/README.md](performance/README.md) for the recorded results, and [capacity.md](performance/capacity.md) for throughput, slow statements, indexes, queues, growth and storage.
 - **Not scripted:**
   - rotation of the database root password, the restic password and the Grafana password;
   - creation of the MariaDB monitoring account for the exporter;
