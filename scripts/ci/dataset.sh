@@ -49,7 +49,8 @@ stack_bench disable-scheduler >/dev/null
 run=$(bench_json automotive_seed.runner.status --kwargs "{'profile': '$profile'}" \
 	| python3 -c 'import json,sys; print(json.load(sys.stdin)["run"])')
 log "generating $run for up to $minutes minutes"
-"${stack_compose[@]}" exec -T backend bench --site "$stack_site" execute automotive_seed.runner.run \
+# fixed string hashes: a resumed run is another process and must iterate as the first did
+"${stack_compose[@]}" exec -T -e PYTHONHASHSEED=0 backend bench --site "$stack_site" execute automotive_seed.runner.run \
 	--kwargs "{'profile': '$profile'}" >"$out/generator.log" 2>&1 &
 generator=$!
 deadline=$((SECONDS + minutes * 60)) stopped=0

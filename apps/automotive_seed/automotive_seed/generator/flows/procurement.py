@@ -450,11 +450,13 @@ class Procurement:
 				"Purchase Receipt Item",
 				filters={"parent": pr, "rejected_qty": (">", 0)},
 				fields=["item_code", "batch_no", "rejected_qty", "rejected_warehouse"],
+				order_by="idx asc",
 			):
 				hold = frappe.db.get_value(
 					"Quality Hold",
 					{"item": row.item_code, "batch_no": row.batch_no, "status": "Active"},
 					"name",
+					order_by="creation desc, name desc",
 				)
 				if not hold:
 					continue
@@ -569,6 +571,7 @@ class Procurement:
 			"Material Request Item",
 			filters={"parent": mr},
 			fields=["name", "item_code", "qty", "schedule_date", "warehouse", "uom", "ordered_qty"],
+			order_by="idx asc",
 		):
 			supplier = primary_supplier(row.item_code, plant)
 			if not supplier or flt(row.qty) <= flt(row.ordered_qty):
@@ -578,6 +581,7 @@ class Procurement:
 					"Item Price",
 					{"item_code": row.item_code, "supplier": supplier, "buying": 1},
 					"price_list_rate",
+					order_by="creation desc, price_list_rate asc",
 				)
 			) or flt(frappe.get_cached_value("Item", row.item_code, "automotive_standard_cost"))
 			by_supplier[supplier].append(
@@ -779,6 +783,7 @@ class Procurement:
 							filters={"parent": pr},
 							fields=["name", "qty"],
 							as_list=True,
+							order_by="idx asc",
 						)
 					)
 					pi.items = [row for row in pi.items if flt(accepted.get(row.pr_detail)) > 0]
@@ -800,6 +805,7 @@ class Procurement:
 						"Invoice Match Exception",
 						filters={"purchase_invoice": pi.name, "status": "Open"},
 						pluck="name",
+						order_by="name asc",
 					):
 						if rng.random() < 0.5:
 							with ctx.as_user(manager):
@@ -835,7 +841,7 @@ class Procurement:
 				"is_return": 0,
 			},
 			fields=["name", "supplier", "company"],
-			order_by="posting_date asc",
+			order_by="posting_date asc, name asc",
 		)
 		clerk = self.sim.person("AP Clerk")
 		for row in rows:

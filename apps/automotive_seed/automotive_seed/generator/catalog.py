@@ -841,11 +841,14 @@ def warehouses() -> dict[str, dict[str, str]]:
 				"wip_warehouse",
 				"receiving_warehouse",
 			],
+			order_by="name asc",
 		)
 	}
 	lines = {
 		ln.name: ln.line_side_warehouse
-		for ln in frappe.get_all("Production Line", fields=["name", "line_side_warehouse"])
+		for ln in frappe.get_all(
+			"Production Line", fields=["name", "line_side_warehouse"], order_by="name asc"
+		)
 	}
 	return {"plants": plants, "lines": lines}
 

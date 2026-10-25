@@ -303,6 +303,14 @@ Frappe v16.53.0. Not yet released: the acceptance gates still open are listed in
   the stock ledger of the WIP warehouses alone whenever they had no stock account of their own
   (a warehouse without one posts to its group's or the company's): it now compares the account
   with the stock ledger of every warehouse posting to it.
+- Two runs of one profile and seed were not the same: the comparison of an uninterrupted closing
+  run with one stopped in the middle of days found an engineering change that altered a
+  different component. The generator picked the BOM line to change from a query without an
+  order, whose rows tied on the creation time the frozen clock gives them; other choices and
+  creation orders came from unordered queries too. Every query whose order feeds a choice or
+  the order documents are made in now has a total order, and the generator requires
+  `PYTHONHASHSEED=0` (set by the scripts): a resumed run is another process, and Python
+  orders sets of strings by per-process hashes otherwise.
 - The rehearsal's Let's Encrypt check could fail when Traefik asked the ACME test server for
   its directory before it listened: Traefik does not ask again before its daily renewal check.
   The check restarts the proxy once the server answers; troubleshooting.md has the same step

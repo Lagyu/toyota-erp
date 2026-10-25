@@ -184,7 +184,7 @@ def _employees(ctx: SeedContext, roster: dict[str, list[str]]) -> None:
 					"last_name": user.last_name,
 					"gender": "Prefer not to say"
 					if frappe.db.exists("Gender", "Prefer not to say")
-					else frappe.db.get_value("Gender", {}, "name"),
+					else frappe.db.get_value("Gender", {}, "name", order_by="name asc"),
 					"date_of_birth": "1985-04-01",
 					"date_of_joining": "2020-04-01",
 					"company": company,
@@ -309,7 +309,10 @@ def suppliers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[
 				doc.submit()
 			ctx.count("Supplier")
 			for row in frappe.get_all(
-				"Approved Supplier List", filters={"supplier_onboarding": doc.name}, pluck="name"
+				"Approved Supplier List",
+				filters={"supplier_onboarding": doc.name},
+				pluck="name",
+				order_by="name asc",
 			):
 				asl = frappe.get_doc("Approved Supplier List", row)
 				asl.status, asl.ppap_status, asl.share_percent = "Approved", "Approved", 100
@@ -361,7 +364,7 @@ def dealers(ctx: SeedContext, roster: dict[str, list[str]]) -> dict[str, list[st
 	rng = ctx.rng("dealers")
 	out = {"JP": [], "US": []}
 	controller = roster["Group Controller"][0]
-	territory = frappe.db.get_value("Territory", {"is_group": 0}, "name")
+	territory = frappe.db.get_value("Territory", {"is_group": 0}, "name", order_by="name asc")
 	for region, count, company, price_list in (
 		("JP", ctx.profile["partners"]["dealers_jp"], AICHI, "Dealer Price JP"),
 		("US", ctx.profile["partners"]["dealers_us"], NA, "Dealer Price US"),
@@ -438,7 +441,9 @@ def bank_accounts(ctx: SeedContext, roster, supplier_names: list[str]) -> None:
 	# group companies settle intercompany invoices through the same verified-account control
 	supplier_names = sorted(
 		set(supplier_names)
-		| set(frappe.get_all("Supplier", filters={"is_internal_supplier": 1}, pluck="name"))
+		| set(
+			frappe.get_all("Supplier", filters={"is_internal_supplier": 1}, pluck="name", order_by="name asc")
+		)
 	)
 	if not frappe.db.exists("Bank", "Hinode Settlement Bank"):
 		frappe.get_doc({"doctype": "Bank", "bank_name": "Hinode Settlement Bank"}).insert(

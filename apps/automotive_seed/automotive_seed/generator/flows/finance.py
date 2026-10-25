@@ -261,8 +261,12 @@ class Finance:
 					"account_name": ("like", "%Retained%"),
 				},
 				"name",
+				order_by="name asc",
 			) or frappe.db.get_value(
-				"Account", {"company": company, "root_type": "Equity", "is_group": 0}, "name"
+				"Account",
+				{"company": company, "root_type": "Equity", "is_group": 0},
+				"name",
+				order_by="name asc",
 			)
 			with ctx.step(23, 0):
 				self.close_stock(company, day)

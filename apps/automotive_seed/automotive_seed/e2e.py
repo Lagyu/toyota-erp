@@ -260,7 +260,7 @@ def _orderable(dealer: str, registration: str, company: str) -> list[dict]:
 	market = "JP" if company == AICHI else "US"
 	price_list = frappe.db.get_value("Customer", dealer, "default_price_list")
 	models = frappe.get_all(
-		"Dealer Authorised Model", filters={"parent": registration}, pluck="vehicle_model"
+		"Dealer Authorised Model", filters={"parent": registration}, pluck="vehicle_model", order_by="idx asc"
 	)
 	out = []
 	for variant in frappe.get_all(
@@ -269,7 +269,10 @@ def _orderable(dealer: str, registration: str, company: str) -> list[dict]:
 		selections = {
 			r.attribute: r.attribute_value
 			for r in frappe.get_all(
-				"Item Variant Attribute", filters={"parent": variant}, fields=["attribute", "attribute_value"]
+				"Item Variant Attribute",
+				filters={"parent": variant},
+				fields=["attribute", "attribute_value"],
+				order_by="idx asc",
 			)
 		}
 		model = frappe.get_cached_value("Item", variant, "variant_of")
@@ -334,7 +337,9 @@ def _build_to_order(variants: list[dict], exclude: set) -> dict | None:
 			continue
 		line_side = line_side_for(v["line"])
 		missing = 0
-		for row in frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"]):
+		for row in frappe.get_all(
+			"BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty"], order_by="idx asc"
+		):
 			have = sum(
 				flt(frappe.db.get_value("Bin", {"item_code": row.item_code, "warehouse": w}, "actual_qty"))
 				for w in (line_side, store_for(PLANT))
@@ -526,6 +531,7 @@ def _current_blanket_orders() -> dict:
 		"Kanban Loop",
 		filters={"status": "Active", "supply_type": "Supplier", "blanket_order": ("is", "set")},
 		fields=["supplier", "item_code", "plant", "blanket_order"],
+		order_by="name asc",
 	):
 		company = frappe.get_cached_value("Plant", loop.plant, "company")
 		if not _blanket_order_for(loop.supplier, company, loop.item_code, today):
@@ -793,7 +799,10 @@ def _engineering_change() -> dict | None:
 					"qty": line.qty,
 					"new_qty": line.qty + 1,
 					"work_order": frappe.db.get_value(
-						"Work Order", {"bom_no": bom.name, "docstatus": 1}, "name", order_by="creation desc"
+						"Work Order",
+						{"bom_no": bom.name, "docstatus": 1},
+						"name",
+						order_by="creation desc, name desc",
 					),
 				}
 	return None

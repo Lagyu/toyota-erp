@@ -139,7 +139,8 @@ print(s.get("run"), s.get("status"), s.get("start_date"), "..", s.get("simulated
 		restore_dataset "$cache"
 	else
 		log "generating the small dataset (cached afterwards as $key)"
-		if ! bench execute automotive_seed.runner.run --kwargs "{'profile': 'small'}" | tail -1; then
+		if ! "${compose[@]}" exec -T -e PYTHONHASHSEED=0 backend bench --site "$site" execute automotive_seed.runner.run \
+			--kwargs "{'profile': 'small'}" | tail -1; then
 			# bench execute reports a failing call as a NameError: the run stored the real one
 			bench execute automotive_seed.runner.status --kwargs "{'profile': 'small'}" | grep '^{' | tail -1 \
 				| python3 -c 'import json,sys; s=json.load(sys.stdin); print(s["status"], s.get("stage")); print(s.get("error") or "")'

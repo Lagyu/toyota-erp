@@ -44,7 +44,10 @@ def daily_usage(structure, ctx: SeedContext) -> dict[str, float]:
 
 	def explode(bom: str, qty: float) -> None:
 		for row in frappe.get_all(
-			"BOM Item", filters={"parent": bom}, fields=["item_code", "stock_qty", "bom_no"]
+			"BOM Item",
+			filters={"parent": bom},
+			fields=["item_code", "stock_qty", "bom_no"],
+			order_by="idx asc",
 		):
 			sub = row.bom_no or frappe.db.get_value(
 				"BOM", {"item": row.item_code, "is_default": 1, "docstatus": 1}, "name"
@@ -66,7 +69,7 @@ def powertrain_usage(structure, ctx: SeedContext) -> dict[str, float]:
 	usage: dict[str, float] = {}
 	for _code, info in sorted(structure["variants"].items()):
 		for row in frappe.get_all(
-			"BOM Item", filters={"parent": info["bom"]}, fields=["item_code", "stock_qty"]
+			"BOM Item", filters={"parent": info["bom"]}, fields=["item_code", "stock_qty"], order_by="idx asc"
 		):
 			if row.item_code in structure["powertrains"]:
 				usage[row.item_code] = usage.get(row.item_code, 0) + share * flt(row.stock_qty)
@@ -78,7 +81,10 @@ def sourcing(ctx: SeedContext, structure, roster, suppliers_by_commodity) -> Non
 	rely on the commodity-level ASL entries created at onboarding)."""
 	buyer, manager = roster["Buyer"][0], roster["Procurement Manager"][0]
 	rng = ctx.rng("sourcing")
-	used = {r.item_code for r in frappe.get_all("BOM Item", fields=["item_code"], distinct=True)}
+	used = {
+		r.item_code
+		for r in frappe.get_all("BOM Item", fields=["item_code"], distinct=True, order_by="item_code asc")
+	}
 	for code in sorted(used & set(structure["purchased"])):
 		info = structure["purchased"][code]
 		candidates = suppliers_by_commodity.get(info["commodity"]) or []
@@ -149,7 +155,10 @@ def blanket_orders_and_kanban(ctx: SeedContext, structure, roster) -> dict[str, 
 	loops = {}
 	for supplier, items in sorted(by_supplier.items()):
 		bo_name = frappe.db.get_value(
-			"Blanket Order", {"supplier": supplier, "company": AICHI, "docstatus": 1}, "name"
+			"Blanket Order",
+			{"supplier": supplier, "company": AICHI, "docstatus": 1},
+			"name",
+			order_by="creation desc, name desc",
 		)
 		if not bo_name:
 			with ctx.as_user(buyer):
@@ -220,7 +229,10 @@ def blanket_orders_and_kanban(ctx: SeedContext, structure, roster) -> dict[str, 
 
 def _sourced_price(code: str, supplier: str) -> float:
 	price = frappe.db.get_value(
-		"Item Price", {"item_code": code, "supplier": supplier, "buying": 1}, "price_list_rate"
+		"Item Price",
+		{"item_code": code, "supplier": supplier, "buying": 1},
+		"price_list_rate",
+		order_by="creation desc, price_list_rate asc",
 	)
 	return flt(price) or flt(frappe.get_cached_value("Item", code, "automotive_standard_cost"))
 
@@ -231,10 +243,14 @@ def _consuming_lines(structure) -> dict[str, list[str]]:
 	for info in structure["modules"].values():
 		if info["plant"] != "AICHI-VA":
 			continue
-		for row in frappe.get_all("BOM Item", filters={"parent": info["bom"]}, pluck="item_code"):
+		for row in frappe.get_all(
+			"BOM Item", filters={"parent": info["bom"]}, pluck="item_code", order_by="idx asc"
+		):
 			out.setdefault(row, set()).add(info["line"])
 	for info in structure["variants"].values():
-		for row in frappe.get_all("BOM Item", filters={"parent": info["bom"]}, pluck="item_code"):
+		for row in frappe.get_all(
+			"BOM Item", filters={"parent": info["bom"]}, pluck="item_code", order_by="idx asc"
+		):
 			out.setdefault(row, set()).add(info["line"])
 	return {k: sorted(v) for k, v in out.items()}
 

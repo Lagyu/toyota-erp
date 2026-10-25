@@ -120,7 +120,7 @@ class Sales:
 					with ctx.as_user(liaison):
 						# negotiated fleet discount, granted internally before acceptance
 						for row in frappe.get_all(
-							"Dealer Order Item", filters={"parent": order}, pluck="name"
+							"Dealer Order Item", filters={"parent": order}, pluck="name", order_by="idx asc"
 						):
 							frappe.db.set_value(
 								"Dealer Order Item", row, "discount_percent", rng.choice((2, 3.5, 4))
@@ -157,7 +157,7 @@ class Sales:
 			"""select va.name, va.sales_order, va.sales_order_item, va.vehicle_unit, va.dealer
 			from `tabVehicle Allocation` va join `tabSales Order` so on so.name = va.sales_order
 			where va.status = 'Allocated' and so.company = %s and date(va.allocated_at) < %s
-			order by va.allocated_at""",
+			order by va.allocated_at, va.name""",
 			(company, day),
 			as_dict=True,
 		)
@@ -236,7 +236,10 @@ class Sales:
 					{
 						r.delivery_note
 						for r in frappe.get_all(
-							"Shipment Manifest Item", filters={"parent": manifest}, fields=["delivery_note"]
+							"Shipment Manifest Item",
+							filters={"parent": manifest},
+							fields=["delivery_note"],
+							order_by="idx asc",
 						)
 					}
 				):
@@ -267,7 +270,7 @@ class Sales:
 		rows = frappe.db.sql(
 			"""select si.name from `tabSales Invoice` si join `tabCustomer` c on c.name = si.customer
 			where si.docstatus = 1 and si.company = %s and si.outstanding_amount > 0 and si.posting_date <= %s
-			and c.is_internal_customer = 0 order by si.posting_date""",
+			and c.is_internal_customer = 0 order by si.posting_date, si.name""",
 			(company, cutoff),
 			pluck=True,
 		)
@@ -361,7 +364,7 @@ class Sales:
 					"name": ("not in", sorted(taken) or [""]),
 				},
 				pluck="name",
-				order_by="built_at asc",
+				order_by="built_at asc, name asc",
 				limit=int(line.open_qty),
 			)
 			if vins:
@@ -392,7 +395,10 @@ class Sales:
 		for pr in list(self.s.get("pdi", [])):
 			inspector = self.sim.person("Quality Inspector", "NA-PDC")
 			for row in frappe.get_all(
-				"Purchase Receipt Item", filters={"parent": pr}, fields=["name", "item_code", "serial_no"]
+				"Purchase Receipt Item",
+				filters={"parent": pr},
+				fields=["name", "item_code", "serial_no"],
+				order_by="idx asc",
 			):
 				for vin in filter(None, (row.serial_no or "").split("\n")):
 					with ctx.step(10, 0):  # one inspection per vehicle on the shared receipt row
@@ -435,7 +441,7 @@ class Sales:
 				"status": ("not in", ("Closed", "Completed")),
 			},
 			pluck="name",
-			order_by="transaction_date asc",
+			order_by="transaction_date asc, name asc",
 		):
 			so = frappe.get_doc("Sales Order", so_name)
 			lines = {}
@@ -446,7 +452,7 @@ class Sales:
 						"Serial No",
 						filters={"item_code": item.item_code, "warehouse": fg, "status": "Active"},
 						pluck="name",
-						order_by="creation asc",
+						order_by="creation asc, name asc",
 						limit=open_qty,
 					)
 					if open_qty

@@ -8,5 +8,6 @@ cd /home/frappe/dev/frappe-bench
 kwargs="{'profile': '$profile'}"
 [[ -n $until ]] && kwargs="{'profile': '$profile', 'until': '$until'}"
 echo "$(date -u +%FT%TZ) seed start site=$site profile=$profile until=${until:-end}"
-bench --site "$site" execute automotive_seed.runner.run --kwargs "$kwargs"
+# fixed string hashes: every run and resume of a seed iterates sets in the same order
+PYTHONHASHSEED=0 bench --site "$site" execute automotive_seed.runner.run --kwargs "$kwargs"
 echo "$(date -u +%FT%TZ) SEED DONE site=$site profile=$profile"

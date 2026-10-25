@@ -131,7 +131,10 @@ class Quality:
 
 	def powertrain_inspection(self, item: str, stock_entry: str, inspector: str) -> None:
 		rows = frappe.get_all(
-			"Stock Entry Detail", filters={"parent": stock_entry, "is_finished_item": 1}, fields=["serial_no"]
+			"Stock Entry Detail",
+			filters={"parent": stock_entry, "is_finished_item": 1},
+			fields=["serial_no"],
+			order_by="idx asc",
 		)
 		serial = (rows[0].serial_no or "").split("\n")[0] if rows else None
 		self._qi(
@@ -174,7 +177,12 @@ class Quality:
 		]
 		for item in pending:
 			vin = item["vin"]
-			hold = frappe.db.get_value("Quality Hold", {"serial_no": vin, "status": "Active"}, "name")
+			hold = frappe.db.get_value(
+				"Quality Hold",
+				{"serial_no": vin, "status": "Active"},
+				"name",
+				order_by="creation desc, name desc",
+			)
 			if not hold:
 				continue
 			with ctx.step(18, 30):
@@ -191,6 +199,7 @@ class Quality:
 							"Quality Inspection",
 							{"item_serial_no": vin, "status": "Rejected", "docstatus": 1},
 							"name",
+							order_by="creation desc, name desc",
 						)
 						template = frappe.db.get_value(
 							"Quality Inspection", rejected_qi, "quality_inspection_template"
@@ -255,7 +264,7 @@ class Quality:
 				continue
 			line = rng.choice(lines)
 			stations = frappe.get_all(
-				"Production Line Station", filters={"parent": line}, pluck="workstation"
+				"Production Line Station", filters={"parent": line}, pluck="workstation", order_by="idx asc"
 			)
 			reason = rng.choice(["E-BREAKDOWN", "E-TOOL", "M-SHORT", "P-OVERCYCLE", "Q-GAUGE", "S-NEAR-MISS"])
 			stop_type = "Call" if reason in ("P-OVERCYCLE", "S-NEAR-MISS") else "Line Stop"

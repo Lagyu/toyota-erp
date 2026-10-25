@@ -1,6 +1,6 @@
 """Deterministic synthetic data generation for non-production sites (requirements §5).
 
-    bench --site SITE execute automotive_seed.runner.run --kwargs "{'profile': 'small'}"
+    PYTHONHASHSEED=0 bench --site SITE execute automotive_seed.runner.run --kwargs "{'profile': 'small'}"
 
 * Refuses to run unless the site sets ``automotive_allow_seed: 1`` and is not marked
   ``automotive_environment: production`` (disabled by default everywhere).
@@ -114,8 +114,22 @@ def _done(run: str) -> set[str]:
 	)
 
 
+def reproducible() -> None:
+	"""A profile and seed give the same documents only when every run iterates sets of strings
+	in the same order: Python randomises string hashes per process unless PYTHONHASHSEED is set
+	(a resumed run is another process)."""
+	import sys
+
+	if sys.flags.hash_randomization:
+		raise SeedNotAllowed(
+			"Run the generator with PYTHONHASHSEED=0 (scripts/seed/run.sh and the CI scripts set it): "
+			"with randomised string hashes two runs of one seed differ."
+		)
+
+
 def run(profile: str = "small", seed: int | None = None, until: str | None = None) -> str:
 	guard()
+	reproducible()
 	frappe.set_user("Administrator")
 	spec = load_profile(profile)
 	if seed is not None:

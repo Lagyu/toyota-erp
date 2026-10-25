@@ -66,9 +66,13 @@ The run takes long, so start it detached inside the backend container and log to
 ```bash
 ENV=/etc/hinode-reference/reference.env        # your copy of reference.env.example
 SITE=erp-reference.hinode.example
-./scripts/deploy/compose.sh "$ENV" exec -d backend bash -c \
+./scripts/deploy/compose.sh "$ENV" exec -d -e PYTHONHASHSEED=0 backend bash -c \
   "bench --site $SITE execute automotive_seed.runner.run --kwargs \"{'profile': 'standard'}\" >>logs/seed-standard.log 2>&1"
 ```
+
+`PYTHONHASHSEED=0` is required (the run refuses to start without it): Python orders sets of
+strings by their hashes, which it randomises per process unless the seed is fixed, and a
+resumed run is a new process. With it, the same profile and seed give the same documents.
 
 Follow progress:
 

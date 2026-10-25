@@ -306,9 +306,13 @@ class Production:
 					"production_item": ("in", list(self.structure["variants"])),
 				},
 				fields=["name", "source_warehouse"],
+				order_by="planned_start_date asc, name asc",
 			):
 				for row in frappe.get_all(
-					"Work Order Item", filters={"parent": wo.name}, fields=["item_code", "required_qty"]
+					"Work Order Item",
+					filters={"parent": wo.name},
+					fields=["item_code", "required_qty"],
+					order_by="idx asc",
 				):
 					if row.item_code in self.structure["modules"]:
 						needs[(row.item_code, wo.source_warehouse)] += flt(row.required_qty)
@@ -385,11 +389,13 @@ class Production:
 				"production_item": ("in", list(self.structure["variants"])),
 			},
 			pluck="name",
+			order_by="planned_start_date asc, name asc",
 		):
 			for row in frappe.get_all(
 				"Work Order Item",
 				filters={"parent": wo},
 				fields=["item_code", "required_qty", "consumed_qty"],
+				order_by="idx asc",
 			):
 				if row.item_code in self.structure["powertrains"]:
 					need[row.item_code] += flt(row.required_qty) - flt(row.consumed_qty)
@@ -550,11 +556,13 @@ class Production:
 				"automotive_superseded_by": ("is", "not set"),
 			},
 			"name",
-			order_by="creation desc",
+			order_by="creation desc, name desc",
 		)
 		if not bom:
 			return
-		lines = frappe.get_all("BOM Item", filters={"parent": bom}, fields=["item_code", "qty"])
+		lines = frappe.get_all(
+			"BOM Item", filters={"parent": bom}, fields=["item_code", "qty"], order_by="idx asc"
+		)
 		line = rng.choice(lines)
 		engineer = self.sim.person("Product Engineer", "AICHI-VA")
 		factor = rng.choice((0.9, 1.1, 1.05))
