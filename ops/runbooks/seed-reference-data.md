@@ -103,7 +103,12 @@ is run again. The validation records a **fingerprint** of the generated document
 fields the profile and seed decide: names from naming series, simulated dates, quantities and
 amounts). Two runs of one profile and seed on the same code give the same fingerprint, however
 often they were interrupted: `dataset.yml` with `minutes` small and `grace_minutes: 0` stops a
-run in the middle of days, and `dataset-compare.yml` compares two runs' fingerprints.
+run in the middle of days, and `dataset-compare.yml` compares two runs' fingerprints. That
+holds because the generator draws from seeded random streams per day, takes every query whose
+order matters with a total order (rows that tie on the frozen clock's timestamps would come
+back in the database's order), and runs with `PYTHONHASHSEED=0`. Keep it so when changing the
+generator: an `order_by` with a unique tie-breaker (`idx` for child rows, `name` for documents)
+on any query a choice or a loop of document creation depends on.
 
 ### Failure
 
